@@ -11,9 +11,17 @@ namespace Waffle
     /// 没有 .mixer 资源时，用 AudioSource 音量 + AudioLowPassFilter 在脚本里完成混音；
     /// 如果之后在 Unity 里建了 AudioMixer，可以把组拖到 musicGroup / sfxGroup，脚本内的音量计算照常生效。
     /// 所有淡入淡出用 unscaled 时间：升级面板期间 timeScale = 0，音乐仍要能交叉淡化。
+    /// 游戏暂停会冻住声部和淡变。禁用组件或收到 Restart 会停声并清掉本局状态；新一局由新实例或 BeginFreshRun 从头开始。
     /// </summary>
     public class AudioDirector : MonoBehaviour
     {
+        enum MusicMode
+        {
+            Combat,
+            LevelUp,
+            Terminal
+        }
+
         public GameLoop loop;
 
         [Header("混音（没有 AudioMixer 时由脚本完成）")]
@@ -54,7 +62,6 @@ namespace Waffle
         public AudioEventRule victory = new AudioEventRule("Event_Game_Victory", 1f, 0f, 1, 0f, 0f, 25f);
         public AudioEventRule defeat = new AudioEventRule("Event_Game_Defeat", 1f, 0f, 1, 0f, 0f, 25f);
 
-        // ---- 运行时 ----
         private class Voice
         {
             public AudioSource source;
@@ -74,18 +81,23 @@ namespace Waffle
         private AudioSource combatSource, levelUpSource;
         private AudioLowPassFilter combatLowpass;
 
-        // 音乐目标音量（线性）与淡变速度
         private float combatGain, combatTarget, combatRate;
         private float levelUpGain, levelUpTarget, levelUpRate;
         private float lowpassTarget = 22000f, lowpassRate;
 
-        // 受击压低：0 = 不压，1 = 压满
         private float duckAmount;
         private float duckHoldUntil = float.NegativeInfinity;
         private bool ducking;
 
         private float lastPickupTime = float.NegativeInfinity;
         private bool paused;
+        private bool combatHeld;
+        private bool started;
+        private bool accepting = true;
+        private bool terminalBedStopped;
+        private float pauseStarted;
+        private float pausedSeconds;
+        private MusicMode musicMode = MusicMode.Combat;
         private GameLoop subscribed;
 
         public static float DbToLinear(float db) { return db <= -80f ? 0f : Mathf.Pow(10f, db / 20f); }
@@ -114,24 +126,89 @@ namespace Waffle
 
         private void Start()
         {
-            // 新一局（场景加载后）：战斗音乐从头开始
-            combatGain = combatTarget = 1f;
-            levelUpGain = levelUpTarget = 0f;
-            if (combatLoop != null) combatSource.Play();
-            if (levelUpLoop != null) levelUpSource.Play(); // 一直播放，音量 0，切换时只做交叉淡化
-            ApplyMusicVolumes();
+            started = true;
+            BeginFreshRun();
         }
 
         private void OnEnable()
         {
             if (loop == null) loop = GetComponent<GameLoop>();
-            if (loop != null) { loop.PresentationDispatched += OnEvents; subscribed = loop; }
+            if (loop != null && subscribed == null)
+            {
+                loop.PresentationDispatched += OnEvents;
+                subscribed = loop;
+            }
+            // 禁用后再启用视为新的一局，不恢复禁用前的淡化、压低或拾取音阶。
+            // 第一次启用发生在 Start 之前，由 Start 开局，避免播两次。
+            if (started) BeginFreshRun();
         }
 
         private void OnDisable()
         {
             if (subscribed != null) subscribed.PresentationDispatched -= OnEvents;
             subscribed = null;
+            Silence();
+        }
+
+        /// <summary>
+        /// 把音乐和音效回到战斗开局。场景重载后的新实例会在 Start 里调用。
+        /// 同一对象被禁用后再启用也会调用。不读取上一局的暂停、压低或升级淡化。
+        /// </summary>
+        public void BeginFreshRun()
+        {
+            accepting = true;
+            paused = false;
+            combatHeld = false;
+            pauseStarted = 0f;
+            pausedSeconds = 0f;
+            terminalBedStopped = false;
+            musicMode = MusicMode.Combat;
+            duckAmount = 0f;
+            ducking = false;
+            duckHoldUntil = float.NegativeInfinity;
+            lastPickupTime = float.NegativeInfinity;
+            ResetChannels();
+            StopSources();
+
+            combatGain = combatTarget = 1f;
+            combatRate = 0f;
+            levelUpGain = levelUpTarget = 0f;
+            levelUpRate = 0f;
+            lowpassTarget = 22000f;
+            lowpassRate = 0f;
+            if (combatLowpass != null) combatLowpass.cutoffFrequency = 22000f;
+
+            // Stop 之后再 UnPause：有的 Unity 版本里 Pause 标记在 Stop 之后还留着，Play 不会出声。
+            RestartLoop(combatSource, combatLoop);
+            RestartLoop(levelUpSource, levelUpLoop);
+            AlignWithRunPhase();
+            ApplyMusicVolumes();
+        }
+
+        private void AlignWithRunPhase()
+        {
+            // A component restart is not a gameplay restart. Events may have fired
+            // before Start, or while this component was disabled: read the authority.
+            if (loop == null || loop.Sim == null) return;
+            var state = loop.Sim.State;
+            RunPhase phase = state.Phase == RunPhase.Paused ? state.PhaseBeforePause : state.Phase;
+            if (phase == RunPhase.LevelUp)
+            {
+                musicMode = MusicMode.LevelUp;
+                combatGain = combatTarget = 0f;
+                levelUpGain = levelUpTarget = DbToLinear(levelUpLoopDb);
+                PauseIfPlaying(combatSource);
+                combatHeld = true;
+            }
+            else if (phase == RunPhase.Victory || phase == RunPhase.Defeat)
+            {
+                musicMode = MusicMode.Terminal;
+                combatGain = combatTarget = 0f;
+                levelUpGain = levelUpTarget = 0f;
+                StopSources();
+                terminalBedStopped = true;
+            }
+            if (state.Phase == RunPhase.Paused) SetPaused(true);
         }
 
         private void BuildChannel(PresentationEventType type, AudioEventRule rule)
@@ -161,10 +238,6 @@ namespace Waffle
             return src;
         }
 
-        // =====================================================================
-        // 事件
-        // =====================================================================
-
         private void OnEvents(IReadOnlyList<PresentationEvent> events)
         {
             for (int i = 0; i < events.Count; i++) Handle(events[i]);
@@ -172,6 +245,7 @@ namespace Waffle
 
         private void Handle(PresentationEvent e)
         {
+            if (!accepting) return;
             switch (e.Type)
             {
                 case PresentationEventType.Paused:
@@ -181,29 +255,24 @@ namespace Waffle
                     SetPaused(false);
                     return;
                 case PresentationEventType.Restart:
-                    StopAll();
+                    // 场景即将重载。这里只停声，不在即将销毁的对象上再起一局。
+                    Silence();
                     return;
                 case PresentationEventType.LevelUpShown:
-                    // 第一张面板：战斗音乐 1 s 淡出，悬浮循环 1 s 淡入；连续升级的后续面板只播提示音
-                    FadeCombat(0f, levelUpCrossfade);
-                    FadeLevelUp(DbToLinear(levelUpLoopDb), levelUpCrossfade);
+                    // 终局之后不再把音乐拉回升级。连续升级的后续面板只播提示音。
+                    if (musicMode == MusicMode.Terminal) break;
+                    if (musicMode != MusicMode.LevelUp) EnterLevelUp();
                     break;
                 case PresentationEventType.LevelUpChosen:
-                    if (loop != null && loop.Sim != null && loop.Sim.State.PendingLevelUps == 0)
-                    {
-                        FadeCombat(1f, resumeFadeIn);
-                        FadeLevelUp(0f, resumeFadeIn);
-                    }
+                    // GameLoop 在 ChooseUpgrade 改完 PendingLevelUps 之后才分发。
+                    // 还有后续面板时不要把战斗音乐淡回来。
+                    if (musicMode != MusicMode.Terminal && IsLastLevelUpChoice()) LeaveLevelUp();
                     break;
                 case PresentationEventType.Victory:
-                    FadeCombat(0f, victoryFadeOut);
-                    FadeLevelUp(0f, victoryFadeOut);
+                    EnterTerminal(victoryFadeOut, false);
                     break;
                 case PresentationEventType.Defeat:
-                    FadeCombat(0f, defeatCut);
-                    FadeLevelUp(0f, defeatCut);
-                    lowpassTarget = defeatLowpassHz;
-                    lowpassRate = (22000f - defeatLowpassHz) / Mathf.Max(0.01f, defeatCut);
+                    EnterTerminal(defeatCut, true);
                     break;
                 case PresentationEventType.PlayerHurt:
                     StartDuck();
@@ -214,18 +283,21 @@ namespace Waffle
             if (channels.TryGetValue(e.Type, out ch)) Play(ch, e);
         }
 
+        private bool IsLastLevelUpChoice()
+        {
+            return loop != null && loop.Sim != null && loop.Sim.State.PendingLevelUps == 0;
+        }
+
         private void Play(Channel ch, PresentationEvent e)
         {
             AudioEventRule rule = ch.rule;
-            if (rule.clips == null || rule.clips.Length == 0) return;
-            float now = Time.unscaledTime;
+            if (rule.clips == null || rule.clips.Length == 0 || paused) return;
+            float now = AudioClock();
             if (now - ch.lastPlayTime < rule.minInterval) return;
 
-            // 选音色
             int clipIndex;
             if (e.Type == PresentationEventType.GemPickup)
             {
-                // 连续拾取按 01→05 递增，超过 1 s 没拾取就回到 01
                 if (now - lastPickupTime > pickupStreakReset) ch.nextIndex = 0;
                 lastPickupTime = now;
                 clipIndex = ch.nextIndex % rule.clips.Length;
@@ -243,7 +315,6 @@ namespace Waffle
             AudioClip clip = rule.clips[clipIndex];
             if (clip == null) return;
 
-            // 选声部：优先空闲，否则挤掉最早开始的
             Voice voice = null;
             for (int i = 0; i < ch.voices.Count; i++)
             {
@@ -262,37 +333,149 @@ namespace Waffle
             ch.lastPlayTime = now;
         }
 
-        // =====================================================================
-        // 暂停 / 重开
-        // =====================================================================
-
-        /// <summary>暂停：所有音效与音乐一起暂停（音频规范没有单独规定暂停，这里按“完全冻结”处理）。</summary>
+        /// <summary>暂停：声部和音乐淡变一起冻住。恢复时不补播暂停期间被丢掉的一次性音效。</summary>
         private void SetPaused(bool value)
         {
             if (paused == value) return;
             paused = value;
+            if (value)
+            {
+                pauseStarted = Time.unscaledTime;
+                PauseIfPlaying(allSfx);
+                PauseIfPlaying(combatSource);
+                PauseIfPlaying(levelUpSource);
+                return;
+            }
+
+            pausedSeconds += Time.unscaledTime - pauseStarted;
+
             for (int i = 0; i < allSfx.Count; i++)
             {
-                if (value) allSfx[i].Pause(); else allSfx[i].UnPause();
+                if (allSfx[i] != null) allSfx[i].UnPause();
             }
-            if (value) { combatSource.Pause(); levelUpSource.Pause(); }
-            else { combatSource.UnPause(); levelUpSource.UnPause(); }
+            // 升级循环在战斗中音量是 0，但仍要保持播放，交叉淡化才听得见。
+            // 只在音量大于 0 时解开的话，战斗中暂停一次之后，下次升级没有悬浮层。
+            if (musicMode != MusicMode.Terminal)
+            {
+                if (!combatHeld) UnPauseIfExists(combatSource);
+                UnPauseIfExists(levelUpSource);
+            }
+            else
+            {
+                if (combatGain > 0.001f || combatTarget > 0.001f) UnPauseIfExists(combatSource);
+                if (levelUpGain > 0.001f || levelUpTarget > 0.001f) UnPauseIfExists(levelUpSource);
+            }
         }
 
-        /// <summary>重开：停止并清空所有声部（场景随后重新加载，本对象也会销毁）。</summary>
-        private void StopAll()
+        private static void PauseIfPlaying(List<AudioSource> sources)
         {
-            for (int i = 0; i < allSfx.Count; i++) allSfx[i].Stop();
-            combatSource.Stop();
-            levelUpSource.Stop();
-            foreach (var ch in channels.Values) { ch.lastPlayTime = float.NegativeInfinity; ch.nextIndex = 0; }
+            for (int i = 0; i < sources.Count; i++) PauseIfPlaying(sources[i]);
+        }
+
+        private static void PauseIfPlaying(AudioSource source)
+        {
+            if (source != null && source.isPlaying) source.Pause();
+        }
+
+        private static void UnPauseIfExists(AudioSource source)
+        {
+            if (source != null) source.UnPause();
+        }
+
+        private void EnterLevelUp()
+        {
+            musicMode = MusicMode.LevelUp;
+            combatHeld = false;
+            // 暂停过的升级层只 UnPause，不从 0 重播，避免接缝。
+            UnPauseIfExists(levelUpSource);
+            if (levelUpSource != null && !levelUpSource.isPlaying && levelUpLoop != null)
+            {
+                levelUpSource.clip = levelUpLoop;
+                levelUpSource.Play();
+            }
+            FadeCombat(0f, levelUpCrossfade);
+            FadeLevelUp(DbToLinear(levelUpLoopDb), levelUpCrossfade);
+        }
+
+        private void LeaveLevelUp()
+        {
+            musicMode = MusicMode.Combat;
+            combatHeld = false;
+            if (!paused && combatSource != null && !combatSource.isPlaying)
+            {
+                // Pause 过的源用 UnPause 接着播；从没播过才从头 Play。
+                combatSource.UnPause();
+                if (!combatSource.isPlaying && combatLoop != null) combatSource.Play();
+            }
+            FadeCombat(1f, resumeFadeIn);
+            FadeLevelUp(0f, resumeFadeIn);
+        }
+
+        private void EnterTerminal(float seconds, bool lowpass)
+        {
+            musicMode = MusicMode.Terminal;
+            combatHeld = false;
+            terminalBedStopped = false;
+            FadeCombat(0f, seconds);
+            FadeLevelUp(0f, seconds);
+            if (!lowpass || combatLowpass == null) return;
+            lowpassTarget = defeatLowpassHz;
+            float from = combatLowpass.cutoffFrequency;
+            lowpassRate = Mathf.Abs(from - defeatLowpassHz) / Mathf.Max(0.01f, seconds);
+        }
+
+        /// <summary>停掉所有声部并拒绝后续事件，直到 BeginFreshRun。不启动新的音乐。</summary>
+        private void Silence()
+        {
+            accepting = false;
+            paused = false;
+            combatHeld = false;
+            pauseStarted = 0f;
+            pausedSeconds = 0f;
+            terminalBedStopped = true;
+            musicMode = MusicMode.Terminal;
             duckAmount = 0f;
             ducking = false;
+            duckHoldUntil = float.NegativeInfinity;
+            lastPickupTime = float.NegativeInfinity;
+            combatTarget = combatGain = 0f;
+            levelUpTarget = levelUpGain = 0f;
+            combatRate = 0f;
+            levelUpRate = 0f;
+            ResetChannels();
+            StopSources();
+            ApplyMusicVolumes();
         }
 
-        // =====================================================================
-        // 音乐淡变与压低
-        // =====================================================================
+        private void ResetChannels()
+        {
+            foreach (var ch in channels.Values)
+            {
+                ch.lastPlayTime = float.NegativeInfinity;
+                ch.nextIndex = 0;
+            }
+        }
+
+        private void StopSources()
+        {
+            for (int i = 0; i < allSfx.Count; i++)
+            {
+                if (allSfx[i] != null) allSfx[i].Stop();
+            }
+            if (combatSource != null) combatSource.Stop();
+            if (levelUpSource != null) levelUpSource.Stop();
+        }
+
+        private static void RestartLoop(AudioSource source, AudioClip clip)
+        {
+            if (source == null) return;
+            source.Stop();
+            source.UnPause();
+            if (clip == null) return;
+            source.clip = clip;
+            source.time = 0f;
+            source.Play();
+        }
 
         private void FadeCombat(float target, float seconds)
         {
@@ -308,25 +491,48 @@ namespace Waffle
 
         private void StartDuck()
         {
+            if (paused || musicMode == MusicMode.Terminal) return;
             ducking = true;
-            duckHoldUntil = Time.unscaledTime + duckAttack + duckHold;
+            duckHoldUntil = AudioClock() + duckAttack + duckHold;
+        }
+
+        /// <summary>暂停期间不走。用于音效间隔、拾取音阶和压低保持，避免暂停把这些计时提前走完。</summary>
+        private float AudioClock()
+        {
+            float t = Time.unscaledTime - pausedSeconds;
+            if (paused) t -= Time.unscaledTime - pauseStarted;
+            return t;
         }
 
         private void Update()
         {
-            if (paused) return;
+            if (paused || !accepting) return;
             float dt = Time.unscaledDeltaTime;
 
             combatGain = Mathf.MoveTowards(combatGain, combatTarget, combatRate * dt);
             levelUpGain = Mathf.MoveTowards(levelUpGain, levelUpTarget, levelUpRate * dt);
-            if (combatLowpass != null && combatLowpass.cutoffFrequency > lowpassTarget)
+            if (combatLowpass != null)
                 combatLowpass.cutoffFrequency = Mathf.MoveTowards(combatLowpass.cutoffFrequency, lowpassTarget, lowpassRate * dt);
 
-            // 压低包络：Attack 10 ms 压到 -8 dB，保持 200 ms，600 ms 回弹
+            if (musicMode == MusicMode.LevelUp && combatGain <= 0.001f && combatSource != null && combatSource.isPlaying)
+            {
+                // 淡出完成后停住播放头，恢复时从离开的位置继续，而不是在面板期间把循环悄悄走完。
+                combatSource.Pause();
+                combatHeld = true;
+            }
+            if (musicMode == MusicMode.Terminal && !terminalBedStopped
+                && combatGain <= 0.001f && levelUpGain <= 0.001f)
+            {
+                // 已经 Pause 的声源 isPlaying 为 false，也要 Stop 一次，清掉暂停标记。
+                if (combatSource != null) combatSource.Stop();
+                if (levelUpSource != null) levelUpSource.Stop();
+                terminalBedStopped = true;
+            }
+
             if (ducking)
             {
                 duckAmount = Mathf.MoveTowards(duckAmount, 1f, dt / Mathf.Max(0.001f, duckAttack));
-                if (Time.unscaledTime >= duckHoldUntil) ducking = false;
+                if (AudioClock() >= duckHoldUntil) ducking = false;
             }
             else
             {
