@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -26,6 +28,12 @@ namespace Waffle
 
         public RunSimulation Sim { get; private set; }
         public GameInput Controls { get; private set; }
+
+        /// <summary>
+        /// 表现事件分发（音效/特效订阅）。每次 Tick 之后、以及 UI 按钮/失焦/重开改变状态之后各分发一次，然后清空。
+        /// 订阅者只读，不能改玩法状态。实例事件，随场景销毁。
+        /// </summary>
+        public event Action<IReadOnlyList<PresentationEvent>> PresentationDispatched;
 
         private RunPhase lastPhase;
         private bool restarting;
@@ -60,9 +68,19 @@ namespace Waffle
             // 用 unscaled 帧时间：逻辑是否推进只看 GameLoop 的门控，不依赖 timeScale（§0.1 规则 4）
             Sim.Tick(Time.unscaledDeltaTime, snapshot, Time.frameCount, Time.unscaledTimeAsDouble);
             SyncAfterStateChange();
+            DispatchPresentation();
 
             if (playerView != null)
                 playerView.position = new Vector3(Sim.PlayerX, playerView.position.y, Sim.PlayerZ);
+        }
+
+        /// <summary>把本帧表现事件交给订阅者，然后清空。</summary>
+        public void DispatchPresentation()
+        {
+            if (Sim == null || Sim.Presentation.Count == 0) return;
+            var handler = PresentationDispatched;
+            if (handler != null) handler(Sim.Presentation.Events);
+            Sim.Presentation.Clear();
         }
 
         /// <summary>状态变化后同步 timeScale 和输入 Map。UI 按钮改变状态后也要调用。</summary>
@@ -84,6 +102,7 @@ namespace Waffle
                 Sim.BeginFrame(Time.frameCount, Time.unscaledTimeAsDouble);
                 Sim.RequestPause("失去焦点");
                 SyncAfterStateChange();
+                DispatchPresentation();
             }
         }
 
@@ -93,6 +112,7 @@ namespace Waffle
             Sim.BeginFrame(Time.frameCount, Time.unscaledTimeAsDouble);
             Sim.ChooseUpgrade(index);
             SyncAfterStateChange();
+            DispatchPresentation();
         }
 
         /// <summary>UI 的"继续"按钮。</summary>
@@ -101,6 +121,7 @@ namespace Waffle
             Sim.BeginFrame(Time.frameCount, Time.unscaledTimeAsDouble);
             Sim.TogglePause("按钮");
             SyncAfterStateChange();
+            DispatchPresentation();
         }
 
         /// <summary>重开 = 重新加载当前场景（§1.7）。重开前显式把 timeScale 设为 1。</summary>
@@ -109,6 +130,8 @@ namespace Waffle
             if (restarting) return;
             restarting = true;
             Debug.Log(string.Format("[Waffle] 重开：从 {0} now={1:F3} frame={2}", Sim.State.Phase, Sim.State.Now, Time.frameCount));
+            Sim.NotifyRestart();
+            DispatchPresentation(); // 让音效/特效先清场
             Time.timeScale = 1f;
             Controls.DisableAll();
 
