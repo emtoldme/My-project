@@ -85,3 +85,8 @@ GameLoop Inspector 里的 **Config** 是唯一来源：基础值（`maxHp`、`mo
 - IMGUI 默认字体显示中文依赖系统字体，若出现方块请告知。
 - `InputSystem_Actions` 是项目级 Actions（会在启动时全部打开），GameInput 初始化时会先关闭全部 Map 再按状态打开。
 - 每秒 CSV、`seed` 命令等其他调试钩子不在本阶段范围。
+
+
+## 表现层（P-01）
+
+先运行 **Waffle → Setup S1 Presentation**：生成材质、视觉 Prefab，设置正交相机（Size 9、Pitch 55°、Yaw 45°）、灯光和后处理，并在 GameLoop 上挂 `AudioDirector`、`VfxDirector`。它们只订阅 `GameLoop.PresentationDispatched` 读取表现事件，不改玩法。详见 `Docs/Integration/P-01_INTEGRATION.md`。

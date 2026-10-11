@@ -7,7 +7,7 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../../Assets/Waffle/Scripts/Rules/*.cs" Link="Rules/%(Filename).cs" />
+    <Compile Include="../../Assets/Waffle/Scripts/Rules/**/*.cs" Link="Rules/%(RecursiveDir)%(Filename).cs" />
     <Compile Include="../../Assets/Waffle/Tests/EditMode/*.cs" Link="Tests/%(Filename).cs" />
   </ItemGroup>
   <ItemGroup>
