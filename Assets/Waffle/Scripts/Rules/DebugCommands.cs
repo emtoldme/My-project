@@ -11,7 +11,7 @@ namespace Waffle
     public static class DebugCommands
     {
         public const string Help =
-            "tracetick [on|off|n] | settime s | setdt s(0=关) | sethp n | givexp n | god [on|off] | hurt n | slowmo x";
+            "tracetick [on|off|n] | settime s | setdt s(0=关) | sethp n | givexp n | god [on|off] | hurt n | slowmo x | spawn n | setcap n | spawngems n";
 
         /// <summary>执行一条命令，返回给控制台显示的结果文字。</summary>
         public static string Execute(RunSimulation sim, string line)
@@ -53,6 +53,21 @@ namespace Waffle
                     break;
                 case "slowmo":
                     if (TryFloat(arg, out f) && f > 0f) { sim.Slowmo = f; return "slowmo = " + arg; }
+                    break;
+                case "spawn":
+                case "spawngems":
+                    if (TryInt(arg, out n) && n > 0)
+                    {
+                        if (!sim.DebugSpawn(n, cmd == "spawngems")) return Rejected(sim, line);
+                        return "已生成 " + Math.Min(n, 200) + (cmd == "spawn" ? " 个敌人（受池容量限制）" : " 份经验（满池合并）");
+                    }
+                    break;
+                case "setcap":
+                    if (TryInt(arg, out n) && n > 0)
+                    {
+                        if (!sim.DebugSetCap(n)) return Rejected(sim, line);
+                        return "普通敌人上限 = " + sim.Combat.Config.aliveCap;
+                    }
                     break;
                 default:
                     return "未知命令：" + cmd + "。" + Help;

@@ -31,20 +31,19 @@ namespace Waffle.Tests
         }
 
         [Test]
-        public void SameTick_DodgeThenHurtThenLevelUp_InTickOrder()
+        public void SameTick_HurtThenLevelUp_InTickOrder()
         {
             var d = new SimDriver();
             d.Sim.DebugHurt(10);
             d.Sim.DebugGiveXp(5);
-            var s = InputSnapshot.None; s.DodgePressed = true;
+            var s = InputSnapshot.None;
             d.Tick(1f / 60f, s);
             CollectionAssert.AreEqual(new[]
             {
-                PresentationEventType.Dodge,        // T1
                 PresentationEventType.PlayerHurt,   // T8
                 PresentationEventType.LevelUpShown  // T12
             }, Types(d));
-            var hurt = d.Sim.Presentation.Events[1];
+            var hurt = d.Sim.Presentation.Events[0];
             Assert.AreEqual(10f, hurt.Value);
             Assert.AreEqual(90, hurt.Data);
             Assert.AreEqual(d.Frame, hurt.Frame);

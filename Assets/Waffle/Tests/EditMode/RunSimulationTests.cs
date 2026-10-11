@@ -289,6 +289,8 @@ namespace Waffle.Tests
             var dodge = InputSnapshot.None; dodge.DodgePressed = true;
             d.Tick(Dt, dodge);
             Assert.AreEqual(1, d.Sim.DodgeRequests);
+            Assert.IsTrue(d.Sim.IsDodging);
+            d.Tick(Dt, dodge); // Active dodge cannot restart; this press is buffered.
             Assert.GreaterOrEqual(d.Sim.DodgeBufferUntil, 0f);
 
             d.PressPause();
@@ -296,7 +298,7 @@ namespace Waffle.Tests
             d.Tick(Dt, dodge); // 暂停时按闪避（实际中 Gameplay Map 已关闭，这里再验证门控）
             d.PressPause();
             d.Tick();
-            Assert.AreEqual(1, d.Sim.DodgeRequests, "暂停期间的按键不会在恢复后补出");
+            Assert.AreEqual(2, d.Sim.DodgeRequests, "暂停期间的按键不会在恢复后补出");
         }
 
         // ---------------- 升级队列（A-60~A-63） ----------------

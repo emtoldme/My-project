@@ -78,6 +78,18 @@ namespace Waffle.EditorTools
                     // 胶囊中心 y = 1，模型轴心在脚底
                     visual.transform.localPosition = new Vector3(0f, -player.transform.position.y, 0f);
                     visual.transform.localRotation = Quaternion.identity;
+                    // Third-party FBX units differ; align the visual with the player's small footprint.
+                    var renderers = visual.GetComponentsInChildren<Renderer>();
+                    if (renderers.Length > 0)
+                    {
+                        Bounds bounds = renderers[0].bounds;
+                        for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+                        visual.transform.localScale *= 1.8f / Mathf.Max(0.01f, bounds.size.y);
+                        bounds = renderers[0].bounds;
+                        for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+                        visual.transform.position += new Vector3(player.transform.position.x - bounds.center.x,
+                            -bounds.min.y, player.transform.position.z - bounds.center.z);
+                    }
                 }
             }
 

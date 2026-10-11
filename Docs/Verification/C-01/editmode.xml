@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="111" result="Passed" total="111" passed="111" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-11 22:52:28Z" end-time="2026-10-11 22:52:29Z" duration="1.2791352">
+  <test-suite type="TestSuite" id="1000" name="My project" fullname="My project" runstate="Runnable" testcasecount="111" result="Passed" start-time="2026-10-11 22:52:28Z" end-time="2026-10-11 22:52:29Z" duration="1.279135" total="111" passed="111" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1030" name="Waffle.Tests.Combat.dll" fullname="G:/图书馆/新建文件夹 (2)/My project-integration/Library/ScriptAssemblies/Waffle.Tests.Combat.dll" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-10-11 22:52:28Z" end-time="2026-10-11 22:52:29Z" duration="1.157022" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16452" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1031" name="Waffle" fullname="Waffle" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-10-11 22:52:28Z" end-time="2026-10-11 22:52:29Z" duration="1.156010" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1032" name="Tests" fullname="Waffle.Tests" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-10-11 22:52:28Z" end-time="2026-10-11 22:52:29Z" duration="1.155503" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1033" name="Combat" fullname="Waffle.Tests.Combat" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-10-11 22:52:28Z" end-time="2026-10-11 22:52:29Z" duration="1.154996" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1010" name="CombatModuleTests" fullname="Waffle.Tests.Combat.CombatModuleTests" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-10-11 22:52:28Z" end-time="2026-10-11 22:52:29Z" duration="1.153380" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1028" name="AliveCap30_NormalWavesTruncated_PoolNeverMisses" fullname="Waffle.Tests.Combat.CombatModuleTests.AliveCap30_NormalWavesTruncated_PoolNeverMisses" methodname="AliveCap30_NormalWavesTruncated_PoolNeverMisses" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1842991252" result="Passed" start-time="2026-10-11 22:52:28Z" end-time="2026-10-11 22:52:29Z" duration="1.021269" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1020" name="Contact_EliteDominates_AndDeadThisTickDealsNone" fullname="Waffle.Tests.Combat.CombatModuleTests.Contact_EliteDominates_AndDeadThisTickDealsNone" methodname="Contact_EliteDominates_AndDeadThisTickDealsNone" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1357445271" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001025" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1019" name="Contact_MultipleEnemies_ReportsSingleHighestDamage" fullname="Waffle.Tests.Combat.CombatModuleTests.Contact_MultipleEnemies_ReportsSingleHighestDamage" methodname="Contact_MultipleEnemies_ReportsSingleHighestDamage" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="399967689" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000569" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1021" name="Contact_OnlyRaw_ModuleDoesNotApplyIFrames" fullname="Waffle.Tests.Combat.CombatModuleTests.Contact_OnlyRaw_ModuleDoesNotApplyIFrames" methodname="Contact_OnlyRaw_ModuleDoesNotApplyIFrames" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1919084500" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000383" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1024" name="Gem_ExpiresAfterLifetime_UnlessMagnetized" fullname="Waffle.Tests.Combat.CombatModuleTests.Gem_ExpiresAfterLifetime_UnlessMagnetized" methodname="Gem_ExpiresAfterLifetime_UnlessMagnetized" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1254994831" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000694" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1025" name="GemCap_MergeOnCreate_ConservesXp_AndNeverExceedsCap" fullname="Waffle.Tests.Combat.CombatModuleTests.GemCap_MergeOnCreate_ConservesXp_AndNeverExceedsCap" methodname="GemCap_MergeOnCreate_ConservesXp_AndNeverExceedsCap" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="336550466" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000507" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="NearestAliveTargetChosen_TieBreaksBySerial" fullname="Waffle.Tests.Combat.CombatModuleTests.NearestAliveTargetChosen_TieBreaksBySerial" methodname="NearestAliveTargetChosen_TieBreaksBySerial" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1715779787" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001111" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1011" name="NoTarget_NoError_NoShot_WeaponStaysReady" fullname="Waffle.Tests.Combat.CombatModuleTests.NoTarget_NoError_NoShot_WeaponStaysReady" methodname="NoTarget_NoError_NoShot_WeaponStaysReady" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1380407690" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.002714" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1014" name="OneShotKill_TwoProjectilesSameTick_RewardsExactlyOnce" fullname="Waffle.Tests.Combat.CombatModuleTests.OneShotKill_TwoProjectilesSameTick_RewardsExactlyOnce" methodname="OneShotKill_TwoProjectilesSameTick_RewardsExactlyOnce" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="471136193" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000978" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1017" name="Pierce_HitsUpToPierceEnemies_InEntryOrder" fullname="Waffle.Tests.Combat.CombatModuleTests.Pierce_HitsUpToPierceEnemies_InEntryOrder" methodname="Pierce_HitsUpToPierceEnemies_InEntryOrder" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1884549172" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000370" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="Restart_NewModuleIsClean_OldModuleUnaffected" fullname="Waffle.Tests.Combat.CombatModuleTests.Restart_NewModuleIsClean_OldModuleUnaffected" methodname="Restart_NewModuleIsClean_OldModuleUnaffected" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1599565846" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.016136" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1016" name="SameProjectile_OverlappingEnemyForManyTicks_HitsOnlyOnce" fullname="Waffle.Tests.Combat.CombatModuleTests.SameProjectile_OverlappingEnemyForManyTicks_HitsOnlyOnce" methodname="SameProjectile_OverlappingEnemyForManyTicks_HitsOnlyOnce" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="2065500673" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000750" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1027" name="SameSeed_SameResult_Deterministic" fullname="Waffle.Tests.Combat.CombatModuleTests.SameSeed_SameResult_Deterministic" methodname="SameSeed_SameResult_Deterministic" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1733531756" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.084192" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1015" name="SameTarget_HitAgainByLaterShot_ButNotTwiceBySameProjectile" fullname="Waffle.Tests.Combat.CombatModuleTests.SameTarget_HitAgainByLaterShot_ButNotTwiceBySameProjectile" methodname="SameTarget_HitAgainByLaterShot_ButNotTwiceBySameProjectile" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="2013043333" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000727" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1029" name="StaleReference_RejectedAfterRelease" fullname="Waffle.Tests.Combat.CombatModuleTests.StaleReference_RejectedAfterRelease" methodname="StaleReference_RejectedAfterRelease" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="803169501" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000465" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1018" name="SweptHit_CatchesCrossingMovingEnemy" fullname="Waffle.Tests.Combat.CombatModuleTests.SweptHit_CatchesCrossingMovingEnemy" methodname="SweptHit_CatchesCrossingMovingEnemy" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1060387988" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000862" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="TargetOutOfRange_NotSelected" fullname="Waffle.Tests.Combat.CombatModuleTests.TargetOutOfRange_NotSelected" methodname="TargetOutOfRange_NotSelected" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="331395729" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000297" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1023" name="XpPickup_EliteValue_AndGemPickupEvent" fullname="Waffle.Tests.Combat.CombatModuleTests.XpPickup_EliteValue_AndGemPickupEvent" methodname="XpPickup_EliteValue_AndGemPickupEvent" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1670408981" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001028" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="XpPickup_KillThenWalkToGem_CollectsExactlyOnce" fullname="Waffle.Tests.Combat.CombatModuleTests.XpPickup_KillThenWalkToGem_CollectsExactlyOnce" methodname="XpPickup_KillThenWalkToGem_CollectsExactlyOnce" classname="Waffle.Tests.Combat.CombatModuleTests" runstate="Runnable" seed="1535599405" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000474" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1141" name="Waffle.Tests.EditMode.dll" fullname="G:/图书馆/新建文件夹 (2)/My project-integration/Library/ScriptAssemblies/Waffle.Tests.EditMode.dll" runstate="Runnable" testcasecount="92" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.112266" total="92" passed="92" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16452" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1142" name="Waffle" fullname="Waffle" runstate="Runnable" testcasecount="92" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.103273" total="92" passed="92" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1143" name="Tests" fullname="Waffle.Tests" runstate="Runnable" testcasecount="92" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.101229" total="92" passed="92" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1034" name="CombatIntegrationTests" fullname="Waffle.Tests.CombatIntegrationTests" classname="Waffle.Tests.CombatIntegrationTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.012037" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1039" name="ContactSetting_UsesMaxOrSum_ThenRespectsInvulnerability" fullname="Waffle.Tests.CombatIntegrationTests.ContactSetting_UsesMaxOrSum_ThenRespectsInvulnerability" classname="Waffle.Tests.CombatIntegrationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.003784" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1037" name="ContactSetting_UsesMaxOrSum_ThenRespectsInvulnerability(False,90)" fullname="Waffle.Tests.CombatIntegrationTests.ContactSetting_UsesMaxOrSum_ThenRespectsInvulnerability(False,90)" methodname="ContactSetting_UsesMaxOrSum_ThenRespectsInvulnerability" classname="Waffle.Tests.CombatIntegrationTests" runstate="Runnable" seed="1953614773" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.002702" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1038" name="ContactSetting_UsesMaxOrSum_ThenRespectsInvulnerability(True,80)" fullname="Waffle.Tests.CombatIntegrationTests.ContactSetting_UsesMaxOrSum_ThenRespectsInvulnerability(True,80)" methodname="ContactSetting_UsesMaxOrSum_ThenRespectsInvulnerability" classname="Waffle.Tests.CombatIntegrationTests" runstate="Runnable" seed="1709276594" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000311" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1036" name="DeathSkipsGems_ButReleasesKilledEnemy" fullname="Waffle.Tests.CombatIntegrationTests.DeathSkipsGems_ButReleasesKilledEnemy" methodname="DeathSkipsGems_ButReleasesKilledEnemy" classname="Waffle.Tests.CombatIntegrationTests" runstate="Runnable" seed="1752311765" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001079" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1042" name="DebugCombatCommandsWork_AndTerminalRejectsThem" fullname="Waffle.Tests.CombatIntegrationTests.DebugCombatCommandsWork_AndTerminalRejectsThem" methodname="DebugCombatCommandsWork_AndTerminalRejectsThem" classname="Waffle.Tests.CombatIntegrationTests" runstate="Runnable" seed="246281665" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.002302" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1040" name="DodgeMovesThreeMeters_BlocksDamage_AndHasCooldown" fullname="Waffle.Tests.CombatIntegrationTests.DodgeMovesThreeMeters_BlocksDamage_AndHasCooldown" methodname="DodgeMovesThreeMeters_BlocksDamage_AndHasCooldown" classname="Waffle.Tests.CombatIntegrationTests" runstate="Runnable" seed="491179433" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001005" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1035" name="KillEventsXpAndRecycle_AreWiredIntoFramework" fullname="Waffle.Tests.CombatIntegrationTests.KillEventsXpAndRecycle_AreWiredIntoFramework" methodname="KillEventsXpAndRecycle_AreWiredIntoFramework" classname="Waffle.Tests.CombatIntegrationTests" runstate="Runnable" seed="250792070" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001209" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1041" name="PauseFreezesDodgeCombatAndClock" fullname="Waffle.Tests.CombatIntegrationTests.PauseFreezesDodgeCombatAndClock" methodname="PauseFreezesDodgeCombatAndClock" classname="Waffle.Tests.CombatIntegrationTests" runstate="Runnable" seed="701315968" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000521" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1043" name="DebugCommandsTests" fullname="Waffle.Tests.DebugCommandsTests" classname="Waffle.Tests.DebugCommandsTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.002398" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1044" name="ParsesMinimalHookSet" fullname="Waffle.Tests.DebugCommandsTests.ParsesMinimalHookSet" methodname="ParsesMinimalHookSet" classname="Waffle.Tests.DebugCommandsTests" runstate="Runnable" seed="213251192" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001172" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1045" name="UnknownOrBadArgs_DoNotThrow" fullname="Waffle.Tests.DebugCommandsTests.UnknownOrBadArgs_DoNotThrow" methodname="UnknownOrBadArgs_DoNotThrow" classname="Waffle.Tests.DebugCommandsTests" runstate="Runnable" seed="1085690808" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000279" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1046" name="PresentationEventTests" fullname="Waffle.Tests.PresentationEventTests" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.012471" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1051" name="ChainedLevelUp_ShownChosenPairs" fullname="Waffle.Tests.PresentationEventTests.ChainedLevelUp_ShownChosenPairs" methodname="ChainedLevelUp_ShownChosenPairs" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="1560821592" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.003547" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1049" name="HurtBlockedByInvulnerability_EmitsNothing" fullname="Waffle.Tests.PresentationEventTests.HurtBlockedByInvulnerability_EmitsNothing" methodname="HurtBlockedByInvulnerability_EmitsNothing" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="284419720" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000319" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1050" name="Pause_EmitsPausedOnly_AndNoGameplayEventsWhilePaused" fullname="Waffle.Tests.PresentationEventTests.Pause_EmitsPausedOnly_AndNoGameplayEventsWhilePaused" methodname="Pause_EmitsPausedOnly_AndNoGameplayEventsWhilePaused" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="1583850708" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001258" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1052" name="PauseDuringLevelUp_ResumedNotShownAgain" fullname="Waffle.Tests.PresentationEventTests.PauseDuringLevelUp_ResumedNotShownAgain" methodname="PauseDuringLevelUp_ResumedNotShownAgain" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="1575763034" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000371" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1058" name="ReservedCombatTypes_NotEmittedByFramework" fullname="Waffle.Tests.PresentationEventTests.ReservedCombatTypes_NotEmittedByFramework" methodname="ReservedCombatTypes_NotEmittedByFramework" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="1373901382" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000826" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1057" name="Restart_EmitsOnce_FromAnyPhase" fullname="Waffle.Tests.PresentationEventTests.Restart_EmitsOnce_FromAnyPhase" methodname="Restart_EmitsOnce_FromAnyPhase" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="2012570900" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000810" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1048" name="SameTick_HurtThenLevelUp_InTickOrder" fullname="Waffle.Tests.PresentationEventTests.SameTick_HurtThenLevelUp_InTickOrder" methodname="SameTick_HurtThenLevelUp_InTickOrder" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="1973157101" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000636" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1056" name="SameTick_LevelUpAndTimeout_VictoryWithoutShown" fullname="Waffle.Tests.PresentationEventTests.SameTick_LevelUpAndTimeout_VictoryWithoutShown" methodname="SameTick_LevelUpAndTimeout_VictoryWithoutShown" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="1037292210" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000244" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1047" name="T0_ClearsPreviousFrameEvents" fullname="Waffle.Tests.PresentationEventTests.T0_ClearsPreviousFrameEvents" methodname="T0_ClearsPreviousFrameEvents" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="1438272221" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000242" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1055" name="Terminal_EmitsExactlyOnce" fullname="Waffle.Tests.PresentationEventTests.Terminal_EmitsExactlyOnce" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001535" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1053" name="Terminal_EmitsExactlyOnce(True)" fullname="Waffle.Tests.PresentationEventTests.Terminal_EmitsExactlyOnce(True)" methodname="Terminal_EmitsExactlyOnce" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="293858135" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000671" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1054" name="Terminal_EmitsExactlyOnce(False)" fullname="Waffle.Tests.PresentationEventTests.Terminal_EmitsExactlyOnce(False)" methodname="Terminal_EmitsExactlyOnce" classname="Waffle.Tests.PresentationEventTests" runstate="Runnable" seed="1466414356" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000156" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1059" name="RunSimulationTests" fullname="Waffle.Tests.RunSimulationTests" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.035836" total="32" passed="32" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1061" name="A05_TraceOnlyT0_WhenPausedOrLevelUp" fullname="Waffle.Tests.RunSimulationTests.A05_TraceOnlyT0_WhenPausedOrLevelUp" methodname="A05_TraceOnlyT0_WhenPausedOrLevelUp" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="619556413" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000651" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1060" name="A05_TraceOrder_T0ToT13_WhenPlaying" fullname="Waffle.Tests.RunSimulationTests.A05_TraceOrder_T0ToT13_WhenPlaying" methodname="A05_TraceOrder_T0ToT13_WhenPlaying" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1405391841" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000822" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1077" name="A61_Give30_ThreePanels_EndsAt4_6of14" fullname="Waffle.Tests.RunSimulationTests.A61_Give30_ThreePanels_EndsAt4_6of14" methodname="A61_Give30_ThreePanels_EndsAt4_6of14" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1547722102" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000433" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1082" name="A61c_FromLevel2With3Xp_Give13" fullname="Waffle.Tests.RunSimulationTests.A61c_FromLevel2With3Xp_Give13" methodname="A61c_FromLevel2With3Xp_Give13" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="227417641" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000316" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1083" name="A62_SameFrameDoubleSubmit_CountsOnce_AndGuardBlocksEarlyInput" fullname="Waffle.Tests.RunSimulationTests.A62_SameFrameDoubleSubmit_CountsOnce_AndGuardBlocksEarlyInput" methodname="A62_SameFrameDoubleSubmit_CountsOnce_AndGuardBlocksEarlyInput" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1882045499" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000257" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1084" name="A63_PauseDuringLevelUp_ReturnsToSamePanel" fullname="Waffle.Tests.RunSimulationTests.A63_PauseDuringLevelUp_ReturnsToSamePanel" methodname="A63_PauseDuringLevelUp_ReturnsToSamePanel" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="46029059" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000431" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1072" name="A70_PauseFreezesClock_NoBacklogAfterResume" fullname="Waffle.Tests.RunSimulationTests.A70_PauseFreezesClock_NoBacklogAfterResume" methodname="A70_PauseFreezesClock_NoBacklogAfterResume" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="698151511" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000616" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1075" name="A74_FocusLoss_PausesAndStaysPaused" fullname="Waffle.Tests.RunSimulationTests.A74_FocusLoss_PausesAndStaysPaused" methodname="A74_FocusLoss_PausesAndStaysPaused" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1568253649" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000336" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1074" name="A75_PauseToggled20Times_StateAndTimeScaleConsistent" fullname="Waffle.Tests.RunSimulationTests.A75_PauseToggled20Times_StateAndTimeScaleConsistent" methodname="A75_PauseToggled20Times_StateAndTimeScaleConsistent" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1713225896" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000427" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1062" name="A76_TimeoutGivesVictory_ClockExactly180" fullname="Waffle.Tests.RunSimulationTests.A76_TimeoutGivesVictory_ClockExactly180" methodname="A76_TimeoutGivesVictory_ClockExactly180" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="2049625280" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000307" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1067" name="A77a_DeathOnEarlierTick_LaterTimeoutCannotOverride" fullname="Waffle.Tests.RunSimulationTests.A77a_DeathOnEarlierTick_LaterTimeoutCannotOverride" methodname="A77a_DeathOnEarlierTick_LaterTimeoutCannotOverride" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1243644318" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000265" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1064" name="A77b_SameTick_ContactDeathAndTimeout_IsDefeat" fullname="Waffle.Tests.RunSimulationTests.A77b_SameTick_ContactDeathAndTimeout_IsDefeat" methodname="A77b_SameTick_ContactDeathAndTimeout_IsDefeat" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="2000043458" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000256" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1065" name="A77c_SameSetupWithGod_IsVictory" fullname="Waffle.Tests.RunSimulationTests.A77c_SameSetupWithGod_IsVictory" methodname="A77c_SameSetupWithGod_IsVictory" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="2066338291" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000253" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1069" name="A78_LevelUpFreezesClock_ThenVictoryAt180" fullname="Waffle.Tests.RunSimulationTests.A78_LevelUpFreezesClock_ThenVictoryAt180" methodname="A78_LevelUpFreezesClock_ThenVictoryAt180" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1829612015" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000365" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1068" name="A79_SameTick_LevelUpAndTimeout_IsVictoryWithoutPanel" fullname="Waffle.Tests.RunSimulationTests.A79_SameTick_LevelUpAndTimeout_IsVictoryWithoutPanel" methodname="A79_SameTick_LevelUpAndTimeout_IsVictoryWithoutPanel" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="86095889" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000399" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="A79b_TerminalState_RejectsDebugCommandsAndTransitions" fullname="Waffle.Tests.RunSimulationTests.A79b_TerminalState_RejectsDebugCommandsAndTransitions" methodname="A79b_TerminalState_RejectsDebugCommandsAndTransitions" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1469462530" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000448" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1089" name="A84_SameSeed_SamePanelOptions_AcrossRestarts" fullname="Waffle.Tests.RunSimulationTests.A84_SameSeed_SamePanelOptions_AcrossRestarts" methodname="A84_SameSeed_SamePanelOptions_AcrossRestarts" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="435720418" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000311" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1085" name="ChooseInput_FromSnapshot_Works" fullname="Waffle.Tests.RunSimulationTests.ChooseInput_FromSnapshot_Works" methodname="ChooseInput_FromSnapshot_Works" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="275111988" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000289" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1066" name="Decision51_Alternative_SameTickDeathCountsAsVictory" fullname="Waffle.Tests.RunSimulationTests.Decision51_Alternative_SameTickDeathCountsAsVictory" methodname="Decision51_Alternative_SameTickDeathCountsAsVictory" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="572020962" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000290" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1086" name="Draw_FallbackHeal_WhenFewerThanThree" fullname="Waffle.Tests.RunSimulationTests.Draw_FallbackHeal_WhenFewerThanThree" methodname="Draw_FallbackHeal_WhenFewerThanThree" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="997877673" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000901" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1087" name="Draw_NoDuplicates_AndDeterministicBySeed" fullname="Waffle.Tests.RunSimulationTests.Draw_NoDuplicates_AndDeterministicBySeed" methodname="Draw_NoDuplicates_AndDeterministicBySeed" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="2138340695" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.002485" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1073" name="DtIsCappedAt005" fullname="Waffle.Tests.RunSimulationTests.DtIsCappedAt005" methodname="DtIsCappedAt005" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1866680923" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000196" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1076" name="F4_DodgePressWhilePaused_DoesNotLeak_AndBufferCleared" fullname="Waffle.Tests.RunSimulationTests.F4_DodgePressWhilePaused_DoesNotLeak_AndBufferCleared" methodname="F4_DodgePressWhilePaused_DoesNotLeak_AndBufferCleared" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="429897541" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000443" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1081" name="F5_GiveXp_PanelsAndResult" fullname="Waffle.Tests.RunSimulationTests.F5_GiveXp_PanelsAndResult" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.014743" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1078" name="F5_GiveXp_PanelsAndResult(5,2,0,1)" fullname="Waffle.Tests.RunSimulationTests.F5_GiveXp_PanelsAndResult(5,2,0,1)" methodname="F5_GiveXp_PanelsAndResult" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1969637233" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000467" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1079" name="F5_GiveXp_PanelsAndResult(38,5,0,4)" fullname="Waffle.Tests.RunSimulationTests.F5_GiveXp_PanelsAndResult(38,5,0,4)" methodname="F5_GiveXp_PanelsAndResult" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1357175758" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000235" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1080" name="F5_GiveXp_PanelsAndResult(300,14,1,13)" fullname="Waffle.Tests.RunSimulationTests.F5_GiveXp_PanelsAndResult(300,14,1,13)" methodname="F5_GiveXp_PanelsAndResult" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1722909930" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000367" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1063" name="F7_SameTick_DeathAndTimeout_IsDefeat_WithSetHp0" fullname="Waffle.Tests.RunSimulationTests.F7_SameTick_DeathAndTimeout_IsDefeat_WithSetHp0" methodname="F7_SameTick_DeathAndTimeout_IsDefeat_WithSetHp0" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="852833948" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000323" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1091" name="Hurt_SetsHitIFrame_SecondHitBlockedWithin05s" fullname="Waffle.Tests.RunSimulationTests.Hurt_SetsHitIFrame_SecondHitBlockedWithin05s" methodname="Hurt_SetsHitIFrame_SecondHitBlockedWithin05s" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="395329759" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000280" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1090" name="MaxHpUpgrade_RaisesMaxAndHeals25" fullname="Waffle.Tests.RunSimulationTests.MaxHpUpgrade_RaisesMaxAndHeals25" methodname="MaxHpUpgrade_RaisesMaxAndHeals25" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="650341850" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000283" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1092" name="Move_DiagonalNotFaster_AndClampedToArena" fullname="Waffle.Tests.RunSimulationTests.Move_DiagonalNotFaster_AndClampedToArena" methodname="Move_DiagonalNotFaster_AndClampedToArena" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="1301824413" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000419" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1088" name="Restart_NewSimulationIsFresh_NoSharedStaticState" fullname="Waffle.Tests.RunSimulationTests.Restart_NewSimulationIsFresh_NoSharedStaticState" methodname="Restart_NewSimulationIsFresh_NoSharedStaticState" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="890419297" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001060" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1071" name="TransitionTable_MatchesSection86" fullname="Waffle.Tests.RunSimulationTests.TransitionTable_MatchesSection86" methodname="TransitionTable_MatchesSection86" classname="Waffle.Tests.RunSimulationTests" runstate="Runnable" seed="750334637" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000572" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1093" name="TerminalCommandTests" fullname="Waffle.Tests.TerminalCommandTests" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.004687" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1098" name="Defeat_StateChangingCommands_ReturnRejection" fullname="Waffle.Tests.TerminalCommandTests.Defeat_StateChangingCommands_ReturnRejection" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.002110" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1094" name="Defeat_StateChangingCommands_ReturnRejection(&quot;givexp 30&quot;)" fullname="Waffle.Tests.TerminalCommandTests.Defeat_StateChangingCommands_ReturnRejection(&quot;givexp 30&quot;)" methodname="Defeat_StateChangingCommands_ReturnRejection" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" seed="1819489474" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000737" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1095" name="Defeat_StateChangingCommands_ReturnRejection(&quot;hurt 10&quot;)" fullname="Waffle.Tests.TerminalCommandTests.Defeat_StateChangingCommands_ReturnRejection(&quot;hurt 10&quot;)" methodname="Defeat_StateChangingCommands_ReturnRejection" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" seed="1067209576" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000193" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1096" name="Defeat_StateChangingCommands_ReturnRejection(&quot;sethp 50&quot;)" fullname="Waffle.Tests.TerminalCommandTests.Defeat_StateChangingCommands_ReturnRejection(&quot;sethp 50&quot;)" methodname="Defeat_StateChangingCommands_ReturnRejection" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" seed="1842760404" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000148" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1097" name="Defeat_StateChangingCommands_ReturnRejection(&quot;settime 10&quot;)" fullname="Waffle.Tests.TerminalCommandTests.Defeat_StateChangingCommands_ReturnRejection(&quot;settime 10&quot;)" methodname="Defeat_StateChangingCommands_ReturnRejection" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" seed="1289679031" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000152" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1100" name="Playing_GiveXp_StillQueues" fullname="Waffle.Tests.TerminalCommandTests.Playing_GiveXp_StillQueues" methodname="Playing_GiveXp_StillQueues" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" seed="453335376" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000183" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1101" name="QueuedXpAndDamage_ClearedWhenRunEnds" fullname="Waffle.Tests.TerminalCommandTests.QueuedXpAndDamage_ClearedWhenRunEnds" methodname="QueuedXpAndDamage_ClearedWhenRunEnds" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" seed="1714456057" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000288" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1102" name="RestartFromLevelUp_NewRunHasNoPanelOrQueue" fullname="Waffle.Tests.TerminalCommandTests.RestartFromLevelUp_NewRunHasNoPanelOrQueue" methodname="RestartFromLevelUp_NewRunHasNoPanelOrQueue" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" seed="1039694429" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000314" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1099" name="Victory_GiveXp_ReturnsRejection_AndNothingQueued" fullname="Waffle.Tests.TerminalCommandTests.Victory_GiveXp_ReturnsRejection_AndNothingQueued" methodname="Victory_GiveXp_ReturnsRejection_AndNothingQueued" classname="Waffle.Tests.TerminalCommandTests" runstate="Runnable" seed="1582184672" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000264" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1103" name="UpgradeConfigTests" fullname="Waffle.Tests.UpgradeConfigTests" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.014122" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1104" name="BugA_BaseMoveSpeed7_Is7AtLv0_And7Point4AfterOneUpgrade" fullname="Waffle.Tests.UpgradeConfigTests.BugA_BaseMoveSpeed7_Is7AtLv0_And7Point4AfterOneUpgrade" methodname="BugA_BaseMoveSpeed7_Is7AtLv0_And7Point4AfterOneUpgrade" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="349699021" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000470" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1105" name="BugB_BaseHp200_FirstUpgradeGives225_AndHeals25" fullname="Waffle.Tests.UpgradeConfigTests.BugB_BaseHp200_FirstUpgradeGives225_AndHeals25" methodname="BugB_BaseHp200_FirstUpgradeGives225_AndHeals25" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="791431942" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000751" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1114" name="ConfigSteps_EditableAndMaxLevelFollowsArrayLength" fullname="Waffle.Tests.UpgradeConfigTests.ConfigSteps_EditableAndMaxLevelFollowsArrayLength" methodname="ConfigSteps_EditableAndMaxLevelFollowsArrayLength" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="1756602020" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000483" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1107" name="DefaultConfig_MatchesV021TableU1" fullname="Waffle.Tests.UpgradeConfigTests.DefaultConfig_MatchesV021TableU1" methodname="DefaultConfig_MatchesV021TableU1" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="1624534354" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.001239" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1106" name="Heal_UsesConfigMaxHpAndFraction" fullname="Waffle.Tests.UpgradeConfigTests.Heal_UsesConfigMaxHpAndFraction" methodname="Heal_UsesConfigMaxHpAndFraction" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="1754225087" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000439" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1113" name="OtherKinds_UseConfigBase" fullname="Waffle.Tests.UpgradeConfigTests.OtherKinds_UseConfigBase" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.005166" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1108" name="OtherKinds_UseConfigBase(Damage,12.0f,17.0f)" fullname="Waffle.Tests.UpgradeConfigTests.OtherKinds_UseConfigBase(Damage,12.0f,17.0f)" methodname="OtherKinds_UseConfigBase" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="939253181" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000703" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1109" name="OtherKinds_UseConfigBase(FireRate,0.8f,0.68f)" fullname="Waffle.Tests.UpgradeConfigTests.OtherKinds_UseConfigBase(FireRate,0.8f,0.68f)" methodname="OtherKinds_UseConfigBase" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="1045142849" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000390" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1110" name="OtherKinds_UseConfigBase(Pierce,2.0f,3.0f)" fullname="Waffle.Tests.UpgradeConfigTests.OtherKinds_UseConfigBase(Pierce,2.0f,3.0f)" methodname="OtherKinds_UseConfigBase" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="413131292" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000343" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1111" name="OtherKinds_UseConfigBase(PickupRange,4.0f,5.5f)" fullname="Waffle.Tests.UpgradeConfigTests.OtherKinds_UseConfigBase(PickupRange,4.0f,5.5f)" methodname="OtherKinds_UseConfigBase" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="673181390" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000375" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1112" name="OtherKinds_UseConfigBase(DodgeCooldown,2.0f,1.75f)" fullname="Waffle.Tests.UpgradeConfigTests.OtherKinds_UseConfigBase(DodgeCooldown,2.0f,1.75f)" methodname="OtherKinds_UseConfigBase" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="338042032" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000529" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1115" name="Simulation_UsesTheSameConfigInstance" fullname="Waffle.Tests.UpgradeConfigTests.Simulation_UsesTheSameConfigInstance" methodname="Simulation_UsesTheSameConfigInstance" classname="Waffle.Tests.UpgradeConfigTests" runstate="Runnable" seed="240469248" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000294" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1116" name="XpRulesTests" fullname="Waffle.Tests.XpRulesTests" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.016140" total="21" passed="21" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1139" name="AddXp_TableX2" fullname="Waffle.Tests.XpRulesTests.AddXp_TableX2" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.004685" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1132" name="A-60 1级0XP+5 → 2级 0/8" fullname="Waffle.Tests.XpRulesTests.A-60 1级0XP+5 → 2级 0/8" methodname="AddXp_TableX2" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="1242390998" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000423" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1133" name="边界 1级0XP+4 → 1级 4/5" fullname="Waffle.Tests.XpRulesTests.边界 1级0XP+4 → 1级 4/5" methodname="AddXp_TableX2" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="2019274135" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000230" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1134" name="A-61 1级0XP+30 → 4级 6/14" fullname="Waffle.Tests.XpRulesTests.A-61 1级0XP+30 → 4级 6/14" methodname="AddXp_TableX2" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="195629815" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000188" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1135" name="A-61b 1级0XP+38 → 5级 0/17" fullname="Waffle.Tests.XpRulesTests.A-61b 1级0XP+38 → 5级 0/17" methodname="AddXp_TableX2" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="1159626407" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000212" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1136" name="A-61c 2级3XP+13 → 3级 8/11" fullname="Waffle.Tests.XpRulesTests.A-61c 2级3XP+13 → 3级 8/11" methodname="AddXp_TableX2" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="151536060" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000194" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1137" name="精英 5级10XP+10 → 6级 3/20" fullname="Waffle.Tests.XpRulesTests.精英 5级10XP+10 → 6级 3/20" methodname="AddXp_TableX2" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="323918186" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000187" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1138" name="调试 1级0XP+300 → 14级 1/44" fullname="Waffle.Tests.XpRulesTests.调试 1级0XP+300 → 14级 1/44" methodname="AddXp_TableX2" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="1554147126" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000273" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1140" name="AddXp_ZeroOrNegative_DoesNothing" fullname="Waffle.Tests.XpRulesTests.AddXp_ZeroOrNegative_DoesNothing" methodname="AddXp_ZeroOrNegative_DoesNothing" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="748734323" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000212" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1131" name="Cumulative_MatchesTableX1" fullname="Waffle.Tests.XpRulesTests.Cumulative_MatchesTableX1" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.004472" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1124" name="Cumulative_MatchesTableX1(2,5)" fullname="Waffle.Tests.XpRulesTests.Cumulative_MatchesTableX1(2,5)" methodname="Cumulative_MatchesTableX1" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="1325268269" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000323" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1125" name="Cumulative_MatchesTableX1(5,38)" fullname="Waffle.Tests.XpRulesTests.Cumulative_MatchesTableX1(5,38)" methodname="Cumulative_MatchesTableX1" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="112692880" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000175" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1126" name="Cumulative_MatchesTableX1(12,220)" fullname="Waffle.Tests.XpRulesTests.Cumulative_MatchesTableX1(12,220)" methodname="Cumulative_MatchesTableX1" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="917217310" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000149" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1127" name="Cumulative_MatchesTableX1(13,258)" fullname="Waffle.Tests.XpRulesTests.Cumulative_MatchesTableX1(13,258)" methodname="Cumulative_MatchesTableX1" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="636165450" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000195" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1128" name="Cumulative_MatchesTableX1(14,299)" fullname="Waffle.Tests.XpRulesTests.Cumulative_MatchesTableX1(14,299)" methodname="Cumulative_MatchesTableX1" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="1417114650" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000175" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1129" name="Cumulative_MatchesTableX1(15,343)" fullname="Waffle.Tests.XpRulesTests.Cumulative_MatchesTableX1(15,343)" methodname="Cumulative_MatchesTableX1" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="360463615" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000185" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1130" name="Cumulative_MatchesTableX1(16,390)" fullname="Waffle.Tests.XpRulesTests.Cumulative_MatchesTableX1(16,390)" methodname="Cumulative_MatchesTableX1" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="1073473336" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000150" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1123" name="XpToNext_FollowsFormula" fullname="Waffle.Tests.XpRulesTests.XpToNext_FollowsFormula" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.003802" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1117" name="XpToNext_FollowsFormula(1,5)" fullname="Waffle.Tests.XpRulesTests.XpToNext_FollowsFormula(1,5)" methodname="XpToNext_FollowsFormula" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="1821725530" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000279" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1118" name="XpToNext_FollowsFormula(2,8)" fullname="Waffle.Tests.XpRulesTests.XpToNext_FollowsFormula(2,8)" methodname="XpToNext_FollowsFormula" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="909691935" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000228" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1119" name="XpToNext_FollowsFormula(4,14)" fullname="Waffle.Tests.XpRulesTests.XpToNext_FollowsFormula(4,14)" methodname="XpToNext_FollowsFormula" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="1786952272" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000207" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1120" name="XpToNext_FollowsFormula(13,41)" fullname="Waffle.Tests.XpRulesTests.XpToNext_FollowsFormula(13,41)" methodname="XpToNext_FollowsFormula" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="949093354" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000172" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1121" name="XpToNext_FollowsFormula(14,44)" fullname="Waffle.Tests.XpRulesTests.XpToNext_FollowsFormula(14,44)" methodname="XpToNext_FollowsFormula" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="881902352" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000154" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1122" name="XpToNext_FollowsFormula(15,47)" fullname="Waffle.Tests.XpRulesTests.XpToNext_FollowsFormula(15,47)" methodname="XpToNext_FollowsFormula" classname="Waffle.Tests.XpRulesTests" runstate="Runnable" seed="885516225" result="Passed" start-time="2026-10-11 22:52:29Z" end-time="2026-10-11 22:52:29Z" duration="0.000242" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/50665/AppData/LocalLow/DefaultCompany/My project\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
