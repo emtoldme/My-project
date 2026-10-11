@@ -37,7 +37,8 @@ namespace Waffle
             RunState st = sim.State;
             RunHud hud = GetComponent<RunHud>();
 
-            GUILayout.BeginArea(new Rect(Screen.width - 430, 10, 420, 330), GUI.skin.box);
+            ImguiScale.Apply();
+            GUILayout.BeginArea(ImguiScale.Fit(new Rect(ImguiScale.Width - 470, 10, 460, 360)), GUI.skin.box);
             GUILayout.Label(string.Format("状态 {0}（暂停前 {1}）  now {2:F3}  dt {3:F4}", st.Phase, st.PhaseBeforePause, st.Now, sim.LastDt));
             GUILayout.Label(string.Format("FPS {0:F0}  timeScale {1}  frame {2}", fpsSmoothed, Time.timeScale, st.Frame));
             GUILayout.Label(string.Format("Map: Gameplay={0}  UI={1}", loop.Controls.GameplayMapEnabled, loop.Controls.UiMapEnabled));
