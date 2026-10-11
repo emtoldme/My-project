@@ -53,18 +53,19 @@ namespace Waffle
                 big = new GUIStyle(GUI.skin.label) { fontSize = 22, fontStyle = FontStyle.Bold };
             }
 
+            ImguiScale.Apply();
             RunSimulation sim = loop.Sim;
             RunState st = sim.State;
 
             // ---- HUD ----
-            GUILayout.BeginArea(new Rect(10, 10, 320, 140), GUI.skin.box);
+            GUILayout.BeginArea(ImguiScale.Fit(new Rect(10, 10, 360, 150)), GUI.skin.box);
             GUILayout.Label(FormatClock(st.Now) + "   " + st.Phase, big);
             GUILayout.Label(string.Format("HP {0}/{1}   Lv{2}   XP {3}/{4}", st.Hp, st.MaxHp, st.Level, st.Xp, st.XpToNext));
             GUILayout.Label(string.Format("待升级 {0}   击杀 {1}", st.PendingLevelUps, st.Kills));
             GUILayout.EndArea();
 
-            float w = 420f, h = 260f;
-            Rect center = new Rect((Screen.width - w) / 2f, (Screen.height - h) / 2f, w, h);
+            float w = 460f, h = 320f;
+            Rect center = ImguiScale.Fit(new Rect((ImguiScale.Width - w) / 2f, (ImguiScale.Height - h) / 2f, w, h));
 
             switch (st.Phase)
             {
