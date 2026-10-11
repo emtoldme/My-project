@@ -51,6 +51,10 @@ namespace Waffle
         /// <summary>已排队、等待 T8 结算的调试伤害（只读）。</summary>
         public int QueuedDamage { get { return queuedDamage; } }
 
+        /// <summary>本帧的表现事件（只读给音效/特效；T0 清空，GameLoop 分发后也清空）。</summary>
+        public readonly PresentationEventBuffer Presentation = new PresentationEventBuffer();
+        private bool restartEmitted;
+
         /// <summary>最近一次 tick 实际用的 dt（调试 Overlay 显示）。</summary>
         public float LastDt;
 
@@ -99,6 +103,7 @@ namespace Waffle
         public void Tick(float frameDt, InputSnapshot input, long frame, double realTimeNow)
         {
             BeginFrame(frame, realTimeNow);
+            Presentation.Clear(); // T0：上一帧没分发的事件不再保留
             bool trace = TraceTicks != 0;
 
             // ---- T0 输入快照与暂停 ----
@@ -125,6 +130,7 @@ namespace Waffle
             {
                 DodgeRequests++;
                 DodgeBufferUntil = now + Config.dodgeBuffer;
+                Emit(PresentationEventType.Dodge, PlayerX, PlayerZ, 0f, 0);
             }
             if (DodgeBufferUntil >= 0f && now >= DodgeBufferUntil) DodgeBufferUntil = -1f;
 
@@ -236,6 +242,7 @@ namespace Waffle
             }
             State.Hp = Math.Max(0, State.Hp - amount);
             InvulnerableUntil = Math.Max(InvulnerableUntil, now + Config.hitIFrame);
+            Emit(PresentationEventType.PlayerHurt, PlayerX, PlayerZ, amount, State.Hp);
             log.Info(string.Format("[Waffle] 受击 now={0:F3} 来源=debug 伤害={1} 剩余HP={2}", now, amount, State.Hp));
         }
 
@@ -266,6 +273,52 @@ namespace Waffle
         }
 
         // =====================================================================
+        // 表现事件（只写入 Presentation，不改玩法状态）
+        // =====================================================================
+
+        internal void Emit(PresentationEventType type, float x, float z, float value, int data)
+        {
+            Presentation.Add(new PresentationEvent
+            {
+                Type = type, Frame = State.Frame, Now = State.Now, X = x, Z = z, Value = value, Data = data
+            });
+        }
+
+        private void EmitPhaseEvent(RunPhase from, RunPhase to)
+        {
+            switch (to)
+            {
+                case RunPhase.Paused:
+                    Emit(PresentationEventType.Paused, PlayerX, PlayerZ, 0f, (int)from);
+                    break;
+                case RunPhase.Victory:
+                    Emit(PresentationEventType.Victory, PlayerX, PlayerZ, 0f, 0);
+                    break;
+                case RunPhase.Defeat:
+                    Emit(PresentationEventType.Defeat, PlayerX, PlayerZ, 0f, 0);
+                    break;
+                case RunPhase.LevelUp:
+                    if (from == RunPhase.Paused) Emit(PresentationEventType.Resumed, PlayerX, PlayerZ, 0f, (int)to);
+                    else Emit(PresentationEventType.LevelUpShown, PlayerX, PlayerZ, 0f, State.PendingLevelUps);
+                    break;
+                case RunPhase.Playing:
+                    if (from == RunPhase.Paused) Emit(PresentationEventType.Resumed, PlayerX, PlayerZ, 0f, (int)to);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 重开前由 GameLoop 调用：发出一次 Restart 事件（同一局重复调用只发一次），让音效/特效清场。
+        /// 不改玩法状态；真正的重开是重新加载场景。
+        /// </summary>
+        public void NotifyRestart()
+        {
+            if (restartEmitted) return;
+            restartEmitted = true;
+            Emit(PresentationEventType.Restart, PlayerX, PlayerZ, 0f, (int)State.Phase);
+        }
+
+        // =====================================================================
         // 暂停
         // =====================================================================
 
@@ -287,6 +340,7 @@ namespace Waffle
 
         private void OnPhaseChanged(RunPhase from, RunPhase to)
         {
+            EmitPhaseEvent(from, to);
             if (from == RunPhase.Playing && to != RunPhase.Playing)
                 DodgeBufferUntil = -1f; // 离开 Playing 清空闪避缓冲
             if (from == RunPhase.Paused && to == RunPhase.LevelUp)
@@ -327,6 +381,7 @@ namespace Waffle
             chooseLocked = true;
             lastChooseFrame = State.Frame;
             ApplyUpgrade(kind);
+            Emit(PresentationEventType.LevelUpChosen, PlayerX, PlayerZ, 0f, (int)kind);
             State.PendingLevelUps--;
             log.Info(string.Format("[Waffle] 选择升级 {0}（第 {1} 次），剩余待升级 {2}",
                 kind, State.ChosenUpgrades.Count, State.PendingLevelUps));
