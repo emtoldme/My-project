@@ -34,22 +34,22 @@ namespace Waffle
                     if (TryInt(arg, out n) && n > 0) { sim.TraceTicks = n; return "追踪下 " + n + " 个 tick"; }
                     break;
                 case "settime":
-                    if (TryFloat(arg, out f)) { sim.DebugSetTime(f); return "now = " + sim.State.Now.ToString("F3", CultureInfo.InvariantCulture); }
+                    if (TryFloat(arg, out f)) { if (!sim.DebugSetTime(f)) return Rejected(sim, line); return "now = " + sim.State.Now.ToString("F3", CultureInfo.InvariantCulture); }
                     break;
                 case "setdt":
                     if (TryFloat(arg, out f) && f >= 0f) { sim.FixedDt = f; return f > 0f ? "固定 dt = " + arg : "固定 dt：关"; }
                     break;
                 case "sethp":
-                    if (TryInt(arg, out n)) { sim.DebugSetHp(n); return "HP = " + sim.State.Hp; }
+                    if (TryInt(arg, out n)) { if (!sim.DebugSetHp(n)) return Rejected(sim, line); return "HP = " + sim.State.Hp; }
                     break;
                 case "givexp":
-                    if (TryInt(arg, out n) && n > 0) { sim.DebugGiveXp(n); return "排队 +" + n + " XP（下一个 Playing tick 的 T10 结算）"; }
+                    if (TryInt(arg, out n) && n > 0) { if (!sim.DebugGiveXp(n)) return Rejected(sim, line); return "排队 +" + n + " XP（下一个 Playing tick 的 T10 结算）"; }
                     break;
                 case "god":
                     sim.God = arg == "" ? !sim.God : arg == "on";
                     return "god = " + sim.God;
                 case "hurt":
-                    if (TryInt(arg, out n) && n > 0) { sim.DebugHurt(n); return "排队伤害 " + n + "（下一个 Playing tick 的 T8 结算）"; }
+                    if (TryInt(arg, out n) && n > 0) { if (!sim.DebugHurt(n)) return Rejected(sim, line); return "排队伤害 " + n + "（下一个 Playing tick 的 T8 结算）"; }
                     break;
                 case "slowmo":
                     if (TryFloat(arg, out f) && f > 0f) { sim.Slowmo = f; return "slowmo = " + arg; }
@@ -58,6 +58,14 @@ namespace Waffle
                     return "未知命令：" + cmd + "。" + Help;
             }
             return "参数错误：" + line + "。" + Help;
+        }
+
+        /// <summary>终局后改玩法数据的命令一律不执行（A-79b），并明确告诉调用者。</summary>
+        public static string Rejected(RunSimulation sim, string line)
+        {
+            if (sim.State.Phase.IsTerminal())
+                return "已终局（" + sim.State.Phase + "），命令未执行：" + line.Trim();
+            return "命令未执行：" + line.Trim();
         }
 
         private static bool TryFloat(string s, out float value)
