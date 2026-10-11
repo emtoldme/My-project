@@ -94,6 +94,7 @@ namespace Waffle
         private bool combatHeld;
         private bool started;
         private bool accepting = true;
+        private bool terminalBedStopped;
         private float pauseStarted;
         private float pausedSeconds;
         private MusicMode musicMode = MusicMode.Combat;
@@ -160,6 +161,7 @@ namespace Waffle
             combatHeld = false;
             pauseStarted = 0f;
             pausedSeconds = 0f;
+            terminalBedStopped = false;
             musicMode = MusicMode.Combat;
             duckAmount = 0f;
             ducking = false;
@@ -176,25 +178,9 @@ namespace Waffle
             lowpassRate = 0f;
             if (combatLowpass != null) combatLowpass.cutoffFrequency = 22000f;
 
-            if (combatSource != null)
-            {
-                combatSource.clip = combatLoop;
-                if (combatLoop != null)
-                {
-                    combatSource.time = 0f;
-                    combatSource.Play();
-                }
-            }
-            if (levelUpSource != null)
-            {
-                levelUpSource.clip = levelUpLoop;
-                if (levelUpLoop != null)
-                {
-                    // 从头播放但音量为 0，升级时只做交叉淡化，不重新起播造成接缝。
-                    levelUpSource.time = 0f;
-                    levelUpSource.Play();
-                }
-            }
+            // Stop 之后再 UnPause：有的 Unity 版本里 Pause 标记在 Stop 之后还留着，Play 不会出声。
+            RestartLoop(combatSource, combatLoop);
+            RestartLoop(levelUpSource, levelUpLoop);
             ApplyMusicVolumes();
         }
 
@@ -246,7 +232,8 @@ namespace Waffle
                     Silence();
                     return;
                 case PresentationEventType.LevelUpShown:
-                    // 连续升级的后续面板只播提示音，不把已经淡完的交叉淡化再拉一遍。
+                    // 终局之后不再把音乐拉回升级。连续升级的后续面板只播提示音。
+                    if (musicMode == MusicMode.Terminal) break;
                     if (musicMode != MusicMode.LevelUp) EnterLevelUp();
                     break;
                 case PresentationEventType.LevelUpChosen:
@@ -335,11 +322,22 @@ namespace Waffle
 
             pausedSeconds += Time.unscaledTime - pauseStarted;
 
-            for (int i = 0; i < allSfx.Count; i++) allSfx[i].UnPause();
-            if (levelUpSource != null && (levelUpGain > 0.001f || levelUpTarget > 0.001f))
-                levelUpSource.UnPause();
-            // 升级淡出完成后战斗循环被故意停住，恢复游戏暂停时不要把它提前解开。
-            if (!combatHeld && musicMode != MusicMode.Terminal) UnPauseIfExists(combatSource);
+            for (int i = 0; i < allSfx.Count; i++)
+            {
+                if (allSfx[i] != null) allSfx[i].UnPause();
+            }
+            // 升级循环在战斗中音量是 0，但仍要保持播放，交叉淡化才听得见。
+            // 只在音量大于 0 时解开的话，战斗中暂停一次之后，下次升级没有悬浮层。
+            if (musicMode != MusicMode.Terminal)
+            {
+                if (!combatHeld) UnPauseIfExists(combatSource);
+                UnPauseIfExists(levelUpSource);
+            }
+            else
+            {
+                if (combatGain > 0.001f || combatTarget > 0.001f) UnPauseIfExists(combatSource);
+                if (levelUpGain > 0.001f || levelUpTarget > 0.001f) UnPauseIfExists(levelUpSource);
+            }
         }
 
         private static void PauseIfPlaying(List<AudioSource> sources)
@@ -361,6 +359,13 @@ namespace Waffle
         {
             musicMode = MusicMode.LevelUp;
             combatHeld = false;
+            // 暂停过的升级层只 UnPause，不从 0 重播，避免接缝。
+            UnPauseIfExists(levelUpSource);
+            if (levelUpSource != null && !levelUpSource.isPlaying && levelUpLoop != null)
+            {
+                levelUpSource.clip = levelUpLoop;
+                levelUpSource.Play();
+            }
             FadeCombat(0f, levelUpCrossfade);
             FadeLevelUp(DbToLinear(levelUpLoopDb), levelUpCrossfade);
         }
@@ -383,6 +388,7 @@ namespace Waffle
         {
             musicMode = MusicMode.Terminal;
             combatHeld = false;
+            terminalBedStopped = false;
             FadeCombat(0f, seconds);
             FadeLevelUp(0f, seconds);
             if (!lowpass || combatLowpass == null) return;
@@ -399,6 +405,7 @@ namespace Waffle
             combatHeld = false;
             pauseStarted = 0f;
             pausedSeconds = 0f;
+            terminalBedStopped = true;
             musicMode = MusicMode.Terminal;
             duckAmount = 0f;
             ducking = false;
@@ -430,6 +437,17 @@ namespace Waffle
             }
             if (combatSource != null) combatSource.Stop();
             if (levelUpSource != null) levelUpSource.Stop();
+        }
+
+        private static void RestartLoop(AudioSource source, AudioClip clip)
+        {
+            if (source == null) return;
+            source.Stop();
+            source.UnPause();
+            if (clip == null) return;
+            source.clip = clip;
+            source.time = 0f;
+            source.Play();
         }
 
         private void FadeCombat(float target, float seconds)
@@ -475,10 +493,13 @@ namespace Waffle
                 combatSource.Pause();
                 combatHeld = true;
             }
-            if (musicMode == MusicMode.Terminal && combatGain <= 0.001f && levelUpGain <= 0.001f)
+            if (musicMode == MusicMode.Terminal && !terminalBedStopped
+                && combatGain <= 0.001f && levelUpGain <= 0.001f)
             {
-                if (combatSource != null && combatSource.isPlaying) combatSource.Stop();
-                if (levelUpSource != null && levelUpSource.isPlaying) levelUpSource.Stop();
+                // 已经 Pause 的声源 isPlaying 为 false，也要 Stop 一次，清掉暂停标记。
+                if (combatSource != null) combatSource.Stop();
+                if (levelUpSource != null) levelUpSource.Stop();
+                terminalBedStopped = true;
             }
 
             if (ducking)
