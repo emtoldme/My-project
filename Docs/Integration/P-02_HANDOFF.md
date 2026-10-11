@@ -1,7 +1,7 @@
 # P-02 交接：音频生命周期
 
 基线：`origin/main` `b6df1fda73c6b0cf5d1e25227c2114a87dba0564`（Merge PR #8）。
-分支：`feature/p02-presentation-polish`。只改 `Assets/Waffle/Scripts/Views/Audio/AudioDirector.cs` 和本文件。
+分支：`feature/p02-presentation-polish`。只改 `Assets/Waffle/Scripts/Views/Audio/AudioDirector.cs`、本文件和 `Docs/Integration/P-02_REPLY.md`（给 Codex 的回复纪要）。
 没有改场景、Editor 生成器、VfxDirector、GameLoop、Rules、音效总监的规格或主美资源。
 
 本环境没有 Unity Editor / Unity 编译器，没有编译，没有 Play Mode，没有试听。下面“已改代码”不是“游戏内试听通过”，也不是“编译通过”。GitHub 上的 wav 显示为约 130 字节，是 Git LFS 指针；这里没有拉取音频本体。
