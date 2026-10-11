@@ -46,6 +46,10 @@ namespace Waffle
         public int TraceTicks;
         private int queuedXp;
         private int queuedDamage;
+        /// <summary>已排队、等待 T10 结算的调试 XP（只读，测试与 Overlay 用）。</summary>
+        public int QueuedXp { get { return queuedXp; } }
+        /// <summary>已排队、等待 T8 结算的调试伤害（只读）。</summary>
+        public int QueuedDamage { get { return queuedDamage; } }
 
         /// <summary>最近一次 tick 实际用的 dt（调试 Overlay 显示）。</summary>
         public float LastDt;
@@ -370,31 +374,35 @@ namespace Waffle
         }
 
         /// <summary>givexp n：排队，在下一个 Playing tick 的 T10 走正常加 XP 流程。</summary>
-        public void DebugGiveXp(int amount)
+        public bool DebugGiveXp(int amount)
         {
-            if (RejectIfTerminal("givexp " + amount) || amount <= 0) return;
+            if (RejectIfTerminal("givexp " + amount) || amount <= 0) return false;
             queuedXp += amount;
+            return true;
         }
 
         /// <summary>sethp n：立即设置当前 HP（0..MaxHp）；在下一个 tick 的 T9 判定。</summary>
-        public void DebugSetHp(int hp)
+        public bool DebugSetHp(int hp)
         {
-            if (RejectIfTerminal("sethp " + hp)) return;
+            if (RejectIfTerminal("sethp " + hp)) return false;
             State.Hp = Math.Max(0, Math.Min(State.MaxHp, hp));
+            return true;
         }
 
         /// <summary>settime s：立即设置游戏时钟（0..时长）。</summary>
-        public void DebugSetTime(float seconds)
+        public bool DebugSetTime(float seconds)
         {
-            if (RejectIfTerminal("settime " + seconds)) return;
+            if (RejectIfTerminal("settime " + seconds)) return false;
             State.Now = Math.Max(0f, Math.Min(Config.runDuration, seconds));
+            return true;
         }
 
         /// <summary>hurt n：在下一个 tick 的 T8 结算一次伤害（代替敌人接触；尊重 god 和无敌）。</summary>
-        public void DebugHurt(int amount)
+        public bool DebugHurt(int amount)
         {
-            if (RejectIfTerminal("hurt " + amount) || amount <= 0) return;
+            if (RejectIfTerminal("hurt " + amount) || amount <= 0) return false;
             queuedDamage = Math.Max(queuedDamage, amount); // 同 tick 不叠加，取最大（C-3）
+            return true;
         }
     }
 }

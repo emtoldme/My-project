@@ -22,6 +22,10 @@
 
 调试命令（在右上角输入框输入后回车）：`tracetick [on|off|n]`、`settime s`、`setdt s`（0 = 关）、`sethp n`、`givexp n`、`god [on|off]`、`hurt n`（下一个 tick 的 T8 结算一次伤害，代替敌人接触）、`slowmo x`、`help`。
 
+终局（Victory/Defeat）后，`givexp`、`hurt`、`sethp`、`settime` 不执行、不排队，控制台返回“已终局（Defeat），命令未执行：…”。`setdt`、`god`、`slowmo`、`tracetick` 只改调试设置，终局后仍可用。
+
+重开：五种状态都能从界面重开。Playing 和 LevelUp 用左上角 HUD 里的小“重开”按钮；Paused、Victory、Defeat 用中间面板的“重开”按钮。没有新增重开快捷键（未改输入资源）。重开 = 重新加载场景，新局的升级面板、待升级数和排队 XP 都是初始值。
+
 ## 结构
 
 ```
