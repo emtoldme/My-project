@@ -1,0 +1,11 @@
+{
+    "name": "Waffle.Tests.Combat",
+    "rootNamespace": "Waffle.Tests.Combat",
+    "references": ["Waffle.Rules", "UnityEngine.TestRunner", "UnityEditor.TestRunner"],
+    "includePlatforms": ["Editor"],
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "noEngineReferences": false
+}

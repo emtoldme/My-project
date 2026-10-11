@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="../../Assets/Waffle/Scripts/Rules/**/*.cs" Link="Rules/%(RecursiveDir)%(Filename).cs" />
     <Compile Include="../../Assets/Waffle/Tests/EditMode/*.cs" Link="Tests/%(Filename).cs" />
+    <Compile Include="../../Assets/Waffle/Tests/Combat/*.cs" Link="CombatTests/%(Filename).cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />

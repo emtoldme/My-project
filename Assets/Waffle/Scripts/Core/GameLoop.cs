@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using Waffle.Combat;
 
 namespace Waffle
 {
@@ -16,6 +17,7 @@ namespace Waffle
     {
         [Tooltip("一局的参数（设计初值）")]
         public RunConfig config = new RunConfig();
+        public CombatConfig combatConfig = new CombatConfig();
 
         [Tooltip("Assets/InputSystem_Actions.inputactions；为空时使用项目级 Actions")]
         public InputActionAsset actions;
@@ -41,7 +43,7 @@ namespace Waffle
         private void Awake()
         {
             Time.timeScale = 1f;
-            Sim = new RunSimulation(config, new UnityRunLog());
+            Sim = new RunSimulation(config, new UnityRunLog(), combatConfig ?? new CombatConfig());
 
             InputActionAsset asset = actions != null ? actions : InputSystem.actions;
             Controls = new GameInput(asset);
@@ -65,13 +67,34 @@ namespace Waffle
             if (restarting) return;
             RunPhase phase = Sim.State.Phase;
             InputSnapshot snapshot = Controls.Read(phase);
+            Sim.ViewRadius = CalculateViewRadius();
             // 用 unscaled 帧时间：逻辑是否推进只看 GameLoop 的门控，不依赖 timeScale（§0.1 规则 4）
             Sim.Tick(Time.unscaledDeltaTime, snapshot, Time.frameCount, Time.unscaledTimeAsDouble);
             SyncAfterStateChange();
-            DispatchPresentation();
-
             if (playerView != null)
                 playerView.position = new Vector3(Sim.PlayerX, playerView.position.y, Sim.PlayerZ);
+            var views = GetComponent<CombatViews>();
+            if (views != null) views.Sync();
+            DispatchPresentation();
+        }
+
+        /// <summary>实际视锥四角与地面交点到玩家的最大XZ距离，包括宽高比。</summary>
+        public float CalculateViewRadius()
+        {
+            Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
+            if (cam == null) return 14f;
+            var plane = new Plane(Vector3.up, Vector3.zero);
+            Vector3 center = playerView != null ? playerView.position : Vector3.zero;
+            center.y = 0f;
+            float radius = 0f;
+            for (int i = 0; i < 4; i++)
+            {
+                Ray ray = cam.ViewportPointToRay(new Vector3(i % 2, i / 2, 0f));
+                float distance;
+                if (!plane.Raycast(ray, out distance)) return 14f;
+                radius = Mathf.Max(radius, Vector3.Distance(center, ray.GetPoint(distance)));
+            }
+            return Mathf.Max(1f, radius);
         }
 
         /// <summary>把本帧表现事件交给订阅者，然后清空。</summary>

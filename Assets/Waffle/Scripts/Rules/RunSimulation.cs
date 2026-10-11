@@ -1,11 +1,12 @@
 using System;
+using Waffle.Combat;
 
 namespace Waffle
 {
     /// <summary>
     /// 一局的逻辑核心：按 §0.3 的固定顺序 T0→T13 推进一个 tick。
     /// 纯 C#，不依赖 UnityEngine：GameLoop 每帧调用一次 <see cref="Tick"/>，测试里也可以直接调用。
-    /// 本阶段（最小框架）没有敌人、武器、宝石，对应步骤只打出"未实现"标记。
+    /// 战斗模块只返回结果；此处统一决定伤害、经验、升级与终局优先级。
     /// </summary>
     public class RunSimulation
     {
@@ -13,15 +14,21 @@ namespace Waffle
         public readonly RunState State;
         private readonly IRunLog log;
         private readonly Random random;
+        public CombatModule Combat { get; private set; }
+        public float ViewRadius = 14f;
+        public float DodgeReadyAt { get; private set; }
+        private float dodgeLeft, dodgeX, dodgeZ;
+        private float facingX, facingZ = 1f;
+        public bool IsDodging { get { return dodgeLeft > 0f; } }
 
-        // ---- 玩家（最小实现：位置、无敌截止、闪避缓冲占位） ----
+        // ---- 玩家：位置、统一无敌截止、闪避状态 ----
         public float PlayerX;
         public float PlayerZ;
         /// <summary>唯一的无敌截止时刻（§1.8 C-1），判定 now &lt; InvulnerableUntil。</summary>
         public float InvulnerableUntil;
         /// <summary>闪避缓冲截止时刻；&lt; 0 表示没有缓冲。离开 Playing 时清空（§1.1）。</summary>
         public float DodgeBufferUntil = -1f;
-        /// <summary>T1 收到的闪避请求次数（闪避还没实现，用来检查 F-4 的"本帧按下"有没有泄漏）。</summary>
+        /// <summary>T1收到的闪避请求次数，区别于实际发动次数。</summary>
         public int DodgeRequests;
 
         // 相机相对的移动基向量（XZ 平面），由 GameLoop 开局时根据相机算一次（§8.2）。
@@ -58,7 +65,7 @@ namespace Waffle
         /// <summary>最近一次 tick 实际用的 dt（调试 Overlay 显示）。</summary>
         public float LastDt;
 
-        public RunSimulation(RunConfig config, IRunLog log)
+        public RunSimulation(RunConfig config, IRunLog log, CombatConfig combatConfig = null)
         {
             Config = config ?? new RunConfig();
             if (Config.upgrades == null) Config.upgrades = new UpgradeConfig();
@@ -66,12 +73,22 @@ namespace Waffle
             State = new RunState(Config.maxHp, this.log);
             random = new Random(Config.seed);
             State.PhaseChanged += OnPhaseChanged;
+            // Rules-only callers may omit combat; the real GameLoop always supplies it.
+            if (combatConfig != null)
+            {
+                combatConfig.runDuration = Config.runDuration;
+                combatConfig.arenaHalfSize = Config.arenaHalfExtent + combatConfig.playerRadius;
+                combatConfig.spawnLegalHalf = Math.Max(0f, combatConfig.arenaHalfSize - 1f);
+                combatConfig.gemLifetime = Config.gemLifetime;
+                Combat = new CombatModule(combatConfig, Config.seed);
+            }
         }
 
         /// <summary>设置相机相对移动方向（已投影到 XZ 并归一化）。</summary>
         public void SetMoveBasis(float rx, float rz, float fx, float fz)
         {
             rightX = rx; rightZ = rz; forwardX = fx; forwardZ = fz;
+            facingX = fx; facingZ = fz;
         }
 
         /// <summary>
@@ -124,33 +141,51 @@ namespace Waffle
             LastDt = dt;
             float now = State.Now;
 
-            // ---- T1 闪避状态推进（占位：只记录请求和缓冲） ----
-            Trace(trace, "T1 闪避（占位）");
+            // ---- T1 闪避请求/缓冲，只有真正发动才产生表现事件 ----
+            Trace(trace, "T1 闪避");
             if (input.DodgePressed)
             {
                 DodgeRequests++;
                 DodgeBufferUntil = now + Config.dodgeBuffer;
-                Emit(PresentationEventType.Dodge, PlayerX, PlayerZ, 0f, 0);
             }
-            if (DodgeBufferUntil >= 0f && now >= DodgeBufferUntil) DodgeBufferUntil = -1f;
+            if (DodgeBufferUntil >= 0f && now > DodgeBufferUntil) DodgeBufferUntil = -1f;
+            if (DodgeBufferUntil >= 0f && !IsDodging && now >= DodgeReadyAt)
+            {
+                float x = rightX * input.MoveX + forwardX * input.MoveY;
+                float z = rightZ * input.MoveX + forwardZ * input.MoveY;
+                float length = (float)Math.Sqrt(x * x + z * z);
+                dodgeX = length > 0.001f ? x / length : facingX;
+                dodgeZ = length > 0.001f ? z / length : facingZ;
+                dodgeLeft = Math.Max(0.001f, Config.dodgeDuration);
+                DodgeReadyAt = now + CurrentValue(UpgradeKind.DodgeCooldown);
+                InvulnerableUntil = Math.Max(InvulnerableUntil, now + dodgeLeft);
+                DodgeBufferUntil = -1f;
+                Emit(PresentationEventType.Dodge, PlayerX, PlayerZ, dodgeLeft, 0);
+            }
 
             // ---- T2 玩家移动（相机相对，长度 ≤ 1，夹在场地内） ----
             Trace(trace, "T2 玩家移动");
             MovePlayer(input.MoveX, input.MoveY, dt);
 
-            Trace(trace, "T3 刷怪（未实现）");
-            Trace(trace, "T4 敌人移动（未实现）");
-            Trace(trace, "T5 武器（未实现）");
-            Trace(trace, "T6 子弹与命中（未实现）");
-            Trace(trace, "T7 敌人死亡结算（未实现）");
-
-            // ---- T8 接触伤害（本阶段用调试命令 hurt 代替敌人接触） ----
-            Trace(trace, "T8 接触伤害（调试 hurt 代替）");
-            if (queuedDamage > 0)
+            Trace(trace, "T3 刷怪");
+            CombatInput combatInput = MakeCombatInput(dt, now);
+            CombatStepResult combatResult = Combat != null ? Combat.StepCombat(combatInput) : null;
+            if (combatResult != null)
             {
-                ApplyDamage(queuedDamage, now);
-                queuedDamage = 0;
+                State.Kills += combatResult.Kills;
+                ForwardCombatEvents(combatResult);
             }
+            Trace(trace, "T4 敌人移动");
+            Trace(trace, "T5 武器");
+            Trace(trace, "T6 子弹与命中");
+            Trace(trace, "T7 敌人死亡结算");
+
+            // ---- T8：敌人接触与调试伤害都经唯一伤害入口 ----
+            Trace(trace, "T8 接触伤害");
+            int contact = combatResult == null ? 0 : (Config.stackContactDamage ? combatResult.ContactDamageSum : combatResult.ContactDamage);
+            int damage = Math.Max(queuedDamage, contact);
+            queuedDamage = 0;
+            if (damage > 0) ApplyDamage(damage, now);
 
             // ---- T9 失败判定 ----
             Trace(trace, "T9 失败判定");
@@ -163,8 +198,14 @@ namespace Waffle
                 return;
             }
 
-            // ---- T10 宝石与 XP（宝石未实现；调试 givexp 在这里走正常加 XP 流程） ----
-            Trace(trace, "T10 宝石/XP（宝石未实现）");
+            // ---- T10：拾取与调试XP均走正常升级流程 ----
+            Trace(trace, "T10 宝石/XP");
+            if (Combat != null)
+            {
+                CombatStepResult gems = Combat.StepGems(combatInput);
+                ForwardCombatEvents(gems);
+                if (gems.XpCollected > 0) AddXp(gems.XpCollected);
+            }
             if (queuedXp > 0)
             {
                 int gained = queuedXp;
@@ -206,8 +247,9 @@ namespace Waffle
 
         private void Recycle(bool trace)
         {
-            // ---- T13 回收（对象池未实现）；不管是否提前跳出都会执行 ----
-            Trace(trace, "T13 回收（未实现）");
+            // ---- T13：失败/胜利帧也必须回收 ----
+            if (Combat != null) Combat.Release();
+            Trace(trace, "T13 回收");
             EndTrace(trace);
         }
 
@@ -226,8 +268,13 @@ namespace Waffle
             float len = (float)Math.Sqrt(ix * ix + iy * iy);
             if (len > 1f) { ix /= len; iy /= len; }
             float speed = CurrentValue(UpgradeKind.MoveSpeed);
-            float dx = (rightX * ix + forwardX * iy) * speed * dt;
-            float dz = (rightZ * ix + forwardZ * iy) * speed * dt;
+            float mx = rightX * ix + forwardX * iy, mz = rightZ * ix + forwardZ * iy;
+            float moveLength = (float)Math.Sqrt(mx * mx + mz * mz);
+            if (moveLength > 0.001f) { facingX = mx / moveLength; facingZ = mz / moveLength; }
+            float dodgeDt = Math.Min(dt, dodgeLeft);
+            float dx = dodgeX * Config.dodgeSpeed * dodgeDt + mx * speed * (dt - dodgeDt);
+            float dz = dodgeZ * Config.dodgeSpeed * dodgeDt + mz * speed * (dt - dodgeDt);
+            dodgeLeft = Math.Max(0f, dodgeLeft - dt);
             float limit = Config.arenaHalfExtent;
             PlayerX = Math.Max(-limit, Math.Min(limit, PlayerX + dx));
             PlayerZ = Math.Max(-limit, Math.Min(limit, PlayerZ + dz));
@@ -243,7 +290,52 @@ namespace Waffle
             State.Hp = Math.Max(0, State.Hp - amount);
             InvulnerableUntil = Math.Max(InvulnerableUntil, now + Config.hitIFrame);
             Emit(PresentationEventType.PlayerHurt, PlayerX, PlayerZ, amount, State.Hp);
-            log.Info(string.Format("[Waffle] 受击 now={0:F3} 来源=debug 伤害={1} 剩余HP={2}", now, amount, State.Hp));
+            log.Info(string.Format("[Waffle] 受击 now={0:F3} 伤害={1} 剩余HP={2}", now, amount, State.Hp));
+        }
+
+        private CombatInput MakeCombatInput(float dt, float now)
+        {
+            return new CombatInput
+            {
+                Dt = dt, RunTime = now, PlayerPos = new Vec2(PlayerX, PlayerZ), ViewRadius = ViewRadius,
+                Stats = new CombatPlayerStats
+                {
+                    Damage = CurrentValue(UpgradeKind.Damage), FireInterval = CurrentValue(UpgradeKind.FireRate),
+                    Pierce = (int)CurrentValue(UpgradeKind.Pierce), MagnetRadius = CurrentValue(UpgradeKind.PickupRange)
+                }
+            };
+        }
+
+        private void ForwardCombatEvents(CombatStepResult result)
+        {
+            for (int i = 0; i < result.Events.Count; i++)
+            {
+                PresentationEvent e = result.Events[i];
+                e.Frame = State.Frame;
+                Presentation.Add(e);
+            }
+        }
+
+        public bool DebugSpawn(int count, bool gems)
+        {
+            if (RejectIfTerminal(gems ? "spawngems" : "spawn") || Combat == null || count < 1) return false;
+            count = Math.Min(count, 200);
+            for (int i = 0; i < count; i++)
+            {
+                double a = i * Math.PI * 2 / count;
+                var p = new Vec2(PlayerX + (float)Math.Cos(a) * (gems ? 2f : 6f), PlayerZ + (float)Math.Sin(a) * (gems ? 2f : 6f));
+                p = new Vec2(Math.Max(-Config.arenaHalfExtent, Math.Min(Config.arenaHalfExtent, p.X)),
+                    Math.Max(-Config.arenaHalfExtent, Math.Min(Config.arenaHalfExtent, p.Y)));
+                if (gems) Combat.DebugSpawnGem(p, 1); else Combat.DebugSpawnEnemy(p);
+            }
+            return true;
+        }
+
+        public bool DebugSetCap(int count)
+        {
+            if (RejectIfTerminal("setcap") || Combat == null || count < 1) return false;
+            Combat.Config.aliveCap = Math.Min(count, Math.Max(1, Combat.Config.enemyPoolSize - Combat.Config.eventOverflow));
+            return true;
         }
 
         private void AddXp(int amount)

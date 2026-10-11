@@ -30,6 +30,9 @@ namespace Waffle
         public float magnetRadius = 3.0f;
         /// <summary>基础闪避冷却（s），§1.1。</summary>
         public float dodgeCooldown = 1.5f;
+        /// <summary>闪避设计初值：0.2秒内移动3米，并在此期间无敌。</summary>
+        public float dodgeDuration = 0.2f;
+        public float dodgeSpeed = 15f;
 
         /// <summary>升级表：每级增量、升级回血等（§1.6 表 U-1，默认值换算成增量）。</summary>
         public UpgradeConfig upgrades = new UpgradeConfig();
@@ -46,9 +49,9 @@ namespace Waffle
         // ---- 待决策项（§5），先按推荐默认值，做成可调开关 ----
         /// <summary>§5-1：同一 tick 死亡并到 3:00 时判失败（true，推荐）还是判胜利（false）。</summary>
         public bool defeatWinsSameTick = true;
-        /// <summary>§5-2：多个敌人同时接触是否叠加伤害（false = 不叠加，推荐）。本阶段还没有敌人，只保存设置。</summary>
+        /// <summary>多个敌人同时接触是否叠加伤害；默认只取最大一次。</summary>
         public bool stackContactDamage = false;
-        /// <summary>§5-3：普通宝石寿命（s，推荐 20）。本阶段还没有宝石，只保存设置。</summary>
+        /// <summary>普通宝石寿命，作为游戏配置的唯一入口。</summary>
         public float gemLifetime = 20f;
     }
 
