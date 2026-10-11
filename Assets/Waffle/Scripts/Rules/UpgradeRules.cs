@@ -18,59 +18,63 @@ namespace Waffle
     }
 
     /// <summary>
-    /// 升级表与抽卡规则（§1.6）。本阶段只记录等级，伤害/射速等数值由以后的系统读取。
+    /// 升级规则（§1.6）。所有数值都来自 RunConfig：数值 = 基础值 + 前 level 个每级增量之和。
+    /// 这里不保存任何数值表（RunConfig 是唯一来源）。
     /// </summary>
     public static class UpgradeRules
     {
         /// <summary>可升级的选项数（不含兜底的"回复"）。</summary>
         public const int RealKindCount = 7;
 
-        // 每个选项从 Lv0 开始的数值表（设计初值）。设为 private，外部只能通过 Value() 读取，保证没有可被修改的 static 数据。
-        private static readonly float[] Damage = { 10, 15, 20, 25, 30 };
-        private static readonly float[] FireInterval = { 0.60f, 0.48f, 0.40f, 0.34f, 0.30f };
-        private static readonly float[] Pierce = { 1, 2, 3 };
-        private static readonly float[] MoveSpeed = { 5.0f, 5.4f, 5.8f, 6.2f };
-        private static readonly float[] MaxHp = { 100, 125, 150, 175, 200 };
-        private static readonly float[] MagnetRadius = { 3.0f, 4.5f, 6.0f, 8.0f };
-        private static readonly float[] DodgeCooldown = { 1.5f, 1.25f, 1.0f, 0.8f };
-
-        public const int MaxHpUpgradeHeal = 25;
-        public const float HealFraction = 0.30f;
-
-        /// <summary>某个选项的最高等级（Lv 上限）。</summary>
-        public static int MaxLevel(UpgradeKind kind)
+        private static float BaseValue(UpgradeKind kind, RunConfig c)
         {
             switch (kind)
             {
-                case UpgradeKind.Damage: return Damage.Length - 1;
-                case UpgradeKind.FireRate: return FireInterval.Length - 1;
-                case UpgradeKind.Pierce: return Pierce.Length - 1;
-                case UpgradeKind.MoveSpeed: return MoveSpeed.Length - 1;
-                case UpgradeKind.MaxHp: return MaxHp.Length - 1;
-                case UpgradeKind.PickupRange: return MagnetRadius.Length - 1;
-                case UpgradeKind.DodgeCooldown: return DodgeCooldown.Length - 1;
-                default: return int.MaxValue; // 回复：无限
+                case UpgradeKind.Damage: return c.damage;
+                case UpgradeKind.FireRate: return c.fireInterval;
+                case UpgradeKind.Pierce: return c.pierce;
+                case UpgradeKind.MoveSpeed: return c.moveSpeed;
+                case UpgradeKind.MaxHp: return c.maxHp;
+                case UpgradeKind.PickupRange: return c.magnetRadius;
+                case UpgradeKind.DodgeCooldown: return c.dodgeCooldown;
+                default: return 0f;
             }
         }
 
-        /// <summary>某选项在某等级时的数值（例如 Value(MaxHp, 1) = 125）。</summary>
-        public static float Value(UpgradeKind kind, int level)
+        private static float[] Steps(UpgradeKind kind, RunConfig c)
         {
-            float[] table;
+            UpgradeConfig u = c.upgrades;
+            if (u == null) return null;
             switch (kind)
             {
-                case UpgradeKind.Damage: table = Damage; break;
-                case UpgradeKind.FireRate: table = FireInterval; break;
-                case UpgradeKind.Pierce: table = Pierce; break;
-                case UpgradeKind.MoveSpeed: table = MoveSpeed; break;
-                case UpgradeKind.MaxHp: table = MaxHp; break;
-                case UpgradeKind.PickupRange: table = MagnetRadius; break;
-                case UpgradeKind.DodgeCooldown: table = DodgeCooldown; break;
-                default: return 0f;
+                case UpgradeKind.Damage: return u.damageSteps;
+                case UpgradeKind.FireRate: return u.fireIntervalSteps;
+                case UpgradeKind.Pierce: return u.pierceSteps;
+                case UpgradeKind.MoveSpeed: return u.moveSpeedSteps;
+                case UpgradeKind.MaxHp: return u.maxHpSteps;
+                case UpgradeKind.PickupRange: return u.magnetRadiusSteps;
+                case UpgradeKind.DodgeCooldown: return u.dodgeCooldownSteps;
+                default: return null;
             }
-            if (level < 0) level = 0;
-            if (level >= table.Length) level = table.Length - 1;
-            return table[level];
+        }
+
+        /// <summary>某个选项的最高等级（= 每级增量数组的长度）；回复为无限。</summary>
+        public static int MaxLevel(UpgradeKind kind, RunConfig config)
+        {
+            if (kind == UpgradeKind.Heal) return int.MaxValue;
+            float[] steps = Steps(kind, config);
+            return steps == null ? 0 : steps.Length;
+        }
+
+        /// <summary>某选项在某等级时的数值（默认配置下 Value(MaxHp, 1) = 125）。</summary>
+        public static float Value(UpgradeKind kind, int level, RunConfig config)
+        {
+            float v = BaseValue(kind, config);
+            float[] steps = Steps(kind, config);
+            if (steps == null) return v;
+            int n = Math.Min(Math.Max(level, 0), steps.Length);
+            for (int i = 0; i < n; i++) v += steps[i];
+            return v;
         }
 
         public static string DisplayName(UpgradeKind kind)
@@ -84,7 +88,7 @@ namespace Waffle
                 case UpgradeKind.MaxHp: return "生命强化";
                 case UpgradeKind.PickupRange: return "拾取范围";
                 case UpgradeKind.DodgeCooldown: return "闪避冷却";
-                case UpgradeKind.Heal: return "回复 30%";
+                case UpgradeKind.Heal: return "回复";
                 default: return "（空）";
             }
         }
@@ -93,13 +97,13 @@ namespace Waffle
         /// 抽 3 个选项：从还没满级的选项里不放回随机抽；不够 3 个时用"回复"补 1 格，其余留空（None）。
         /// levels 下标对应 UpgradeKind 0..6。
         /// </summary>
-        public static UpgradeKind[] Draw(int[] levels, Random random)
+        public static UpgradeKind[] Draw(int[] levels, RunConfig config, Random random)
         {
             var candidates = new List<UpgradeKind>(RealKindCount);
             for (int i = 0; i < RealKindCount; i++)
             {
                 var kind = (UpgradeKind)i;
-                if (levels[i] < MaxLevel(kind)) candidates.Add(kind);
+                if (levels[i] < MaxLevel(kind, config)) candidates.Add(kind);
             }
 
             var result = new UpgradeKind[3];

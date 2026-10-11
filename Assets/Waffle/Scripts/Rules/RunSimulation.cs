@@ -53,6 +53,7 @@ namespace Waffle
         public RunSimulation(RunConfig config, IRunLog log)
         {
             Config = config ?? new RunConfig();
+            if (Config.upgrades == null) Config.upgrades = new UpgradeConfig();
             this.log = log ?? new NullRunLog();
             State = new RunState(Config.maxHp, this.log);
             random = new Random(Config.seed);
@@ -73,6 +74,13 @@ namespace Waffle
         {
             State.Frame = frame;
             realTime = realTimeNow;
+        }
+
+        /// <summary>按当前升级等级、从 RunConfig 算出的数值（例如当前移速、最大 HP）。</summary>
+        public float CurrentValue(UpgradeKind kind)
+        {
+            int level = kind >= 0 && (int)kind < UpgradeRules.RealKindCount ? State.UpgradeLevels[(int)kind] : 0;
+            return UpgradeRules.Value(kind, level, Config);
         }
 
         public bool IsInvulnerable { get { return God || State.Now < InvulnerableUntil; } }
@@ -207,7 +215,7 @@ namespace Waffle
         {
             float len = (float)Math.Sqrt(ix * ix + iy * iy);
             if (len > 1f) { ix /= len; iy /= len; }
-            float speed = UpgradeRules.Value(UpgradeKind.MoveSpeed, State.UpgradeLevels[(int)UpgradeKind.MoveSpeed]);
+            float speed = CurrentValue(UpgradeKind.MoveSpeed);
             float dx = (rightX * ix + forwardX * iy) * speed * dt;
             float dz = (rightZ * ix + forwardZ * iy) * speed * dt;
             float limit = Config.arenaHalfExtent;
@@ -291,7 +299,7 @@ namespace Waffle
 
         private void DrawPanel()
         {
-            CurrentOptions = UpgradeRules.Draw(State.UpgradeLevels, random);
+            CurrentOptions = UpgradeRules.Draw(State.UpgradeLevels, Config, random);
             PanelsShown++;
             panelShownRealTime = realTime;
             chooseLocked = false;
@@ -337,15 +345,15 @@ namespace Waffle
             State.ChosenUpgrades.Add(kind);
             if (kind == UpgradeKind.Heal)
             {
-                State.Hp = Math.Min(State.MaxHp, State.Hp + (int)Math.Round(State.MaxHp * UpgradeRules.HealFraction));
+                State.Hp = Math.Min(State.MaxHp, State.Hp + (int)Math.Round(State.MaxHp * Config.upgrades.healFraction));
                 return;
             }
             int i = (int)kind;
-            State.UpgradeLevels[i] = Math.Min(State.UpgradeLevels[i] + 1, UpgradeRules.MaxLevel(kind));
+            State.UpgradeLevels[i] = Math.Min(State.UpgradeLevels[i] + 1, UpgradeRules.MaxLevel(kind, Config));
             if (kind == UpgradeKind.MaxHp)
             {
-                State.MaxHp = (int)UpgradeRules.Value(UpgradeKind.MaxHp, State.UpgradeLevels[i]);
-                State.Hp = Math.Min(State.MaxHp, State.Hp + UpgradeRules.MaxHpUpgradeHeal);
+                State.MaxHp = (int)Math.Round(CurrentValue(UpgradeKind.MaxHp));
+                State.Hp = Math.Min(State.MaxHp, State.Hp + Config.upgrades.maxHpUpgradeHeal);
             }
         }
 

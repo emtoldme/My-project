@@ -412,13 +412,13 @@ namespace Waffle.Tests
         public void Draw_FallbackHeal_WhenFewerThanThree()
         {
             var levels = new int[UpgradeRules.RealKindCount];
-            for (int i = 0; i < 5; i++) levels[i] = UpgradeRules.MaxLevel((UpgradeKind)i);
-            var opts = UpgradeRules.Draw(levels, new System.Random(1));
+            for (int i = 0; i < 5; i++) levels[i] = UpgradeRules.MaxLevel((UpgradeKind)i, new RunConfig());
+            var opts = UpgradeRules.Draw(levels, new RunConfig(), new System.Random(1));
             Assert.AreEqual(1, opts.Count(o => o == UpgradeKind.Heal));
             Assert.AreEqual(2, opts.Count(o => o == UpgradeKind.PickupRange || o == UpgradeKind.DodgeCooldown));
 
-            for (int i = 0; i < levels.Length; i++) levels[i] = UpgradeRules.MaxLevel((UpgradeKind)i);
-            opts = UpgradeRules.Draw(levels, new System.Random(1));
+            for (int i = 0; i < levels.Length; i++) levels[i] = UpgradeRules.MaxLevel((UpgradeKind)i, new RunConfig());
+            opts = UpgradeRules.Draw(levels, new RunConfig(), new System.Random(1));
             CollectionAssert.AreEqual(new[] { UpgradeKind.Heal, UpgradeKind.None, UpgradeKind.None }, opts);
         }
 
@@ -428,8 +428,8 @@ namespace Waffle.Tests
             var levels = new int[UpgradeRules.RealKindCount];
             for (int seed = 0; seed < 50; seed++)
             {
-                var a = UpgradeRules.Draw(levels, new System.Random(seed));
-                var b = UpgradeRules.Draw(levels, new System.Random(seed));
+                var a = UpgradeRules.Draw(levels, new RunConfig(), new System.Random(seed));
+                var b = UpgradeRules.Draw(levels, new RunConfig(), new System.Random(seed));
                 CollectionAssert.AreEqual(a, b);
                 Assert.AreEqual(3, a.Distinct().Count());
                 Assert.IsFalse(a.Contains(UpgradeKind.Heal));

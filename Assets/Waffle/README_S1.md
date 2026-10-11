@@ -31,7 +31,7 @@ Assets/Waffle/
       RunPhase / RunState      状态机，唯一切换入口 TryTransition，§8.6 切换表
       RunSimulation            每帧一次 Tick：T0→T13 固定顺序、门控、终局优先级、升级面板、调试钩子
       XpRules                  5 + 3(n−1)，溢出与连续升级
-      UpgradeRules             表 U-1、抽 3 张、不足时“回复”补位
+      UpgradeRules             从 RunConfig 计算升级数值、抽 3 张、不足时“回复”补位
       RunConfig                参数（设计初值）+ 3 个待决策开关
       DebugCommands            调试命令解析
       InputSnapshot / IRunLog
@@ -41,10 +41,15 @@ Assets/Waffle/
     Debug/   DebugConsole：Overlay + 命令输入
   Editor/    S1SceneSetup：菜单 Waffle/Setup S1 Scene
   Tests/EditMode/  NUnit 测试（只引用 Waffle.Rules）
+  Tests/Integration/  PlayMode 集成测试程序集（2 号创建，之后归 1 号）
 Tools/RulesTests/  脱离 Unity 用 dotnet 跑同一批测试的工程（Unity 不会导入这里）
 ```
 
 输入资源 `Assets/InputSystem_Actions.inputactions` 的改动：Player Map 新增 `Dodge`（Space、手柄 East）和 `Pause`（Esc、手柄 Start）；UI Map 新增 `Pause`、`Choose1/2/3`（1/2/3、小键盘、手柄十字键）。原有动作没动。
+
+## 参数来源
+
+GameLoop Inspector 里的 **Config** 是唯一来源：基础值（`maxHp`、`moveSpeed`、`damage`、`fireInterval`、`pierce`、`magnetRadius`、`dodgeCooldown`）+ `upgrades` 里的每级增量数组。升级后的数值 = 基础值 + 前 N 级增量之和；数组长度就是该选项的最高等级。默认值等于 v0.2.1 表 U-1。
 
 ## 已按推荐默认值实现的待决策项（在 GameLoop 的 Config 里可改）
 
