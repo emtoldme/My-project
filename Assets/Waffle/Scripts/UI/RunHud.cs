@@ -58,10 +58,15 @@ namespace Waffle
             RunState st = sim.State;
 
             // ---- HUD ----
-            GUILayout.BeginArea(ImguiScale.Fit(new Rect(10, 10, 360, 150)), GUI.skin.box);
+            GUILayout.BeginArea(ImguiScale.Fit(new Rect(10, 10, 360, 180)), GUI.skin.box);
             GUILayout.Label(FormatClock(st.Now) + "   " + st.Phase, big);
             GUILayout.Label(string.Format("HP {0}/{1}   Lv{2}   XP {3}/{4}", st.Hp, st.MaxHp, st.Level, st.Xp, st.XpToNext));
             GUILayout.Label(string.Format("待升级 {0}   击杀 {1}", st.PendingLevelUps, st.Kills));
+            // Playing / LevelUp 也能直接重开（Paused、Victory、Defeat 的面板里已有重开按钮）
+            if (st.Phase == RunPhase.Playing || st.Phase == RunPhase.LevelUp)
+            {
+                if (GUILayout.Button("重开", GUILayout.Width(80), GUILayout.Height(24))) loop.Restart();
+            }
             GUILayout.EndArea();
 
             float w = 460f, h = 320f;
