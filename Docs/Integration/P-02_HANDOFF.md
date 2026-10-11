@@ -1,5 +1,7 @@
 # P-02 交接：音频生命周期
 
+> 2026-10-12：历史P-02交接：b6df1fd时的待接事件与闪避占位描述已过期；当前C-01战斗事件和真实闪避已接入。Codex另修组件重新启用时读取局内状态，下一轮P-03不再改共享AudioDirector。 统一事实与证据见[收拢审查](../Verification/Handoffs-2026-10-12/REVIEW.md)。
+
 基线：`origin/main` `b6df1fda73c6b0cf5d1e25227c2114a87dba0564`（Merge PR #8）。
 分支：`feature/p02-presentation-polish`。只改 `Assets/Waffle/Scripts/Views/Audio/AudioDirector.cs`、本文件和 `Docs/Integration/P-02_REPLY.md`（给 Codex 的回复纪要）。
 没有改场景、Editor 生成器、VfxDirector、GameLoop、Rules、音效总监的规格或主美资源。

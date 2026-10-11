@@ -1,0 +1,227 @@
+[
+  {
+    "file": "Assets/Audio/Music/bgm_combat_master_64s_seamless.wav",
+    "seconds": 64.0,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 2,
+    "sample_peak_dbfs": -1.8,
+    "sha256": "115b19378e9f7778da8856c590a1560680418294a5251a2124fd33d563e0678a"
+  },
+  {
+    "file": "Assets/Audio/Music/bgm_levelup_suspended_loop.wav",
+    "seconds": 16.0,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 2,
+    "sample_peak_dbfs": -2.0,
+    "sha256": "ac6c279c0a6cb10836df7ea57bdd9bd877fc296e90889422664d65aad3a1ddcd"
+  },
+  {
+    "file": "Assets/Audio/S02/bgm_combat_mathrock_postrock_32s_preview.wav",
+    "seconds": 32.0,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 2,
+    "sample_peak_dbfs": -1.8,
+    "sha256": "b4ca7a184a22c9b6ecfa7725a5adfefea93a3300c39ed10f322590c559e627a6"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_enemy_death_01.wav",
+    "seconds": 0.42,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "88ff137e1efea1911e9924822d2dae1e5dc9882e44a41ff3d2a507374b34c127"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_enemy_death_02.wav",
+    "seconds": 0.42,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "eb7582b16592eacf5cc9bb55dba10d2fc501587085000f65863462129661d570"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_enemy_death_03.wav",
+    "seconds": 0.42,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "ebdfa14f0be983484e285f81c0ddb76b41f7eaa954b78a130bdb20fc672a881c"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_enemy_hit_01.wav",
+    "seconds": 0.085,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "8e54dcf904f3f18aa67bbf70ba85094be3034b207e19adf1a8fa45887a49c651"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_enemy_hit_02.wav",
+    "seconds": 0.085,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "d2b960a472779040e58e1551c35a9da2f7194c69b1a4a119c96dce1f399fc22a"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_enemy_hit_03.wav",
+    "seconds": 0.085,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "8f62e04214b366f192b4eec43ed0d792fd3585642cd29219595452f8ecdea4d6"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_game_defeat.wav",
+    "seconds": 2.8,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "3fb2430e98f3655ff811e91db9994f4e67569683e230817021c288cda4181804"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_game_victory.wav",
+    "seconds": 3.2,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "4469276c35ff7cde4822f7622f772617cb500a332cfc946905a16c682e4d6cfd"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_gem_pickup_01.wav",
+    "seconds": 0.22,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "9a933817aa9c2716419659c3834b6c198204f222314cd67f9c0cfaf7bdb82a34"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_gem_pickup_02.wav",
+    "seconds": 0.22,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "b81901fb24984a26bc0ff2bf7e7c5f9f0ad81f1101e7fe9700e6cf115f9695f2"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_gem_pickup_03.wav",
+    "seconds": 0.22,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "1c650075ce723d27d8950595d649474ea0c8474c104d9e077b0bd4855fa3b17f"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_gem_pickup_04.wav",
+    "seconds": 0.22,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "d0bca82d220d328562cb3947a425be962c574ef197f45ea2293637957ca8fd96"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_gem_pickup_05.wav",
+    "seconds": 0.22,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "2d0be2e5c85ee5cc1e77001ec8f188a6ca42269cd63c9c87471a4a94c88a91a4"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_player_dodge_01.wav",
+    "seconds": 0.26,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "229193adcdbf0ad7f023d4771cca0d0b09393f0caafecbdc64736a27160888cb"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_player_dodge_02.wav",
+    "seconds": 0.26,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "d6ee721ea4720d450e387e1221e9b5fa05b75d6da5585e3b20399caf60b388eb"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_player_hurt_01.wav",
+    "seconds": 0.36,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "f26d1122b0bc1ffe8059d3987619d446f45c09d7a25bb79518231a30296b8cc3"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_player_hurt_02.wav",
+    "seconds": 0.36,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "6184fb9e62938c5fa41247696442ea330e45b8e1555ed8fd95202e5b86775764"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_player_shoot_01.wav",
+    "seconds": 0.11,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "683ac8399b51f42c82ee95a5391ac38174033746690e9530fcdddbdddeb12684"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_player_shoot_02.wav",
+    "seconds": 0.11,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "bd0296a33c59ddd013fb336563f1d54dfb3f441ba1a238ad7c6cb87a568b49f4"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_player_shoot_03.wav",
+    "seconds": 0.11,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "eab422550fdc3c7b4e2324c34f5b9fa8701c776fece6e31ac67711ab307d1e84"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_ui_levelup_appear.wav",
+    "seconds": 0.55,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "1f79060a09cc6d01133523cee970de9d1d16cb452494de39df79c250b1159bd0"
+  },
+  {
+    "file": "Assets/Audio/SFX/sfx_ui_levelup_confirm.wav",
+    "seconds": 0.75,
+    "hz": 48000,
+    "bits": 24,
+    "channels": 1,
+    "sample_peak_dbfs": -1.5,
+    "sha256": "0de1c8fde6eb5e2b89c2544f5d98852e3fa9d1a26485c3e2041c08992e15c681"
+  }
+]

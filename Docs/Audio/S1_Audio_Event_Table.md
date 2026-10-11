@@ -1,5 +1,7 @@
 # S1 音频事件与系统接入契约表 (S1 Audio Event Table v1.1)
 
+> 2026-10-12：Codex审查：本表为作者提供的映射与参数建议，实际行为以当前AudioDirector和场景资源为准，不把建议当成游戏内混音验收。 统一事实与证据见[收拢审查](../Verification/Handoffs-2026-10-12/REVIEW.md)。
+
 **维护岗位**：音效总监（Sound Director）  
 **基线版本**：基于 `origin/main` 实际代码 `PresentationEventType` 与 `AudioDirector.cs` 实现  
 **对接负责人**：2 号（负责音频生命周期与音频小修）、Codex（负责桥接与整合）  

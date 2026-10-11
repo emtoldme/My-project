@@ -181,7 +181,34 @@ namespace Waffle
             // Stop 之后再 UnPause：有的 Unity 版本里 Pause 标记在 Stop 之后还留着，Play 不会出声。
             RestartLoop(combatSource, combatLoop);
             RestartLoop(levelUpSource, levelUpLoop);
+            AlignWithRunPhase();
             ApplyMusicVolumes();
+        }
+
+        private void AlignWithRunPhase()
+        {
+            // A component restart is not a gameplay restart. Events may have fired
+            // before Start, or while this component was disabled: read the authority.
+            if (loop == null || loop.Sim == null) return;
+            var state = loop.Sim.State;
+            RunPhase phase = state.Phase == RunPhase.Paused ? state.PhaseBeforePause : state.Phase;
+            if (phase == RunPhase.LevelUp)
+            {
+                musicMode = MusicMode.LevelUp;
+                combatGain = combatTarget = 0f;
+                levelUpGain = levelUpTarget = DbToLinear(levelUpLoopDb);
+                PauseIfPlaying(combatSource);
+                combatHeld = true;
+            }
+            else if (phase == RunPhase.Victory || phase == RunPhase.Defeat)
+            {
+                musicMode = MusicMode.Terminal;
+                combatGain = combatTarget = 0f;
+                levelUpGain = levelUpTarget = 0f;
+                StopSources();
+                terminalBedStopped = true;
+            }
+            if (state.Phase == RunPhase.Paused) SetPaused(true);
         }
 
         private void BuildChannel(PresentationEventType type, AudioEventRule rule)

@@ -1,5 +1,7 @@
 # C-01A 交付报告（最小战斗模块）
 
+> 2026-10-12：历史交接记录：C-01A与R-1/R-2已通过PR #9/#10整合。下文“待合并/待接线”仅描述作者交付时版本，不是当前待办。下一轮为C-02。 统一事实与证据见[收拢审查](../Verification/Handoffs-2026-10-12/REVIEW.md)。
+
 - 分支：`feature/c01-combat-core`，PR #9（基底 main，未合并）
 - 基线：`origin/main@b6df1fda73c6b0cf5d1e25227c2114a87dba0564`
 - 提交：`c5a5ed7` 战斗模块代码；`650a1c5` 19 条关键用例；`81b1d66` 接口说明 README 与 REQUESTS

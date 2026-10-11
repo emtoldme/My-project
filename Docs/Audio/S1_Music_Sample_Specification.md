@@ -1,5 +1,7 @@
 # S1 音乐样板与过渡方案说明 (S1 Music Sample & Transition System v1.1)
 
+> 2026-10-12：证据边界：音乐结构/调性/听感为作者评估，未独立试听验收。测得的是样点峰值而非True Peak；S02参考与原曲前32秒样点相关约0.98208，不据文件名确认新增数学摇滚风格。 统一事实与证据见[收拢审查](../Verification/Handoffs-2026-10-12/REVIEW.md)。
+
 **维护岗位**：音效总监（Sound Director）  
 **基线版本**：基于 `origin/main` 实际接入的 `bgm_combat_master_64s_seamless.wav` 与 `bgm_levelup_suspended_loop.wav`  
 **对接负责人**：2 号（负责音频生命周期与过渡微调）、Codex（自动化与测试）  
@@ -9,14 +11,14 @@
 ## 一、现有 64 秒主战斗循环与升级循环方向评估
 
 ### 1. 现有战斗主音乐：`bgm_combat_master_64s_seamless.wav`
-- **时长与母带规格**：64.0 秒，48 kHz / 24-bit PCM WAV (立体声)，True Peak 控制在 `-1.8 dBFS`。
+- **时长与母带规格**：64.0 秒，48 kHz / 24-bit PCM WAV (立体声)，样点峰值约 `-1.8 dBFS`。
 - **音乐参数**：
   - **BPM**：120 BPM（每小节 2.0 秒，完整 32 小节结构）。
   - **调性**：D 小调 / 极简五度低频。
   - **循环点**：从 `0.00s` 循环至 `64.00s`。在 `62.80s ~ 64.00s` 区间内施加了 1.2 秒等功率对数交叉淡化，保证波形无相位抵消。
 - **方向与听感评估**：
   - **沉稳精密，底床干净**：融合了后摇（Post-Rock）的空旷低频张力与现代极简电子脉冲，低频沉稳结实，高频具有冰冷空气感。
-  - **抗疲劳度优秀**：克制、没有过度激烈的 EDM 爆音（Drop），长时间在局内循环播放（3分钟甚至数小时）不会产生烦躁刺耳的疲劳感。
+  - **抗疲劳目标**：克制、避免过度爆音；3分钟和长时间循环的实际耐受度待验证，不能预先确认。
   - **风格差距考量**：目前该曲目偏向“极简氛围电子与低频心跳脉动”，在“数学摇滚（Math-Rock）的复杂不对称重音（Polymeter）和清澈吉他/金属拨奏”维度上较为收敛。若用户或团队希望强化“雕塑错位敲击与数学摇滚律动”，可参考下文的 32 秒短备选方案。
 
 ---
@@ -46,7 +48,7 @@
 
 ## 三、AudioDirector 音乐状态机与过渡建议
 
-当前 `Assets/Waffle/Scripts/Views/Audio/AudioDirector.cs` 中的状态机已经实现了精细的无缝过渡，建议继续保持以下参数配置：
+当前 `Assets/Waffle/Scripts/Views/Audio/AudioDirector.cs` 已实现状态驱动淡变；过渡听感待验收，以下为作者建议值，不代表所有值已在当前场景生效：
 
 1. **升级面板展开 (`PresentationEventType.LevelUpShown`)**：
    - `levelUpCrossfade = 1.0f`：战斗音乐在 1.0 秒内通过 `Time.unscaledDeltaTime` 线性淡出至 0；悬浮循环在 1.0 秒内线性淡入至 `-2 dB`。
