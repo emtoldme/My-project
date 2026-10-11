@@ -16,7 +16,7 @@ CombatViews按PoolIndex预热和同步敌人/子弹/宝石，不参与玩法判�
 
 ## 试玩
 
-本地Windows包：工作区Builds/S1-C01/Waffle.exe。双击启动，不需要Unity。
+最新闪避修复Windows包：工作区Builds/S1-DodgeFix/Waffle.exe。旧Builds/S1-C01/Waffle.exe保留。双击启动，不需要Unity。修复原因、自动验证与实际渲染对照见Docs/Verification/DodgeFix/。
 WASD移动，Space闪避，自动选敌攻击；Esc暂停；升级时1/2/3或鼠标选择；面板按钮重开。
 
 请先玩约3分钟，只反馈：

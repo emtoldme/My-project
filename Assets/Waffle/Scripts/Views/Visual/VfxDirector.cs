@@ -48,7 +48,6 @@ namespace Waffle
             public Vector3 baseScale;
             public bool fadeAlpha;
             public bool shrink;
-            public float delay;
             public bool inUse;
             public Mesh bakedMesh;
         }
@@ -62,12 +61,16 @@ namespace Waffle
         private SkinnedMeshRenderer playerSkin;
         private MeshFilter playerMeshFilter;
         private float hurtFlashLeft;
+        private bool secondAfterimagePending;
+        private float secondAfterimageLeft;
         private GameLoop subscribed;
 
         private void Awake()
         {
             if (loop == null) loop = GetComponent<GameLoop>();
             if (playerVisual == null && loop != null) playerVisual = loop.playerView;
+            if (playerVisual != null && playerVisual.Find("Visual") != null)
+                playerVisual = playerVisual.Find("Visual");
             block = new MaterialPropertyBlock();
 
             for (int i = 0; i < 8; i++) muzzlePool.Add(CreateFx(PrimitiveType.Cube, muzzleMaterial, "FX_Muzzle"));
@@ -78,7 +81,12 @@ namespace Waffle
             {
                 playerRenderers = playerVisual.GetComponentsInChildren<Renderer>(true);
                 playerSkin = playerVisual.GetComponentInChildren<SkinnedMeshRenderer>(true);
-                if (playerSkin == null) playerMeshFilter = playerVisual.GetComponentInChildren<MeshFilter>(true);
+                if (playerSkin == null)
+                    foreach (var filter in playerVisual.GetComponentsInChildren<MeshFilter>())
+                    {
+                        var renderer = filter.GetComponent<MeshRenderer>();
+                        if (renderer != null && renderer.enabled) { playerMeshFilter = filter; break; }
+                    }
             }
         }
 
@@ -134,10 +142,16 @@ namespace Waffle
                     case PresentationEventType.Shot: SpawnMuzzle(p + Vector3.up * 1.2f); break;
                     case PresentationEventType.EnemyHit: SpawnFragments(p + Vector3.up, 3, hitFragmentDuration, 2f, 0.12f); break;
                     case PresentationEventType.EnemyKilled: SpawnFragments(p + Vector3.up * 0.8f, Random.Range(3, 6), deathDuration, 3f, 0.35f); break;
-                    case PresentationEventType.Dodge: SpawnAfterimage(0f); SpawnAfterimage(afterimageSecondDelay); break;
+                    case PresentationEventType.Dodge:
+                        SpawnAfterimage();
+                        secondAfterimagePending = true;
+                        secondAfterimageLeft = afterimageSecondDelay;
+                        break;
                     case PresentationEventType.PlayerHurt: hurtFlashLeft = hurtFlashDuration; SetPlayerFlash(true); break;
                     case PresentationEventType.Victory:
-                    case PresentationEventType.Defeat: hurtFlashLeft = 0f; SetPlayerFlash(false); break;
+                    case PresentationEventType.Defeat:
+                        secondAfterimagePending = false;
+                        hurtFlashLeft = 0f; SetPlayerFlash(false); break;
                     case PresentationEventType.Restart: ClearAll(); break;
                 }
             }
@@ -145,7 +159,7 @@ namespace Waffle
 
         private Fx Take(List<Fx> pool)
         {
-            // Delayed effects already own their slot, even while the GameObject is inactive.
+            // A slot remains leased until Release; never overwrite a live snapshot.
             for (int i = 0; i < pool.Count; i++) if (!pool[i].inUse) return pool[i];
             return null; // 池满就放弃这次表现（不 new）
         }
@@ -158,7 +172,7 @@ namespace Waffle
             fx.age = 0f;
             fx.life = life;
             fx.inUse = true;
-            fx.go.SetActive(fx.delay <= 0f);
+            fx.go.SetActive(true);
             active.Add(fx);
         }
 
@@ -166,7 +180,7 @@ namespace Waffle
         {
             Fx fx = Take(muzzlePool);
             if (fx == null) return;
-            fx.velocity = Vector3.zero; fx.shrink = false; fx.delay = 0f;
+            fx.velocity = Vector3.zero; fx.shrink = false;
             fx.go.transform.rotation = Quaternion.Euler(45f, 45f, 0f); // 菱形
             Activate(fx, pos, Vector3.one * muzzleScale, muzzleDuration);
         }
@@ -179,13 +193,13 @@ namespace Waffle
                 if (fx == null) return;
                 Vector3 dir = Random.insideUnitSphere; dir.y = Mathf.Abs(dir.y);
                 fx.velocity = dir.normalized * speed;
-                fx.shrink = true; fx.delay = 0f;
+                fx.shrink = true;
                 fx.go.transform.rotation = Random.rotation;
                 Activate(fx, pos, Vector3.one * size, life);
             }
         }
 
-        private void SpawnAfterimage(float delay)
+        private void SpawnAfterimage()
         {
             if (playerVisual == null) return;
             Fx fx = Take(afterimagePool);
@@ -194,22 +208,26 @@ namespace Waffle
             if (playerSkin != null)
             {
                 mf.sharedMesh = fx.bakedMesh;
-                playerSkin.BakeMesh(fx.bakedMesh);
+                // Compensate the FBX/bone transform scale before applying it to the
+                // snapshot transform. The default overload baked it twice (~23x).
+                playerSkin.BakeMesh(fx.bakedMesh, true);
             }
             else if (playerMeshFilter != null) mf.sharedMesh = playerMeshFilter.sharedMesh;
+            else return;
             Transform src = playerSkin != null ? playerSkin.transform : (playerMeshFilter != null ? playerMeshFilter.transform : playerVisual);
             fx.go.transform.rotation = src.rotation;
-            fx.velocity = Vector3.zero; fx.shrink = false; fx.delay = delay;
+            fx.velocity = Vector3.zero; fx.shrink = false;
             Activate(fx, src.position, src.lossyScale, afterimageDuration);
         }
 
         // =====================================================================
 
-        private void Update()
+        private void LateUpdate()
         {
             // 冻结：只有 Playing 才推进（暂停/升级/终局时特效停在原地）
             if (loop == null || loop.Sim == null || loop.Sim.State.Phase != RunPhase.Playing) return;
-            float dt = Mathf.Min(Time.unscaledDeltaTime, 0.05f);
+            float dt = loop.Sim.LastDt;
+            if (dt <= 0f) return;
 
             if (hurtFlashLeft > 0f)
             {
@@ -220,12 +238,6 @@ namespace Waffle
             for (int i = active.Count - 1; i >= 0; i--)
             {
                 Fx fx = active[i];
-                if (fx.delay > 0f)
-                {
-                    fx.delay -= dt;
-                    if (fx.delay <= 0f) fx.go.SetActive(true);
-                    continue;
-                }
                 fx.age += dt;
                 float t = fx.life > 0f ? fx.age / fx.life : 1f;
                 if (t >= 1f) { Release(fx); active.RemoveAt(i); continue; }
@@ -245,13 +257,23 @@ namespace Waffle
                     fx.renderer.SetPropertyBlock(block);
                 }
             }
+            // Sample a fresh pose at the later world position, rather than showing
+            // a second copy of the initial pose after a visibility delay.
+            if (secondAfterimagePending)
+            {
+                secondAfterimageLeft -= dt;
+                if (secondAfterimageLeft <= 0f)
+                {
+                    secondAfterimagePending = false;
+                    SpawnAfterimage();
+                }
+            }
         }
 
         private void Release(Fx fx)
         {
             fx.go.SetActive(false);
             fx.renderer.SetPropertyBlock(null);
-            fx.delay = 0f;
             fx.inUse = false;
         }
 
@@ -280,6 +302,7 @@ namespace Waffle
         {
             for (int i = 0; i < active.Count; i++) Release(active[i]);
             active.Clear();
+            secondAfterimagePending = false;
             hurtFlashLeft = 0f;
             SetPlayerFlash(false);
         }

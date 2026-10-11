@@ -170,7 +170,8 @@ namespace Waffle
                 if (aim.sqrMagnitude > 0.0001f) playerVisual.rotation = Quaternion.Slerp(playerVisual.rotation, Quaternion.LookRotation(aim), Mathf.Min(1f, dt * 18f));
                 float bob = movement.sqrMagnitude > 0.00001f ? Mathf.Sin(sim.State.Now * 16f) * 0.035f : 0f;
                 playerVisual.localPosition = playerBasePosition + Vector3.up * bob;
-                playerVisual.localScale = Vector3.Scale(playerBaseScale, sim.IsDodging ? new Vector3(1.05f, 0.85f, 1.08f) : Vector3.one);
+                // Rigid mech: movement and a trail communicate dodge, without deforming its skeleton.
+                playerVisual.localScale = playerBaseScale;
             }
             if (loop.playerView != null) previousPlayer = loop.playerView.position;
         }

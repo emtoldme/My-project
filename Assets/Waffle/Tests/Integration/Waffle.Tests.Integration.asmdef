@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "Waffle.Rules",
         "Waffle.Runtime",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.InputSystem.TestFramework"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

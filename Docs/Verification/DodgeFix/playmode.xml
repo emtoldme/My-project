@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="12" result="Passed" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-11 23:26:46Z" end-time="2026-10-11 23:26:49Z" duration="2.6440931">
+  <test-suite type="TestSuite" id="1025" name="My project" fullname="My project" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-11 23:26:46Z" end-time="2026-10-11 23:26:49Z" duration="2.644093" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1021" name="Waffle.Tests.Integration.dll" fullname="G:/图书馆/新建文件夹 (2)/My project-integration/Library/ScriptAssemblies/Waffle.Tests.Integration.dll" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-11 23:26:46Z" end-time="2026-10-11 23:26:49Z" duration="2.636350" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8600" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1022" name="Waffle" fullname="Waffle" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-11 23:26:46Z" end-time="2026-10-11 23:26:49Z" duration="2.635571" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1023" name="Tests" fullname="Waffle.Tests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-11 23:26:46Z" end-time="2026-10-11 23:26:49Z" duration="2.635021" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1024" name="Integration" fullname="Waffle.Tests.Integration" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-11 23:26:46Z" end-time="2026-10-11 23:26:49Z" duration="2.634474" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1004" name="CombatSceneSmokeTests" fullname="Waffle.Tests.Integration.CombatSceneSmokeTests" classname="Waffle.Tests.Integration.CombatSceneSmokeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-11 23:26:46Z" end-time="2026-10-11 23:26:47Z" duration="1.187416" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1005" name="ActualScene_AttacksCollectsPausesUpgradesAndRestarts" fullname="Waffle.Tests.Integration.CombatSceneSmokeTests.ActualScene_AttacksCollectsPausesUpgradesAndRestarts" methodname="ActualScene_AttacksCollectsPausesUpgradesAndRestarts" classname="Waffle.Tests.Integration.CombatSceneSmokeTests" runstate="Runnable" seed="454483315" result="Passed" start-time="2026-10-11 23:26:46Z" end-time="2026-10-11 23:26:47Z" duration="1.176841" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Waffle] 开局 seed=12345 frame=153
+[Waffle] 状态 Playing→Paused（按钮） now=0.209 frame=494 timeScale=0
+[Waffle] 状态 Paused→Playing（按钮（恢复）） now=0.209 frame=660 timeScale=1
+[Waffle] +5 XP → Lv2 0/8，本次升级 1 次，待升级 1
+[Waffle] 升级面板 #1：Lv2 选项 [Damage, FireRate, PickupRange] 待升级 1
+[Waffle] 状态 Playing→LevelUp（待升级 1） now=0.211 frame=661 timeScale=0
+[Waffle] 选择升级 Damage（第 1 次），剩余待升级 0
+[Waffle] 状态 LevelUp→Playing（升级完成） now=0.211 frame=1728 timeScale=1
+[Waffle] 重开：从 Playing now=0.211 frame=1728
+[Waffle] 开局 seed=12345 frame=1729
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1006" name="DodgeSceneTests" fullname="Waffle.Tests.Integration.DodgeSceneTests" classname="Waffle.Tests.Integration.DodgeSceneTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-11 23:26:47Z" end-time="2026-10-11 23:26:48Z" duration="0.463857" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1007" name="SpaceInput_MovesRealPlayer_AndAfterimagesMatchVisualSize" fullname="Waffle.Tests.Integration.DodgeSceneTests.SpaceInput_MovesRealPlayer_AndAfterimagesMatchVisualSize" methodname="SpaceInput_MovesRealPlayer_AndAfterimagesMatchVisualSize" classname="Waffle.Tests.Integration.DodgeSceneTests" runstate="Runnable" seed="349589525" result="Passed" start-time="2026-10-11 23:26:47Z" end-time="2026-10-11 23:26:48Z" duration="0.459350" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Waffle] 开局 seed=12345 frame=1738
+DODGE_SIZE_CHECK: visual=(1.56, 1.80, 1.36) ghost=(1.27, 1.51, 1.24) scale=(23.16, 23.16, 23.16)
+[Waffle] 状态 Playing→Paused（按钮） now=0.151 frame=1745 timeScale=0
+[Waffle] 状态 Paused→Playing（按钮（恢复）） now=0.151 frame=1916 timeScale=1
+DODGE_DISTANCE_CHECK: 3
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1008" name="IntegrationSmokeTests" fullname="Waffle.Tests.Integration.IntegrationSmokeTests" classname="Waffle.Tests.Integration.IntegrationSmokeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-11 23:26:48Z" end-time="2026-10-11 23:26:48Z" duration="0.004309" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1009" name="GameLoop_CanBeCreated_AndStartsPlaying" fullname="Waffle.Tests.Integration.IntegrationSmokeTests.GameLoop_CanBeCreated_AndStartsPlaying" methodname="GameLoop_CanBeCreated_AndStartsPlaying" classname="Waffle.Tests.Integration.IntegrationSmokeTests" runstate="Runnable" seed="6710005" result="Passed" start-time="2026-10-11 23:26:48Z" end-time="2026-10-11 23:26:48Z" duration="0.002994" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Waffle] 开局 seed=12345 frame=1933
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1010" name="PresentationSceneSmokeTests" fullname="Waffle.Tests.Integration.PresentationSceneSmokeTests" classname="Waffle.Tests.Integration.PresentationSceneSmokeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-11 23:26:48Z" end-time="2026-10-11 23:26:49Z" duration="0.966676" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1011" name="PresentationScene_StartPauseUpgradeAndRestart" fullname="Waffle.Tests.Integration.PresentationSceneSmokeTests.PresentationScene_StartPauseUpgradeAndRestart" methodname="PresentationScene_StartPauseUpgradeAndRestart" classname="Waffle.Tests.Integration.PresentationSceneSmokeTests" runstate="Runnable" seed="969036503" result="Passed" start-time="2026-10-11 23:26:48Z" end-time="2026-10-11 23:26:49Z" duration="0.965706" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Waffle] 开局 seed=12345 frame=1979
+[Waffle] 状态 Playing→Paused（按钮） now=0.050 frame=1980 timeScale=0
+[Waffle] 状态 Paused→Playing（按钮（恢复）） now=0.050 frame=2236 timeScale=1
+[Waffle] +5 XP → Lv2 0/8，本次升级 1 次，待升级 1
+[Waffle] 升级面板 #1：Lv2 选项 [Damage, FireRate, PickupRange] 待升级 1
+[Waffle] 状态 Playing→LevelUp（待升级 1） now=0.051 frame=2237 timeScale=0
+[Waffle] 选择升级 Damage（第 1 次），剩余待升级 0
+[Waffle] 状态 LevelUp→Playing（升级完成） now=0.051 frame=3460 timeScale=1
+[Waffle] 重开：从 Playing now=0.051 frame=3460
+[Waffle] 开局 seed=12345 frame=3461
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1012" name="V01RulesTests" fullname="Waffle.Tests.Integration.V01RulesTests" classname="Waffle.Tests.Integration.V01RulesTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-11 23:26:49Z" end-time="2026-10-11 23:26:49Z" duration="0.010498" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1016" name="DeathWithoutTimeout_IsDefeat_AndClockStaysAtTickStart" fullname="Waffle.Tests.Integration.V01RulesTests.DeathWithoutTimeout_IsDefeat_AndClockStaysAtTickStart" methodname="DeathWithoutTimeout_IsDefeat_AndClockStaysAtTickStart" classname="Waffle.Tests.Integration.V01RulesTests" runstate="Runnable" seed="1536716446" result="Passed" start-time="2026-10-11 23:26:49Z" end-time="2026-10-11 23:26:49Z" duration="0.002903" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1014" name="GiveXp30_OpensThreePanels_AndFinishesAtLevel4With6Of14" fullname="Waffle.Tests.Integration.V01RulesTests.GiveXp30_OpensThreePanels_AndFinishesAtLevel4With6Of14" methodname="GiveXp30_OpensThreePanels_AndFinishesAtLevel4With6Of14" classname="Waffle.Tests.Integration.V01RulesTests" runstate="Runnable" seed="1259936634" result="Passed" start-time="2026-10-11 23:26:49Z" end-time="2026-10-11 23:26:49Z" duration="0.001123" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1018" name="LevelUpAndTimeoutSameTick_IsVictory_AndDoesNotOpenPanel" fullname="Waffle.Tests.Integration.V01RulesTests.LevelUpAndTimeoutSameTick_IsVictory_AndDoesNotOpenPanel" methodname="LevelUpAndTimeoutSameTick_IsVictory_AndDoesNotOpenPanel" classname="Waffle.Tests.Integration.V01RulesTests" runstate="Runnable" seed="775111932" result="Passed" start-time="2026-10-11 23:26:49Z" end-time="2026-10-11 23:26:49Z" duration="0.000396" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1020" name="NewSimulation_DoesNotKeepPreviousRun" fullname="Waffle.Tests.Integration.V01RulesTests.NewSimulation_DoesNotKeepPreviousRun" methodname="NewSimulation_DoesNotKeepPreviousRun" classname="Waffle.Tests.Integration.V01RulesTests" runstate="Runnable" seed="1697926720" result="Passed" start-time="2026-10-11 23:26:49Z" end-time="2026-10-11 23:26:49Z" duration="0.000302" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="PausedInput_DoesNotMoveOrDodge_AndDoesNotReplayAfterResume" fullname="Waffle.Tests.Integration.V01RulesTests.PausedInput_DoesNotMoveOrDodge_AndDoesNotReplayAfterResume" methodname="PausedInput_DoesNotMoveOrDodge_AndDoesNotReplayAfterResume" classname="Waffle.Tests.Integration.V01RulesTests" runstate="Runnable" seed="465612787" result="Passed" start-time="2026-10-11 23:26:49Z" end-time="2026-10-11 23:26:49Z" duration="0.000352" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1015" name="SameTick_DeathAndTimeout_IsDefeat" fullname="Waffle.Tests.Integration.V01RulesTests.SameTick_DeathAndTimeout_IsDefeat" methodname="SameTick_DeathAndTimeout_IsDefeat" classname="Waffle.Tests.Integration.V01RulesTests" runstate="Runnable" seed="1067434176" result="Passed" start-time="2026-10-11 23:26:49Z" end-time="2026-10-11 23:26:49Z" duration="0.000229" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1019" name="Terminal_RejectsGiveXp_AndDoesNotChangeProgress" fullname="Waffle.Tests.Integration.V01RulesTests.Terminal_RejectsGiveXp_AndDoesNotChangeProgress" methodname="Terminal_RejectsGiveXp_AndDoesNotChangeProgress" classname="Waffle.Tests.Integration.V01RulesTests" runstate="Runnable" seed="2066660887" result="Passed" start-time="2026-10-11 23:26:49Z" end-time="2026-10-11 23:26:49Z" duration="0.000388" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1017" name="TimeoutWithoutDeath_IsVictoryAtDuration" fullname="Waffle.Tests.Integration.V01RulesTests.TimeoutWithoutDeath_IsVictoryAtDuration" methodname="TimeoutWithoutDeath_IsVictoryAtDuration" classname="Waffle.Tests.Integration.V01RulesTests" runstate="Runnable" seed="1862521434" result="Passed" start-time="2026-10-11 23:26:49Z" end-time="2026-10-11 23:26:49Z" duration="0.000243" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/50665/AppData/LocalLow/DefaultCompany/My project\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

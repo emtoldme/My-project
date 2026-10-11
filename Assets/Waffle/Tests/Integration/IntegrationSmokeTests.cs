@@ -1,13 +1,13 @@
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.TestTools;
 
 namespace Waffle.Tests.Integration
 {
     /// <summary>
-    /// 占位冒烟测试：只证明 Waffle.Tests.Integration 程序集能编译、能在 PlayMode 下运行。
-    /// 本目录之后由 1 号（V-01）负责编写真正的集成测试。
+    /// 独立组件冒烟测试，显式提供输入依赖，不依赖其他用例保留项目级 Actions。
     /// </summary>
     public class IntegrationSmokeTests
     {
@@ -15,7 +15,16 @@ namespace Waffle.Tests.Integration
         public IEnumerator GameLoop_CanBeCreated_AndStartsPlaying()
         {
             var go = new GameObject("GameLoop_Smoke");
+            go.SetActive(false);
             var loop = go.AddComponent<GameLoop>();
+            var actions = ScriptableObject.CreateInstance<InputActionAsset>();
+            var player = actions.AddActionMap("Player");
+            player.AddAction("Move", InputActionType.Value);
+            player.AddAction("Dodge", InputActionType.Button);
+            player.AddAction("Pause", InputActionType.Button);
+            actions.AddActionMap("UI").AddAction("Pause", InputActionType.Button);
+            loop.actions = actions;
+            go.SetActive(true);
             yield return null; // 让 Awake / 第一帧 Update 执行
 
             Assert.IsNotNull(loop.Sim);
@@ -25,6 +34,7 @@ namespace Waffle.Tests.Integration
             Object.Destroy(go);
             Time.timeScale = 1f;
             yield return null;
+            Object.Destroy(actions);
         }
     }
 }
