@@ -127,6 +127,8 @@ namespace Waffle.EditorTools
                 profile = ScriptableObject.CreateInstance<VolumeProfile>();
                 AssetDatabase.CreateAsset(profile, profilePath);
             }
+            // Repair profiles saved by earlier setup versions with transient components.
+            profile.components.RemoveAll(component => component == null);
             Bloom bloom;
             if (!profile.TryGet(out bloom)) bloom = profile.Add<Bloom>(true);
             bloom.active = true;
@@ -136,6 +138,12 @@ namespace Waffle.EditorTools
             if (!profile.TryGet(out vignette)) vignette = profile.Add<Vignette>(true);
             vignette.active = true;
             vignette.intensity.Override(0.2f);
+            foreach (var component in profile.components)
+            {
+                // VolumeProfile.Add only creates the object; it must also become a saved subasset.
+                if (!AssetDatabase.Contains(component)) AssetDatabase.AddObjectToAsset(component, profile);
+                EditorUtility.SetDirty(component);
+            }
             EditorUtility.SetDirty(profile);
             var volGo = GameObject.Find("PostFX Volume");
             if (volGo == null) volGo = new GameObject("PostFX Volume");

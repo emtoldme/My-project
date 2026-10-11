@@ -49,6 +49,8 @@ namespace Waffle
             public bool fadeAlpha;
             public bool shrink;
             public float delay;
+            public bool inUse;
+            public Mesh bakedMesh;
         }
 
         private readonly List<Fx> muzzlePool = new List<Fx>();
@@ -110,12 +112,13 @@ namespace Waffle
             var go = new GameObject("FX_Afterimage");
             go.transform.SetParent(transform, false);
             var mf = go.AddComponent<MeshFilter>();
-            mf.sharedMesh = new Mesh { name = "AfterimageBake" };
+            var bakedMesh = new Mesh { name = "AfterimageBake" };
+            mf.sharedMesh = bakedMesh;
             var r = go.AddComponent<MeshRenderer>();
             if (afterimageMaterial != null) r.sharedMaterial = afterimageMaterial;
             r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             go.SetActive(false);
-            return new Fx { go = go, renderer = r, fadeAlpha = true };
+            return new Fx { go = go, renderer = r, fadeAlpha = true, bakedMesh = bakedMesh };
         }
 
         // =====================================================================
@@ -142,7 +145,8 @@ namespace Waffle
 
         private Fx Take(List<Fx> pool)
         {
-            for (int i = 0; i < pool.Count; i++) if (!pool[i].go.activeSelf) return pool[i];
+            // Delayed effects already own their slot, even while the GameObject is inactive.
+            for (int i = 0; i < pool.Count; i++) if (!pool[i].inUse) return pool[i];
             return null; // 池满就放弃这次表现（不 new）
         }
 
@@ -153,6 +157,7 @@ namespace Waffle
             fx.baseScale = scale;
             fx.age = 0f;
             fx.life = life;
+            fx.inUse = true;
             fx.go.SetActive(fx.delay <= 0f);
             active.Add(fx);
         }
@@ -186,7 +191,11 @@ namespace Waffle
             Fx fx = Take(afterimagePool);
             if (fx == null) return;
             var mf = fx.go.GetComponent<MeshFilter>();
-            if (playerSkin != null) playerSkin.BakeMesh(mf.sharedMesh);
+            if (playerSkin != null)
+            {
+                mf.sharedMesh = fx.bakedMesh;
+                playerSkin.BakeMesh(fx.bakedMesh);
+            }
             else if (playerMeshFilter != null) mf.sharedMesh = playerMeshFilter.sharedMesh;
             Transform src = playerSkin != null ? playerSkin.transform : (playerMeshFilter != null ? playerMeshFilter.transform : playerVisual);
             fx.go.transform.rotation = src.rotation;
@@ -243,6 +252,7 @@ namespace Waffle
             fx.go.SetActive(false);
             fx.renderer.SetPropertyBlock(null);
             fx.delay = 0f;
+            fx.inUse = false;
         }
 
         private void SetPlayerFlash(bool on)
@@ -272,6 +282,14 @@ namespace Waffle
             active.Clear();
             hurtFlashLeft = 0f;
             SetPlayerFlash(false);
+        }
+
+        private void OnDestroy()
+        {
+            // Runtime-created meshes are not released with their MeshFilter.
+            // Never destroy a model asset used by the static-mesh fallback.
+            for (int i = 0; i < afterimagePool.Count; i++)
+                if (afterimagePool[i].bakedMesh != null) Destroy(afterimagePool[i].bakedMesh);
         }
     }
 }
