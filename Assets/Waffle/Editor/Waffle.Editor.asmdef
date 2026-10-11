@@ -1,0 +1,20 @@
+{
+    "name": "Waffle.Editor",
+    "rootNamespace": "Waffle.EditorTools",
+    "references": [
+        "Waffle.Rules",
+        "Waffle.Runtime",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

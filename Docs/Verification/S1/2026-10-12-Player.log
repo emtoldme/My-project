@@ -1,0 +1,57 @@
+Mono path[0] = 'C:/Users/50665/AppData/Local/Temp/ai-unity-verify/main/Builds/Windows/WaffleS1_Data/Managed'
+Mono config path = 'C:/Users/50665/AppData/Local/Temp/ai-unity-verify/main/Builds/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Found 3 interfaces on host : 0) 192.168.137.1 1) 172.24.160.1 2) 192.168.50.238
+Player connection [33564]  Target information:
+
+Player connection [33564]  * "[IP] 192.168.137.1 [Port] 55009 [Flags] 2 [Guid] 2345108695 [EditorId] 797307793 [Version] 1048832 [Id] WindowsPlayer(2,¸ÇÑÇ) [Debug] 0 [PackageName] WindowsPlayer [ProjectName] My project" 
+
+Player connection [33564]  * "[IP] 172.24.160.1 [Port] 55009 [Flags] 2 [Guid] 2345108695 [EditorId] 797307793 [Version] 1048832 [Id] WindowsPlayer(2,¸ÇÑÇ) [Debug] 0 [PackageName] WindowsPlayer [ProjectName] My project" 
+
+Player connection [33564]  * "[IP] 192.168.50.238 [Port] 55009 [Flags] 2 [Guid] 2345108695 [EditorId] 797307793 [Version] 1048832 [Id] WindowsPlayer(2,¸ÇÑÇ) [Debug] 0 [PackageName] WindowsPlayer [ProjectName] My project" 
+
+Player connection [33564] Started UDP target info broadcast (1) on [225.0.0.222:54997].
+
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.4.3f1 (39d1a88d4dd1)
+[Subsystems] Discovering subsystems at path C:/Users/50665/AppData/Local/Temp/ai-unity-verify/main/Builds/Windows/WaffleS1_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Laptop GPU
+[D3D12 Device Filter] Driver Version: 32.0.16.1692
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 7948 MB
+[D3D12 Device Filter] Processor Count: 32
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Laptop GPU (ID=0x2860)
+    Vendor:          NVIDIA
+    VRAM:            7948 MB
+    App VRAM Budget: 7180 MB
+    Driver:          32.0.16.1692
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.068700 ms
+[Waffle] å¼€å±€ seed=12345 frame=0
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at C:/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:35)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[]) (at C:/build/output/unity/unity/Runtime/Export/Logging/DebugLogHandler.cs:9)
+UnityEngine.Logger:Log (UnityEngine.LogType,object) (at C:/build/output/unity/unity/Runtime/Export/Logging/Logger.cs:60)
+UnityEngine.Debug:Log (object) (at C:/build/output/unity/unity/Runtime/Export/Debug/Debug.bindings.cs:123)
+Waffle.GameLoop:Awake () (at C:/Users/50665/AppData/Local/Temp/ai-unity-verify/main/Assets/Waffle/Scripts/Core/GameLoop.cs:52)
+
+(Filename: C:/build/output/unity/unity/Runtime/Export/Debug/Debug.bindings.cs Line: 123)
+

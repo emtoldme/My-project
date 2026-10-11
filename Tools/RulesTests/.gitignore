@@ -1,0 +1,4 @@
+bin/
+obj/
+TestResults/
+!WaffleRules.Tests.csproj
