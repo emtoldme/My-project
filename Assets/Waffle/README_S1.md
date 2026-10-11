@@ -22,6 +22,10 @@
 
 调试命令（在右上角输入框输入后回车）：`tracetick [on|off|n]`、`settime s`、`setdt s`（0 = 关）、`sethp n`、`givexp n`、`god [on|off]`、`hurt n`（下一个 tick 的 T8 结算一次伤害，代替敌人接触）、`slowmo x`、`help`。
 
+终局（Victory/Defeat）后，`givexp`、`hurt`、`sethp`、`settime` 不执行、不排队，控制台返回“已终局（Defeat），命令未执行：…”。`setdt`、`god`、`slowmo`、`tracetick` 只改调试设置，终局后仍可用。
+
+重开：五种状态都能从界面重开。Playing 和 LevelUp 用左上角 HUD 里的小“重开”按钮；Paused、Victory、Defeat 用中间面板的“重开”按钮。没有新增重开快捷键（未改输入资源）。重开 = 重新加载场景，新局的升级面板、待升级数和排队 XP 都是初始值。
+
 ## 结构
 
 ```
@@ -81,3 +85,8 @@ GameLoop Inspector 里的 **Config** 是唯一来源：基础值（`maxHp`、`mo
 - IMGUI 默认字体显示中文依赖系统字体，若出现方块请告知。
 - `InputSystem_Actions` 是项目级 Actions（会在启动时全部打开），GameInput 初始化时会先关闭全部 Map 再按状态打开。
 - 每秒 CSV、`seed` 命令等其他调试钩子不在本阶段范围。
+
+
+## 表现层（P-01）
+
+先运行 **Waffle → Setup S1 Presentation**：生成材质、视觉 Prefab，设置正交相机（Size 9、Pitch 55°、Yaw 45°）、灯光和后处理，并在 GameLoop 上挂 `AudioDirector`、`VfxDirector`。它们只订阅 `GameLoop.PresentationDispatched` 读取表现事件，不改玩法。详见 `Docs/Integration/P-01_INTEGRATION.md`。

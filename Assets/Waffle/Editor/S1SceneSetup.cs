@@ -52,8 +52,7 @@ namespace Waffle.EditorTools
             camGo.AddComponent<AudioListener>();
             var follow = camGo.AddComponent<CameraFollow>();
             follow.target = player.transform;
-            camGo.transform.position = player.transform.position + follow.offset;
-            camGo.transform.LookAt(player.transform.position);
+            follow.Apply(); // 正交 Size 9、Pitch 55°、Yaw 45°（Docs/Art/01 §四）
 
             // GameLoop + HUD + 调试控制台
             var loopGo = new GameObject("GameLoop");
