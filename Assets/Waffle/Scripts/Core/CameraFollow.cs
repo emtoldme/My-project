@@ -16,6 +16,10 @@ namespace Waffle
         [Tooltip("俯仰角（度）")] public float pitch = 55f;
         [Tooltip("水平朝向（度）")] public float yaw = 45f;
         [Tooltip("相机到目标的距离（正交时只影响裁剪，不影响画面大小）")] public float distance = 30f;
+        [Tooltip("跟随缓冲秒数；短促位移时让人物在画面中先行，再平滑回中")]
+        public float followSmoothTime = 0.08f;
+        public GameLoop loop;
+        private Vector3 followVelocity;
 
         private void Awake()
         {
@@ -33,18 +37,24 @@ namespace Waffle
                 cam.farClipPlane = Mathf.Max(cam.farClipPlane, distance + 60f);
             }
             transform.rotation = Quaternion.Euler(pitch, yaw, 0f);
-            Follow();
+            followVelocity = Vector3.zero;
+            transform.position = DesiredPosition();
         }
 
         private void LateUpdate()
         {
-            Follow();
+            if (loop == null) loop = FindAnyObjectByType<GameLoop>();
+            if (loop != null && loop.Sim != null && loop.Sim.State.Phase != RunPhase.Playing) return;
+            float dt = loop != null && loop.Sim != null ? loop.Sim.LastDt : Mathf.Min(Time.unscaledDeltaTime, 0.05f);
+            if (dt <= 0f) return;
+            transform.position = followSmoothTime <= 0f ? DesiredPosition() : Vector3.SmoothDamp(
+                transform.position, DesiredPosition(), ref followVelocity, followSmoothTime, Mathf.Infinity, dt);
         }
 
-        private void Follow()
+        private Vector3 DesiredPosition()
         {
             Vector3 center = target != null ? target.position : Vector3.zero;
-            transform.position = center - transform.rotation * Vector3.forward * distance;
+            return center - transform.rotation * Vector3.forward * distance;
         }
     }
 }

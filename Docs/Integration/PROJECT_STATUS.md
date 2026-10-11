@@ -6,7 +6,7 @@
 
 main是唯一共享基线。Codex负责GitHub、审查整合、共享接线、本地开发与自动化；用户转发需求并判断必要的手感、视觉、听感和方向。其他AI使用独立目录、功能分支和任务范围，PR交Codex整合，不自行合并。
 
-原My project的Unity窗口、art/s1-industrial-mech分支和未提交文件保留。Codex工作目录为My project-integration。
+Codex使用独立工作目录My project-integration，不切换用户原My project目录的分支、不覆盖其未提交文件；其他AI应继续使用各自的独立目录。
 
 ## 已交付与本轮新增
 
@@ -15,6 +15,7 @@ main是唯一共享基线。Codex负责GitHub、审查整合、共享接线、�
 - C-01B：补齐Unity战斗测试程序集和dotnet入口；RunSimulation统一伤害/XP/终局优先级与T13回收；真实闪避、只读池视图、战斗事件、相机实际视野、调试命令及正式场景已接入。
 - 原始玩家模型过大，已按1.8米高度归一化并对齐脚底，增加青色位置环；属于临时素材可读性修正。工业机甲不代表用户批准改变抽象几何美术方向。
 - 包与操作见C-01B_HANDOFF.md，具体验证和限制见Docs/Verification/C-01/。
+- 用户闪避反馈修复：补偿骨骼残影缩放、沿实际路径延迟采样，取消本体挤压，添加轻微相机跟随缓冲和灰盒地面参照。最新包为Builds/S1-DodgeFix；专项渲染与12项PlayMode回归见Docs/Verification/DodgeFix/，用户手感验收仍待进行。
 
 ## 轻量验证
 
