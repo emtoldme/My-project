@@ -6,6 +6,7 @@
         "UnityEditor.TestRunner",
         "Waffle.Rules",
         "Waffle.Runtime",
+        "Waffle.S2",
         "Unity.InputSystem",
         "Unity.InputSystem.TestFramework"
     ],

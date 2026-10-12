@@ -1,5 +1,7 @@
 # P-03 交接：S2 视听样板装配
 
+> 2026-10-12：作者提交时未运行Unity。Codex随后整合A-03/S-03并完成共享适配：全模型残影、保留敌人材质、分节命名/时序/身份接线、地面铺设、派生音频绑定、样板Build Settings及A/B试听。当前事实与运行证据见Docs/Verification/S2-StyleLab，以下原交接保留历史。
+
 基线：`origin/main` `8e5fe719db2e1d57468e5f451be3e7732e7ea797`（Merge PR #12）。
 分支：`feature/p03-style-lab`。样板代码提交：`0f370922bb108e462877e531a17acb38dee22841`。本交接的提交号补记可能使分支顶端比它新一个提交，以 `git rev-parse origin/feature/p03-style-lab` 为准。
 可写范围只做了：`Assets/Waffle/S2/`、`Docs/Integration/P-03_HANDOFF.md`。

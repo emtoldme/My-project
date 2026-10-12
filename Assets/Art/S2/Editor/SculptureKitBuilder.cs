@@ -79,11 +79,11 @@ namespace Art.S2.Editor
             var meshPlayerWingR = CreateWedgeMesh("Mesh_Player_Fin_R", 0.18f, 0.55f, 0.40f, isLeft: false); // 右翼非对称分节
             var meshPlayerVisor = CreateBeveledBoxMesh("Mesh_Player_SensorVisor", 0.25f, 0.08f, 0.18f, 0.02f, 0.0f); // 核心光学视窗
 
-            SaveMeshAsset(meshPlayerCore, $"{ModelsDir}/Mesh_Player_Core.asset");
-            SaveMeshAsset(meshPlayerUpper, $"{ModelsDir}/Mesh_Player_UpperCowl.asset");
-            SaveMeshAsset(meshPlayerWingL, $"{ModelsDir}/Mesh_Player_Fin_L.asset");
-            SaveMeshAsset(meshPlayerWingR, $"{ModelsDir}/Mesh_Player_Fin_R.asset");
-            SaveMeshAsset(meshPlayerVisor, $"{ModelsDir}/Mesh_Player_SensorVisor.asset");
+            meshPlayerCore = SaveMeshAsset(meshPlayerCore, $"{ModelsDir}/Mesh_Player_Core.asset");
+            meshPlayerUpper = SaveMeshAsset(meshPlayerUpper, $"{ModelsDir}/Mesh_Player_UpperCowl.asset");
+            meshPlayerWingL = SaveMeshAsset(meshPlayerWingL, $"{ModelsDir}/Mesh_Player_Fin_L.asset");
+            meshPlayerWingR = SaveMeshAsset(meshPlayerWingR, $"{ModelsDir}/Mesh_Player_Fin_R.asset");
+            meshPlayerVisor = SaveMeshAsset(meshPlayerVisor, $"{ModelsDir}/Mesh_Player_SensorVisor.asset");
 
             // 敌人部件 Mesh
             var meshEnemyTorso = CreateHexagonalPrismMesh("Mesh_Enemy_Torso", 0.48f, 0.80f, 0.06f); // 钝角六棱体躯干
@@ -91,14 +91,14 @@ namespace Art.S2.Editor
             var meshEnemyBladeR = CreateWedgeMesh("Mesh_Enemy_Blade_R", 0.18f, 0.50f, 0.35f, isLeft: false); // 右突进切刃
             var meshEnemyCore = CreateBeveledBoxMesh("Mesh_Enemy_AlertCore", 0.20f, 0.15f, 0.22f, 0.02f, 0.0f); // 警戒核心
 
-            SaveMeshAsset(meshEnemyTorso, $"{ModelsDir}/Mesh_Enemy_Torso.asset");
-            SaveMeshAsset(meshEnemyBladeL, $"{ModelsDir}/Mesh_Enemy_Blade_L.asset");
-            SaveMeshAsset(meshEnemyBladeR, $"{ModelsDir}/Mesh_Enemy_Blade_R.asset");
-            SaveMeshAsset(meshEnemyCore, $"{ModelsDir}/Mesh_Enemy_AlertCore.asset");
+            meshEnemyTorso = SaveMeshAsset(meshEnemyTorso, $"{ModelsDir}/Mesh_Enemy_Torso.asset");
+            meshEnemyBladeL = SaveMeshAsset(meshEnemyBladeL, $"{ModelsDir}/Mesh_Enemy_Blade_L.asset");
+            meshEnemyBladeR = SaveMeshAsset(meshEnemyBladeR, $"{ModelsDir}/Mesh_Enemy_Blade_R.asset");
+            meshEnemyCore = SaveMeshAsset(meshEnemyCore, $"{ModelsDir}/Mesh_Enemy_AlertCore.asset");
 
             // 地面模块 Mesh (6m x 6m 倒角预制板与带缝组合)
-            var meshFloorTile = CreateFloorTileMesh("Mesh_Floor_Tile_6x6", 6.0f, 0.25f, 0.08f);
-            SaveMeshAsset(meshFloorTile, $"{ModelsDir}/Mesh_Floor_Tile_6x6.asset");
+            var meshFloorTile = CreateFloorTileMesh("Mesh_Floor_Tile_6x6", 6.0f, 0.25f, 0.025f);
+            meshFloorTile = SaveMeshAsset(meshFloorTile, $"{ModelsDir}/Mesh_Floor_Tile_6x6.asset");
 
             // 3. 构建并保存标准化预制体 (Prefabs)
             BuildPlayerPrefab(meshPlayerCore, meshPlayerUpper, meshPlayerWingL, meshPlayerWingR, meshPlayerVisor,
@@ -157,18 +157,18 @@ namespace Art.S2.Editor
             return mat;
         }
 
-        private static void SaveMeshAsset(Mesh mesh, string path)
+        private static Mesh SaveMeshAsset(Mesh mesh, string path)
         {
             var existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
             if (existing != null)
             {
                 EditorUtility.CopySerialized(mesh, existing);
                 EditorUtility.SetDirty(existing);
+                UnityEngine.Object.DestroyImmediate(mesh);
+                return existing;
             }
-            else
-            {
-                AssetDatabase.CreateAsset(mesh, path);
-            }
+            AssetDatabase.CreateAsset(mesh, path);
+            return mesh;
         }
 
         /// <summary>
@@ -237,6 +237,7 @@ namespace Art.S2.Editor
             muzzle.transform.SetParent(motionRoot.transform, false);
             muzzle.transform.localPosition = new Vector3(0.15f, 0.90f, 0.45f);
 
+            NormalizeVisual(root, 1.8f);
             var path = $"{PrefabsDir}/RS_Player.prefab";
             PrefabUtility.SaveAsPrefabAsset(root, path);
             UnityEngine.Object.DestroyImmediate(root);
@@ -294,6 +295,7 @@ namespace Art.S2.Editor
             var mrCore = goCore.AddComponent<MeshRenderer>();
             mrCore.sharedMaterial = matOrange;
 
+            NormalizeVisual(root, 1.4f);
             var path = $"{PrefabsDir}/RS_Enemy.prefab";
             PrefabUtility.SaveAsPrefabAsset(root, path);
             UnityEngine.Object.DestroyImmediate(root);
@@ -326,72 +328,101 @@ namespace Art.S2.Editor
         /// </summary>
         private static Mesh CreateBeveledBoxMesh(string name, float width, float height, float length, float bevel, float asymmetryZ)
         {
-            var mesh = new Mesh { name = name };
-            float hx = width * 0.5f;
-            float hy = height * 0.5f;
-            float hz = length * 0.5f;
-
-            // 简化精确 24 顶点立方体构建，具有倒角法线感
-            Vector3[] vertices = new Vector3[]
+            // Six inset faces, twelve chamfer strips and eight corner triangles.
+            // The delivered six disconnected quads left holes where bevels belong.
+            var half = new Vector3(width, height, length + asymmetryZ) * 0.5f;
+            var center = new Vector3(0f, 0f, asymmetryZ * 0.5f);
+            float b = Mathf.Min(bevel, Mathf.Min(half.x, Mathf.Min(half.y, half.z)) * 0.8f);
+            var faces = new System.Collections.Generic.List<Vector3[]>();
+            for (int axis = 0; axis < 3; axis++)
             {
-                // 前面 (+Z)
-                new Vector3(-hx + bevel, -hy + bevel,  hz + asymmetryZ),
-                new Vector3( hx - bevel, -hy + bevel,  hz + asymmetryZ),
-                new Vector3( hx - bevel,  hy - bevel,  hz + asymmetryZ),
-                new Vector3(-hx + bevel,  hy - bevel,  hz + asymmetryZ),
-                // 后面 (-Z)
-                new Vector3( hx - bevel, -hy + bevel, -hz),
-                new Vector3(-hx + bevel, -hy + bevel, -hz),
-                new Vector3(-hx + bevel,  hy - bevel, -hz),
-                new Vector3( hx - bevel,  hy - bevel, -hz),
-                // 顶面 (+Y)
-                new Vector3(-hx + bevel,  hy, -hz + bevel),
-                new Vector3(-hx + bevel,  hy,  hz + asymmetryZ - bevel),
-                new Vector3( hx - bevel,  hy,  hz + asymmetryZ - bevel),
-                new Vector3( hx - bevel,  hy, -hz + bevel),
-                // 底面 (-Y)
-                new Vector3(-hx + bevel, -hy,  hz + asymmetryZ - bevel),
-                new Vector3(-hx + bevel, -hy, -hz + bevel),
-                new Vector3( hx - bevel, -hy, -hz + bevel),
-                new Vector3( hx - bevel, -hy,  hz + asymmetryZ - bevel),
-                // 右面 (+X)
-                new Vector3( hx, -hy + bevel,  hz + asymmetryZ - bevel),
-                new Vector3( hx, -hy + bevel, -hz + bevel),
-                new Vector3( hx,  hy - bevel, -hz + bevel),
-                new Vector3( hx,  hy - bevel,  hz + asymmetryZ - bevel),
-                // 左面 (-X)
-                new Vector3(-hx, -hy + bevel, -hz + bevel),
-                new Vector3(-hx, -hy + bevel,  hz + asymmetryZ - bevel),
-                new Vector3(-hx,  hy - bevel,  hz + asymmetryZ - bevel),
-                new Vector3(-hx,  hy - bevel, -hz + bevel),
-            };
-
-            int[] triangles = new int[]
-            {
-                0, 2, 1, 0, 3, 2,       // 前
-                4, 6, 5, 4, 7, 6,       // 后
-                8, 10, 9, 8, 11, 10,    // 顶
-                12, 14, 13, 12, 15, 14, // 底
-                16, 18, 17, 16, 19, 18, // 右
-                20, 22, 21, 20, 23, 22  // 左
-            };
-
-            Vector2[] uvs = new Vector2[24];
-            for (int i = 0; i < 6; i++)
-            {
-                uvs[i * 4 + 0] = new Vector2(0, 0);
-                uvs[i * 4 + 1] = new Vector2(1, 0);
-                uvs[i * 4 + 2] = new Vector2(1, 1);
-                uvs[i * 4 + 3] = new Vector2(0, 1);
+                int u = (axis + 1) % 3, v = (axis + 2) % 3;
+                for (int sign = -1; sign <= 1; sign += 2)
+                {
+                    var f = new Vector3[4];
+                    int[] su = { -1, 1, 1, -1 }, sv = { -1, -1, 1, 1 };
+                    for (int i = 0; i < 4; i++)
+                    {
+                        f[i][axis] = sign * half[axis];
+                        f[i][u] = su[i] * (half[u] - b);
+                        f[i][v] = sv[i] * (half[v] - b);
+                        f[i] += center;
+                    }
+                    faces.Add(f);
+                }
             }
+            for (int a = 0; a < 3; a++) for (int d = a + 1; d < 3; d++)
+            {
+                int c = 3 - a - d;
+                for (int sa = -1; sa <= 1; sa += 2) for (int sd = -1; sd <= 1; sd += 2)
+                {
+                    var f = new Vector3[4];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        bool first = i == 0 || i == 3;
+                        f[i][a] = sa * (half[a] - (first ? 0f : b));
+                        f[i][d] = sd * (half[d] - (first ? b : 0f));
+                        f[i][c] = (i < 2 ? -1 : 1) * (half[c] - b);
+                        f[i] += center;
+                    }
+                    faces.Add(f);
+                }
+            }
+            for (int x = -1; x <= 1; x += 2) for (int y = -1; y <= 1; y += 2) for (int z = -1; z <= 1; z += 2)
+            {
+                var f = new Vector3[3];
+                var signs = new Vector3(x, y, z);
+                for (int i = 0; i < 3; i++)
+                {
+                    f[i] = Vector3.Scale(signs, half - Vector3.one * b);
+                    f[i][i] = signs[i] * half[i];
+                    f[i] += center;
+                }
+                faces.Add(f);
+            }
+            return FlatSolid(name, faces, center);
+        }
 
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.uv = uvs;
-            mesh.RecalculateNormals();
-            mesh.RecalculateTangents();
-            mesh.RecalculateBounds();
+        private static Mesh FlatSolid(string name, System.Collections.Generic.List<Vector3[]> faces, Vector3 center)
+        {
+            var vertices = new System.Collections.Generic.List<Vector3>();
+            var indices = new System.Collections.Generic.List<int>();
+            var uv = new System.Collections.Generic.List<Vector2>();
+            foreach (var face in faces)
+            {
+                Vector3 middle = Vector3.zero;
+                foreach (var point in face) middle += point;
+                middle /= face.Length;
+                if (Vector3.Dot(Vector3.Cross(face[1] - face[0], face[2] - face[0]), middle - center) < 0f)
+                    Array.Reverse(face);
+                int start = vertices.Count;
+                for (int i = 0; i < face.Length; i++)
+                {
+                    vertices.Add(face[i]);
+                    uv.Add(i == 0 ? Vector2.zero : i == 1 ? Vector2.right : i == 2 ? Vector2.one : Vector2.up);
+                }
+                for (int i = 1; i < face.Length - 1; i++)
+                { indices.Add(start); indices.Add(start + i); indices.Add(start + i + 1); }
+            }
+            var mesh = new Mesh { name = name };
+            mesh.SetVertices(vertices); mesh.SetTriangles(indices, 0); mesh.SetUVs(0, uv);
+            mesh.RecalculateNormals(); mesh.RecalculateTangents(); mesh.RecalculateBounds();
             return mesh;
+        }
+
+        private static void NormalizeVisual(GameObject root, float height)
+        {
+            var renderers = root.GetComponentsInChildren<Renderer>();
+            var bounds = renderers[0].bounds;
+            foreach (var renderer in renderers) bounds.Encapsulate(renderer.bounds);
+            float scale = height / bounds.size.y;
+            Vector3 offset = new Vector3(-bounds.center.x, -bounds.min.y, -bounds.center.z);
+            var motion = root.transform.Find("MotionRoot");
+            foreach (Transform part in motion)
+            {
+                part.localPosition = (part.localPosition + offset) * scale;
+                part.localScale *= scale;
+            }
         }
 
         /// <summary>
@@ -431,12 +462,13 @@ namespace Art.S2.Editor
                 3, 4, 5, 3, 5, 2
             };
 
-            mesh.vertices = v;
-            mesh.triangles = t;
-            mesh.RecalculateNormals();
-            mesh.RecalculateTangents();
-            mesh.RecalculateBounds();
-            return mesh;
+            var faces = new System.Collections.Generic.List<Vector3[]> {
+                new[] { v[0], v[1], v[2], v[3] }, new[] { v[0], v[4], v[5], v[1] },
+                new[] { v[0], v[3], v[4] }, new[] { v[1], v[5], v[2] },
+                new[] { v[3], v[2], v[5], v[4] }
+            };
+            UnityEngine.Object.DestroyImmediate(mesh);
+            return FlatSolid(name, faces, new Vector3(0f, -height / 6f, -length * 0.1f));
         }
 
         /// <summary>
@@ -511,12 +543,15 @@ namespace Art.S2.Editor
                 tList.Add(bottomCenterIndex + 1 + i);
             }
 
-            mesh.vertices = vList.ToArray();
-            mesh.triangles = tList.ToArray();
-            mesh.RecalculateNormals();
-            mesh.RecalculateTangents();
-            mesh.RecalculateBounds();
-            return mesh;
+            var faces = new System.Collections.Generic.List<Vector3[]>();
+            for (int i = 0; i < segments; i++)
+            {
+                int next = (i + 1) % segments;
+                faces.Add(new[] { bottomRing[i], bottomRing[next], topRing[next], topRing[i] });
+            }
+            faces.Add(topRing); faces.Add(bottomRing);
+            UnityEngine.Object.DestroyImmediate(mesh);
+            return FlatSolid(name, faces, Vector3.zero);
         }
 
         /// <summary>
@@ -524,57 +559,10 @@ namespace Art.S2.Editor
         /// </summary>
         private static Mesh CreateFloorTileMesh(string name, float size, float thickness, float bevel)
         {
-            var mesh = new Mesh { name = name };
-            float hs = size * 0.5f;
-
-            Vector3[] v = new Vector3[]
-            {
-                // 顶面主平面 (微收缩留出倒角斜面)
-                new Vector3(-hs + bevel, 0.0f, -hs + bevel),
-                new Vector3( hs - bevel, 0.0f, -hs + bevel),
-                new Vector3( hs - bevel, 0.0f,  hs - bevel),
-                new Vector3(-hs + bevel, 0.0f,  hs - bevel),
-
-                // 倒角下凹边缘
-                new Vector3(-hs, -bevel, -hs),
-                new Vector3( hs, -bevel, -hs),
-                new Vector3( hs, -bevel,  hs),
-                new Vector3(-hs, -bevel,  hs),
-
-                // 底部定位
-                new Vector3(-hs, -thickness, -hs),
-                new Vector3( hs, -thickness, -hs),
-                new Vector3( hs, -thickness,  hs),
-                new Vector3(-hs, -thickness,  hs),
-            };
-
-            int[] t = new int[]
-            {
-                // 顶面核心
-                0, 2, 1, 0, 3, 2,
-                // 前倒角斜面
-                3, 2, 6, 3, 6, 7,
-                // 后倒角斜面
-                4, 5, 1, 4, 1, 0,
-                // 右倒角斜面
-                1, 5, 6, 1, 6, 2,
-                // 左倒角斜面
-                4, 0, 3, 4, 3, 7,
-                // 底面
-                8, 10, 9, 8, 11, 10
-            };
-
-            Vector2[] uvs = new Vector2[v.Length];
-            for (int i = 0; i < v.Length; i++)
-            {
-                uvs[i] = new Vector2((v[i].x / size) + 0.5f, (v[i].z / size) + 0.5f);
-            }
-
-            mesh.vertices = v;
-            mesh.triangles = t;
-            mesh.uv = uvs;
-            mesh.RecalculateNormals();
-            mesh.RecalculateTangents();
+            var mesh = CreateBeveledBoxMesh(name, size, thickness, size, bevel, 0f);
+            var vertices = mesh.vertices;
+            for (int i = 0; i < vertices.Length; i++) vertices[i].y -= thickness * 0.5f;
+            mesh.vertices = vertices;
             mesh.RecalculateBounds();
             return mesh;
         }

@@ -23,6 +23,7 @@ namespace Waffle.S2.EditorTools
         const string ActionsPath = "Assets/InputSystem_Actions.inputactions";
         const string SfxDir = "Assets/Audio/SFX/";
         const string MusicDir = "Assets/Audio/Music/";
+        const string SonicDir = "Assets/Waffle/S2/Audio/";
 
         [MenuItem("Waffle/Setup S2 Style Lab")]
         public static void Setup()
@@ -31,12 +32,23 @@ namespace Waffle.S2.EditorTools
             Directory.CreateDirectory(MeshDir);
             Directory.CreateDirectory(PrefabDir);
             Directory.CreateDirectory("Assets/Waffle/Scenes");
+            foreach (string audioPath in Directory.GetFiles(SonicDir, "*.wav"))
+            {
+                var importer = AssetImporter.GetAtPath(audioPath.Replace('\\', '/')) as AudioImporter;
+                if (importer == null) continue;
+                var settings = importer.defaultSampleSettings;
+                settings.compressionFormat = AudioCompressionFormat.PCM;
+                settings.loadType = AudioClipLoadType.DecompressOnLoad;
+                settings.sampleRateSetting = AudioSampleRateSetting.PreserveSampleRate;
+                importer.defaultSampleSettings = settings;
+                importer.SaveAndReimport();
+            }
 
             Material ceramic = Lit("M_S2_Ceramic", new Color(0.90f, 0.90f, 0.86f), 0f, 0.16f, Color.black);
             Material graphite = Lit("M_S2_Graphite", new Color(0.22f, 0.23f, 0.25f), 0.08f, 0.2f, Color.black);
             Material metal = Lit("M_S2_Metal", new Color(0.55f, 0.58f, 0.62f), 0.55f, 0.38f, Color.black);
             Material glow = Lit("M_S2_Accent", new Color(0.16f, 0.18f, 0.2f), 0f, 0.12f, new Color(1f, 0.27f, 0f) * 1.2f);
-            Material ground = Lit("M_S2_Ground", new Color(0.45f, 0.48f, 0.5f), 0f, 0.14f, Color.black);
+            Material ground = Lit("M_S2_Ground", new Color(0.14f, 0.16f, 0.19f), 0f, 0.14f, Color.black);
             Material line = Unlit("M_S2_Line", new Color(1f, 0.27f, 0f, 1f));
             Material shard = Unlit("M_S2_Shard", new Color(0.93f, 0.74f, 0.32f, 1f));
             Material burstMat = ParticleUnlit("M_S2_Burst", new Color(1f, 0.27f, 0f, 1f));
@@ -80,11 +92,17 @@ namespace Waffle.S2.EditorTools
             var floorRenderer = floorGo.AddComponent<MeshRenderer>();
             floorRenderer.sharedMaterial = ground;
 
-            GameObject groundArt = LoadArt("RS_Ground", "Ground", "RS_GroundModule");
-            GameObject groundInstance = (GameObject)PrefabUtility.InstantiatePrefab(groundArt != null ? groundArt : groundPrefab);
-            groundInstance.name = groundArt != null ? "RS_Ground_Art" : "RS_GroundModule_Placeholder";
-            groundInstance.transform.position = new Vector3(0f, 0.02f, 0f);
-            groundInstance.transform.localScale = Vector3.one;
+            GameObject groundArt = LoadArt("RS_Floor_Tile_6x6", "RS_Ground", "Ground", "RS_GroundModule");
+            var groundRoot = new GameObject("SculptureFloor").transform;
+            int tiles = groundArt != null ? 10 : 1;
+            for (int x = 0; x < tiles; x++) for (int z = 0; z < tiles; z++)
+            {
+                GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(groundArt != null ? groundArt : groundPrefab);
+                tile.transform.SetParent(groundRoot, false);
+                tile.transform.position = groundArt != null
+                    ? new Vector3(-27f + x * 6f, 0.02f, -27f + z * 6f) : new Vector3(0f, 0.02f, 0f);
+                tile.transform.localScale = Vector3.one;
+            }
 
             GameObject playerArt = LoadArt("RS_Player", "Player");
             bool playerArtOk = playerArt != null && HasMotion(playerArt);
@@ -131,12 +149,14 @@ namespace Waffle.S2.EditorTools
             var views = loopGo.AddComponent<CombatViews>();
             views.loop = gameLoop;
             views.enemyVisualPrefab = enemyArtOk ? enemyArt : enemyPrefab;
+            views.tintEnemyMaterials = false;
+            views.normalizeEnemyVisuals = false;
             views.projectileMaterial = LoadOr<Material>("Assets/Waffle/Art/Materials/M_FX_Muzzle_Cyan.mat", line);
             views.gemMaterial = shard;
 
             var audio = loopGo.AddComponent<AudioDirector>();
             audio.loop = gameLoop;
-            audio.combatLoop = Clip(MusicDir + "bgm_combat_master_64s_seamless.wav");
+            audio.combatLoop = Clip(SonicDir + "bgm_s03_mathrock_polymeter_24s_loop.wav");
             audio.levelUpLoop = Clip(MusicDir + "bgm_levelup_suspended_loop.wav");
             audio.shoot.clips = Clips("sfx_player_shoot_01", "sfx_player_shoot_02", "sfx_player_shoot_03");
             audio.enemyHit.clips = Clips("sfx_enemy_hit_01", "sfx_enemy_hit_02", "sfx_enemy_hit_03");
@@ -148,6 +168,13 @@ namespace Waffle.S2.EditorTools
             audio.levelUpConfirm.clips = Clips("sfx_ui_levelup_confirm");
             audio.victory.clips = Clips("sfx_game_victory");
             audio.defeat.clips = Clips("sfx_game_defeat");
+            audio.shoot.clips = new[] { Clip(SonicDir + "sfx_s03_shot.wav") };
+            audio.enemyHit.clips = new[] { Clip(SonicDir + "sfx_s03_enemy_hit.wav") };
+            audio.dodge.clips = new[] { Clip(SonicDir + "sfx_s03_dodge.wav") };
+            audio.playerHurt.clips = new[] { Clip(SonicDir + "sfx_s03_player_hurt.wav") };
+            audio.gemPickup.clips = new[] { Clip(SonicDir + "sfx_s03_gem_pickup.wav") };
+            audio.levelUpConfirm.clips = new[] { Clip(SonicDir + "sfx_s03_levelup_chosen.wav") };
+            audio.shoot.pitchRandom = audio.enemyHit.pitchRandom = audio.gemPickup.pitchRandom = 0f;
 
             var vfx = loopGo.AddComponent<VfxDirector>();
             vfx.loop = gameLoop;
@@ -168,6 +195,8 @@ namespace Waffle.S2.EditorTools
             fx.lineMaterial = line;
             var hud = loopGo.AddComponent<S2ChoiceHud>();
             hud.loop = gameLoop;
+            hud.musicA = audio.combatLoop;
+            hud.musicB = Clip(SonicDir + "bgm_s03_postrock_space_24s_loop.wav");
             var console = loopGo.AddComponent<DebugConsole>();
             console.loop = gameLoop;
             console.visible = false;

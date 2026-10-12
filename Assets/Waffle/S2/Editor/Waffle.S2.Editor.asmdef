@@ -5,7 +5,8 @@
         "Waffle.Rules",
         "Waffle.Runtime",
         "Waffle.S2",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Art.S2.Editor"
     ],
     "includePlatforms": [
         "Editor"

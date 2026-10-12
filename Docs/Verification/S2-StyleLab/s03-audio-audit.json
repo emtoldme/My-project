@@ -1,0 +1,106 @@
+{
+  "method": "PCM sample scan; interpolated peak estimate: 4 phases, 21-tap sinc per phase, Kaiser beta=5. No certified true-peak or listening claim. Zero-lag Pearson is not proof of authorship, genre or perceptual independence.",
+  "files": [
+    {
+      "file": "Assets/Audio/S03/bgm_s03_mathrock_polymeter_24s_loop.wav",
+      "seconds": 24.0,
+      "hz": 48000,
+      "bits": 24,
+      "channels": 2,
+      "sample_peak_dbfs": -2.8654,
+      "interpolated_peak_4phase_dbfs": -1.915,
+      "rms_dbfs": -21.0722,
+      "loop_boundary_step": 0.14575493335723877,
+      "sha256": "d228c777b492863f1797f512180a4389d9665f4132539517b3207a7f07a68f19"
+    },
+    {
+      "file": "Assets/Audio/S03/bgm_s03_postrock_space_24s_loop.wav",
+      "seconds": 24.0,
+      "hz": 48000,
+      "bits": 24,
+      "channels": 2,
+      "sample_peak_dbfs": -1.9217,
+      "interpolated_peak_4phase_dbfs": -1.8882,
+      "rms_dbfs": -16.9423,
+      "loop_boundary_step": 0.1907569169998169,
+      "sha256": "7d811f3a532808916663b66b922b69fb6369d346b3f23f2c79e3b56c86812754"
+    },
+    {
+      "file": "Assets/Audio/S03/sfx_s03_dodge.wav",
+      "seconds": 0.22,
+      "hz": 48000,
+      "bits": 24,
+      "channels": 1,
+      "sample_peak_dbfs": -2.0535,
+      "interpolated_peak_4phase_dbfs": -1.5871,
+      "rms_dbfs": -17.9867,
+      "loop_boundary_step": 0.7572346925735474,
+      "sha256": "8ac41d38c6c1aa44541ff9074b0878404d9e60f6f0023c713a906fb9531a2127"
+    },
+    {
+      "file": "Assets/Audio/S03/sfx_s03_enemy_hit.wav",
+      "seconds": 0.07,
+      "hz": 48000,
+      "bits": 24,
+      "channels": 1,
+      "sample_peak_dbfs": -1.777,
+      "interpolated_peak_4phase_dbfs": -1.5964,
+      "rms_dbfs": -18.8875,
+      "loop_boundary_step": 0.30458927154541016,
+      "sha256": "fd3136c0a4877fda0d9c91ca55bab98adcb147cff66343113740e498a8f8a0d1"
+    },
+    {
+      "file": "Assets/Audio/S03/sfx_s03_gem_pickup.wav",
+      "seconds": 0.18,
+      "hz": 48000,
+      "bits": 24,
+      "channels": 1,
+      "sample_peak_dbfs": -2.3929,
+      "interpolated_peak_4phase_dbfs": -1.6045,
+      "rms_dbfs": -18.7036,
+      "loop_boundary_step": 0.016691088676452637,
+      "sha256": "a025dfa1083664cc73d0e519c5e32be46f2e3a2071f1ebbf6281810e2ca56657"
+    },
+    {
+      "file": "Assets/Audio/S03/sfx_s03_levelup_chosen.wav",
+      "seconds": 0.65,
+      "hz": 48000,
+      "bits": 24,
+      "channels": 1,
+      "sample_peak_dbfs": -1.5928,
+      "interpolated_peak_4phase_dbfs": -1.5904,
+      "rms_dbfs": -17.4351,
+      "loop_boundary_step": 0.0006308555603027344,
+      "sha256": "1a838d628698ae8d3ea4cc8bceb2b76138de0c7f72c965b591a85a48eae35efa"
+    },
+    {
+      "file": "Assets/Audio/S03/sfx_s03_player_hurt.wav",
+      "seconds": 0.32,
+      "hz": 48000,
+      "bits": 24,
+      "channels": 1,
+      "sample_peak_dbfs": -1.5947,
+      "interpolated_peak_4phase_dbfs": -1.5878,
+      "rms_dbfs": -12.8079,
+      "loop_boundary_step": 0.02373063564300537,
+      "sha256": "c661b870c7ce52d1d56f74d1066ba88b377d40252b45b11bdd73e1fc305c4420"
+    },
+    {
+      "file": "Assets/Audio/S03/sfx_s03_shot.wav",
+      "seconds": 0.09,
+      "hz": 48000,
+      "bits": 24,
+      "channels": 1,
+      "sample_peak_dbfs": -1.5944,
+      "interpolated_peak_4phase_dbfs": -1.593,
+      "rms_dbfs": -15.9772,
+      "loop_boundary_step": 0.025584816932678223,
+      "sha256": "1b57bc9a266bada20e118934c75c084dc481453c9a1c414180a23aeef1c946bc"
+    }
+  ],
+  "zero_lag_correlations": {
+    "a_vs_old_first24": 0.006630402046905403,
+    "b_vs_old_first24": 0.0011896533059443343,
+    "a_vs_b": 0.010552793593094177
+  }
+}

@@ -10,6 +10,9 @@ namespace Waffle
         public GameLoop loop;
         public GameObject enemyVisualPrefab;
         public Material projectileMaterial, gemMaterial;
+        [Tooltip("S1 tint remains the default; S2 keeps the sculpture's authored materials.")]
+        public bool tintEnemyMaterials = true;
+        public bool normalizeEnemyVisuals = true;
         private sealed class Slot
         {
             public Transform root;
@@ -78,7 +81,7 @@ namespace Waffle
                 body.transform.SetParent(root, false);
                 foreach (var collider in body.GetComponentsInChildren<Collider>()) Destroy(collider);
                 var renderers = body.GetComponentsInChildren<Renderer>();
-                if (enemy && enemyVisualPrefab != null && renderers.Length > 0)
+                if (enemy && normalizeEnemyVisuals && enemyVisualPrefab != null && renderers.Length > 0)
                 {
                     var bounds = renderers[0].bounds;
                     for (int r = 1; r < renderers.Length; r++) bounds.Encapsulate(renderers[r].bounds);
@@ -134,7 +137,8 @@ namespace Waffle
                 Color tint = e.IsElite ? new Color(1f, 0.58f, 0.22f) : Color.Lerp(new Color(1f, 0.65f, 0.52f), new Color(0.9f, 0.3f, 0.2f), e.Phase / 3f);
                 block.Clear(); block.SetColor(BaseColor, slot.flash > 0f ? Color.white : tint);
                 block.SetColor(Emission, slot.flash > 0f ? Color.white * 2f : Color.black);
-                foreach (var r in slot.renderers) r.SetPropertyBlock(block);
+                foreach (var r in slot.renderers)
+                    r.SetPropertyBlock(tintEnemyMaterials || slot.flash > 0f ? block : null);
                 VisibleEnemies++;
             }
             foreach (var p in combat.Projectiles)

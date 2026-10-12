@@ -30,6 +30,7 @@ namespace Waffle.S2
         readonly List<Pose> poses = new List<Pose>();
         readonly HashSet<int> eliteSerials = new HashSet<int>();
         Transform playerMotion;
+        bool enemyPosesBound;
 
         public bool WasElite(int serial) { return eliteSerials.Contains(serial); }
 
@@ -48,14 +49,6 @@ namespace Waffle.S2
         void Update()
         {
             SnapshotElites();
-            if (!Playing()) return;
-            float dt = loop.Sim.LastDt;
-            if (dt <= 0f) return;
-            for (int i = 0; i < poses.Count; i++)
-            {
-                Pose pose = poses[i];
-                if (pose.age >= 0f) pose.age += dt;
-            }
         }
 
         void LateUpdate()
@@ -67,6 +60,7 @@ namespace Waffle.S2
                 if (pose.motion == null) continue;
                 // 回池后 CombatViews 会关掉槽位。先写回静止姿态，避免下次出池带着偏移。
                 if (!pose.motion.gameObject.activeInHierarchy) pose.age = -1f;
+                else if (pose.age >= 0f && Playing()) pose.age += loop.Sim.LastDt;
                 Apply(pose);
             }
         }
@@ -83,8 +77,7 @@ namespace Waffle.S2
                     case PresentationEventType.Dodge: Play(playerMotion, Dodge); break;
                     case PresentationEventType.PlayerHurt: Play(playerMotion, Hurt); break;
                     case PresentationEventType.EnemyHit:
-                    case PresentationEventType.EnemyKilled:
-                        Play(NearestEnemy(e.X, e.Z), Hit);
+                        Play(EnemyMotion(e.Data), Hit);
                         break;
                     case PresentationEventType.Restart:
                         ResetAll();
@@ -116,7 +109,11 @@ namespace Waffle.S2
                 if (visual != null) playerMotion = FindMotion(visual);
             }
             var views = loop.GetComponent<CombatViews>();
-            if (views != null) Collect(views.transform);
+            if (views != null && !enemyPosesBound && views.transform.Find("Enemy_0") != null)
+            {
+                Collect(views.transform);
+                enemyPosesBound = true;
+            }
             if (playerMotion != null) Ensure(playerMotion);
         }
 
@@ -143,7 +140,7 @@ namespace Waffle.S2
             for (int i = 0; i < motion.childCount; i++)
             {
                 Transform child = motion.GetChild(i);
-                if (child.name == "Core" || child.name == "Segment_A" || child.name == "Segment_B")
+                if (child.name == "Core" || child.name == "Torso" || child.name.StartsWith("Segment_"))
                     parts.Add(child);
             }
             var pose = new Pose
@@ -173,20 +170,18 @@ namespace Waffle.S2
             }
         }
 
-        Transform NearestEnemy(float x, float z)
+        Transform EnemyMotion(int serial)
         {
-            Transform best = null;
-            float bestSqr = 4f;
-            for (int i = 0; i < poses.Count; i++)
+            if (loop == null || loop.Sim == null || loop.Sim.Combat == null) return null;
+            foreach (var enemy in loop.Sim.Combat.Enemies)
             {
-                Transform motion = poses[i].motion;
-                if (motion == null || motion == playerMotion) continue;
-                Vector3 p = motion.position;
-                float dx = p.x - x, dz = p.z - z;
-                float sqr = dx * dx + dz * dz;
-                if (sqr < bestSqr) { bestSqr = sqr; best = motion; }
+                if (!enemy.IsAlive || enemy.Serial != serial) continue;
+                var slot = transform.Find("Enemy_" + enemy.PoolIndex);
+                if (slot == null) return null;
+                for (int i = 0; i < poses.Count; i++)
+                    if (poses[i].motion != null && poses[i].motion.IsChildOf(slot)) return poses[i].motion;
             }
-            return best;
+            return null;
         }
 
         void Apply(Pose pose)
@@ -244,8 +239,9 @@ namespace Waffle.S2
 
         static Vector3 Side(string part)
         {
-            if (part == "Segment_A") return Vector3.right;
-            if (part == "Segment_B") return Vector3.left;
+            if (part == "Segment_A" || part.EndsWith("R")) return Vector3.right;
+            if (part == "Segment_B" || part.EndsWith("L")) return Vector3.left;
+            if (part == "Segment_Upper") return Vector3.up;
             return new Vector3(0f, 0f, -0.35f);
         }
 
