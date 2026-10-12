@@ -38,6 +38,17 @@ namespace Reverb.Experiments.Mechanism.Rules
         { Time = time; Target = target; Position = position; Damage = damage; }
     }
 
+    /// <summary>只读回声预备信息：目标、直接命中时间、计划触发时间。</summary>
+    public readonly struct PendingEchoInfo
+    {
+        public readonly MechanismTarget Target;
+        public readonly double ScheduledAt;
+        public readonly double DueAt;
+        public PendingEchoInfo(MechanismTarget target, double scheduledAt, double dueAt)
+        { Target = target; ScheduledAt = scheduledAt; DueAt = dueAt; }
+        public override string ToString() => $"{Target} {ScheduledAt:0.###}->{DueAt:0.###}";
+    }
+
     public enum DerivedKind { Echo = 0, Propagation = 1, EchoPropagation = 2 }
 
     /// <summary>宿主结算派生伤害的结果。Missed/Invalid 时本分支不再产生后续派生。</summary>

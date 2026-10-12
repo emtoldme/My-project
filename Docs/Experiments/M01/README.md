@@ -52,3 +52,31 @@
 - 排除已传播目标仅按 Serial（CombatModule 的 Serial 每次出池递增唯一）。
 - 未做性能/GC 测量（队列为 List 插入，低数量试玩足够）。
 - Missed 结果目前只在伤害取整为 0 时由本模块产生；宿主何时返回 Missed 由 Codex 决定。
+
+## 回声预备只读查询（REVERB_TASKS_04，feature/m01-echo-cues）
+基线：`main` d143e7adefeb321c4b1fa6668f1cb493d4c8947e。
+
+### API
+- `public void CopyPendingEchoes(List<PendingEchoInfo> destination)`
+- `public readonly struct PendingEchoInfo { MechanismTarget Target; double ScheduledAt; double DueAt; }`，构造参数顺序同上。
+
+### 语义
+- 先清空调用者传入的复用 List；`null` 抛 `ArgumentNullException`。
+- 只复制队列中真正排队的 `DerivedKind.Echo`，顺序与现有待处理顺序一致；传播 / 回声传播不计入。
+- 宿主 `TryGetLiveTarget` 判定失效（代号变化）或死亡的原目标跳过（不出队，仍由 Tick 按原逻辑跳过）。
+- `ScheduledAt` = 该回声的直接命中时间（新增 Chain.HitTime 记录）；`DueAt` = 原计划触发时间（命中 + 0.5s）。
+- 同一目标多次命中可有多条记录。
+- 不推进 Tick、不出队、不改计数和目标选择、不申请伤害，无独立时钟、不保留历史；查询内部无分配（除 List 扩容）。
+- 10/15/14/23、0.5s 回声、0.1s 传播、5m 半径与触发预算均不变。
+
+### 给 Codex 的接线请求（我不改 Contracts/Integration/Presentation）
+1. 规则步骤（T6/T7 之后或每帧表现读取前）用一个复用 List 调 `CopyPendingEchoes`，桥接为 `M01EchoCue` 快照。
+2. 按 `Target`（Serial+Generation）合并，同一目标只保留 `DueAt` 最早的一条。
+3. `Progress = (now - ScheduledAt) / (DueAt - ScheduledAt)`，夹到 [0,1]；`now` 用同一运行时间（暂停时不前进）。
+4. 表现层只读快照，不回写伤害或队列。
+
+### 测试（新增 `Tests/MechanismEchoCueTests.cs`，6 项）
+None / 仅传播为空；待触发回声目标与时间正确（含同目标两条、按序消失、null 抛异常）；带查询与不带查询 200 步完整事件序列、计数、HP 逐项相同且 Combined 仍为 23；代号失效 / 已死亡不出记录且不出队；Clear / 新局为空。
+- Linux，.NET SDK 8.0.425，NUnit 3.14：M01 规则 22 项全部通过（原 16 + 新 6，用仓库外临时 csproj 编译 Rules 全部 .cs + Contracts 的 MechanismMode）；E02 DotnetRunner~ 13 项全部通过。
+- **未安装 Unity，未在 Unity 编译或运行**；新 .meta GUID 为新生成。
+- 缺口：未做“故意改坏后测试失败”的变异验证；时间仍为 double；未测性能/GC。
