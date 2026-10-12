@@ -22,12 +22,13 @@ namespace Reverb.Experiments.Mechanism.Tests
                 }
             Assert.That(Weight(weights, terrain, -4f, -1f, 1), Is.GreaterThan(.9f), "Path must exist along its centreline.");
             Assert.That(Weight(weights, terrain, -2f, -4f, 0), Is.GreaterThan(.9f), "Clearing must retain dry soil.");
+            Assert.That(Weight(weights, terrain, 16f, 16f, 0), Is.GreaterThan(.99f), "Rendering apron must fade back to soil without a square straw seam.");
             Assert.That(Weight(weights, terrain, 10f, 10f, 2), Is.GreaterThan(.9f), "Outer field must contain dense straw.");
         }
         static float Weight(float[,,] weights, TerrainData terrain, float x, float z, int layer)
         {
-            int ix = Mathf.Clamp(Mathf.FloorToInt((x + 12f) / 24f * terrain.alphamapWidth),0,terrain.alphamapWidth-1);
-            int iz = Mathf.Clamp(Mathf.FloorToInt((z + 12f) / 24f * terrain.alphamapHeight),0,terrain.alphamapHeight-1);
+            int ix = Mathf.Clamp(Mathf.FloorToInt((x + terrain.size.x * .5f) / terrain.size.x * terrain.alphamapWidth),0,terrain.alphamapWidth-1);
+            int iz = Mathf.Clamp(Mathf.FloorToInt((z + terrain.size.z * .5f) / terrain.size.z * terrain.alphamapHeight),0,terrain.alphamapHeight-1);
             return weights[iz,ix,layer];
         }
     }

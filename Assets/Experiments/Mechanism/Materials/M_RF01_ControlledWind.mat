@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_RF01_ControlledWind
+  m_Name: M_RyeFoliageWind
   m_Shader: {fileID: 4800000, guid: baa156544bea66e47ada7e43dbd88b72, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -30,7 +30,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _PlantHeight: 2
-    - _UseExternalTime: 1
+    - _UseExternalTime: 0
     - _VisualTime: 0
     - _WindSpatialScale: 0.45
     - _WindSpeed: 1.15

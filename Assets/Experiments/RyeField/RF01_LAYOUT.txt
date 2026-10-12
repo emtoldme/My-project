@@ -1,7 +1,8 @@
 RF01 layout
 label: first sample, not a finished map
 seed: 20261012
-size: 24m
+size: 24m planted sample
+groundApron: 48m; soil fade at sample edge
 clearingRadius: 6m
 instances: 220
 wheat: 200

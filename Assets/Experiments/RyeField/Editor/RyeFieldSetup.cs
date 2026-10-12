@@ -26,6 +26,8 @@ namespace Reverb.Experiments.RyeField.EditorTools
         public const float ClearingRadius = 6f;
 
         const float Half = FieldSize * 0.5f;
+        // Rendering apron keeps the small planted sample boundary out of the oblique camera.
+        const float GroundSize = 48f;
         const float TileMeters = 4f;
         static readonly Vector2[] PathPoints =
         {
@@ -81,7 +83,7 @@ namespace Reverb.Experiments.RyeField.EditorTools
             var terrainGo = Terrain.CreateTerrainGameObject(terrainData);
             terrainGo.name = "Ground";
             terrainGo.transform.SetParent(environment.transform, false);
-            terrainGo.transform.position = new Vector3(-Half, 0f, -Half);
+            terrainGo.transform.position = new Vector3(-GroundSize * .5f, 0f, -GroundSize * .5f);
             Terrain terrain = terrainGo.GetComponent<Terrain>();
             terrain.basemapDistance = 1000f;
             terrain.heightmapPixelError = 1f;
@@ -159,7 +161,8 @@ namespace Reverb.Experiments.RyeField.EditorTools
             report.AppendLine("RF01 layout");
             report.AppendLine("label: first sample, not a finished map");
             report.AppendLine("seed: " + Seed);
-            report.AppendLine("size: " + FieldSize + "m");
+            report.AppendLine("size: " + FieldSize + "m planted sample");
+            report.AppendLine("groundApron: " + GroundSize + "m; soil fade at sample edge");
             report.AppendLine("clearingRadius: " + ClearingRadius + "m");
             report.AppendLine("instances: " + total);
             report.AppendLine("wheat: " + wheat);
@@ -190,9 +193,9 @@ namespace Reverb.Experiments.RyeField.EditorTools
                 AssetDatabase.CreateAsset(data, TerrainPath);
             }
             data.heightmapResolution = 33;
-            data.size = new Vector3(FieldSize, 1f, FieldSize);
-            data.alphamapResolution = 128;
-            data.baseMapResolution = 256;
+            data.size = new Vector3(GroundSize, 1f, GroundSize);
+            data.alphamapResolution = 256;
+            data.baseMapResolution = 512;
             data.terrainLayers = new[] { soil, path, straw };
             int res = data.alphamapResolution;
             var maps = new float[res, res, 3];
@@ -200,11 +203,12 @@ namespace Reverb.Experiments.RyeField.EditorTools
             {
                 for (int x = 0; x < res; x++)
                 {
-                    float wx = -Half + (x + 0.5f) / res * FieldSize;
-                    float wz = -Half + (y + 0.5f) / res * FieldSize;
+                    float wx = -GroundSize * .5f + (x + 0.5f) / res * GroundSize;
+                    float wz = -GroundSize * .5f + (y + 0.5f) / res * GroundSize;
                     float dist = Mathf.Sqrt(wx * wx + wz * wz);
-                    float pathWeight = PathWeight(wx, wz);
-                    float edgeWeight = SmoothRange(5.4f, 8.2f, dist);
+                    float boundary = 1f - SmoothRange(Half - 1.5f, Half, Mathf.Max(Mathf.Abs(wx), Mathf.Abs(wz)));
+                    float pathWeight = PathWeight(wx, wz) * boundary;
+                    float edgeWeight = SmoothRange(5.4f, 8.2f, dist) * boundary;
                     float strawWeight = edgeWeight;
                     strawWeight *= Mathf.Lerp(0.82f, 1f, Noise(wx, wz));
                     strawWeight *= 1f - pathWeight;

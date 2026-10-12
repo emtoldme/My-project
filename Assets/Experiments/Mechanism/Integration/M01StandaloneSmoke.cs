@@ -20,6 +20,8 @@ namespace Reverb.Experiments.Mechanism.Integration
             if (flag < 0 || flag + 1 >= args.Length) yield break;
             string output = Path.GetFullPath(args[flag + 1]); Directory.CreateDirectory(output);
             Application.runInBackground = true; Application.targetFrameRate = 60;
+            // Only this explicit hidden-player test accepts input without foreground focus.
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
             // Batch players need not expose a physical keyboard. This device exists only in smoke runs.
             var keyboard = InputSystem.AddDevice<Keyboard>("M01SmokeKeyboard");
             var loop = GetComponent<GameLoop>(); var controls = GetComponent<M01PlaytestController>();
