@@ -1,0 +1,484 @@
+{
+  "schemaVersion": 1,
+  "packageId": "rc02.audio.pipeline.v1",
+  "description": "RC02 音效与音乐管线表现清单 v1，映射已合入的 22 段 PolishR1 短音及既有音频素材至权威 PresentationEventType",
+  "entries": [
+    {
+      "id": "rc02.audio.w01.shot",
+      "kind": "audio",
+      "contentId": "W01",
+      "eventType": "Shot",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v2.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v3.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -3.5 },
+        { "key": "pitchMin", "value": 0.96 },
+        { "key": "pitchMax", "value": 1.04 },
+        { "key": "spatialBlend", "value": 0.0 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 64.0 }
+      ],
+      "maxInstances": 3,
+      "minInterval": 0.07,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 synthesized mineral capacitor transients (65~85ms)"
+    },
+    {
+      "id": "rc02.audio.w02.shot",
+      "kind": "audio",
+      "contentId": "W02",
+      "eventType": "Shot",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v2.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v3.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -3.5 },
+        { "key": "pitchMin", "value": 0.95 },
+        { "key": "pitchMax", "value": 1.05 },
+        { "key": "spatialBlend", "value": 0.2 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 70.0 }
+      ],
+      "maxInstances": 2,
+      "minInterval": 0.10,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 synthesized pneumatic cylinder stroke (110~135ms)"
+    },
+    {
+      "id": "rc02.audio.w03.hit",
+      "kind": "audio",
+      "contentId": "W03",
+      "eventType": "EnemyHit",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v2.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v3.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -4.0 },
+        { "key": "pitchMin", "value": 0.96 },
+        { "key": "pitchMax", "value": 1.04 },
+        { "key": "spatialBlend", "value": 0.4 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 80.0 }
+      ],
+      "maxInstances": 2,
+      "minInterval": 0.09,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 metallic orbital impact harmonic pulses (120~150ms)"
+    },
+    {
+      "id": "rc02.audio.w04.zone",
+      "kind": "audio",
+      "contentId": "W04",
+      "eventType": "WeaponZone",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v2.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v3.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -3.0 },
+        { "key": "pitchMin", "value": 0.96 },
+        { "key": "pitchMax", "value": 1.04 },
+        { "key": "spatialBlend", "value": 0.3 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 72.0 }
+      ],
+      "maxInstances": 2,
+      "minInterval": 0.12,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 resonant pitch-down implosion bursts (150~185ms)"
+    },
+    {
+      "id": "rc02.audio.w05.chain",
+      "kind": "audio",
+      "contentId": "W05",
+      "eventType": "EnemyHit",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_propagation_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_propagation_v2.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -4.0 },
+        { "key": "pitchMin", "value": 1.10 },
+        { "key": "pitchMax", "value": 1.20 },
+        { "key": "spatialBlend", "value": 0.5 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 85.0 }
+      ],
+      "maxInstances": 2,
+      "minInterval": 0.06,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 propagation chirp reused at higher pitch for chain arc"
+    },
+    {
+      "id": "rc02.audio.w06.residue",
+      "kind": "audio",
+      "contentId": "W06",
+      "eventType": "WeaponZone",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Audio/S03/sfx_s03_dodge.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -4.5 },
+        { "key": "pitchMin", "value": 1.20 },
+        { "key": "pitchMax", "value": 1.30 },
+        { "key": "spatialBlend", "value": 0.4 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 90.0 }
+      ],
+      "maxInstances": 2,
+      "minInterval": 0.12,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "S03 dodge transient reused at +1.25 pitch for movement residue detonation"
+    },
+    {
+      "id": "rc02.audio.p12.echo",
+      "kind": "audio",
+      "contentId": "P12",
+      "eventType": "EchoHit",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_echo_hit_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_echo_hit_v2.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -3.5 },
+        { "key": "pitchMin", "value": 0.97 },
+        { "key": "pitchMax", "value": 1.03 },
+        { "key": "spatialBlend", "value": 0.5 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 75.0 }
+      ],
+      "maxInstances": 2,
+      "minInterval": 0.08,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 hollow secondary cavity resonance (180~200ms)"
+    },
+    {
+      "id": "rc02.audio.p13.propagation",
+      "kind": "audio",
+      "contentId": "P13",
+      "eventType": "PropagationHit",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_propagation_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_propagation_v2.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -4.5 },
+        { "key": "pitchMin", "value": 0.96 },
+        { "key": "pitchMax", "value": 1.04 },
+        { "key": "spatialBlend", "value": 0.6 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 85.0 }
+      ],
+      "maxInstances": 2,
+      "minInterval": 0.07,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 fast frequency glide micro-chirp (95~110ms)"
+    },
+    {
+      "id": "rc02.audio.p12_13.echo_propagation",
+      "kind": "audio",
+      "contentId": "P12_P13",
+      "eventType": "EchoPropagationHit",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_propagation_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_propagation_v2.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -5.0 },
+        { "key": "pitchMin", "value": 0.82 },
+        { "key": "pitchMax", "value": 0.88 },
+        { "key": "spatialBlend", "value": 0.7 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 90.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.10,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 propagation chirp pitch-dropped for secondary echo jump"
+    },
+    {
+      "id": "rc02.audio.p17.dodge_discharge",
+      "kind": "audio",
+      "contentId": "P17",
+      "eventType": "Dodge",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v3.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -3.5 },
+        { "key": "pitchMin", "value": 1.15 },
+        { "key": "pitchMax", "value": 1.25 },
+        { "key": "spatialBlend", "value": 0.2 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 68.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.15,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 W01 pulse v3 tuned higher for dodge electric burst"
+    },
+    {
+      "id": "rc02.audio.generic.enemy_hit",
+      "kind": "audio",
+      "contentId": "*",
+      "eventType": "EnemyHit",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_enemy_hit_01.wav" },
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_enemy_hit_02.wav" },
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_enemy_hit_03.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -5.0 },
+        { "key": "pitchMin", "value": 0.95 },
+        { "key": "pitchMax", "value": 1.05 },
+        { "key": "spatialBlend", "value": 0.4 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 95.0 }
+      ],
+      "maxInstances": 4,
+      "minInterval": 0.075,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Generic fallback hit sounds (3 variations)"
+    },
+    {
+      "id": "rc02.audio.generic.enemy_death",
+      "kind": "audio",
+      "contentId": "*",
+      "eventType": "EnemyKilled",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v2.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v3.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -2.5 },
+        { "key": "pitchMin", "value": 0.94 },
+        { "key": "pitchMax", "value": 1.06 },
+        { "key": "spatialBlend", "value": 0.8 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 50.0 }
+      ],
+      "maxInstances": 3,
+      "minInterval": 0.08,
+      "pausePolicy": "stop",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 material fracture and sub-bass release death (320~400ms, pausePolicy: stop)"
+    },
+    {
+      "id": "rc02.audio.ui.levelup_appear",
+      "kind": "audio",
+      "contentId": "*",
+      "eventType": "LevelUpShown",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_ui_levelup_appear.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": 0.0 },
+        { "key": "pitchMin", "value": 1.0 },
+        { "key": "pitchMax", "value": 1.0 },
+        { "key": "spatialBlend", "value": 0.0 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 30.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.10,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Level up cards presented suspended sound"
+    },
+    {
+      "id": "rc02.audio.ui.growth_confirm",
+      "kind": "audio",
+      "contentId": "*",
+      "eventType": "LevelUpChosen",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_ui_growth_confirm_v1.wav" },
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_ui_growth_confirm_v2.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -1.5 },
+        { "key": "pitchMin", "value": 0.98 },
+        { "key": "pitchMax", "value": 1.02 },
+        { "key": "spatialBlend", "value": 0.0 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 20.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.10,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 mechanical reed snap and positive ascending triad (480~540ms)"
+    },
+    {
+      "id": "rc02.audio.ui.evolution",
+      "kind": "audio",
+      "contentId": "*",
+      "eventType": "Evolved",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_evolution_flourish_v1.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -2.0 },
+        { "key": "pitchMin", "value": 1.0 },
+        { "key": "pitchMax", "value": 1.0 },
+        { "key": "spatialBlend", "value": 0.0 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 10.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.25,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "PolishR1 G-major resonant chord flourish (1250ms)"
+    },
+    {
+      "id": "rc02.audio.pickup.gem",
+      "kind": "audio",
+      "contentId": "D01",
+      "eventType": "GemPickup",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_gem_pickup_01.wav" },
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_gem_pickup_02.wav" },
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_gem_pickup_03.wav" },
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_gem_pickup_04.wav" },
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_gem_pickup_05.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -5.5 },
+        { "key": "pitchMin", "value": 0.98 },
+        { "key": "pitchMax", "value": 1.02 },
+        { "key": "spatialBlend", "value": 0.0 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 100.0 }
+      ],
+      "maxInstances": 3,
+      "minInterval": 0.04,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Fixed -5.5dB calibrated gem pickup tones (5 sequential variants)"
+    },
+    {
+      "id": "rc02.audio.pickup.heal",
+      "kind": "audio",
+      "contentId": "D02",
+      "eventType": "PickupCollected",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Audio/SFX/sfx_ui_levelup_confirm.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -2.5 },
+        { "key": "pitchMin", "value": 1.15 },
+        { "key": "pitchMax", "value": 1.15 },
+        { "key": "spatialBlend", "value": 0.0 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 60.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.10,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Warm tube arp for 20% health restore feedback"
+    },
+    {
+      "id": "rc02.audio.pickup.magnet",
+      "kind": "audio",
+      "contentId": "D03",
+      "eventType": "PickupCollected",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Audio/S03/sfx_s03_dodge.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -3.0 },
+        { "key": "pitchMin", "value": 1.40 },
+        { "key": "pitchMax", "value": 1.40 },
+        { "key": "spatialBlend", "value": 0.0 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 60.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.20,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Gravitational pull wind whoosh"
+    },
+    {
+      "id": "rc02.audio.pickup.pulse",
+      "kind": "audio",
+      "contentId": "D04",
+      "eventType": "PickupCollected",
+      "profileId": "",
+      "assets": [
+        { "role": "clip", "path": "Assets/Drafts/RC01/Audio/TEST_ONLY_sfx_resonance_drop.wav" }
+      ],
+      "parameters": [
+        { "key": "gainDb", "value": -1.5 },
+        { "key": "pitchMin", "value": 0.85 },
+        { "key": "pitchMax", "value": 0.85 },
+        { "key": "spatialBlend", "value": 0.0 },
+        { "key": "minDistance", "value": 30.0 },
+        { "key": "maxDistance", "value": 65.0 },
+        { "key": "priority", "value": 40.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.30,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Full-screen sonic blast sub-bass shockwave"
+    }
+  ]
+}
