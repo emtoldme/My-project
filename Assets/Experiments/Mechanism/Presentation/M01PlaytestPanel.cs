@@ -37,7 +37,8 @@ namespace Waffle.Experiments.Mechanism.Presentation
                 GUILayout.Label("回声 —    传播 —    待处理 —");
             }
             GUILayout.Label("seed " + loop.config.seed + "    切换即同种子重开 · 固定武器对照");
-            GUILayout.Label("紫红双环 = 延迟回声    金色连线 = 目标间传播");
+            GUILayout.Label("回声：0.5秒后原目标再次受伤，不是范围伤害");
+            GUILayout.Label("金色连线：伤害跳向另一目标，最多5米");
 
             bool previous = GUI.enabled;
             GUI.enabled = ready;
