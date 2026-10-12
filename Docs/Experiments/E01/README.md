@@ -1,5 +1,7 @@
 # E-01 资源、URP 与声波通路
 
+> 2026-10-12 复核见 [FOLLOWUP.md](FOLLOWUP.md)。下面是第一轮作者说明。Codex 已生成 ShaderGraph、真实 ParticleSystem 和场景；不要再把碎粒读成方块，也不要把“作者没跑 Unity”读成主线上仍未生成图。
+
 基线：`origin/main` `9c565ee0ca87c6858145e5f656996aa7711f916b`（Merge PR #17）。
 分支：`experiment/e01-asset-wave`。
 只写 `Assets/Experiments/VisualPipeline/` 和本目录。没有改 Art/S2、Waffle/S2、共享 Views、正式场景、Settings、Packages、ProjectSettings。P-04 雕塑返工没有继续。

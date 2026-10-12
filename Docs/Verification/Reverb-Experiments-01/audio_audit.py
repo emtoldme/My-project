@@ -5,6 +5,8 @@ root = Path(__file__).resolve().parents[3]
 data = []
 rows = []
 for p in sorted((root / 'Assets/Experiments/AudioSync').glob('*.wav')):
+    if p.stem.endswith('_v2'):
+        continue  # Historical V1 audit must not pair A V1 with A V2 after new assets arrive.
     with wave.open(str(p), 'rb') as reader:
         frames = reader.getnframes()
         width = reader.getsampwidth()

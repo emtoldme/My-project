@@ -13,6 +13,20 @@ namespace Reverb.Experiments.EditorTools
     public static class ReverbExperimentBatch
     {
         public const string AudioScene = "Assets/Experiments/AudioSync/E03_AudioSync.unity";
+        [MenuItem("Experiments/Use E03 TEST_ONLY V2 Signals")]
+        public static void SetupAudioV2()
+        {
+            EditorSceneManager.OpenScene(AudioScene, OpenSceneMode.Single);
+            var controller = UnityEngine.Object.FindAnyObjectByType<DspSyncExperimentController>();
+            var a = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Experiments/AudioSync/TEST_ONLY_track_a_base_16s_v2.wav");
+            var b = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Experiments/AudioSync/TEST_ONLY_track_b_shimmer_16s_v2.wav");
+            if (controller == null || a == null || b == null) throw new InvalidOperationException("V2 assets not imported.");
+            controller.ConfigureClips(a, b);
+            EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
+            EditorSceneManager.SaveScene(controller.gameObject.scene);
+            AssetDatabase.SaveAssets();
+            Debug.Log("E03_V2_SCENE_READY " + a.name + " / " + b.name);
+        }
         public static void Setup()
         {
             E01VisualPipelineSetup.Setup();
@@ -27,8 +41,8 @@ namespace Reverb.Experiments.EditorTools
             camera.gameObject.AddComponent<AudioListener>();
             var controller = new GameObject("TEST_ONLY DSP Harness").AddComponent<DspSyncExperimentController>();
             controller.ConfigureClips(
-                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Experiments/AudioSync/TEST_ONLY_track_a_base_16s.wav"),
-                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Experiments/AudioSync/TEST_ONLY_track_b_shimmer_16s.wav"));
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Experiments/AudioSync/TEST_ONLY_track_a_base_16s_v2.wav"),
+                AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Experiments/AudioSync/TEST_ONLY_track_b_shimmer_16s_v2.wav"));
             controller.gameObject.AddComponent<DspSyncDebugGui>();
             EditorSceneManager.SaveScene(scene, AudioScene);
             Directory.CreateDirectory("Docs/Verification/Reverb-Experiments-01");

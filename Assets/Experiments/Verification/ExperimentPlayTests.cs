@@ -18,7 +18,7 @@ namespace Reverb.Experiments.Verification
 {
     public class ExperimentPlayTests
     {
-        const string Evidence = "Docs/Verification/Reverb-Experiments-01";
+        const string Evidence = "Docs/Verification/Reverb-Followup-02";
 
         [UnityTest]
         public IEnumerator Visual_RealEvents_Freeze_Clear_AndRenderedRing()

@@ -161,8 +161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45e76b2789404a7898de27aac83faabd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Reverb.Experiments.AudioSync::Reverb.Experiments.AudioSync.DspSyncExperimentController
-  trackA: {fileID: 8300000, guid: e833abfe7a1a4acca26c96c09efb0ab0, type: 3}
-  trackB: {fileID: 8300000, guid: d65e37a6ccce44b6aa8faa5f5c019760, type: 3}
+  trackA: {fileID: 8300000, guid: 18753d1063314df38b495a5beab3cd1e, type: 3}
+  trackB: {fileID: 8300000, guid: 8d42da1851c6464a833ea6ad009a769e, type: 3}
   scheduleDelaySec: 0.15
   targetGainA: 1
   targetGainB: 0

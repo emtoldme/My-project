@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 05:06:47Z" end-time="2026-10-12 05:09:41Z" duration="173.7684481">
+  <test-suite type="TestSuite" id="1038" name="My project" fullname="My project" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-10-12 05:06:47Z" end-time="2026-10-12 05:09:41Z" duration="173.768448" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1006" name="Reverb.Experiments.Verification.dll" fullname="G:/图书馆/新建文件夹 (2)/My project-integration/Library/ScriptAssemblies/Reverb.Experiments.Verification.dll" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-12 05:06:47Z" end-time="2026-10-12 05:09:41Z" duration="173.760603" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12568" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1007" name="Reverb" fullname="Reverb" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-12 05:06:47Z" end-time="2026-10-12 05:09:41Z" duration="173.759750" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1008" name="Experiments" fullname="Reverb.Experiments" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-12 05:06:47Z" end-time="2026-10-12 05:09:41Z" duration="173.759147" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1009" name="Verification" fullname="Reverb.Experiments.Verification" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-12 05:06:47Z" end-time="2026-10-12 05:09:41Z" duration="173.758649" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="ExperimentPlayTests" fullname="Reverb.Experiments.Verification.ExperimentPlayTests" classname="Reverb.Experiments.Verification.ExperimentPlayTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 05:06:47Z" end-time="2026-10-12 05:09:30Z" duration="163.396504" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1003" name="Audio_ActualStems_TenWraps_Pause_Resume_Restart_Disable" fullname="Reverb.Experiments.Verification.ExperimentPlayTests.Audio_ActualStems_TenWraps_Pause_Resume_Restart_Disable" methodname="Audio_ActualStems_TenWraps_Pause_Resume_Restart_Disable" classname="Reverb.Experiments.Verification.ExperimentPlayTests" runstate="Runnable" seed="1335525082" result="Passed" start-time="2026-10-12 05:06:47Z" end-time="2026-10-12 05:09:29Z" duration="162.109502" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[DspSyncExperiment] TEST_ONLY scheduled=44.950000 clipHz=48000 outputHz=48000 buffer=1024x4
+[DspSyncExperiment] TEST_ONLY scheduled=206.272667 clipHz=48000 outputHz=48000 buffer=1024x4
+]]></output>
+              </test-case>
+              <test-case id="1002" name="Visual_RealEvents_Freeze_Clear_AndRenderedRing" fullname="Reverb.Experiments.Verification.ExperimentPlayTests.Visual_RealEvents_Freeze_Clear_AndRenderedRing" methodname="Visual_RealEvents_Freeze_Clear_AndRenderedRing" classname="Reverb.Experiments.Verification.ExperimentPlayTests" runstate="Runnable" seed="345141454" result="Passed" start-time="2026-10-12 05:09:29Z" end-time="2026-10-12 05:09:30Z" duration="1.274661" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Waffle] 开局 seed=12345 frame=1056342
+[Waffle] 状态 Playing→Paused（按钮） now=0.102 frame=1056348 timeScale=0
+[Waffle] 开局 seed=12345 frame=1057057
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1004" name="SmallSceneProfileTests" fullname="Reverb.Experiments.Verification.SmallSceneProfileTests" classname="Reverb.Experiments.Verification.SmallSceneProfileTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 05:09:30Z" end-time="2026-10-12 05:09:41Z" duration="10.360381" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1005" name="Visual_SmallScene_ProfilerCounters_OnOff" fullname="Reverb.Experiments.Verification.SmallSceneProfileTests.Visual_SmallScene_ProfilerCounters_OnOff" methodname="Visual_SmallScene_ProfilerCounters_OnOff" classname="Reverb.Experiments.Verification.SmallSceneProfileTests" runstate="Runnable" seed="1529359092" result="Passed" start-time="2026-10-12 05:09:30Z" end-time="2026-10-12 05:09:41Z" duration="10.339125" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Waffle] 开局 seed=12345 frame=1057061
+[Waffle] 状态 Playing→Paused（按钮） now=0.019 frame=1057062 timeScale=0
+Saving results to: C:/Users/50665/AppData/LocalLow/DefaultCompany/My project\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
