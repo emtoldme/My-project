@@ -23,7 +23,7 @@ namespace Waffle.Experiments.Mechanism.Presentation
             IMechanismPlaytestControls controls = FindOnThisObject();
             bool ready = controls != null && controls.IsReady;
 
-            Rect box = ImguiScale.Fit(new Rect(16f, ImguiScale.Height - 168f, 560f, 150f));
+            Rect box = ImguiScale.Fit(new Rect(16f, ImguiScale.Height - 214f, 560f, 198f));
             GUILayout.BeginArea(box, GUI.skin.box);
             GUILayout.Label(ready ? "TEST_ONLY 机制  " + controls.Mode : "等待机制接线");
             if (ready)
@@ -36,8 +36,13 @@ namespace Waffle.Experiments.Mechanism.Presentation
             {
                 GUILayout.Label("回声 —    传播 —    待处理 —");
             }
+            M01DerivedFx fx = GetComponent<M01DerivedFx>();
+            if (fx != null && fx.CueSyncSeen)
+                GUILayout.Label("回声预备 " + fx.ActiveCues + "    标记收在原目标身上，不是范围");
+            else
+                GUILayout.Label("回声预备：等待规则快照");
             GUILayout.Label("seed " + loop.config.seed + "    切换即同种子重开 · 固定武器对照");
-            GUILayout.Label("回声：0.5秒后原目标再次受伤，不是范围伤害");
+            GUILayout.Label("紫红标记：0.5秒后这一个目标再受伤。数字只在打中后出现");
             GUILayout.Label("金色连线：伤害跳向另一目标，最多5米");
 
             bool previous = GUI.enabled;
