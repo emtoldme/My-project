@@ -26,7 +26,7 @@ GameLoop→RunSimulation→CombatModule保持唯一权威。1号新规则模块�
 
 目前真实PresentationEvent已有Shot、EnemyHit、EnemyKilled、EchoHit、PropagationHit、EchoPropagationHit、GemPickup、Dodge、LevelUpShown/Chosen及Pause/Restart等。现有事件不都携带weaponId；新内容声音/VFX不能据名字或“当前武器”猜触发者，缺字段在REQUESTS.md提出，由Codex统一增补。尚无事件的效果只在预览展示，不自行用表现计时决定伤害。
 
-6家族最终接线要求：多目标命中去重、同目标接触冷却、实际死亡只结算一次、派生不递归、事件携带武器/来源、暂停冻结、重开清理、池预算和旧代号失效。1号交最小接线请求，不越权覆盖现有CombatModule/RunSimulation；Codex负责共享扩展，必要时明确再派1号改。
+6家族最终接线要求：多目标命中去重、同目标接触冷却、实际死亡只结算一次、派生不递归（P12＋P13可一次回声传播，见当前集成验收文档的有限预算）、事件携带武器/来源、暂停冻结、重开清理、池预算和旧代号失效。1号交最小接线请求，不越权覆盖现有CombatModule/RunSimulation；Codex负责共享扩展，必要时明确再派1号改。
 
 ## 提交与验证
 

@@ -1,0 +1,26 @@
+{
+  "name": "Reverb.Drafts.RC01.Editor",
+  "rootNamespace": "Reverb.Drafts.RC01.EditorTools",
+  "references": [
+    "Waffle.Rules",
+    "Waffle.Runtime",
+    "Reverb.Drafts.RC01.Presentation",
+    "Unity.InputSystem",
+    "Waffle.Experiments.Mechanism.Editor",
+    "Waffle.Experiments.Mechanism.Presentation",
+    "Reverb.Experiments.Mechanism.Integration",
+    "Reverb.UserArt.VFX",
+    "Reverb.Drafts.RC01.Art.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

@@ -9,6 +9,8 @@ namespace Waffle
     [Serializable]
     public class RunConfig
     {
+        public bool useRunContent;
+        public string[] runContentAllowList;
         /// <summary>一局时长（s），§1.7。</summary>
         public float runDuration = 180f;
         /// <summary>单帧逻辑 dt 上限（s），§0.3。</summary>

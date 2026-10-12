@@ -14,7 +14,7 @@ namespace Waffle.Combat
     ///   Release()          = T13 回收（不管是否提前跳出都必须调用）
     /// 暂停/升级面板/终局后不调用任何步骤。模块不读写 RunState，不调用调试命令。
     /// </summary>
-    public sealed class CombatModule
+    public sealed partial class CombatModule
     {
         public readonly CombatConfig Config;
         public readonly CombatCounters Counters = new CombatCounters();
@@ -137,6 +137,7 @@ namespace Waffle.Combat
                 try { ruleExtension.AfterProjectiles(now); }
                 finally { resolvingRuleExtension = false; }
             }
+            if (runGrowth != null) ResolveRunPending();
             DeathStep();                 // T7
             ContactStep();               // T8
             return Result;
@@ -153,6 +154,7 @@ namespace Waffle.Combat
             float magnetSqr = magnet * magnet;
             float pickSqr = Config.pickupRadius * Config.pickupRadius;
 
+            if (runGrowth != null) CollectRunPickups(input);
             int xp = pendingDirectXp;
             pendingDirectXp = 0;
 
@@ -201,6 +203,7 @@ namespace Waffle.Combat
                 }
             }
 
+            if (runGrowth != null) DeathStep();
             Result.XpCollected = xp;
             Counters.TotalXpCollected += xp;
             return Result;
@@ -222,6 +225,8 @@ namespace Waffle.Combat
                 ProjectileState p = projectileRecycle[i];
                 projectiles.Remove(p);
                 p.HitKeys.Clear();
+            p.SourceId = null; p.Slot = 0; p.Speed = Config.projectileSpeed; p.Lifetime = Config.projectileLifetime;
+            p.MaxDistance = float.MaxValue; p.Travelled = 0; p.Returning = false; p.ReturnAllowed = false; p.Group = null;
                 p.Generation++;
                 projectileFree.Push(p.PoolIndex);
             }
@@ -475,6 +480,7 @@ namespace Waffle.Combat
 
         private void WeaponStep(float dt, CombatPlayerStats stats)
         {
+            if (runGrowth != null) { RunWeaponStep(dt); return; }
             weaponTimer -= dt;
             EnemyState target = FindNearestTarget();
             if (target == null)
@@ -501,6 +507,8 @@ namespace Waffle.Combat
             p.Finished = false;
             p.BornThisTick = true;
             p.HitKeys.Clear();
+            p.SourceId = null; p.Slot = 0; p.Speed = Config.projectileSpeed; p.Lifetime = Config.projectileLifetime;
+            p.MaxDistance = float.MaxValue; p.Travelled = 0; p.Returning = false; p.ReturnAllowed = false; p.Group = null;
             projectiles.Add(p);
             Counters.ShotsFired++;
             Result.Events.Add(new PresentationEvent { Type = PresentationEventType.Shot, Now = now,
@@ -535,7 +543,10 @@ namespace Waffle.Combat
                 ProjectileState p = projectiles[pi];
                 if (p.Finished) continue;
                 Vec2 b0 = p.Position;
-                Vec2 b1 = b0 + p.Direction * (Config.projectileSpeed * dt);
+                if (p.Returning) p.Direction = (player - b0).Normalized;
+                float travel = Math.Min(p.Speed * dt, Math.Max(0, p.MaxDistance - p.Travelled));
+                Vec2 b1 = b0 + p.Direction * travel;
+                p.Travelled += travel;
 
                 candidates.Clear();
                 for (int i = 0; i < enemies.Count; i++)
@@ -554,17 +565,21 @@ namespace Waffle.Combat
                 for (int c = 0; c < candidates.Count && p.PierceLeft > 0; c++)
                 {
                     EnemyState e = candidates[c].Enemy;
+                    if (p.Group != null && !p.Group.Accept(Key(e))) continue;
                     p.HitKeys.Add(Key(e));
                     p.PierceLeft--;
                     Counters.Hits++;
-                    ApplyEnemyDamage(e, p.Damage, PresentationEventType.EnemyHit, e.Position);
+                    ApplyEnemyDamage(e, p.Damage, PresentationEventType.EnemyHit, e.Position, p.SourceId, p.Slot);
                     ruleExtension?.OnDirectHit(now, e.Serial, e.Generation, e.Position, p.Damage);
                 }
 
                 p.Position = b1;
                 p.Age += dt;
                 p.BornThisTick = false;
-                if (p.PierceLeft <= 0 || p.Age >= Config.projectileLifetime
+                if (p.ReturnAllowed && !p.Returning && p.Travelled >= p.MaxDistance)
+                { p.Returning = true; p.Travelled = 0; p.HitKeys.Clear(); p.PierceLeft = 1; }
+                if ((p.PierceLeft <= 0 && (!p.ReturnAllowed || p.Returning)) || p.Age >= p.Lifetime || (!p.ReturnAllowed && p.Travelled >= p.MaxDistance)
+                    || (p.Returning && Vec2.SqrDistance(p.Position, player) < .25f)
                     || Math.Abs(b1.X) > lim || Math.Abs(b1.Y) > lim)
                 {
                     p.Finished = true;
@@ -596,12 +611,16 @@ namespace Waffle.Combat
 
         private static long Key(EnemyState e) { return ((long)e.Serial << 32) | (uint)e.Generation; }
 
-        private bool ApplyEnemyDamage(EnemyState enemy, float damage, PresentationEventType type, Vec2 from)
+        private bool ApplyEnemyDamage(EnemyState enemy, float damage, PresentationEventType type, Vec2 from, string sourceId = null, int slot = 0, string rootSourceId = null)
         {
+            if (!enemy.IsAlive || damage <= 0 || float.IsNaN(damage) || float.IsInfinity(damage)) return false;
             enemy.Hp -= damage;
+            enemy.LastSourceId = sourceId; enemy.LastSlot = slot;
             Result.Events.Add(new PresentationEvent { Type = type, Now = now, X = enemy.Position.X,
                 Z = enemy.Position.Y, Value = damage, Data = enemy.Serial, Generation = enemy.Generation,
-                FromX = from.X, FromZ = from.Y });
+                FromX = from.X, FromZ = from.Y, SourceId = sourceId, RootSourceId = rootSourceId ?? sourceId, Slot = slot });
+            if (runGrowth != null && type == PresentationEventType.EnemyHit && sourceId != null && (sourceId.StartsWith("W") || sourceId.StartsWith("E")))
+                OnRunDirectHit(enemy, damage, sourceId, slot);
             if (enemy.Hp > 0f || enemy.Life != EnemyLife.Alive) return false;
             enemy.Life = EnemyLife.Dead;
             newlyDead.Add(enemy);
@@ -621,7 +640,8 @@ namespace Waffle.Combat
                 Result.Kills++;
                 Counters.TotalKills++;
                 enemyRecycle.Add(e);
-                Emit(PresentationEventType.EnemyKilled, e.Position, e.GemValue, e.Serial);
+                Result.Events.Add(new PresentationEvent { Type = PresentationEventType.EnemyKilled, Now = now, X = e.Position.X, Z = e.Position.Y, Data = e.Serial, Generation = e.Generation, Value = e.GemValue, SourceId = e.LastSourceId, Slot = e.LastSlot });
+                if (runGrowth != null) DropRunPickups(e);
             }
             newlyDead.Clear();
         }

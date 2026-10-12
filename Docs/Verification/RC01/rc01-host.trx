@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="f05a5522-8018-4767-b583-933253735c0d" name="50665@盖亚 2026-10-12 18:50:55" runUser="盖亚\50665" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-12T18:50:55.9092989+08:00" queuing="2026-10-12T18:50:55.9092991+08:00" start="2026-10-12T18:50:55.4118632+08:00" finish="2026-10-12T18:50:55.9138314+08:00" />
+  <TestSettings name="default" id="a2814153-514a-4e1f-9e59-d7f2fa8c6047">
+    <Deployment runDeploymentRoot="50665_盖亚_2026-10-12_18_50_55" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="51608382-c5af-453c-9f8e-f83b757940b5" testId="fbaceb63-ac15-c369-4952-26b7f34d65c2" testName="OrbitHitsItsPathAndDoesNotDamageTheWholeInnerDisk" computerName="盖亚" duration="00:00:00.0008540" startTime="2026-10-12T18:50:55.8238944+08:00" endTime="2026-10-12T18:50:55.8247484+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="51608382-c5af-453c-9f8e-f83b757940b5" />
+    <UnitTestResult executionId="d2040148-adfa-4c8d-9640-a0ad72167c7f" testId="b34ddb50-6211-0749-5769-2a606be4d719" testName="ZoneWaitsForItsWarningAndTicksAtALimitedRate" computerName="盖亚" duration="00:00:00.0002660" startTime="2026-10-12T18:50:55.8365225+08:00" endTime="2026-10-12T18:50:55.8367884+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d2040148-adfa-4c8d-9640-a0ad72167c7f" />
+    <UnitTestResult executionId="e3926d86-34aa-4997-bf20-0a89b68c7281" testId="f4a67ec7-68c4-cf86-7af7-b74e4151bf1c" testName="RealXpQueueEliteEvolutionAndNewRunShareOneHost" computerName="盖亚" duration="00:00:00.0088180" startTime="2026-10-12T18:50:55.8272157+08:00" endTime="2026-10-12T18:50:55.8360337+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e3926d86-34aa-4997-bf20-0a89b68c7281" />
+    <UnitTestResult executionId="a3151a89-b73d-499b-bb39-46f2d36072b8" testId="e3b072d3-3e93-1346-1e22-bde85c48834c" testName="PickupsHealMagnetConserveXpAndPulseOnlyKillsOnce" computerName="盖亚" duration="00:00:00.0024500" startTime="2026-10-12T18:50:55.8247572+08:00" endTime="2026-10-12T18:50:55.8272072+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a3151a89-b73d-499b-bb39-46f2d36072b8" />
+    <UnitTestResult executionId="f4fde156-4e32-4895-9035-6cc850a89cb9" testId="51a7082a-be52-93a6-f15d-1ca03167e2d8" testName="AcquiredCombinationHasOneSecondaryHopAndNeverRecurses" computerName="盖亚" duration="00:00:00.0199570" startTime="2026-10-12T18:50:55.8011614+08:00" endTime="2026-10-12T18:50:55.8210899+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f4fde156-4e32-4895-9035-6cc850a89cb9" />
+    <UnitTestResult executionId="27a6b489-73c1-450a-8e6a-7143cf2a4233" testId="643cb083-7301-d5a8-09e9-ace133f66ace" testName="SimultaneousLevelUpsDoNotDuplicateResourcesOrResumeEarly" computerName="盖亚" duration="00:00:00.0004580" startTime="2026-10-12T18:50:55.8360515+08:00" endTime="2026-10-12T18:50:55.8365091+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="27a6b489-73c1-450a-8e6a-7143cf2a4233" />
+    <UnitTestResult executionId="7d63a4e6-6eb3-468b-ae06-6fbb8e93a76f" testId="833ddc88-3610-bce8-39c6-42f782bfaf96" testName="FanLimitsSameTargetHitsAcrossOneVolley" computerName="盖亚" duration="00:00:00.0021490" startTime="2026-10-12T18:50:55.8217322+08:00" endTime="2026-10-12T18:50:55.8238812+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7d63a4e6-6eb3-468b-ae06-6fbb8e93a76f" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="FanLimitsSameTargetHitsAcrossOneVolley" storage="g:\图书馆\新建文件夹 (2)\my project-integration\tools\rulestests\bin\debug\net8.0\wafflerules.tests.dll" id="833ddc88-3610-bce8-39c6-42f782bfaf96">
+      <Execution id="7d63a4e6-6eb3-468b-ae06-6fbb8e93a76f" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Tools\RulesTests\bin\Debug\net8.0\WaffleRules.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.Tests.Combat.RC01IntegrationTests" name="FanLimitsSameTargetHitsAcrossOneVolley" />
+    </UnitTest>
+    <UnitTest name="ZoneWaitsForItsWarningAndTicksAtALimitedRate" storage="g:\图书馆\新建文件夹 (2)\my project-integration\tools\rulestests\bin\debug\net8.0\wafflerules.tests.dll" id="b34ddb50-6211-0749-5769-2a606be4d719">
+      <Execution id="d2040148-adfa-4c8d-9640-a0ad72167c7f" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Tools\RulesTests\bin\Debug\net8.0\WaffleRules.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.Tests.Combat.RC01IntegrationTests" name="ZoneWaitsForItsWarningAndTicksAtALimitedRate" />
+    </UnitTest>
+    <UnitTest name="PickupsHealMagnetConserveXpAndPulseOnlyKillsOnce" storage="g:\图书馆\新建文件夹 (2)\my project-integration\tools\rulestests\bin\debug\net8.0\wafflerules.tests.dll" id="e3b072d3-3e93-1346-1e22-bde85c48834c">
+      <Execution id="a3151a89-b73d-499b-bb39-46f2d36072b8" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Tools\RulesTests\bin\Debug\net8.0\WaffleRules.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.Tests.Combat.RC01IntegrationTests" name="PickupsHealMagnetConserveXpAndPulseOnlyKillsOnce" />
+    </UnitTest>
+    <UnitTest name="RealXpQueueEliteEvolutionAndNewRunShareOneHost" storage="g:\图书馆\新建文件夹 (2)\my project-integration\tools\rulestests\bin\debug\net8.0\wafflerules.tests.dll" id="f4a67ec7-68c4-cf86-7af7-b74e4151bf1c">
+      <Execution id="e3926d86-34aa-4997-bf20-0a89b68c7281" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Tools\RulesTests\bin\Debug\net8.0\WaffleRules.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.Tests.Combat.RC01IntegrationTests" name="RealXpQueueEliteEvolutionAndNewRunShareOneHost" />
+    </UnitTest>
+    <UnitTest name="SimultaneousLevelUpsDoNotDuplicateResourcesOrResumeEarly" storage="g:\图书馆\新建文件夹 (2)\my project-integration\tools\rulestests\bin\debug\net8.0\wafflerules.tests.dll" id="643cb083-7301-d5a8-09e9-ace133f66ace">
+      <Execution id="27a6b489-73c1-450a-8e6a-7143cf2a4233" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Tools\RulesTests\bin\Debug\net8.0\WaffleRules.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.Tests.Combat.RC01IntegrationTests" name="SimultaneousLevelUpsDoNotDuplicateResourcesOrResumeEarly" />
+    </UnitTest>
+    <UnitTest name="OrbitHitsItsPathAndDoesNotDamageTheWholeInnerDisk" storage="g:\图书馆\新建文件夹 (2)\my project-integration\tools\rulestests\bin\debug\net8.0\wafflerules.tests.dll" id="fbaceb63-ac15-c369-4952-26b7f34d65c2">
+      <Execution id="51608382-c5af-453c-9f8e-f83b757940b5" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Tools\RulesTests\bin\Debug\net8.0\WaffleRules.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.Tests.Combat.RC01IntegrationTests" name="OrbitHitsItsPathAndDoesNotDamageTheWholeInnerDisk" />
+    </UnitTest>
+    <UnitTest name="AcquiredCombinationHasOneSecondaryHopAndNeverRecurses" storage="g:\图书馆\新建文件夹 (2)\my project-integration\tools\rulestests\bin\debug\net8.0\wafflerules.tests.dll" id="51a7082a-be52-93a6-f15d-1ca03167e2d8">
+      <Execution id="f4fde156-4e32-4895-9035-6cc850a89cb9" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Tools\RulesTests\bin\Debug\net8.0\WaffleRules.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.Tests.Combat.RC01IntegrationTests" name="AcquiredCombinationHasOneSecondaryHopAndNeverRecurses" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="fbaceb63-ac15-c369-4952-26b7f34d65c2" executionId="51608382-c5af-453c-9f8e-f83b757940b5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b34ddb50-6211-0749-5769-2a606be4d719" executionId="d2040148-adfa-4c8d-9640-a0ad72167c7f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f4a67ec7-68c4-cf86-7af7-b74e4151bf1c" executionId="e3926d86-34aa-4997-bf20-0a89b68c7281" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e3b072d3-3e93-1346-1e22-bde85c48834c" executionId="a3151a89-b73d-499b-bb39-46f2d36072b8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="51a7082a-be52-93a6-f15d-1ca03167e2d8" executionId="f4fde156-4e32-4895-9035-6cc850a89cb9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="643cb083-7301-d5a8-09e9-ace133f66ace" executionId="27a6b489-73c1-450a-8e6a-7143cf2a4233" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="833ddc88-3610-bce8-39c6-42f782bfaf96" executionId="7d63a4e6-6eb3-468b-ae06-6fbb8e93a76f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="列表中未列出的结果" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="所有已加载的结果" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="7" executed="7" passed="7" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 4.6.0.0: Test execution started&#xD;
+Running selected tests in G:\图书馆\新建文件夹 (2)\My project-integration\Tools\RulesTests\bin\Debug\net8.0\WaffleRules.Tests.dll&#xD;
+   NUnit3TestExecutor discovered 7 of 7 NUnit test cases using Current Discovery mode, Non-Explicit run&#xD;
+NUnit Adapter 4.6.0.0: Test execution complete&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

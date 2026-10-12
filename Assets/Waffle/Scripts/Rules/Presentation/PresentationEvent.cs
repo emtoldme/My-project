@@ -36,7 +36,8 @@ namespace Waffle
         Restart,
         EchoHit,
         PropagationHit,
-        EchoPropagationHit
+        EchoPropagationHit,
+        WeaponOrbit, WeaponZone, PickupCollected, EliteReward, Evolved, GrowthReroll, GrowthBanish, ShieldReady, ShieldBlock
     }
 
     /// <summary>一条表现事件。纯数据，值类型。位置在 XZ 平面。</summary>
@@ -50,6 +51,9 @@ namespace Waffle
         public float Z;
         public float Value;
         public int Data;
+        public string SourceId, RootSourceId;
+        public int Slot;
+        public float Radius, Duration;
         // Derived hits carry source and target positions; existing events leave these at zero.
         public float FromX, FromZ;
         public int Generation;

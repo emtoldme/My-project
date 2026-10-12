@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a9228140-0443-4d5c-9ae0-fbd9eddcdae6" name="50665@盖亚 2026-10-12 18:54:04" runUser="盖亚\50665" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-12T18:54:04.1086927+08:00" queuing="2026-10-12T18:54:04.1086929+08:00" start="2026-10-12T18:54:03.6557467+08:00" finish="2026-10-12T18:54:04.1296138+08:00" />
+  <TestSettings name="default" id="238c4721-486c-452d-b265-991ad31b87ef">
+    <Deployment runDeploymentRoot="50665_盖亚_2026-10-12_18_54_04" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="400d4d43-9ce8-46ff-a339-a1f116b0e722" testId="41a01d3d-f396-1f88-37f2-eedf32895723" testName="Draw_ThreeDistinctLegal_SeedReproducible_ViewDoesNotAdvanceRng" computerName="盖亚" duration="00:00:00.0073030" startTime="2026-10-12T18:54:04.0510824+08:00" endTime="2026-10-12T18:54:04.0583852+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="400d4d43-9ce8-46ff-a339-a1f116b0e722" />
+    <UnitTestResult executionId="e791c04d-4853-4f98-a4c9-ff1c1e55be3c" testId="0db8627d-3545-76e8-402b-70339dfa3148" testName="RunEnd_StopsOffers_NewRunIsClean" computerName="盖亚" duration="00:00:00.0003800" startTime="2026-10-12T18:54:04.0626774+08:00" endTime="2026-10-12T18:54:04.0630575+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e791c04d-4853-4f98-a4c9-ff1c1e55be3c" />
+    <UnitTestResult executionId="3d978c4d-c97b-48cb-bbb6-12d1620b22bc" testId="9b2f7892-237e-5980-78cb-d594d195319e" testName="ResourceLimits_3Rerolls_2Banishes_2Skips" computerName="盖亚" duration="00:00:00.0009460" startTime="2026-10-12T18:54:04.0617181+08:00" endTime="2026-10-12T18:54:04.0626643+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3d978c4d-c97b-48cb-bbb6-12d1620b22bc" />
+    <UnitTestResult executionId="15d6bbfe-2c1c-47e1-ab28-5fdbf21de57d" testId="ea0a944c-a0ee-641e-ff68-97e93501a2b6" testName="Token_RejectsStaleAndDuplicate_ResourcesSpentOnlyOnSuccess" computerName="盖亚" duration="00:00:00.0003540" startTime="2026-10-12T18:54:04.0690939+08:00" endTime="2026-10-12T18:54:04.0694481+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="15d6bbfe-2c1c-47e1-ab28-5fdbf21de57d" />
+    <UnitTestResult executionId="55b7ccf4-2eca-423f-a6ad-f2e6bb94dfd8" testId="778766c3-9631-c241-742e-5a83461849db" testName="SlotsAndTiersCapped_FallbackHealWhenExhausted" computerName="盖亚" duration="00:00:00.0033000" startTime="2026-10-12T18:54:04.0630750+08:00" endTime="2026-10-12T18:54:04.0663746+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="55b7ccf4-2eca-423f-a6ad-f2e6bb94dfd8" />
+    <UnitTestResult executionId="97a9e572-8893-41c0-b805-cd25c3b3cab8" testId="0ac81bbd-a2f0-3cfe-b035-604230792b9a" testName="Catalog_CountsAndPlannedNeverDrawn" computerName="盖亚" duration="00:00:00.0106970" startTime="2026-10-12T18:54:04.0397349+08:00" endTime="2026-10-12T18:54:04.0504047+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="97a9e572-8893-41c0-b805-cd25c3b3cab8" />
+    <UnitTestResult executionId="fcd14917-2a45-4b60-bc6e-2627be726e33" testId="4eab4fe7-ad88-ad8c-e482-d21cf17847a2" testName="PeriodicNewWeaponOpportunityRemainsAvailableAfterTheFirstOffer" computerName="盖亚" duration="00:00:00.0004840" startTime="2026-10-12T18:54:04.0612194+08:00" endTime="2026-10-12T18:54:04.0617037+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fcd14917-2a45-4b60-bc6e-2627be726e33" />
+    <UnitTestResult executionId="8552ca5f-a022-4115-a7eb-1f16d200a66b" testId="ba2038b0-1d00-da1e-896d-9902b41b6dac" testName="Stats_StackAdditiveWithCaps" computerName="盖亚" duration="00:00:00.0026940" startTime="2026-10-12T18:54:04.0663869+08:00" endTime="2026-10-12T18:54:04.0690808+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8552ca5f-a022-4115-a7eb-1f16d200a66b" />
+    <UnitTestResult executionId="48936006-74a7-4ed6-90f3-da7588ff3586" testId="ba856e62-c31b-beaa-e9bc-66d02e82619e" testName="Evolution_OnlyViaElite_WhenEligible_ConsumedOnce_TokenOnce" computerName="盖亚" duration="00:00:00.0020430" startTime="2026-10-12T18:54:04.0591645+08:00" endTime="2026-10-12T18:54:04.0612068+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="48936006-74a7-4ed6-90f3-da7588ff3586" />
+    <UnitTestResult executionId="55aba9a1-ddd4-496c-84e7-2f9de7de873a" testId="7963a17d-5141-a0f3-c441-d136b85a2487" testName="EarlyOffers_ContainNewWeaponAndOwnedUpgrade" computerName="盖亚" duration="00:00:00.0007540" startTime="2026-10-12T18:54:04.0584007+08:00" endTime="2026-10-12T18:54:04.0591545+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="55aba9a1-ddd4-496c-84e7-2f9de7de873a" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="ResourceLimits_3Rerolls_2Banishes_2Skips" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="9b2f7892-237e-5980-78cb-d594d195319e">
+      <Execution id="3d978c4d-c97b-48cb-bbb6-12d1620b22bc" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="ResourceLimits_3Rerolls_2Banishes_2Skips" />
+    </UnitTest>
+    <UnitTest name="RunEnd_StopsOffers_NewRunIsClean" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="0db8627d-3545-76e8-402b-70339dfa3148">
+      <Execution id="e791c04d-4853-4f98-a4c9-ff1c1e55be3c" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="RunEnd_StopsOffers_NewRunIsClean" />
+    </UnitTest>
+    <UnitTest name="Stats_StackAdditiveWithCaps" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="ba2038b0-1d00-da1e-896d-9902b41b6dac">
+      <Execution id="8552ca5f-a022-4115-a7eb-1f16d200a66b" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="Stats_StackAdditiveWithCaps" />
+    </UnitTest>
+    <UnitTest name="PeriodicNewWeaponOpportunityRemainsAvailableAfterTheFirstOffer" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="4eab4fe7-ad88-ad8c-e482-d21cf17847a2">
+      <Execution id="fcd14917-2a45-4b60-bc6e-2627be726e33" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="PeriodicNewWeaponOpportunityRemainsAvailableAfterTheFirstOffer" />
+    </UnitTest>
+    <UnitTest name="Catalog_CountsAndPlannedNeverDrawn" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="0ac81bbd-a2f0-3cfe-b035-604230792b9a">
+      <Execution id="97a9e572-8893-41c0-b805-cd25c3b3cab8" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="Catalog_CountsAndPlannedNeverDrawn" />
+    </UnitTest>
+    <UnitTest name="EarlyOffers_ContainNewWeaponAndOwnedUpgrade" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="7963a17d-5141-a0f3-c441-d136b85a2487">
+      <Execution id="55aba9a1-ddd4-496c-84e7-2f9de7de873a" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="EarlyOffers_ContainNewWeaponAndOwnedUpgrade" />
+    </UnitTest>
+    <UnitTest name="Evolution_OnlyViaElite_WhenEligible_ConsumedOnce_TokenOnce" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="ba856e62-c31b-beaa-e9bc-66d02e82619e">
+      <Execution id="48936006-74a7-4ed6-90f3-da7588ff3586" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="Evolution_OnlyViaElite_WhenEligible_ConsumedOnce_TokenOnce" />
+    </UnitTest>
+    <UnitTest name="SlotsAndTiersCapped_FallbackHealWhenExhausted" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="778766c3-9631-c241-742e-5a83461849db">
+      <Execution id="55b7ccf4-2eca-423f-a6ad-f2e6bb94dfd8" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="SlotsAndTiersCapped_FallbackHealWhenExhausted" />
+    </UnitTest>
+    <UnitTest name="Token_RejectsStaleAndDuplicate_ResourcesSpentOnlyOnSuccess" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="ea0a944c-a0ee-641e-ff68-97e93501a2b6">
+      <Execution id="15d6bbfe-2c1c-47e1-ab28-5fdbf21de57d" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="Token_RejectsStaleAndDuplicate_ResourcesSpentOnlyOnSuccess" />
+    </UnitTest>
+    <UnitTest name="Draw_ThreeDistinctLegal_SeedReproducible_ViewDoesNotAdvanceRng" storage="g:\图书馆\新建文件夹 (2)\my project-integration\assets\waffle\scripts\rules\runcontent\tests\dotnetrunner~\bin\debug\net8.0\runcontent.tests.dll" id="41a01d3d-f396-1f88-37f2-eedf32895723">
+      <Execution id="400d4d43-9ce8-46ff-a339-a1f116b0e722" />
+      <TestMethod codeBase="G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Waffle.RunContent.Tests.RunGrowthStateTests" name="Draw_ThreeDistinctLegal_SeedReproducible_ViewDoesNotAdvanceRng" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="41a01d3d-f396-1f88-37f2-eedf32895723" executionId="400d4d43-9ce8-46ff-a339-a1f116b0e722" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0db8627d-3545-76e8-402b-70339dfa3148" executionId="e791c04d-4853-4f98-a4c9-ff1c1e55be3c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9b2f7892-237e-5980-78cb-d594d195319e" executionId="3d978c4d-c97b-48cb-bbb6-12d1620b22bc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ea0a944c-a0ee-641e-ff68-97e93501a2b6" executionId="15d6bbfe-2c1c-47e1-ab28-5fdbf21de57d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="778766c3-9631-c241-742e-5a83461849db" executionId="55b7ccf4-2eca-423f-a6ad-f2e6bb94dfd8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0ac81bbd-a2f0-3cfe-b035-604230792b9a" executionId="97a9e572-8893-41c0-b805-cd25c3b3cab8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4eab4fe7-ad88-ad8c-e482-d21cf17847a2" executionId="fcd14917-2a45-4b60-bc6e-2627be726e33" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ba2038b0-1d00-da1e-896d-9902b41b6dac" executionId="8552ca5f-a022-4115-a7eb-1f16d200a66b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ba856e62-c31b-beaa-e9bc-66d02e82619e" executionId="48936006-74a7-4ed6-90f3-da7588ff3586" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7963a17d-5141-a0f3-c441-d136b85a2487" executionId="55aba9a1-ddd4-496c-84e7-2f9de7de873a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="列表中未列出的结果" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="所有已加载的结果" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="10" executed="10" passed="10" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 4.6.0.0: Test execution started&#xD;
+Running all tests in G:\图书馆\新建文件夹 (2)\My project-integration\Assets\Waffle\Scripts\Rules\RunContent\Tests\DotnetRunner~\bin\Debug\net8.0\RunContent.Tests.dll&#xD;
+   NUnit3TestExecutor discovered 10 of 10 NUnit test cases using Current Discovery mode, Non-Explicit run&#xD;
+NUnit Adapter 4.6.0.0: Test execution complete&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
