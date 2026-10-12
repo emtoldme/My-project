@@ -10,6 +10,8 @@ namespace Waffle
     public class AudioEventRule
     {
         public string name;
+        public float pitch = 1f;
+        public bool dropWhenFull;
         public AudioClip[] clips;
         [Tooltip("推荐音量（dB），在 sfxTrimDb 之后叠加")] public float volumeDb;
         [Tooltip("音高随机 ±")] public float pitchRandom;

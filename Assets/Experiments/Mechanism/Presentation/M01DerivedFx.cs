@@ -12,8 +12,8 @@ namespace Waffle.Experiments.Mechanism.Presentation
     {
         public GameLoop loop;
         public Material lineMaterial;
-        public int echoCapacity = 8;
-        public int linkCapacity = 12;
+        public int echoCapacity = 6;
+        public int linkCapacity = 6;
 
         public int ActiveEchoes { get; private set; }
         public int ActiveLinks { get; private set; }
@@ -21,8 +21,8 @@ namespace Waffle.Experiments.Mechanism.Presentation
         const float EchoLife = 0.28f;
         const float LinkLife = 0.16f;
         const int Segments = 28;
-        static readonly Color EchoColor = new Color(1f, 0.86f, 0.28f, 1f);
-        static readonly Color LinkColor = new Color(0.95f, 0.42f, 0.12f, 1f);
+        static readonly Color EchoColor = new Color(0.88f, 0.14f, 0.76f, 1f);
+        static readonly Color LinkColor = new Color(1f, 0.84f, 0.18f, 1f);
 
         sealed class Echo
         {
@@ -36,6 +36,7 @@ namespace Waffle.Experiments.Mechanism.Presentation
         {
             public LineRenderer line;
             public float age = -1f;
+            public Vector3 from, to;
         }
 
         readonly List<Echo> echoes = new List<Echo>();
@@ -93,6 +94,7 @@ namespace Waffle.Experiments.Mechanism.Presentation
                 if (k >= 1f) { HideEcho(echo); continue; }
                 WriteCircle(echo.inner, Mathf.Lerp(0.28f, 1.15f, k));
                 WriteCircle(echo.outer, Mathf.Lerp(0.46f, 1.75f, k));
+                SetAlpha(echo.inner, 1f - k); SetAlpha(echo.outer, 1f - k);
                 ActiveEchoes++;
             }
             for (int i = 0; i < links.Count; i++)
@@ -101,6 +103,9 @@ namespace Waffle.Experiments.Mechanism.Presentation
                 if (link.age < 0f) continue;
                 if (dt > 0f) link.age += dt;
                 if (link.age >= LinkLife) { HideLink(link); continue; }
+                float progress = Mathf.Clamp01(link.age / 0.05f);
+                link.line.SetPosition(1, Vector3.Lerp(link.from, link.to, progress));
+                SetAlpha(link.line, 1f - link.age / LinkLife);
                 ActiveLinks++;
             }
         }
@@ -114,6 +119,7 @@ namespace Waffle.Experiments.Mechanism.Presentation
             echo.go.SetActive(true);
             WriteCircle(echo.inner, 0.28f);
             WriteCircle(echo.outer, 0.46f);
+            SetAlpha(echo.inner, 1f); SetAlpha(echo.outer, 1f);
         }
 
         public void PlayPropagation(float fromX, float fromZ, float toX, float toZ)
@@ -124,8 +130,10 @@ namespace Waffle.Experiments.Mechanism.Presentation
             if (dx * dx + dz * dz < 0.05f * 0.05f) return;
             Link link = links[Pick(links, item => item.age)];
             link.age = 0f;
-            link.line.SetPosition(0, new Vector3(fromX, 0.12f, fromZ));
-            link.line.SetPosition(1, new Vector3(toX, 0.12f, toZ));
+            link.from = new Vector3(fromX, 0.12f, fromZ); link.to = new Vector3(toX, 0.12f, toZ);
+            link.line.SetPosition(0, link.from);
+            link.line.SetPosition(1, link.from);
+            SetAlpha(link.line, 1f);
             link.line.gameObject.SetActive(true);
         }
 
@@ -199,8 +207,20 @@ namespace Waffle.Experiments.Mechanism.Presentation
             var copy = new Material(lineMaterial) { name = "M01_" + color.r.ToString("F2") + "_Runtime" };
             if (copy.HasProperty("_BaseColor")) copy.SetColor("_BaseColor", color);
             if (copy.HasProperty("_Color")) copy.SetColor("_Color", color);
+            copy.SetFloat("_Surface", 1f);
+            copy.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            copy.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            copy.SetFloat("_SrcBlendAlpha", (float)UnityEngine.Rendering.BlendMode.One);
+            copy.SetFloat("_DstBlendAlpha", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            copy.SetFloat("_ZWrite", 0f);
+            copy.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            copy.SetOverrideTag("RenderType", "Transparent");
+            copy.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
             return copy;
         }
+
+        static void SetAlpha(LineRenderer line, float alpha)
+        { var color = new Color(1f, 1f, 1f, Mathf.Clamp01(alpha)); line.startColor = color; line.endColor = color; }
 
         static int Pick<T>(List<T> items, System.Func<T, float> ageOf)
         {

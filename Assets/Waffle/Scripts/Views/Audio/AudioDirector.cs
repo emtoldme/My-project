@@ -23,6 +23,10 @@ namespace Waffle
         }
 
         public GameLoop loop;
+        public bool enableMechanismAudio;
+        public AudioEventRule echo = new AudioEventRule("M01_Echo", -3.5f, 0f, 2, 0.06f, 0f, 25f);
+        public AudioEventRule propagation = new AudioEventRule("M01_Propagation", -4.5f, 0f, 2, 0.05f, 0f, 25f);
+        public AudioEventRule echoPropagation = new AudioEventRule("M01_EchoPropagation", -5f, 0f, 1, 0.06f, 0f, 25f);
 
         [Header("混音（没有 AudioMixer 时由脚本完成）")]
         public AudioMixerGroup musicGroup;
@@ -115,6 +119,12 @@ namespace Waffle
             BuildChannel(PresentationEventType.LevelUpChosen, levelUpConfirm);
             BuildChannel(PresentationEventType.Victory, victory);
             BuildChannel(PresentationEventType.Defeat, defeat);
+            if (enableMechanismAudio)
+            {
+                BuildChannel(PresentationEventType.EchoHit, echo);
+                BuildChannel(PresentationEventType.PropagationHit, propagation);
+                BuildChannel(PresentationEventType.EchoPropagationHit, echoPropagation);
+            }
 
             combatSource = CreateSource("Music_Combat", musicGroup, true);
             combatSource.clip = combatLoop;
@@ -323,10 +333,11 @@ namespace Waffle
             }
 
             AudioSource src = voice.source;
+            if (rule.dropWhenFull && src.isPlaying) return;
             src.Stop();
             src.clip = clip;
             src.volume = DbToLinear(sfxTrimDb + rule.volumeDb);
-            src.pitch = 1f + (rule.pitchRandom > 0f ? Random.Range(-rule.pitchRandom, rule.pitchRandom) : 0f);
+            src.pitch = rule.pitch + (rule.pitchRandom > 0f ? Random.Range(-rule.pitchRandom, rule.pitchRandom) : 0f);
             if (rule.spatialBlend > 0f) src.transform.position = new Vector3(e.X, 0f, e.Z);
             src.Play();
             voice.startTime = now;

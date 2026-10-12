@@ -36,7 +36,8 @@ namespace Waffle.Experiments.Mechanism.Presentation
             {
                 GUILayout.Label("回声 —    传播 —    待处理 —");
             }
-            GUILayout.Label("seed " + loop.config.seed + "    同一种子重开    本面板不选择升级");
+            GUILayout.Label("seed " + loop.config.seed + "    切换即同种子重开 · 固定武器对照");
+            GUILayout.Label("紫红双环 = 延迟回声    金色连线 = 目标间传播");
 
             bool previous = GUI.enabled;
             GUI.enabled = ready;

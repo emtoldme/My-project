@@ -63,6 +63,26 @@ namespace Waffle.Combat
         private float now;
         private Vec2 player;
         private float viewRadius = 14f;
+        private ICombatRuleExtension ruleExtension;
+        private bool hasStepped, resolvingRuleExtension;
+
+        public void InstallRuleExtension(ICombatRuleExtension extension)
+        {
+            if (hasStepped) throw new InvalidOperationException("Install rule extension before the first combat step.");
+            ruleExtension = extension;
+        }
+
+        // Synchronous rule-only entry: presentation callbacks cannot use this after StepCombat.
+        public CombatRuleDamageResult ApplyRuleDamage(int serial, int generation, float damage,
+            PresentationEventType type, Vec2 from)
+        {
+            if (!resolvingRuleExtension || float.IsNaN(damage) || float.IsInfinity(damage) || damage <= 0f
+                || (type != PresentationEventType.EchoHit && type != PresentationEventType.PropagationHit
+                    && type != PresentationEventType.EchoPropagationHit)
+                || !TryGetEnemy(serial, generation, out var enemy)) return CombatRuleDamageResult.Invalid;
+            bool killed = ApplyEnemyDamage(enemy, damage, type, from);
+            return killed ? CombatRuleDamageResult.Killed : CombatRuleDamageResult.Applied;
+        }
 
         public IReadOnlyList<EnemyState> Enemies { get { return enemies; } }
         public IReadOnlyList<ProjectileState> Projectiles { get { return projectiles; } }
@@ -103,6 +123,7 @@ namespace Waffle.Combat
         public CombatStepResult StepCombat(CombatInput input)
         {
             Result.Clear();
+            hasStepped = true;
             BeginTick(input);
             float dt = Math.Max(0f, input.Dt);
 
@@ -110,6 +131,12 @@ namespace Waffle.Combat
             EnemyMoveStep(dt);           // T4
             WeaponStep(dt, input.Stats); // T5
             ProjectileStep(dt);          // T6
+            if (ruleExtension != null)
+            {
+                resolvingRuleExtension = true;
+                try { ruleExtension.AfterProjectiles(now); }
+                finally { resolvingRuleExtension = false; }
+            }
             DeathStep();                 // T7
             ContactStep();               // T8
             return Result;
@@ -527,14 +554,9 @@ namespace Waffle.Combat
                     EnemyState e = candidates[c].Enemy;
                     p.HitKeys.Add(Key(e));
                     p.PierceLeft--;
-                    e.Hp -= p.Damage;
                     Counters.Hits++;
-                    Emit(PresentationEventType.EnemyHit, e.Position, p.Damage, e.Serial);
-                    if (e.Hp <= 0f && e.Life == EnemyLife.Alive)
-                    {
-                        e.Life = EnemyLife.Dead; // 只转换一次
-                        newlyDead.Add(e);
-                    }
+                    ApplyEnemyDamage(e, p.Damage, PresentationEventType.EnemyHit, e.Position);
+                    ruleExtension?.OnDirectHit(now, e.Serial, e.Generation, e.Position, p.Damage);
                 }
 
                 p.Position = b1;
@@ -571,6 +593,18 @@ namespace Waffle.Combat
         }
 
         private static long Key(EnemyState e) { return ((long)e.Serial << 32) | (uint)e.Generation; }
+
+        private bool ApplyEnemyDamage(EnemyState enemy, float damage, PresentationEventType type, Vec2 from)
+        {
+            enemy.Hp -= damage;
+            Result.Events.Add(new PresentationEvent { Type = type, Now = now, X = enemy.Position.X,
+                Z = enemy.Position.Y, Value = damage, Data = enemy.Serial, Generation = enemy.Generation,
+                FromX = from.X, FromZ = from.Y });
+            if (enemy.Hp > 0f || enemy.Life != EnemyLife.Alive) return false;
+            enemy.Life = EnemyLife.Dead;
+            newlyDead.Add(enemy);
+            return true;
+        }
 
         // =====================================================================
         // T7 死亡结算

@@ -6,7 +6,8 @@
         "Waffle.Runtime",
         "Waffle.Experiments.Mechanism.Presentation",
         "Reverb.Experiments.Mechanism.Contracts",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Reverb.Experiments.Mechanism.Integration"
     ],
     "includePlatforms": [
         "Editor"

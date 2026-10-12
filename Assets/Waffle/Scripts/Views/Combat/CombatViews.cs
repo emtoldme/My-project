@@ -107,7 +107,8 @@ namespace Waffle
             for (int i = 0; i < events.Count; i++)
             {
                 var e = events[i];
-                if (e.Type != PresentationEventType.EnemyHit) continue;
+                if (e.Type != PresentationEventType.EnemyHit && e.Type != PresentationEventType.EchoHit
+                    && e.Type != PresentationEventType.PropagationHit && e.Type != PresentationEventType.EchoPropagationHit) continue;
                 for (int j = 0; j < enemies.Length; j++)
                     if (enemies[j].root.gameObject.activeSelf && enemies[j].serial == e.Data) enemies[j].flash = 0.06f;
             }

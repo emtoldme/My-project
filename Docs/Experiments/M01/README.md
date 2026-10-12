@@ -6,7 +6,7 @@
 ## 程序集
 - `Reverb.Experiments.Mechanism.Rules`（noEngineReferences，autoReferenced=false），显式引用 `Reverb.Experiments.Mechanism.Contracts`，使用共享 `MechanismMode`，未复制合同。
 - 测试 `Reverb.Experiments.Mechanism.Rules.Tests`（Editor，UNITY_INCLUDE_TESTS）。
-- dotnet 运行器：`Assets/Experiments/Mechanism/Rules/DotnetRunner~/`（`~` 目录 Unity 不导入），`dotnet test` 即可。
+- 作者报告曾在自己的 dotnet 运行器验证；本分支未交付 `DotnetRunner~/`，不能据此要求接收者直接运行 dotnet test。仓库内提供 Unity EditMode 测试。
 
 ## API（命名空间 Reverb.Experiments.Mechanism.Rules）
 | 成员 | 说明 |
