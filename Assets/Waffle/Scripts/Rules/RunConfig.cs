@@ -9,6 +9,8 @@ namespace Waffle
     [Serializable]
     public class RunConfig
     {
+        /// <summary>等级超过4后，每级额外增加的经验门槛；0保留旧节奏。</summary>
+        public float extraXpStepAfterFour;
         public bool useRunContent;
         public string[] runContentAllowList;
         /// <summary>一局时长（s），§1.7。</summary>

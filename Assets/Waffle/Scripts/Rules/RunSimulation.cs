@@ -70,7 +70,7 @@ namespace Waffle
             Config = config ?? new RunConfig();
             if (Config.upgrades == null) Config.upgrades = new UpgradeConfig();
             this.log = log ?? new NullRunLog();
-            State = new RunState(Config.maxHp, this.log);
+            State = new RunState(Config.maxHp, this.log, Config.extraXpStepAfterFour);
             random = new Random(Config.seed);
             State.PhaseChanged += OnPhaseChanged;
             // Rules-only callers may omit combat; the real GameLoop always supplies it.
@@ -358,12 +358,12 @@ namespace Waffle
         private void AddXp(int amount)
         {
             int level = State.Level, xp = State.Xp;
-            int ups = XpRules.AddXp(ref level, ref xp, amount);
+            int ups = XpRules.AddXp(ref level, ref xp, amount, State.ExtraXpStepAfterFour);
             State.Level = level;
             State.Xp = xp;
             State.PendingLevelUps += ups;
             log.Info(string.Format("[Waffle] +{0} XP → Lv{1} {2}/{3}，本次升级 {4} 次，待升级 {5}",
-                amount, level, xp, XpRules.XpToNext(level), ups, State.PendingLevelUps));
+                amount, level, xp, State.XpToNext, ups, State.PendingLevelUps));
         }
 
         private void EnterTerminal(RunPhase phase, string reason)
