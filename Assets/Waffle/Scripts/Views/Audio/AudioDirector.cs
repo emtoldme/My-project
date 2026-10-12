@@ -242,7 +242,9 @@ namespace Waffle
                 var src = CreateSource("SFX_" + rule.name + "_" + i, sfxGroup, false);
                 src.spatialBlend = rule.spatialBlend;
                 src.rolloffMode = AudioRolloffMode.Logarithmic;
-                src.maxDistance = rule.maxDistance;
+                src.minDistance = Mathf.Max(.01f,rule.minDistance);
+                src.maxDistance = Mathf.Max(src.minDistance,rule.maxDistance);
+                src.priority = Mathf.Clamp(rule.priority,0,256);
                 ch.voices.Add(new Voice { source = src, startTime = float.NegativeInfinity });
                 allSfx.Add(src);
             }
@@ -375,6 +377,8 @@ namespace Waffle
             {
                 pauseStarted = Time.unscaledTime;
                 PauseIfPlaying(allSfx);
+                foreach(var ch in channels.Values) ClearPausedTail(ch);
+                foreach(var ch in contentChannels.Values) ClearPausedTail(ch);
                 PauseIfPlaying(combatSource);
                 PauseIfPlaying(levelUpSource);
                 return;
@@ -398,6 +402,12 @@ namespace Waffle
                 if (combatGain > 0.001f || combatTarget > 0.001f) UnPauseIfExists(combatSource);
                 if (levelUpGain > 0.001f || levelUpTarget > 0.001f) UnPauseIfExists(levelUpSource);
             }
+        }
+
+        private static void ClearPausedTail(Channel channel)
+        {
+            if(channel.rule.clearOnPause)
+                foreach(var voice in channel.voices) voice.source.Stop();
         }
 
         private static void PauseIfPlaying(List<AudioSource> sources)

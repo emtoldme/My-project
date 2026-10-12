@@ -11,6 +11,9 @@ namespace Waffle
     {
         public string name;
         public float pitch = 1f;
+        [Tooltip("暂停时停止此事件的尾音，恢复不补播")] public bool clearOnPause;
+        [Tooltip("3D声音开始衰减的距离；斜俯视相机应考虑离地高度")] public float minDistance = 1f;
+        [Range(0,256)] public int priority = 128;
         public bool dropWhenFull;
         public AudioClip[] clips;
         [Tooltip("推荐音量（dB），在 sfxTrimDb 之后叠加")] public float volumeDb;

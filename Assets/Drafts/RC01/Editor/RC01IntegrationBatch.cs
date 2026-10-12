@@ -17,7 +17,7 @@ namespace Reverb.Drafts.RC01.EditorTools
     public static class RC01IntegrationBatch
     {
         public const string ScenePath = "Assets/Drafts/RC01/Scenes/RC01_HarvestRoad.unity";
-        [Serializable] class Cue { public string id, assetPath; public string[] variants; public float pitch = 1, pitchJitter, volumeDb, minInterval, spatialBlend; public int maxVoices = 1; }
+        [Serializable] class Cue { public string id, assetPath; public string[] variants; public float pitch = 1, pitchJitter, volumeDb, minInterval, spatialBlend; public int maxVoices = 1, priority = 8; public bool pauseClear; }
         [Serializable] class Categories { public Cue[] weapons, mechanisms, pickups, growthUi; }
         [Serializable] class Map { public Categories categories; }
 
@@ -108,11 +108,14 @@ namespace Reverb.Drafts.RC01.EditorTools
             if(loop==null || audio==null) throw new Exception("RC01 host missing");
             loop.config.extraXpStepAfterFour=.4f;
             ConfigureAudio(audio,loop);
+            string configured=EditorJsonUtility.ToJson(audio);
+            ConfigureAudio(audio,loop);
+            if(configured!=EditorJsonUtility.ToJson(audio)) throw new Exception("RC01 audio setup must be idempotent");
             if(audio.enemyDeath.clips.Length!=3 || audio.gemPickup.clips.Length!=5) throw new Exception("Feedback variants missing");
             EditorSceneManager.MarkSceneDirty(loop.gameObject.scene);
             EditorSceneManager.SaveScene(loop.gameObject.scene);
             AssetDatabase.SaveAssets();
-            Debug.Log("RC01_FEEDBACK_APPLIED xpExtra=.4 shot=3 hit=3 death=3 dodge=2 hurt=2 gem=5");
+            Debug.Log("RC01_SOUND_R1_APPLIED 22 delivered clips; feedback XP preserved");
         }
 
         static void ConfigureAudio(AudioDirector audio, GameLoop loop)
@@ -161,12 +164,59 @@ namespace Reverb.Drafts.RC01.EditorTools
             audio.enemyDeath.minInterval = .10f;
             audio.dodge.clips = Variants("sfx_player_dodge",2); audio.dodge.sequential = true;
             audio.playerHurt.clips = Variants("sfx_player_hurt",2); audio.playerHurt.sequential = true;
-            audio.gemPickup.clips = Variants("sfx_gem_pickup",5); audio.gemPickup.volumeDb -= 3;
+            audio.gemPickup.clips = Variants("sfx_gem_pickup",5); audio.gemPickup.volumeDb = -5.5f;
             audio.echo.minInterval = .10f; audio.propagation.minInterval = .09f; audio.echoPropagation.minInterval = .12f;
+            // Overlay only R1's delivered groups; pickup/hurt/dodge/music keep the feedback baseline.
+            var polish=JsonUtility.FromJson<Map>(File.ReadAllText("Docs/Design/RC01/Audio/PolishR1/cue-map.json"));
+            foreach(var cue in polish.categories.weapons)
+            {
+                var binding=bindings.Find(b=>b.contentId==cue.id);
+                if(binding==null) throw new Exception("Unknown polished weapon "+cue.id);
+                binding.rule=PolishedRule(cue);
+            }
+            foreach(var cue in polish.categories.mechanisms)
+            {
+                if(cue.id=="EchoHit") audio.echo=PolishedRule(cue);
+                else if(cue.id=="PropagationHit")
+                {
+                    audio.propagation=PolishedRule(cue);
+                    audio.echoPropagation=PolishedRule(cue);
+                    audio.echoPropagation.name="R1_EchoPropagation";
+                    audio.echoPropagation.pitch=.85f;audio.echoPropagation.volumeDb-=1.5f;
+                    audio.echoPropagation.maxVoices=1;audio.echoPropagation.minInterval=.12f;
+                }
+                else if(cue.id=="EnemyDeath") audio.enemyDeath=PolishedRule(cue);
+                else throw new Exception("Unknown polished mechanism "+cue.id);
+            }
+            foreach(var cue in polish.categories.growthUi)
+            {
+                if(cue.id=="UI_Card_Chosen") audio.levelUpConfirm=PolishedRule(cue);
+                else if(cue.id=="UI_Evolution_Chest")
+                {
+                    var evolved=bindings.Find(b=>b.eventType==PresentationEventType.Evolved);
+                    if(evolved==null) throw new Exception("Evolution binding missing");
+                    evolved.rule=PolishedRule(cue);
+                }
+                else throw new Exception("Unknown polished growth cue "+cue.id);
+            }
+            // Suppress the busiest short voices slightly to keep the mechanism identity audible.
+            audio.echo.minInterval=Math.Max(.10f,audio.echo.minInterval);
+            audio.propagation.minInterval=Math.Max(.09f,audio.propagation.minInterval);
+            audio.enemyDeath.minInterval=Math.Max(.10f,audio.enemyDeath.minInterval);
             audio.contentBindings = bindings.ToArray();
         }
         static AudioEventRule Rule(Cue c) => new AudioEventRule(c.id,c.volumeDb,c.pitchJitter,Math.Max(1,c.maxVoices),c.minInterval,c.spatialBlend,25)
             { clips = CueClips(c), pitch = c.pitch, dropWhenFull = true };
+        static AudioEventRule PolishedRule(Cue cue)
+        {
+            var rule=Rule(cue);rule.name="R1_"+cue.id;rule.sequential=true;
+            rule.clearOnPause=cue.pauseClear;
+            // Confirm clips are longer than the input guard: each new choice must still give immediate feedback.
+            if(cue.id=="UI_Card_Chosen") rule.dropWhenFull=false;
+            // Listener is on the camera, 30m from the player; default 1m rolloff attenuated centre combat.
+            rule.minDistance=30;rule.maxDistance=65;rule.priority=Mathf.Clamp(160-cue.priority*12,0,256);
+            return rule;
+        }
         static AudioClip[] CueClips(Cue cue)
         {
             if (cue.variants == null || cue.variants.Length == 0) return new[] { Load<AudioClip>(cue.assetPath) };
@@ -183,7 +233,7 @@ namespace Reverb.Drafts.RC01.EditorTools
         static T Load<T>(string path) where T : UnityEngine.Object => AssetDatabase.LoadAssetAtPath<T>(path) ?? throw new Exception("Missing asset " + path);
         public static void Build()
         {
-            string output = Path.GetFullPath(Path.Combine(Application.dataPath,"../../Builds/RC01-Feedback01/Reverb.exe"));
+            string output = Path.GetFullPath(Path.Combine(Application.dataPath,"../../Builds/RC01-SoundR1/Reverb.exe"));
             M01IntegrationBatch.BuildScene(ScenePath,output);
         }
     }

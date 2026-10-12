@@ -20,9 +20,22 @@ namespace Reverb.Drafts.RC01.Presentation
         readonly HashSet<string> damageSources = new HashSet<string>();
         bool passed = true;
         GameLoop loop;
+        AudioSource[] audioVoices;
+        readonly HashSet<string> playedAudio=new HashSet<string>();
+        bool polished;
+        bool DeathTailPlaying()
+        {
+            foreach(var voice in audioVoices) if(voice!=null && voice.isPlaying && voice.clip!=null
+                && voice.clip.name.StartsWith("TEST_ONLY_sfx_enemy_death_v")) return true;
+            return false;
+        }
         void Check(bool ok,string label) { observations.Add(label+"="+ok); passed &= ok; }
         void Record(IReadOnlyList<PresentationEvent> events)
-        { foreach(var e in events) if(e.Type==PresentationEventType.EnemyHit && e.SourceId!=null) damageSources.Add(e.SourceId); }
+        {
+            foreach(var e in events) if(e.Type==PresentationEventType.EnemyHit && e.SourceId!=null) damageSources.Add(e.SourceId);
+            if(audioVoices!=null) foreach(var voice in audioVoices)
+                if(voice!=null && voice.isPlaying && voice.clip!=null) playedAudio.Add(voice.clip.name);
+        }
         IEnumerator Start()
         {
             var args=Environment.GetCommandLineArgs(); int flag=Array.IndexOf(args,"--rc01-smoke-output");
@@ -41,6 +54,16 @@ namespace Reverb.Drafts.RC01.Presentation
             }
             observations.Clear(); Check(loop.Sim.Growth!=null,"growthHost");
             var audio=GetComponent<AudioDirector>();
+            audioVoices=GetComponentsInChildren<AudioSource>();
+            polished=audio!=null && audio.enemyDeath.clearOnPause;
+            if(polished)
+            {
+                bool wired=audio.echo.clips.Length==2 && audio.propagation.clips.Length==2 && audio.levelUpConfirm.clips.Length==2;
+                foreach(var binding in audio.contentBindings)
+                    if(binding.contentId=="W01" || binding.contentId=="W02" || binding.contentId=="W03" || binding.contentId=="W04")
+                        wired &= binding.rule.clips.Length==3 && binding.rule.minDistance==30 && binding.rule.sequential;
+                Check(wired,"polishR1Bindings");
+            }
             if(loop.config.extraXpStepAfterFour>0)
                 Check(audio!=null && audio.enemyDeath.clips.Length==3 && audio.enemyHit.clips.Length==3
                     && audio.dodge.clips.Length==2 && audio.gemPickup.clips.Length==5,"feedbackAudioVariations");
@@ -74,6 +97,13 @@ namespace Reverb.Drafts.RC01.Presentation
             sim.Combat.DebugSpawnEnemy(new Vec2(sim.PlayerX+6,sim.PlayerZ),20,0);
             sim.Combat.DebugSpawnPickup("D04",new Vec2(sim.PlayerX,sim.PlayerZ));
             yield return new WaitForSecondsRealtime(.1f); Check(damageSources.Contains("D04"),"actualPulsePickup");
+            if(polished)
+            {
+                Check(DeathTailPlaying(),"deathTailStarted");
+                loop.TogglePause();Check(!DeathTailPlaying(),"deathTailStoppedOnPause");
+                loop.TogglePause();yield return new WaitForSecondsRealtime(.03f);
+                Check(!DeathTailPlaying(),"deathTailNotReplayed");
+            }
             sim.DebugGiveXp(2000);
             yield return new WaitForSecondsRealtime(.1f);
             float deadline=Time.realtimeSinceStartup+35;
@@ -123,6 +153,16 @@ namespace Reverb.Drafts.RC01.Presentation
             Check(Capture(loop.gameplayCamera,Path.Combine(output,"world.png")),"rendered");
             ScreenCapture.CaptureScreenshot(Path.Combine(output,"combat-ui.png"));
             yield return new WaitForSecondsRealtime(.15f);
+            if(polished)
+            {
+                var expected=new[] {"w01_pulse","w02_spread","w03_orbit_hit","w04_zone_drop","echo_hit","propagation","enemy_death","ui_growth_confirm","evolution_flourish"};
+                foreach(var group in expected)
+                {
+                    bool heard=false; foreach(var name in playedAudio) heard |= name.StartsWith("TEST_ONLY_sfx_"+group+"_v");
+                    Check(heard,"audioSourcePlayed_"+group);
+                }
+                observations.Add("audioSourceClips="+string.Join(",",playedAudio));
+            }
             observations.Add("damageSources="+string.Join(",",damageSources));
             observations.Add("debugXp=2000 debugTime=241 god=true spawning=false for jump; this is wiring evidence, not natural balance");
             if(!passed) { Finish(); yield break; }

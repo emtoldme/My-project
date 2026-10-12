@@ -1427,70 +1427,91 @@ MonoBehaviour:
   - contentId: W01
     eventType: 1
     rule:
-      name: W01
+      name: R1_W01
       pitch: 1
+      clearOnPause: 0
+      minDistance: 30
+      priority: 40
       dropWhenFull: 1
       clips:
-      - {fileID: 8300000, guid: 453466980d32479cbb04d527624fb2cd, type: 3}
-      - {fileID: 8300000, guid: 0244239c48eb486c82f9c4e964397f59, type: 3}
-      - {fileID: 8300000, guid: 3084b52852f04f8bbd5baf3a8a45d92f, type: 3}
-      volumeDb: -5
-      pitchRandom: 0.05
+      - {fileID: 8300000, guid: d190eed9429749e39ce1e200a8416a4f, type: 3}
+      - {fileID: 8300000, guid: 717c5b3df5e54e15ab7e0d98d2c2fffb, type: 3}
+      - {fileID: 8300000, guid: 9fbd72582fe043af94dd5f393d62ccdb, type: 3}
+      volumeDb: -3.5
+      pitchRandom: 0.04
       maxVoices: 3
-      minInterval: 0.08
+      minInterval: 0.07
       spatialBlend: 0
-      maxDistance: 25
+      maxDistance: 65
       sequential: 1
   - contentId: W02
     eventType: 1
     rule:
-      name: W02
+      name: R1_W02
       pitch: 1
+      clearOnPause: 0
+      minDistance: 30
+      priority: 52
       dropWhenFull: 1
       clips:
-      - {fileID: 8300000, guid: 1ce77bf27ceb47b9bb72c4366dce69f2, type: 3}
+      - {fileID: 8300000, guid: 826eafaf689145d6a4774fb404e8af95, type: 3}
+      - {fileID: 8300000, guid: 7eb5dbf1719d43928d4dda8617416292, type: 3}
+      - {fileID: 8300000, guid: fdb5444f49fd4fa3a3a1a13420fa1c0d, type: 3}
       volumeDb: -3.5
-      pitchRandom: 0.06
+      pitchRandom: 0.05
       maxVoices: 2
-      minInterval: 0.12
+      minInterval: 0.1
       spatialBlend: 0.2
-      maxDistance: 25
-      sequential: 0
+      maxDistance: 65
+      sequential: 1
   - contentId: W03
     eventType: 2
     rule:
-      name: W03
+      name: R1_W03
       pitch: 1
+      clearOnPause: 0
+      minDistance: 30
+      priority: 64
       dropWhenFull: 1
       clips:
-      - {fileID: 8300000, guid: 7febf8a8111a444bbe0254daea1b7e01, type: 3}
+      - {fileID: 8300000, guid: 02bf45bc8fc04e0992636597c0cedf68, type: 3}
+      - {fileID: 8300000, guid: fd27bec1e3de47d592a716b24add3d46, type: 3}
+      - {fileID: 8300000, guid: 58ff0acaca024505b85ef75d4d77c8f8, type: 3}
       volumeDb: -4
       pitchRandom: 0.04
       maxVoices: 2
-      minInterval: 0.1
+      minInterval: 0.09
       spatialBlend: 0.4
-      maxDistance: 25
-      sequential: 0
+      maxDistance: 65
+      sequential: 1
   - contentId: W04
     eventType: 17
     rule:
-      name: W04
+      name: R1_W04
       pitch: 1
+      clearOnPause: 0
+      minDistance: 30
+      priority: 52
       dropWhenFull: 1
       clips:
-      - {fileID: 8300000, guid: c2b53d6a9454488591ded7b53fa9e4db, type: 3}
+      - {fileID: 8300000, guid: 592fd38442864385a80d691e0443a00b, type: 3}
+      - {fileID: 8300000, guid: c3b7308c405e4d25aa54cc250caf4786, type: 3}
+      - {fileID: 8300000, guid: bbbf3975b6e84ac5bba76c0a89eff3cf, type: 3}
       volumeDb: -3
-      pitchRandom: 0.05
+      pitchRandom: 0.04
       maxVoices: 2
-      minInterval: 0.14
+      minInterval: 0.12
       spatialBlend: 0.3
-      maxDistance: 25
-      sequential: 0
+      maxDistance: 65
+      sequential: 1
   - contentId: D02
     eventType: 18
     rule:
       name: D02
       pitch: 1.15
+      clearOnPause: 0
+      minDistance: 1
+      priority: 128
       dropWhenFull: 1
       clips:
       - {fileID: 8300000, guid: 6c8b35e98add4087a6d76303ec3003f9, type: 3}
@@ -1506,6 +1527,9 @@ MonoBehaviour:
     rule:
       name: D03
       pitch: 1.4
+      clearOnPause: 0
+      minDistance: 1
+      priority: 128
       dropWhenFull: 1
       clips:
       - {fileID: 8300000, guid: 912ffd53d59a4e00be38ec9a03e30c7d, type: 3}
@@ -1521,6 +1545,9 @@ MonoBehaviour:
     rule:
       name: D04
       pitch: 0.85
+      clearOnPause: 0
+      minDistance: 1
+      priority: 128
       dropWhenFull: 1
       clips:
       - {fileID: 8300000, guid: c2b53d6a9454488591ded7b53fa9e4db, type: 3}
@@ -1536,6 +1563,9 @@ MonoBehaviour:
     rule:
       name: UI_Reroll
       pitch: 1
+      clearOnPause: 0
+      minDistance: 1
+      priority: 128
       dropWhenFull: 1
       clips:
       - {fileID: 8300000, guid: 217a2b8fbcb04bd0923447bef6461238, type: 3}
@@ -1551,6 +1581,9 @@ MonoBehaviour:
     rule:
       name: UI_Banish
       pitch: 1
+      clearOnPause: 0
+      minDistance: 1
+      priority: 128
       dropWhenFull: 1
       clips:
       - {fileID: 8300000, guid: 0cfa6dadcd2b41bb9c9a8c4fbb38d4e2, type: 3}
@@ -1564,58 +1597,73 @@ MonoBehaviour:
   - contentId: '*'
     eventType: 20
     rule:
-      name: UI_Evolution_Chest
+      name: R1_UI_Evolution_Chest
       pitch: 1
+      clearOnPause: 0
+      minDistance: 30
+      priority: 40
       dropWhenFull: 1
       clips:
-      - {fileID: 8300000, guid: a1bdbea04ee04a61a4eb131a10af6b30, type: 3}
+      - {fileID: 8300000, guid: 4fab2cc858984c398fef6944447539e8, type: 3}
       volumeDb: -2
       pitchRandom: 0
       maxVoices: 1
       minInterval: 0.25
       spatialBlend: 0
-      maxDistance: 25
-      sequential: 0
+      maxDistance: 65
+      sequential: 1
   enableMechanismAudio: 1
   echo:
-    name: P12
+    name: R1_EchoHit
     pitch: 1
+    clearOnPause: 0
+    minDistance: 30
+    priority: 64
     dropWhenFull: 1
     clips:
-    - {fileID: 8300000, guid: d4c55b0ad5ea45fdbabbcc059b64846d, type: 3}
+    - {fileID: 8300000, guid: bddff433e1ed4b8c88bd3a3e2df91e57, type: 3}
+    - {fileID: 8300000, guid: 0768e3840952442f9ae5e8c59dd3b7dc, type: 3}
     volumeDb: -3.5
     pitchRandom: 0.03
     maxVoices: 2
     minInterval: 0.1
     spatialBlend: 0.5
-    maxDistance: 25
-    sequential: 0
+    maxDistance: 65
+    sequential: 1
   propagation:
-    name: P13
+    name: R1_PropagationHit
     pitch: 1
+    clearOnPause: 0
+    minDistance: 30
+    priority: 76
     dropWhenFull: 1
     clips:
-    - {fileID: 8300000, guid: 4721becc9980472dbcb6b6b1028ddecb, type: 3}
+    - {fileID: 8300000, guid: 2047249e25424da384ff7ed0134635a6, type: 3}
+    - {fileID: 8300000, guid: 8627df982725408a826e243eb38d7106, type: 3}
     volumeDb: -4.5
     pitchRandom: 0.04
     maxVoices: 2
     minInterval: 0.09
     spatialBlend: 0.6
-    maxDistance: 25
-    sequential: 0
+    maxDistance: 65
+    sequential: 1
   echoPropagation:
-    name: P12_P13
+    name: R1_EchoPropagation
     pitch: 0.85
+    clearOnPause: 0
+    minDistance: 30
+    priority: 76
     dropWhenFull: 1
     clips:
-    - {fileID: 8300000, guid: 4721becc9980472dbcb6b6b1028ddecb, type: 3}
-    volumeDb: -5
+    - {fileID: 8300000, guid: 2047249e25424da384ff7ed0134635a6, type: 3}
+    - {fileID: 8300000, guid: 8627df982725408a826e243eb38d7106, type: 3}
+    volumeDb: -6
     pitchRandom: 0.04
     maxVoices: 1
     minInterval: 0.12
-    spatialBlend: 0.7
-    maxDistance: 25
-    sequential: 0
+    spatialBlend: 0.6
+    maxDistance: 65
+    sequential: 1
   musicGroup: {fileID: 0}
   sfxGroup: {fileID: 0}
   sfxTrimDb: -10
@@ -1636,6 +1684,9 @@ MonoBehaviour:
   shoot:
     name: Event_Player_Shoot
     pitch: 1
+    clearOnPause: 0
+    minDistance: 1
+    priority: 128
     dropWhenFull: 0
     clips: []
     volumeDb: -2
@@ -1648,6 +1699,9 @@ MonoBehaviour:
   enemyHit:
     name: DirectHit
     pitch: 1
+    clearOnPause: 0
+    minDistance: 1
+    priority: 128
     dropWhenFull: 1
     clips:
     - {fileID: 8300000, guid: 1e1c4be755ac40c3a2a3c8edf88bf902, type: 3}
@@ -1661,23 +1715,29 @@ MonoBehaviour:
     maxDistance: 25
     sequential: 1
   enemyDeath:
-    name: EnemyDeath
+    name: R1_EnemyDeath
     pitch: 1
+    clearOnPause: 1
+    minDistance: 30
+    priority: 40
     dropWhenFull: 1
     clips:
-    - {fileID: 8300000, guid: b542d9ec81b645519a955094de66ae42, type: 3}
-    - {fileID: 8300000, guid: 9715009741364694ad0363469d4528dd, type: 3}
-    - {fileID: 8300000, guid: a8d5ecb94c4d4847acfbeb015fbfdfec, type: 3}
-    volumeDb: -2
-    pitchRandom: 0.08
+    - {fileID: 8300000, guid: 37aab7a6084541369a24decfdf913d10, type: 3}
+    - {fileID: 8300000, guid: 0217c40991b84765872203c27df28e06, type: 3}
+    - {fileID: 8300000, guid: e7d55b4d77284cce98b67a85e9120ded, type: 3}
+    volumeDb: -2.5
+    pitchRandom: 0.06
     maxVoices: 3
     minInterval: 0.1
     spatialBlend: 0.8
-    maxDistance: 25
-    sequential: 0
+    maxDistance: 65
+    sequential: 1
   playerHurt:
     name: Event_Player_Hurt
     pitch: 1
+    clearOnPause: 0
+    minDistance: 1
+    priority: 128
     dropWhenFull: 0
     clips:
     - {fileID: 8300000, guid: 4da6c5ea24ba44cd9bd68b92fd7fcab8, type: 3}
@@ -1692,6 +1752,9 @@ MonoBehaviour:
   dodge:
     name: Event_Player_Dodge
     pitch: 1
+    clearOnPause: 0
+    minDistance: 1
+    priority: 128
     dropWhenFull: 0
     clips:
     - {fileID: 8300000, guid: 5e7bbe928bc14f3bb36a12a96d3c0c26, type: 3}
@@ -1706,6 +1769,9 @@ MonoBehaviour:
   gemPickup:
     name: Event_Gem_Pickup
     pitch: 1
+    clearOnPause: 0
+    minDistance: 1
+    priority: 128
     dropWhenFull: 0
     clips:
     - {fileID: 8300000, guid: 413535198303456e958ce36071a23685, type: 3}
@@ -1723,6 +1789,9 @@ MonoBehaviour:
   levelUpAppear:
     name: UI_LevelUp_Appear
     pitch: 1
+    clearOnPause: 0
+    minDistance: 1
+    priority: 128
     dropWhenFull: 1
     clips:
     - {fileID: 8300000, guid: f64f314d93664bbbb3f854986a8de693, type: 3}
@@ -1734,21 +1803,28 @@ MonoBehaviour:
     maxDistance: 25
     sequential: 0
   levelUpConfirm:
-    name: UI_Card_Chosen
+    name: R1_UI_Card_Chosen
     pitch: 1
-    dropWhenFull: 1
+    clearOnPause: 0
+    minDistance: 30
+    priority: 40
+    dropWhenFull: 0
     clips:
-    - {fileID: 8300000, guid: eae4183121c5499ba120bb3c2eb4a546, type: 3}
-    volumeDb: -1
-    pitchRandom: 0
+    - {fileID: 8300000, guid: 67d7df6cf6bb4c1d9884e5710601129c, type: 3}
+    - {fileID: 8300000, guid: d6b321e7818b4d14be452512751904d5, type: 3}
+    volumeDb: -1.5
+    pitchRandom: 0.02
     maxVoices: 1
     minInterval: 0.1
     spatialBlend: 0
-    maxDistance: 25
-    sequential: 0
+    maxDistance: 65
+    sequential: 1
   victory:
     name: Event_Game_Victory
     pitch: 1
+    clearOnPause: 0
+    minDistance: 1
+    priority: 128
     dropWhenFull: 0
     clips:
     - {fileID: 8300000, guid: d68021e1e19c472386f73dfd99ae09d7, type: 3}
@@ -1762,6 +1838,9 @@ MonoBehaviour:
   defeat:
     name: Event_Game_Defeat
     pitch: 1
+    clearOnPause: 0
+    minDistance: 1
+    priority: 128
     dropWhenFull: 0
     clips:
     - {fileID: 8300000, guid: e3507f548cf747f99db0cb6173791f85, type: 3}
