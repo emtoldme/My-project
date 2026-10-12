@@ -1,0 +1,20 @@
+{
+    "name": "Reverb.Drafts.RC01.Pipeline.Editor",
+    "rootNamespace": "Reverb.Drafts.RC01.Pipeline.EditorTools",
+    "references": [
+        "Reverb.Drafts.RC01.Pipeline",
+        "Waffle.Rules",
+        "Waffle.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
