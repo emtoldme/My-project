@@ -1,7 +1,7 @@
 # P-03 交接：S2 视听样板装配
 
 基线：`origin/main` `8e5fe719db2e1d57468e5f451be3e7732e7ea797`（Merge PR #12）。
-分支：`feature/p03-style-lab`。
+分支：`feature/p03-style-lab`。样板代码提交：`0f370922bb108e462877e531a17acb38dee22841`。本交接的提交号补记可能使分支顶端比它新一个提交，以 `git rev-parse origin/feature/p03-style-lab` 为准。
 可写范围只做了：`Assets/Waffle/S2/`、`Docs/Integration/P-03_HANDOFF.md`。
 没有改 S1_Graybox、Core/Input/Views、AudioDirector、VfxDirector、原 asmdef、主美/声音原始素材，也没有合并 A-03 / S-03。
 没有把本分支合进 main。
