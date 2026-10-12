@@ -157,7 +157,7 @@ namespace Waffle.S2
             GUILayout.BeginArea(box, GUI.skin.box);
             GUILayout.Label(state.Phase == RunPhase.Victory ? "胜利" : "失败");
             GUILayout.Label(RunHud.FormatClock(state.Now) + "  击杀 " + state.Kills + "  等级 " + state.Level);
-            GUILayout.Label(state.EndReason);
+            GUILayout.Label(state.Phase == RunPhase.Victory ? "本轮完成" : "核心失稳，重新尝试");
             if (GUILayout.Button("重开", GUILayout.Height(36f))) loop.Restart();
             GUILayout.EndArea();
         }
