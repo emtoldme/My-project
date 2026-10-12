@@ -1,11 +1,13 @@
 # 项目状态与开发入口
 
-2026-10-12。《麦田里的混响》，长期上下文见Docs/Project/REVERB_CONTEXT_V1.md。保持四位外部AI独立交付，Codex整合/验证，用户转发和阶段体验验收。
+2026-10-12。《麦田里的混响》，长期上下文见 Docs/Project/REVERB_CONTEXT_V1.md。保持四位外部 AI 独立提交、用户转发、Codex 整合/自动化/本地开发、用户阶段体验验收。
 
-第二轮基线main@2d113dd656933c48b5a510c86ea5993d169e7c2a，四位交付已收齐；验证源码见Docs/Verification/Reverb-Followup-02/REVIEW.md。Unity EditMode130/130、三项实验PlayMode3/3、补充Profiler单项1/1均通过。V2真实16秒双轨回绕10次及三次恢复通过，最大主线程游标差1024，不能认证连续相位；原V1保留。V2端点归零，仍有斜率变化，未经监听不保证无爆音。
+本轮四位交付已收齐，M01 独立回声＋传播试玩已接线并构建 Windows 包。规则只通过唯一 CombatModule 结算，实际派生事件驱动环/线和音效；四模式切换即同 seed 12345 重开，保留 WASD/自动攻击/Space 闪避/Esc 暂停，固定武器且冻结 XP/升级供比较。默认 S1/S2 未启用新机制。
 
-同场景off/on/on/off已采ProfilerRecorder/UnityStats，含设备、CPU/GC/绘制统计；GPU不可用，CPU/GC包含编辑器与测试开销，不当作特效净成本或发布性能认证。正式Core/Input/Views、旧场景、渲染配置和Packages未改，本轮无新Windows包。S2旧画面仍未通过美术验收。
+EditMode153/153、实际场景及旧回归 PlayMode15/15 通过。当前实测、源码与独立包记录见 Docs/Verification/M01/REVIEW.md；用户三分钟体验步骤见 M01_ACCEPTANCE.md。集成重建入口 M01IntegrationBatch.Setup，独立构建入口 M01IntegrationBatch.Build，不更改默认 Build Settings。
 
-用户已选择下一阶段：在独立M01试玩中验证回声＋传播是否有趣，正式美术后置。当前只有共享UI合同和下一轮任务卡，没有声称M01已可玩。1号做二维纯规则/宿主接口，2号做独立场景/面板/表现池，主美做辨识审查，音效总监做声响应表。Codex负责唯一CombatModule可选桥和自动验证，之后交独立Windows试玩供用户验收。
+本轮包含最小可选共享规则钩子和表现/音效通道，不能沿用上一轮“正式玩法源代码未改”的描述。旧默认场景、Packages 和共享渲染配置保持原样；Unity 自动序列化噪声已还原。旧包和原用户 Unity 窗口保留。
 
-当前转发提示词：REVERB_TASKS_03.md。TASKS_01/02及第一轮审查保留历史。所有对外提示词由用户转发，未自动发外部消息；正式素材本轮不索要，Lore与大系统后排。
+当前为机制体验待用户验收：是否改变走位、是否可辨认、是否值得继续。所有模型/地面/音效仍是 TEST_ONLY，M01 没有正式 BGM；S2 旧画面仍未通过美术验收。正式素材后置，本轮不索要或制作。下一轮四位 AI 需求依据本次体验反馈再发，不扩装备大系统/完整关卡/Lore。
+
+第二轮 PR23 基线 dc8b096 的 V2 双轨与小场景观察保留于 Docs/Verification/Reverb-Followup-02；第一轮保留于 Reverb-Experiments-01。TASKS_01/02/03 是历史分工记录，不要重复执行。提示词仍由用户转发，没有自动发外部消息。

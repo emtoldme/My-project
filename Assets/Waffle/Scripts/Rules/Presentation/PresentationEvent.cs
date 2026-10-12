@@ -33,7 +33,10 @@ namespace Waffle
         /// <summary>T9 进入 Defeat（每局最多一次）。</summary>
         Defeat,
         /// <summary>重开前发出（每个 RunSimulation 最多一次）。</summary>
-        Restart
+        Restart,
+        EchoHit,
+        PropagationHit,
+        EchoPropagationHit
     }
 
     /// <summary>一条表现事件。纯数据，值类型。位置在 XZ 平面。</summary>
@@ -47,6 +50,9 @@ namespace Waffle
         public float Z;
         public float Value;
         public int Data;
+        // Derived hits carry source and target positions; existing events leave these at zero.
+        public float FromX, FromZ;
+        public int Generation;
 
         public override string ToString()
         {

@@ -1,0 +1,5 @@
+{
+  "name": "Reverb.Experiments.Mechanism.Integration",
+  "references": ["Waffle.Rules", "Waffle.Runtime", "Reverb.Experiments.Mechanism.Contracts", "Reverb.Experiments.Mechanism.Rules", "Waffle.Experiments.Mechanism.Presentation", "Unity.InputSystem"],
+  "autoReferenced": false
+}
