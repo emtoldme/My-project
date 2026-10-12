@@ -1,6 +1,6 @@
 # S2-01联合视听样板整合复核
 
-2026-10-12 / Codex。整合基线main@8e5fe719db2e1d57468e5f451be3e7732e7ea797；本包源码6f9ed0fcc663f1975eada65d50a86aacbe6e638c。技术交付完成，用户视听方向和S2阶段验收待进行；不进入S3或批量填充。
+2026-10-12 / Codex。整合基线main@8e5fe719db2e1d57468e5f451be3e7732e7ea797；本包源码d44a402d7467d81059afec548859e0f5ad43083c。技术交付完成，用户视听方向和S2阶段验收待进行；不进入S3或批量填充。
 
 ## 接收的四方成果
 
@@ -24,13 +24,13 @@
 
 ## 验证事实
 
-Unity6000.4.3f1，Windows：EditMode规则程序集117通过/0失败；D3D11 PlayMode14通过/0失败。原始逻辑结果在editmode.xml/playmode.xml（仅统一行尾）。PlayMode覆盖旧S1与音频生命周期，新增S2实际模型、自动攻击/命中、真实D+Space、全五部件残影顶点与大小、暂停冻结、A/B切换、经验/连续升级、真实120秒精英击杀环及重开输入/状态恢复。
+测试源码6f9ed0fcc663f1975eada65d50a86aacbe6e638c；随后仅将终局原始原因字符串改为玩家可读文案，最终源码重新构建并独立启动，未为纯文案修改重复整套测试。Unity6000.4.3f1，Windows：EditMode规则程序集117通过/0失败；D3D11 PlayMode14通过/0失败。原始逻辑结果在editmode.xml/playmode.xml（仅统一行尾）。PlayMode覆盖旧S1与音频生命周期，新增S2实际模型、自动攻击/命中、真实D+Space、全五部件残影顶点与大小、暂停冻结、A/B切换、经验/连续升级、真实120秒精英击杀环及重开输入/状态恢复。
 
 S2短检查为可重复的隔离场景：固定dt、God、测试敌人、升级XP、跳时、关闭普通波次与高伤害用于迅速观察精英强调。生产场景保留原3分钟局长、正常属性/刷怪和120/150/170秒精英，不把短检查作为难度、战斗密度或性能基准。
 
 模型/场景装配多次执行成功，日志S2_STYLELAB_SETUP_PASSED的placeholder=False、enemyPlaceholder=False、groundArt=True，引用/几何检查通过。combat.png、dodge.png、elite.png为真实运行时相机渲染的安排测试状态，**不含IMGUI界面**；scene-preview.png为编辑态静态预览，不用于代替实际运行光照。没有概念图冒充游戏截图。
 
-Windows Development Build成功，0错误、487条告警；本轮未清理原有第三方/包告警。输出Builds/S2-StyleLab/Waffle.exe，整个目录保留，S1-DodgeFix未覆盖。D3D11独立进程观察50.3秒，结束后日志确认GameLoop开局、拾取XP和34.760秒进入首次升级，无上述异常；只停止本次测试进程。监控脚本实时读取遇文件共享锁，未采用该布尔值作结论，改以关闭后的日志复核。摘录player-startup.txt，源码/程序集SHA见build-info.json。
+Windows Development Build成功，0错误、487条告警；本轮未清理原有第三方/包告警。输出Builds/S2-StyleLab/Waffle.exe，整个目录保留，S1-DodgeFix未覆盖。最终d44a402包D3D11独立进程观察5.1秒，日志确认GameLoop开局、无异常，测试进程按计划停止；摘录player-startup.txt。此前6f9ed0f包另观察50.3秒，确认拾取XP和34.760秒进入首次升级，见player-upgrade-smoke.txt；该结果属于终局文案修改前的包，不冒充最终包长时验证。早期监控读取共享锁的布尔值未作结论，已改用共享读取并复核关闭后的日志。源码/测试版本与程序集SHA见build-info.json。
 
 ## 声音事实与限制
 

@@ -1,5 +1,5 @@
 {
-  "source_commit": "6f9ed0fcc663f1975eada65d50a86aacbe6e638c",
+  "source_commit": "d44a402d7467d81059afec548859e0f5ad43083c",
   "unity": "6000.4.3f1",
   "target": "StandaloneWindows64",
   "options": "Development",
@@ -7,7 +7,7 @@
   "build_result": "Succeeded",
   "build_errors": 0,
   "build_warnings": 487,
-  "startup": "D3D11; GameLoop start, XP and first LevelUp observed; 50.3s process observation, then test-owned process stopped; no manual input/listening acceptance. Monitor live-read sharing error ignored; conclusion derived from closed player log.",
+  "startup": "Final D3D11 player observed for 5.1s, GameLoop start confirmed, no exception in log, only test-owned process stopped. No manual feel/listening acceptance.",
   "files": [
     {
       "file": "Waffle.exe",
@@ -27,7 +27,14 @@
     {
       "file": "Waffle_Data/Managed/Waffle.S2.dll",
       "bytes": 22528,
-      "sha256": "966fbfc59cea0dcd97e197f8fa3bac24890d632b744a0b009e7fa1aef64f1071"
+      "sha256": "e03ae506737d26eabc1857958ed318b46cb53d7d13170e3c0c64204dd6c5eb17"
     }
-  ]
+  ],
+  "test_source_commit": "6f9ed0fcc663f1975eada65d50a86aacbe6e638c",
+  "test_scope_note": "117 EditMode and 14 PlayMode tests passed at test_source_commit; subsequent source change only replaces result-panel labels. Final source rebuilt and independently started; full suite not repeated for labels.",
+  "previous_upgrade_smoke": {
+    "source_commit": "6f9ed0fcc663f1975eada65d50a86aacbe6e638c",
+    "observation_seconds": 50.3,
+    "observed": "XP pickup and first LevelUp at run time 34.760; see player-upgrade-smoke.txt. This was the previous binary before result-label change."
+  }
 }

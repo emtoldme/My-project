@@ -12,3 +12,5 @@
 | S2方向验收 | 用户 | 短试玩、A/B试听、形体/材质/爆发/混音判断 | 待进行 |
 
 源码整合版本6f9ed0fcc663f1975eada65d50a86aacbe6e638c。证据见Docs/Verification/S2-StyleLab/REVIEW.md，操作见S2_STYLELAB_HANDOFF.md。S1-DodgeFix仍保留；本轮没有授权S3或批量扩武器、角色和场景。
+
+最终包源码d44a402d7467d81059afec548859e0f5ad43083c，补玩家终局文案后重新构建和独立启动；117/14项测试对应此前6f9ed0fcc663f1975eada65d50a86aacbe6e638c，详见构建记录。

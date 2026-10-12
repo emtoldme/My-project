@@ -24,3 +24,5 @@ Unity EditMode117通过、PlayMode14通过，0失败。实际场景检查包括�
 | 用户 | 试玩、比较音乐A/B，判断形体、哑光质感、动效爆发与声音辨识度 |
 
 操作见S2_STYLELAB_HANDOFF.md；任务卡NEXT_TASKS.md已归档，共用契约S2_SAMPLE_CONTRACT.md继续有效。没有自动向外部AI发送消息；用户转发新指令。各AI不同时修改共享入口，不自行合并或进入S3。
+
+最终包源码d44a402d7467d81059afec548859e0f5ad43083c，补玩家终局文案后重新构建和独立启动；117/14项测试对应此前6f9ed0fcc663f1975eada65d50a86aacbe6e638c，详见构建记录。
