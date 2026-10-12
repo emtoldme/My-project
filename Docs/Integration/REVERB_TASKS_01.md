@@ -1,5 +1,7 @@
 # 《麦田里的混响》第一轮协作任务
 
+> 历史记录：本轮四位作者已交付并整合。当前结果见Docs/Verification/Reverb-Experiments-01/REVIEW.md，后续只执行REVERB_TASKS_02.md，不重复领取此处旧任务。
+
 2026-10-12。保留用户转发 → 各AI独立分支/目录交GitHub → Codex审查/本地接线与自动化 → 用户体验验收的模式。当前仅技术基线与三个小实验，不制作正式艺术或大型系统。先读AGENTS.md、Docs/Project/REVERB_CONTEXT_V1.md和REVERB_BASELINE_REVIEW.md。**撤回A-04/P-04/C-03/S-04旧雕塑返工卡**，若已开始，保留分支并回报，停止继续写入，不能删成果或自动合入。
 
 统一要求：fetch最新origin/main，从独立目录开新分支，记录完整SHA；只写自己的目录，提交.meta、实际验证/缺项和跨目录需求；不能自行合并或改main，不能升级Package。共享Core/Input/Views/asmdef/渲染设置由Codex处理。初期只做必要验证。没有Unity如实说明并交可运行入口，不让用户补工具/导入/测试。每项只交一个小实验，不展开正式游戏系统。

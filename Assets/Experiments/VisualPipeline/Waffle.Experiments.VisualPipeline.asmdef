@@ -1,0 +1,17 @@
+{
+    "name": "Waffle.Experiments.VisualPipeline",
+    "rootNamespace": "Waffle.Experiments.VisualPipeline",
+    "references": [
+        "Waffle.Rules",
+        "Waffle.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

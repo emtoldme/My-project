@@ -1,0 +1,21 @@
+{
+    "name": "Waffle.Experiments.VisualPipeline.Editor",
+    "rootNamespace": "Waffle.Experiments.VisualPipeline.EditorTools",
+    "references": [
+        "Waffle.Rules",
+        "Waffle.Runtime",
+        "Waffle.Experiments.VisualPipeline",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

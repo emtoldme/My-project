@@ -1,0 +1,13 @@
+== none : events=1 totalDamage=10 pending=0
+t=0.00 #1 trig=1 Direct d0 T1g1->T1g1 dmg=10 hp=20 Applied parent=0
+== A : events=2 totalDamage=15 pending=0
+t=0.00 #1 trig=1 Direct d0 T1g1->T1g1 dmg=10 hp=20 Applied parent=0
+t=0.50 #2 trig=1 Echo d1 T1g1->T1g1 dmg=5 hp=15 Applied parent=1
+== B : events=2 totalDamage=14 pending=0
+t=0.00 #1 trig=1 Direct d0 T1g1->T1g1 dmg=10 hp=20 Applied parent=0
+t=0.10 #2 trig=1 Propagation d1 T1g1->T2g1 dmg=4 hp=26 Applied parent=1
+== A+B : events=4 totalDamage=23 pending=0
+t=0.00 #1 trig=1 Direct d0 T1g1->T1g1 dmg=10 hp=20 Applied parent=0
+t=0.10 #3 trig=1 Propagation d1 T1g1->T2g1 dmg=4 hp=26 Applied parent=1
+t=0.50 #2 trig=1 Echo d1 T1g1->T1g1 dmg=5 hp=15 Applied parent=1
+t=0.60 #4 trig=1 Propagation d2 T1g1->T3g1 dmg=4 hp=26 Applied parent=2
