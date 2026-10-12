@@ -61,7 +61,7 @@ namespace Reverb.Experiments.Verification
             Assert.That(wave.ActiveRings, Is.GreaterThan(0));
             Assert.That(wave.ActiveSparks, Is.GreaterThan(0));
             loop.TogglePause(); // Freeze transforms and effects, vary renderer visibility only.
-            foreach (var script in UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+            foreach (var script in UnityEngine.Object.FindObjectsByType<MonoBehaviour>())
                 if (script.GetType().Name == "RunHud" || script.GetType().Name == "DebugConsole") script.enabled = false;
             var renderers = wave.GetComponentsInChildren<Renderer>().Where(r => r.name.StartsWith("E01_")).ToArray();
             var target = new RenderTexture(1280, 720, 24);
@@ -74,7 +74,7 @@ namespace Reverb.Experiments.Verification
             var handles = new List<ProfilerRecorderHandle>();
             ProfilerRecorderHandle.GetAvailable(handles);
             var descriptions = handles.Select(ProfilerRecorderHandle.GetDescription).ToArray();
-            string[] wanted = { "Main Thread", "Render Thread", "Draw Calls Count", "Batches Count", "SetPass Calls Count", "GC Allocated In Frame", "GPU Frame Time" };
+            string[] wanted = { "Main Thread", "PlayerLoop", "Render Thread", "Draw Calls Count", "Batches Count", "SetPass Calls Count", "GC Allocated In Frame", "GPU Frame Time" };
             var recorders = new ProfilerRecorder[wanted.Length];
             var units = new string[wanted.Length];
             var phases = new List<Phase>();
@@ -97,7 +97,13 @@ namespace Reverb.Experiments.Verification
                     {
                         yield return null;
                         for (int i = 0; i < recorders.Length; i++)
+                        {
                             if (recorders[i].Valid && recorders[i].Count > 0) values[i].Add(recorders[i].LastValue);
+#if UNITY_EDITOR
+                            else if (wanted[i] == "Draw Calls Count")
+                            { values[i].Add(UnityEditor.UnityStats.drawCalls); units[i] = "Count (UnityEditor.UnityStats)"; }
+#endif
+                        }
                     }
                     var metrics = new Metric[wanted.Length];
                     for (int i = 0; i < wanted.Length; i++)
@@ -118,8 +124,8 @@ namespace Reverb.Experiments.Verification
                 }
                 var report = new Report { unity = Application.unityVersion, cpu = SystemInfo.processorType, gpu = SystemInfo.graphicsDeviceName,
                     graphicsApi = SystemInfo.graphicsDeviceType.ToString(), os = SystemInfo.operatingSystem, phases = phases.ToArray(),
-                    availableCounters = descriptions.Select(d => d.Category.Name + "/" + d.Name + " [" + d.UnitType + "]").Where(s => wanted.Any(w => s.Contains(w))).ToArray(),
-                    scope = "Windows Editor PlayMode / batch D3D11. Same paused scene, camera and objects; E01 renderer visibility off/on/on/off. 30 warmup + 120 observed frames per phase, target 60Hz, camera target 1280x720. Whole frame CPU includes Editor, waits and test harness; GC is whole-frame allocation, not just effects. GPU unavailable if absent/all zero. ProfilerRecorder, not a Frame Debugger trace. No stress or shipping performance acceptance." };
+                    availableCounters = descriptions.Select(d => d.Category.Name + "/" + d.Name + " [" + d.UnitType + "]").Where(s => System.Text.RegularExpressions.Regex.IsMatch(s, "Draw|Batch|Render|GPU|PlayerLoop|Main Thread|GC Allocated", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToArray(),
+                    scope = "Windows Editor PlayMode / batch D3D11. Same paused scene, camera and objects; E01 renderer visibility off/on/on/off. 30 warmup + 120 observed frames per phase, target 60Hz, camera target 1280x720. Whole frame CPU includes Editor, waits and test harness; GC is whole-frame allocation, not just effects. GPU unavailable if absent/all zero. ProfilerRecorder plus explicitly labeled UnityStats fallback for draw calls, not a Frame Debugger trace. No stress or shipping performance acceptance." };
                 Directory.CreateDirectory("Docs/Verification/Reverb-Followup-02");
                 File.WriteAllText("Docs/Verification/Reverb-Followup-02/e01-profiler.json", JsonUtility.ToJson(report, true) + "\n");
                 Assert.That(phases.Select(p => p.activeRings).Distinct().Count(), Is.EqualTo(1));
