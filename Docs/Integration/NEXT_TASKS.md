@@ -1,5 +1,7 @@
 # 下一轮派工：S2-01 首个联合视听样板
 
+> 当前入口改为REVERB_TASKS_01.md和REVERB_BASELINE_REVIEW.md。旧S2-01与S2_VISUAL_REWORK.md的制作卡均归档/撤回，不继续旧雕塑资产路线。
+
 > 用户已拒绝S2首版视觉。当前A-04/P-04返工及C-03/S-04限定支持的完整提示词在[S2_VISUAL_REWORK.md](S2_VISUAL_REWORK.md)。以下S2-01派工卡仅存档，不重复开工。
 
 2026-10-12。用户已反馈当前试玩“一切正常”，授权下一步。先读AGENTS.md、PROJECT_STATUS.md及S2_SAMPLE_CONTRACT.md。下列内容由用户转发给四位AI，没有自动发送外部消息。
