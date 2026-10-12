@@ -10,6 +10,7 @@ Shader "ReverbInTheRye/VFX/ResonancePulseURP"
         _CoreMix ("Core Glow Mix", Range(0,1)) = 0
         _Distortion ("Analog Interference", Range(0,0.1)) = 0.025
         _Phase ("Phase Offset", Float) = 0
+        _VisualTime ("Presentation Time", Float) = 0
     }
 
     SubShader
@@ -38,6 +39,7 @@ Shader "ReverbInTheRye/VFX/ResonancePulseURP"
                 float _CoreMix;
                 float _Distortion;
                 float _Phase;
+                float _VisualTime;
             CBUFFER_END
 
             struct Attributes
@@ -64,7 +66,7 @@ Shader "ReverbInTheRye/VFX/ResonancePulseURP"
             {
                 float2 p = IN.uv * 2.0 - 1.0;
                 float theta = atan2(p.y, p.x);
-                float phase = _Phase + _Time.y * 3.0;
+                float phase = _Phase + _VisualTime * 3.0;
                 float radialJitter = sin(theta * 17.0 + sin(theta * 5.0 - phase) * 2.4 + phase) * 0.65;
                 radialJitter += sin(theta * 53.0 - phase * 2.7) * 0.35;
                 float radius = length(p) + radialJitter * _Distortion;

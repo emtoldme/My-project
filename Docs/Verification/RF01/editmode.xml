@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="31" result="Passed" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.7573113">
+  <test-suite type="TestSuite" id="1000" name="My project" fullname="My project" runstate="Runnable" testcasecount="161" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.757311" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1028" name="Reverb.Experiments.Mechanism.Rules.Tests.dll" fullname="G:/图书馆/新建文件夹 (2)/My project-integration/Library/ScriptAssemblies/Reverb.Experiments.Mechanism.Rules.Tests.dll" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.062785" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="20468" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1029" name="Reverb" fullname="Reverb" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.061821" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1030" name="Experiments" fullname="Reverb.Experiments" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.061279" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1031" name="Mechanism" fullname="Reverb.Experiments.Mechanism" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.060736" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1032" name="Rules" fullname="Reverb.Experiments.Mechanism.Rules" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.060136" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestSuite" id="1033" name="Tests" fullname="Reverb.Experiments.Mechanism.Rules.Tests" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.059604" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-suite type="TestFixture" id="1001" name="MechanismEchoCueTests" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.044010" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1008" name="ClearAndNewRun_NoStaleCues" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests.ClearAndNewRun_NoStaleCues" methodname="ClearAndNewRun_NoStaleCues" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests" runstate="Runnable" seed="335085975" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.014629" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1007" name="InvalidGenerationOrDeadTarget_Excluded" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests.InvalidGenerationOrDeadTarget_Excluded" methodname="InvalidGenerationOrDeadTarget_Excluded" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests" runstate="Runnable" seed="109009817" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000695" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-suite type="ParameterizedMethod" id="1004" name="NoneAndPropagationOnly_Empty" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests.NoneAndPropagationOnly_Empty" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.003254" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                    <properties />
+                    <test-case id="1002" name="NoneAndPropagationOnly_Empty(None)" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests.NoneAndPropagationOnly_Empty(None)" methodname="NoneAndPropagationOnly_Empty" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests" runstate="Runnable" seed="678987200" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000548" asserts="0">
+                      <properties>
+                        <property name="retryIteration" value="0" />
+                        <property name="repeatIteration" value="0" />
+                      </properties>
+                    </test-case>
+                    <test-case id="1003" name="NoneAndPropagationOnly_Empty(Propagation)" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests.NoneAndPropagationOnly_Empty(Propagation)" methodname="NoneAndPropagationOnly_Empty" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests" runstate="Runnable" seed="1093093514" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000169" asserts="0">
+                      <properties>
+                        <property name="retryIteration" value="0" />
+                        <property name="repeatIteration" value="0" />
+                      </properties>
+                    </test-case>
+                  </test-suite>
+                  <test-case id="1005" name="PendingEcho_HasTargetAndTimes_MultiplePerTargetInOrder" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests.PendingEcho_HasTargetAndTimes_MultiplePerTargetInOrder" methodname="PendingEcho_HasTargetAndTimes_MultiplePerTargetInOrder" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests" runstate="Runnable" seed="536762092" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.005871" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1006" name="Query_DoesNotChangeDamageQueueOrCounters" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests.Query_DoesNotChangeDamageQueueOrCounters" methodname="Query_DoesNotChangeDamageQueueOrCounters" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismEchoCueTests" runstate="Runnable" seed="140913637" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.004251" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+                <test-suite type="TestFixture" id="1009" name="MechanismRulesTests" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.014231" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1027" name="BetweenRuns_NewInstanceAndClearAreClean_BudgetRecycled" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.BetweenRuns_NewInstanceAndClearAreClean_BudgetRecycled" methodname="BetweenRuns_NewInstanceAndClearAreClean_BudgetRecycled" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1347971850" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.001946" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-suite type="ParameterizedMethod" id="1020" name="CoarseAndFineDt_Identical" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.CoarseAndFineDt_Identical" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.002632" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                    <properties />
+                    <test-case id="1017" name="CoarseAndFineDt_Identical(Echo)" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.CoarseAndFineDt_Identical(Echo)" methodname="CoarseAndFineDt_Identical" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="257389729" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.001031" asserts="0">
+                      <properties>
+                        <property name="retryIteration" value="0" />
+                        <property name="repeatIteration" value="0" />
+                      </properties>
+                    </test-case>
+                    <test-case id="1018" name="CoarseAndFineDt_Identical(Propagation)" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.CoarseAndFineDt_Identical(Propagation)" methodname="CoarseAndFineDt_Identical" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1888561662" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000251" asserts="0">
+                      <properties>
+                        <property name="retryIteration" value="0" />
+                        <property name="repeatIteration" value="0" />
+                      </properties>
+                    </test-case>
+                    <test-case id="1019" name="CoarseAndFineDt_Identical(Combined)" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.CoarseAndFineDt_Identical(Combined)" methodname="CoarseAndFineDt_Identical" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1350458187" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000238" asserts="0">
+                      <properties>
+                        <property name="retryIteration" value="0" />
+                        <property name="repeatIteration" value="0" />
+                      </properties>
+                    </test-case>
+                  </test-suite>
+                  <test-case id="1015" name="Combined_OrderAndTargets" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.Combined_OrderAndTargets" methodname="Combined_OrderAndTargets" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="463674244" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000399" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1026" name="ConfigCopiedAtStart" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.ConfigCopiedAtStart" methodname="ConfigCopiedAtStart" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="2073010112" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000285" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1025" name="DeadEchoTarget_StopsEchoPropagation" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.DeadEchoTarget_StopsEchoPropagation" methodname="DeadEchoTarget_StopsEchoPropagation" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="753773547" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000265" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1022" name="EqualDistance_TieBySerial_AndRadiusIsXZInclusive" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.EqualDistance_TieBySerial_AndRadiusIsXZInclusive" methodname="EqualDistance_TieBySerial_AndRadiusIsXZInclusive" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1418984639" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000369" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-suite type="ParameterizedMethod" id="1014" name="FourModes_GiveReferenceTotals" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.FourModes_GiveReferenceTotals" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.002289" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                    <properties />
+                    <test-case id="1010" name="FourModes_GiveReferenceTotals(None,10,0,0)" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.FourModes_GiveReferenceTotals(None,10,0,0)" methodname="FourModes_GiveReferenceTotals" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1719728190" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000441" asserts="0">
+                      <properties>
+                        <property name="retryIteration" value="0" />
+                        <property name="repeatIteration" value="0" />
+                      </properties>
+                    </test-case>
+                    <test-case id="1011" name="FourModes_GiveReferenceTotals(Echo,15,1,0)" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.FourModes_GiveReferenceTotals(Echo,15,1,0)" methodname="FourModes_GiveReferenceTotals" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1042474733" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000183" asserts="0">
+                      <properties>
+                        <property name="retryIteration" value="0" />
+                        <property name="repeatIteration" value="0" />
+                      </properties>
+                    </test-case>
+                    <test-case id="1012" name="FourModes_GiveReferenceTotals(Propagation,14,0,1)" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.FourModes_GiveReferenceTotals(Propagation,14,0,1)" methodname="FourModes_GiveReferenceTotals" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="491062305" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000171" asserts="0">
+                      <properties>
+                        <property name="retryIteration" value="0" />
+                        <property name="repeatIteration" value="0" />
+                      </properties>
+                    </test-case>
+                    <test-case id="1013" name="FourModes_GiveReferenceTotals(Combined,23,1,2)" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.FourModes_GiveReferenceTotals(Combined,23,1,2)" methodname="FourModes_GiveReferenceTotals" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="579678948" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000161" asserts="0">
+                      <properties>
+                        <property name="retryIteration" value="0" />
+                        <property name="repeatIteration" value="0" />
+                      </properties>
+                    </test-case>
+                  </test-suite>
+                  <test-case id="1016" name="None_ProducesNothing" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.None_ProducesNothing" methodname="None_ProducesNothing" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1260842340" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000243" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1023" name="PoolGenerationChange_EchoSkippedAndNoChildren" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.PoolGenerationChange_EchoSkippedAndNoChildren" methodname="PoolGenerationChange_EchoSkippedAndNoChildren" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1173760952" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000303" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1024" name="SameFrameRepeatedDeath_SecondPropagationPicksNextLiveTarget" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.SameFrameRepeatedDeath_SecondPropagationPicksNextLiveTarget" methodname="SameFrameRepeatedDeath_SecondPropagationPicksNextLiveTarget" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1052306087" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.000489" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1021" name="SingleCoarseTick_EventsBufferHoldsAllInOrderThenClears" fullname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests.SingleCoarseTick_EventsBufferHoldsAllInOrderThenClears" methodname="SingleCoarseTick_EventsBufferHoldsAllInOrderThenClears" classname="Reverb.Experiments.Mechanism.Rules.Tests.MechanismRulesTests" runstate="Runnable" seed="1907754251" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.001305" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1047" name="Reverb.M01.EditTests.dll" fullname="G:/图书馆/新建文件夹 (2)/My project-integration/Library/ScriptAssemblies/Reverb.M01.EditTests.dll" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.681572" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="20468" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1048" name="Reverb" fullname="Reverb" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.680654" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1049" name="Experiments" fullname="Reverb.Experiments" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.679789" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1050" name="Mechanism" fullname="Reverb.Experiments.Mechanism" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.679207" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1051" name="Tests" fullname="Reverb.Experiments.Mechanism.Tests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.678561" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1034" name="M01CombatBridgeTests" fullname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" classname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.020950" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1040" name="DerivedKills_UseUniqueT7DeathAndDropPath" fullname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests.DerivedKills_UseUniqueT7DeathAndDropPath" methodname="DerivedKills_UseUniqueT7DeathAndDropPath" classname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" runstate="Runnable" seed="608171783" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.010296" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1041" name="PresentationCannotApplyRuleDamage_AfterStepReturns" fullname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests.PresentationCannotApplyRuleDamage_AfterStepReturns" methodname="PresentationCannotApplyRuleDamage_AfterStepReturns" classname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" runstate="Runnable" seed="826593444" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:22Z" duration="0.001090" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-suite type="ParameterizedMethod" id="1039" name="RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage" fullname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests.RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage" classname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.003802" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1035" name="RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage(None,10,0,0)" fullname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests.RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage(None,10,0,0)" methodname="RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage" classname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" runstate="Runnable" seed="1902362062" result="Passed" start-time="2026-10-12 08:54:22Z" end-time="2026-10-12 08:54:23Z" duration="0.001214" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1036" name="RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage(Echo,15,1,0)" fullname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests.RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage(Echo,15,1,0)" methodname="RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage" classname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" runstate="Runnable" seed="744397152" result="Passed" start-time="2026-10-12 08:54:23Z" end-time="2026-10-12 08:54:23Z" duration="0.000426" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1037" name="RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage(Propagation,14,0,1)" fullname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests.RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage(Propagation,14,0,1)" methodname="RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage" classname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" runstate="Runnable" seed="1411215634" result="Passed" start-time="2026-10-12 08:54:23Z" end-time="2026-10-12 08:54:23Z" duration="0.000385" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1038" name="RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage(Combined,23,1,2)" fullname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests.RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage(Combined,23,1,2)" methodname="RealProjectileAndHost_FourModes_DoNotDuplicateDirectDamage" classname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" runstate="Runnable" seed="561074321" result="Passed" start-time="2026-10-12 08:54:23Z" end-time="2026-10-12 08:54:23Z" duration="0.000373" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+                <test-case id="1042" name="RunSimulationPause_GatesPendingDerivedDamage" fullname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests.RunSimulationPause_GatesPendingDerivedDamage" methodname="RunSimulationPause_GatesPendingDerivedDamage" classname="Reverb.Experiments.Mechanism.Tests.M01CombatBridgeTests" runstate="Runnable" seed="447506446" result="Passed" start-time="2026-10-12 08:54:23Z" end-time="2026-10-12 08:54:23Z" duration="0.003851" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1043" name="RF01ShotEventTests" fullname="Reverb.Experiments.Mechanism.Tests.RF01ShotEventTests" classname="Reverb.Experiments.Mechanism.Tests.RF01ShotEventTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 08:54:23Z" end-time="2026-10-12 08:54:23Z" duration="0.003535" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1044" name="ShotKeepsOriginalDirection_WhenItsTargetDiesAndIsReleasedInSameTick" fullname="Reverb.Experiments.Mechanism.Tests.RF01ShotEventTests.ShotKeepsOriginalDirection_WhenItsTargetDiesAndIsReleasedInSameTick" methodname="ShotKeepsOriginalDirection_WhenItsTargetDiesAndIsReleasedInSameTick" classname="Reverb.Experiments.Mechanism.Tests.RF01ShotEventTests" runstate="Runnable" seed="1937699436" result="Passed" start-time="2026-10-12 08:54:23Z" end-time="2026-10-12 08:54:23Z" duration="0.002489" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1045" name="RF01TerrainTests" fullname="Reverb.Experiments.Mechanism.Tests.RF01TerrainTests" classname="Reverb.Experiments.Mechanism.Tests.RF01TerrainTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 08:54:23Z" end-time="2026-10-12 08:54:23Z" duration="0.653174" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1046" name="GeneratedTerrain_WeightsAreNormalized_AndPathSoilStrawHaveDistinctRegions" fullname="Reverb.Experiments.Mechanism.Tests.RF01TerrainTests.GeneratedTerrain_WeightsAreNormalized_AndPathSoilStrawHaveDistinctRegions" methodname="GeneratedTerrain_WeightsAreNormalized_AndPathSoilStrawHaveDistinctRegions" classname="Reverb.Experiments.Mechanism.Tests.RF01TerrainTests" runstate="Runnable" seed="1747632168" result="Passed" start-time="2026-10-12 08:54:23Z" end-time="2026-10-12 08:54:23Z" duration="0.652027" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Saving results to: C:/Users/50665/AppData/LocalLow/DefaultCompany/My project\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,4 @@
+mode=Combined seed=12345 echo=2 propagation=5 pending=1 pause/reload/root=passed
+mode=None seed=12345 echo=0 propagation=0 pending=0 pause/reload/root=passed
+mode=Echo seed=12345 echo=2 propagation=0 pending=1 pause/reload/root=passed
+mode=Propagation seed=12345 echo=0 propagation=3 pending=0 pause/reload/root=passed

@@ -53,6 +53,8 @@ namespace Waffle
         // Derived hits carry source and target positions; existing events leave these at zero.
         public float FromX, FromZ;
         public int Generation;
+        // Shot captures its actual firing direction before the target can die/recycle.
+        public float DirectionX, DirectionZ;
 
         public override string ToString()
         {

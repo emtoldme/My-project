@@ -1,5 +1,23 @@
 # M01 机制试玩场景
 
+## R1 可读反馈（2026-10-12）
+
+基线 `origin/main` `d143e7adefeb321c4b1fa6668f1cb493d4c8947e`。分支 `feature/m01-readable-feedback`。只改了 `Assets/Experiments/Mechanism/Presentation/` 和本文件。没有改场景、Editor、Integration、Rules、全屏组件或共享视图。本环境没有 Unity，下面是源码，不是实机通过。
+
+用户看不懂向外扩散的双环。回声是 0.5 秒后**原来那个目标**再受伤，不是范围伤害。这一版把命中脉冲改成身上的紫红菱形，从大约 0.5 m 收到 0.1 m。旧的 `PlayEcho(x, z)` 仍然可用，但不再放大。
+
+预备标记不显示伤害数字。Codex 用规则时间算出 `Progress`（0 到 1）后调用：
+
+```csharp
+fx.SyncEchoCues(cues); // 空列表会清掉标记
+fx.PlayEcho(x, z, damage);                 // 已结算的回声，标签「回声 -5」
+fx.PlayPropagation(fromX, fromZ, toX, toZ, damage); // 已结算的传播，标签「传播 -4」
+```
+
+`M01EchoCue` 的字段是 `Serial`、`Generation`、`X`、`Z`、`Progress`。同一 Serial+Generation 只留一个标记，池子最多 8 个，超出的丢掉。标记位置和大小只跟当次快照走，视图不累加 0.5 秒，也不会在 Progress 到 1 时自己扣血。目标从快照里消失、组件禁用或 `Restart` 都会清标记。
+
+没调用过 `SyncEchoCues` 时，面板写“回声预备：等待规则快照”。不要用 `EnemyHit` 去猜标记或下一跳。传播仍是金色、从身体连到身体的短线，终点另有一个小落点。暂停时脉冲和标签冻结。颜色保持现有紫红 / 金色，可在组件上改半径和高度，不是已批准的正式色。
+
 ## Codex 集成后的入口（2026-10-12）
 
 作者原始交付记录保留在下面；其中“等待接线”“没有场景/AudioDirector”“8/12 池”仅描述作者提交时，不能作为当前工程状态。

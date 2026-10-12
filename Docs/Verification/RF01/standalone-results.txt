@@ -1,0 +1,4 @@
+mode=Combined passed=True movement=True dodge=True pause=True rootScale=True rendered=True echo=9 propagation=12 anticipation=True feedback=True shots=10 direct=10 deaths=3 kills=3 time=8.818 seed=12345
+mode=None passed=True movement=True dodge=True pause=True rootScale=True rendered=True echo=0 propagation=0 anticipation=True feedback=True shots=11 direct=11 deaths=1 kills=1 time=6.486 seed=12345
+mode=Echo passed=True movement=True dodge=True pause=True rootScale=True rendered=True echo=11 propagation=0 anticipation=True feedback=True shots=11 direct=11 deaths=2 kills=2 time=6.570 seed=12345
+mode=Propagation passed=True movement=True dodge=True pause=True rootScale=True rendered=True echo=0 propagation=9 anticipation=True feedback=True shots=11 direct=11 deaths=2 kills=2 time=6.554 seed=12345

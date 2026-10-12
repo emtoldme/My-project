@@ -20,6 +20,8 @@ namespace Reverb.Experiments.Mechanism.Integration
             if (flag < 0 || flag + 1 >= args.Length) yield break;
             string output = Path.GetFullPath(args[flag + 1]); Directory.CreateDirectory(output);
             Application.runInBackground = true; Application.targetFrameRate = 60;
+            // Only this explicit hidden-player test accepts input without foreground focus.
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
             // Batch players need not expose a physical keyboard. This device exists only in smoke runs.
             var keyboard = InputSystem.AddDevice<Keyboard>("M01SmokeKeyboard");
             var loop = GetComponent<GameLoop>(); var controls = GetComponent<M01PlaytestController>();
@@ -75,12 +77,14 @@ namespace Reverb.Experiments.Mechanism.Integration
                 if (loop.Sim.State.Phase == RunPhase.Paused) loop.TogglePause();
             }
             var fx = GetComponent<M01DerivedFx>();
-            bool capturedEcho = false, capturedLink = false;
+            bool capturedEcho = false, capturedLink = false, capturedCue = false;
             float deadline = Time.realtimeSinceStartup + 7f;
             while (Time.realtimeSinceStartup < deadline)
             {
                 if (!capturedEcho && fx.ActiveEchoes > 0)
                 { capturedEcho = CaptureWorld(loop.gameplayCamera, Path.Combine(output, "echo.png")); }
+                if (!capturedCue && fx.ActiveCues > 0)
+                { capturedCue = CaptureWorld(loop.gameplayCamera, Path.Combine(output, "echo-pending.png")); }
                 if (!capturedLink && fx.ActiveLinks > 0)
                 { capturedLink = CaptureWorld(loop.gameplayCamera, Path.Combine(output, "propagation.png")); }
                 yield return null;
@@ -92,9 +96,13 @@ namespace Reverb.Experiments.Mechanism.Integration
             bool propagation = controls.Mode != MechanismMode.Propagation && controls.Mode != MechanismMode.Combined || controls.PropagationHits > 0;
             bool none = controls.Mode != MechanismMode.None || controls.EchoHits == 0 && controls.PropagationHits == 0;
             bool rendered = CaptureWorld(loop.gameplayCamera, Path.Combine(output, "world.png"));
-            bool passed = moved && dodged && paused && rootScale && echo && propagation && none && rendered && displayPassed;
+            var feedback = GetComponent<RF01FeedbackBridge>();
+            bool newFeedback = feedback == null || (feedback.sonic.PoolSize == 18 && feedback.Shots == feedback.sonic.FireCount
+                && feedback.DirectHits == feedback.sonic.HitCount && feedback.Deaths == feedback.sonic.DeathCount && feedback.Shots > 0 && feedback.DirectHits > 0);
+            bool anticipation = controls.Mode != MechanismMode.Echo && controls.Mode != MechanismMode.Combined || capturedCue;
+            bool passed = moved && dodged && paused && rootScale && echo && propagation && none && rendered && displayPassed && newFeedback && anticipation;
             for (int i = 0; i < 5; i++) yield return null;
-            string text = $"TEST_ONLY mode={controls.Mode} passed={passed} movement={moved} dodge={dodged} pause={paused} rootScale={rootScale} rendered={rendered} echo={controls.EchoHits} propagation={controls.PropagationHits} kills={loop.Sim.State.Kills} time={loop.Sim.State.Now:F3} seed={loop.config.seed}\n";
+            string text = $"mode={controls.Mode} passed={passed} movement={moved} dodge={dodged} pause={paused} rootScale={rootScale} rendered={rendered} echo={controls.EchoHits} propagation={controls.PropagationHits} anticipation={anticipation} feedback={newFeedback} shots={feedback?.Shots ?? 0} direct={feedback?.DirectHits ?? 0} deaths={feedback?.Deaths ?? 0} kills={loop.Sim.State.Kills} time={loop.Sim.State.Now:F3} seed={loop.config.seed}\n";
             File.WriteAllText(Path.Combine(output, "smoke.txt"), text);
             Debug.Log("M01_STANDALONE_SMOKE " + text);
             Application.Quit(passed ? 0 : 2);

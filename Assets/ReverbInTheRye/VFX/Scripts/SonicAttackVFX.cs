@@ -23,6 +23,14 @@ namespace ReverbInTheRye.VFX
         [SerializeField, Range(1, 64)] private int maxFireInstances = 20;
         [SerializeField, Range(1, 64)] private int maxHitInstances = 24;
         [SerializeField, Range(1, 64)] private int maxDeathInstances = 12;
+        [SerializeField] private bool externallyDriven;
+        [SerializeField] private bool compactDirectHits;
+        public int PoolSize => instances.Count;
+        public int FireCount { get; private set; }
+        public int HitCount { get; private set; }
+        public int DeathCount { get; private set; }
+        public float VisualTime { get; private set; }
+        public int ActiveEffects { get { int count = 0; foreach (var item in instances) if (item.active) count++; return count; } }
 
         private enum Kind { Fire, Hit, Death }
 
@@ -56,6 +64,7 @@ namespace ReverbInTheRye.VFX
         private static readonly int CoreMixId = Shader.PropertyToID("_CoreMix");
         private static readonly int DistortionId = Shader.PropertyToID("_Distortion");
         private static readonly int PhaseId = Shader.PropertyToID("_Phase");
+        private static readonly int VisualTimeId = Shader.PropertyToID("_VisualTime");
 
         private readonly List<Effect> instances = new List<Effect>(64);
         private Mesh quadMesh;
@@ -76,7 +85,15 @@ namespace ReverbInTheRye.VFX
         private void Awake()
         {
             quadMesh = BuildQuad();
-            EnsureMaterials();
+            if (!EnsureMaterials()) return;
+            Prewarm(Kind.Fire, maxFireInstances);
+            Prewarm(Kind.Hit, maxHitInstances);
+            Prewarm(Kind.Death, maxDeathInstances);
+        }
+
+        private void Prewarm(Kind kind, int count)
+        {
+            for (int i = 0; i < Mathf.Clamp(count, 1, 64); i++) instances.Add(CreateEffect(kind));
         }
 
         private bool EnsureMaterials()
@@ -123,6 +140,8 @@ namespace ReverbInTheRye.VFX
             if (!EnsureMaterials()) return;
 
             Effect effect = Acquire(kind);
+            if (effect == null) return;
+            if (kind == Kind.Fire) FireCount++; else if (kind == Kind.Hit) HitCount++; else DeathCount++;
             effect.root.transform.position = position;
             effect.root.transform.rotation = Quaternion.identity;
             effect.root.transform.localScale = Vector3.one * visualScale;
@@ -137,33 +156,29 @@ namespace ReverbInTheRye.VFX
                 Mathf.Abs(Vector3.Dot(particleForward.normalized, Vector3.up)) > 0.99f
                     ? Vector3.forward : Vector3.up);
             effect.particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            effect.particles.Play(true);
+            // Manual simulation keeps particles on the same clock as the rings, including pauses.
             effect.particles.Emit(kind == Kind.Fire ? 7 : kind == Kind.Hit ? 11 : 23);
+            effect.particles.Pause(true);
             TickRings(effect);
         }
 
         private Effect Acquire(Kind kind)
         {
             Effect oldest = null;
-            int count = 0;
-            int cap = kind == Kind.Fire ? maxFireInstances : kind == Kind.Hit ? maxHitInstances : maxDeathInstances;
             foreach (Effect item in instances)
             {
                 if (item.kind != kind) continue;
-                count++;
                 if (!item.active) return item;
                 if (oldest == null || item.elapsed > oldest.elapsed) oldest = item;
             }
 
-            if (count >= cap && oldest != null)
+            if (oldest != null)
             {
                 oldest.particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 return oldest;
             }
 
-            Effect created = CreateEffect(kind);
-            instances.Add(created);
-            return created;
+            return null; // Never allocate during combat, even if configuration is edited at runtime.
         }
 
         private Effect CreateEffect(Kind kind)
@@ -182,6 +197,12 @@ namespace ReverbInTheRye.VFX
                 rings.Add(MakeRing(result.root.transform, "MuzzleWhite", 0.00f, 0.10f, 0.24f, 0.7f, 0.95f, WarmFlash, SignalCyan, true, 0.0f, 0.07f, 0.02f));
                 rings.Add(MakeRing(result.root.transform, "PrimaryCyan", 0.00f, 0.18f, 0.42f, 2.1f, 0.88f, SignalCyan, SignalPurple, false, 0.025f, 0.041f, 0.04f));
                 rings.Add(MakeRing(result.root.transform, "SecondaryPurple", 0.047f, 0.18f, 0.35f, 1.65f, 0.42f, SignalPurple, SignalCyan, false, 0.040f, 0.032f, 0.055f));
+            }
+            else if (kind == Kind.Hit && compactDirectHits)
+            {
+                // Warm, small first impact. Magenta is reserved for M01's delayed echo feedback.
+                rings.Add(MakeRing(result.root.transform, "DirectWarmFlash", 0f, .10f, .12f, .55f, .9f, WarmFlash, StrawGold, true, 0f, .04f, .02f));
+                rings.Add(MakeRing(result.root.transform, "DirectDustEdge", .01f, .13f, .18f, .68f, .35f, StrawGold, WarmFlash, false, .01f, .025f, .03f));
             }
             else if (kind == Kind.Hit)
             {
@@ -311,7 +332,14 @@ namespace ReverbInTheRye.VFX
 
         private void Update()
         {
-            float delta = Time.deltaTime;
+            if (!externallyDriven) Advance(Time.deltaTime);
+        }
+
+        /// <summary>Advance presentation only. The caller supplies the authoritative playing step.</summary>
+        public void Advance(float delta)
+        {
+            if (delta <= 0f || float.IsNaN(delta) || float.IsInfinity(delta)) return;
+            VisualTime += delta;
             foreach (Effect effect in instances)
             {
                 if (!effect.active) continue;
@@ -323,6 +351,7 @@ namespace ReverbInTheRye.VFX
                     effect.active = false;
                     continue;
                 }
+                effect.particles.Simulate(delta, false, false, false);
                 TickRings(effect);
             }
         }
@@ -343,6 +372,7 @@ namespace ReverbInTheRye.VFX
                 ring.transform.localScale = new Vector3(size, 1f, size);
                 float opacity = ring.peakOpacity * Mathf.Sin(t * Mathf.PI);
                 ring.properties.SetFloat(OpacityId, Mathf.Max(0f, opacity));
+                ring.properties.SetFloat(VisualTimeId, effect.elapsed);
                 ring.renderer.SetPropertyBlock(ring.properties);
             }
         }
@@ -371,6 +401,20 @@ namespace ReverbInTheRye.VFX
         private void OnDestroy()
         {
             if (quadMesh != null) Destroy(quadMesh);
+        }
+
+        private void OnDisable() => Clear();
+
+        public void Clear()
+        {
+            foreach (var effect in instances)
+            {
+                effect.particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                effect.root.SetActive(false);
+                effect.active = false;
+                effect.elapsed = 0f;
+            }
+            VisualTime = 0f;
         }
     }
 }
