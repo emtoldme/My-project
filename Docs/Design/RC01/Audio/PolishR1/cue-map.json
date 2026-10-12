@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RC01 Audio Cue Map Polish R1",
+  "version": "1.1.0",
+  "description": "RC01 音效表现 R1 核心战斗短音、派生机制与成长反馈多变体映射表 (TASKS_07)",
+  "categories": {
+    "weapons": [
+      {
+        "id": "W01",
+        "name": "定向脉冲",
+        "event": "Shot",
+        "assetPath": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v1.wav",
+        "variants": [
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v1.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v2.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v3.wav"
+        ],
+        "variantCount": 3,
+        "pitch": 1.0,
+        "pitchJitter": 0.04,
+        "volumeDb": -3.5,
+        "maxVoices": 3,
+        "minInterval": 0.07,
+        "priority": 10,
+        "spatialBlend": 0.0,
+        "durationSec": 0.085,
+        "pauseClear": false,
+        "description": "短促、干脆、高频矿物电容放电与针刺物理穿透 (65~85ms)"
+      },
+      {
+        "id": "W02",
+        "name": "扇形散射",
+        "event": "Shot",
+        "assetPath": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v1.wav",
+        "variants": [
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v1.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v2.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v3.wav"
+        ],
+        "variantCount": 3,
+        "pitch": 1.0,
+        "pitchJitter": 0.05,
+        "volumeDb": -3.5,
+        "maxVoices": 2,
+        "minInterval": 0.10,
+        "priority": 9,
+        "spatialBlend": 0.2,
+        "durationSec": 0.135,
+        "pauseClear": false,
+        "description": "低中频重冲程、散弹气动泄压与开阔扇面推力 (110~135ms)"
+      },
+      {
+        "id": "W03",
+        "name": "环绕护卫",
+        "event": "EnemyHit",
+        "assetPath": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v1.wav",
+        "variants": [
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v1.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v2.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v3.wav"
+        ],
+        "variantCount": 3,
+        "pitch": 1.0,
+        "pitchJitter": 0.04,
+        "volumeDb": -4.0,
+        "maxVoices": 2,
+        "minInterval": 0.09,
+        "priority": 8,
+        "spatialBlend": 0.4,
+        "durationSec": 0.150,
+        "pauseClear": false,
+        "description": "短金属公转切削碰撞脉冲，弹簧钢/铜轨多材质变体 (120~150ms)"
+      },
+      {
+        "id": "W04",
+        "name": "共振落区",
+        "event": "WeaponZone",
+        "assetPath": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v1.wav",
+        "variants": [
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v1.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v2.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v3.wav"
+        ],
+        "variantCount": 3,
+        "pitch": 1.0,
+        "pitchJitter": 0.04,
+        "volumeDb": -3.0,
+        "maxVoices": 2,
+        "minInterval": 0.12,
+        "priority": 9,
+        "spatialBlend": 0.3,
+        "durationSec": 0.185,
+        "pauseClear": false,
+        "description": "延迟落区引爆，下潜声学内爆扫频与地表挤压 (150~185ms)"
+      }
+    ],
+    "mechanisms": [
+      {
+        "id": "EchoHit",
+        "name": "回声实际命中",
+        "event": "EchoHit",
+        "assetPath": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_echo_hit_v1.wav",
+        "variants": [
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_echo_hit_v1.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_echo_hit_v2.wav"
+        ],
+        "variantCount": 2,
+        "pitch": 1.0,
+        "pitchJitter": 0.03,
+        "volumeDb": -3.5,
+        "maxVoices": 2,
+        "minInterval": 0.08,
+        "priority": 8,
+        "spatialBlend": 0.5,
+        "durationSec": 0.200,
+        "pauseClear": false,
+        "description": "原目标0.5s延迟后二次受伤，空心空腔共鸣，预备期严格静默 (180~200ms)"
+      },
+      {
+        "id": "PropagationHit",
+        "name": "传播实际命中",
+        "event": "PropagationHit",
+        "assetPath": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_propagation_v1.wav",
+        "variants": [
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_propagation_v1.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_propagation_v2.wav"
+        ],
+        "variantCount": 2,
+        "pitch": 1.0,
+        "pitchJitter": 0.04,
+        "volumeDb": -4.5,
+        "maxVoices": 2,
+        "minInterval": 0.07,
+        "priority": 7,
+        "spatialBlend": 0.6,
+        "durationSec": 0.110,
+        "pauseClear": false,
+        "description": "目标间0.1s折射跳跃，高频电弧微粒与扫频偏心位移 (95~110ms)"
+      },
+      {
+        "id": "EnemyDeath",
+        "name": "敌人死亡",
+        "event": "EnemyKilled",
+        "assetPath": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v1.wav",
+        "variants": [
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v1.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v2.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v3.wav"
+        ],
+        "variantCount": 3,
+        "pitch": 1.0,
+        "pitchJitter": 0.06,
+        "volumeDb": -2.5,
+        "maxVoices": 3,
+        "minInterval": 0.08,
+        "priority": 10,
+        "spatialBlend": 0.8,
+        "durationSec": 0.400,
+        "pauseClear": true,
+        "description": "材料崩解破裂、次低频泄压与残骸落地 (320~400ms)"
+      }
+    ],
+    "growthUi": [
+      {
+        "id": "UI_Card_Chosen",
+        "name": "成长确认",
+        "event": "LevelUpChosen",
+        "assetPath": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_ui_growth_confirm_v1.wav",
+        "variants": [
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_ui_growth_confirm_v1.wav",
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_ui_growth_confirm_v2.wav"
+        ],
+        "variantCount": 2,
+        "pitch": 1.0,
+        "pitchJitter": 0.02,
+        "volumeDb": -1.5,
+        "maxVoices": 1,
+        "minInterval": 0.10,
+        "priority": 10,
+        "spatialBlend": 0.0,
+        "durationSec": 0.540,
+        "pauseClear": false,
+        "description": "金属簧片闭合与正向能量上扬琶音 (480~540ms)"
+      },
+      {
+        "id": "UI_Evolution_Chest",
+        "name": "进化解锁",
+        "event": "Evolved",
+        "assetPath": "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_evolution_flourish_v1.wav",
+        "variants": [
+          "Assets/Drafts/RC01/Audio/PolishR1/TEST_ONLY_sfx_evolution_flourish_v1.wav"
+        ],
+        "variantCount": 1,
+        "pitch": 1.0,
+        "pitchJitter": 0.0,
+        "volumeDb": -2.0,
+        "maxVoices": 1,
+        "minInterval": 0.25,
+        "priority": 10,
+        "spatialBlend": 0.0,
+        "durationSec": 1.250,
+        "pauseClear": false,
+        "description": "G大调大三和弦金属共振短促展开与1.25s空间漫反射 (1250ms)"
+      }
+    ]
+  }
+}
