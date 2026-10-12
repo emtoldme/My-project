@@ -32,9 +32,10 @@ namespace Reverb.Drafts.RC01.Presentation
             if (sim != null)
             {
                 var st = sim.State;
-                GUILayout.BeginArea(ImguiScale.Fit(new Rect(16,16,360,selecting ? 84 : 148)), GUI.skin.box);
+                GUILayout.BeginArea(ImguiScale.Fit(new Rect(16,16,360,selecting ? 106 : 170)), GUI.skin.box);
                 GUILayout.Label("秋收之路 · 战斗草稿    " + RunHud.FormatClock(st.Now) + " / 10:00");
                 GUILayout.Label("HP " + st.Hp + "/" + st.MaxHp + "    Lv " + st.Level + "    击杀 " + st.Kills);
+                GUILayout.Label("吸取半径 " + sim.CurrentValue(UpgradeKind.PickupRange).ToString("0.00") + "米 · 精英箱靠近开启");
                 if (!selecting) GUILayout.Label("经验 " + st.Xp + "/" + st.XpToNext + "    护盾 " + sim.ShieldCharges);
                 if (!selecting)
                 {
