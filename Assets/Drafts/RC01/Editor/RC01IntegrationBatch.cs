@@ -208,6 +208,8 @@ namespace Reverb.Drafts.RC01.EditorTools
         {
             var rule=Rule(cue);rule.name="R1_"+cue.id;rule.sequential=true;
             rule.clearOnPause=cue.pauseClear;
+            // Confirm clips are longer than the input guard: each new choice must still give immediate feedback.
+            if(cue.id=="UI_Card_Chosen") rule.dropWhenFull=false;
             // Listener is on the camera, 30m from the player; default 1m rolloff attenuated centre combat.
             rule.minDistance=30;rule.maxDistance=65;rule.priority=Mathf.Clamp(160-cue.priority*12,0,256);
             return rule;
