@@ -1779,7 +1779,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 38268aac551d4ca2859d47b1b9368b72, type: 3}
     - {fileID: 8300000, guid: d03d603dea594947a62d193124cc76d1, type: 3}
     - {fileID: 8300000, guid: 25bbaa41fcbc4e8d812525a4bf7bcc83, type: 3}
-    volumeDb: -8.5
+    volumeDb: -11.5
     pitchRandom: 0
     maxVoices: 5
     minInterval: 0.03
@@ -1808,7 +1808,7 @@ MonoBehaviour:
     clearOnPause: 0
     minDistance: 30
     priority: 40
-    dropWhenFull: 1
+    dropWhenFull: 0
     clips:
     - {fileID: 8300000, guid: 67d7df6cf6bb4c1d9884e5710601129c, type: 3}
     - {fileID: 8300000, guid: d6b321e7818b4d14be452512751904d5, type: 3}
