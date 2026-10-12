@@ -36,6 +36,10 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
                 if (setSub == null) setSub = targetType.GetMethod("TrySetActiveSubTarget");
                 setSub.Invoke(target, new object[] { unlitType });
                 SetMember(target, "alphaClip", true);
+                var zWrite = targetType.GetProperty("zWriteControl");
+                zWrite.SetValue(target, Enum.Parse(zWrite.PropertyType, "ForceDisabled"));
+                var renderFace = targetType.GetProperty("renderFace");
+                renderFace.SetValue(target, Enum.Parse(renderFace.PropertyType, "Both"));
 
                 Array blocks = Array.CreateInstance(blockType, 6);
                 blocks.SetValue(Block("VertexDescription", "Position"), 0);
@@ -49,7 +53,7 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
                 graphType.GetMethod("InitializeOutputs").Invoke(graph, new object[] { targets, blocks });
 
                 Type category = Find("UnityEditor.ShaderGraph.CategoryData");
-                object def = category.GetMethod("DefaultCategory", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, null);
+                object def = category.GetMethod("DefaultCategory", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { null });
                 graphType.GetMethod("AddCategory").Invoke(graph, new object[] { def });
 
                 object radius = AddFloat(graph, graphType, "_Radius", 0.4f);
@@ -60,7 +64,7 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
                 Wire(graph, graphType, color, "SurfaceDescription.BaseColor");
                 Wire(graph, graphType, cutoff, "SurfaceDescription.AlphaClipThreshold");
                 object alphaNode = AddRingFunction(graph, graphType, radius, width, quad);
-                if (alphaNode != null) WireNode(graph, graphType, alphaNode, 1, "SurfaceDescription.Alpha");
+                if (alphaNode != null) WireNode(graph, graphType, alphaNode, 4, "SurfaceDescription.Alpha");
 
                 Type fileUtil = Find("UnityEditor.ShaderGraph.FileUtilities");
                 MethodInfo write = fileUtil.GetMethod("WriteShaderGraphToDisk", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
@@ -70,7 +74,7 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
             }
             catch (Exception e)
             {
-                detail = e.GetBaseException().GetType().Name + ": " + e.GetBaseException().Message;
+                detail = e.GetBaseException().ToString();
                 return false;
             }
         }
@@ -123,7 +127,7 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
                 "float2 p = (UV.xy - 0.5) * QuadMeters;\n" +
                 "float band = abs(length(p) - Radius);\n" +
                 "Alpha = band < max(Width, 0.0001) ? 1 : 0;\n");
-            AddInput(fn, 0, "UV", Find("UnityEditor.ShaderGraph.UVMaterialSlot"), Vector4.zero);
+            AddInput(fn, 0, "UV", Find("UnityEditor.ShaderGraph.Vector4MaterialSlot"), Vector4.zero);
             AddInput(fn, 1, "Radius", Find("UnityEditor.ShaderGraph.Vector1MaterialSlot"), 0.4f);
             AddInput(fn, 2, "Width", Find("UnityEditor.ShaderGraph.Vector1MaterialSlot"), 0.09f);
             AddInput(fn, 3, "QuadMeters", Find("UnityEditor.ShaderGraph.Vector1MaterialSlot"), 6f);
@@ -156,9 +160,11 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
             foreach (ConstructorInfo ctor in slotType.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 ParameterInfo[] p = ctor.GetParameters();
-                if (p.Length == 5 && p[0].ParameterType == typeof(int))
+                if (p.Length >= 5 && p[0].ParameterType == typeof(int))
                 {
-                    object[] args = { id, name, name, kind, value };
+                    object[] args = new object[p.Length];
+                    args[0] = id; args[1] = name; args[2] = name; args[3] = kind; args[4] = value;
+                    for (int i = 5; i < p.Length; i++) args[i] = p[i].DefaultValue;
                     if (p[4].ParameterType == typeof(Vector4) && value is float f) args[4] = new Vector4(f, f, f, f);
                     try { return ctor.Invoke(args); } catch (ArgumentException) { }
                 }
@@ -169,7 +175,7 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
         static void InvokeAddSlot(object node, object slot)
         {
             MethodInfo add = node.GetType().GetMethod("AddSlot", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            add.Invoke(node, new[] { slot });
+            add.Invoke(node, new object[] { slot, true });
         }
 
         static void Wire(object graph, Type graphType, object propertyNode, string descriptor)
@@ -197,8 +203,12 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
             MethodInfo getNodes = graphType.GetMethod("GetNodes").MakeGenericMethod(blockNode);
             foreach (object node in (IEnumerable)getNodes.Invoke(graph, null))
             {
-                object value = node.GetType().GetField("m_SerializedDescriptor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(node);
-                if (value != null && value.ToString() == descriptor) return node;
+                object field = node.GetType().GetProperty("descriptor").GetValue(node);
+                if (field == null) continue;
+                var fieldType = field.GetType();
+                string tag = (string)fieldType.GetProperty("tag").GetValue(field);
+                string name = (string)fieldType.GetProperty("name").GetValue(field);
+                if (tag + "." + name == descriptor) return node;
             }
             return null;
         }

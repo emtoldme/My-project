@@ -27,10 +27,12 @@ namespace Reverb.Experiments.AudioSync
             GUILayout.Label($"播放状态: {(controller.IsPlaying ? (controller.IsPaused ? "已暂停" : "正在播放") : "未启动")}");
             GUILayout.Label($"完成循环次数: {controller.LoopCount}");
             
-            float driftMs = (controller.CurrentSampleDrift / 48000.0f) * 1000.0f;
-            float maxDriftMs = (controller.MaxSampleDriftDetected / 48000.0f) * 1000.0f;
+            float sampleRate = Mathf.Max(1, controller.SampleRate);
+            float driftMs = (controller.CurrentSampleDrift / sampleRate) * 1000.0f;
+            float maxDriftMs = (controller.MaxSampleDriftDetected / sampleRate) * 1000.0f;
             GUILayout.Label($"实时采样点漂移: {controller.CurrentSampleDrift} samples ({driftMs:F3} ms)");
             GUILayout.Label($"历史最大漂移: {controller.MaxSampleDriftDetected} samples ({maxDriftMs:F3} ms)");
+            GUILayout.Label($"有效观察 {controller.ValidObservations}，丢弃 {controller.DiscardedObservations}（非硬件输出认证）");
 
             GUILayout.Space(10);
             GUILayout.Label($"Track A (基础底床) 增益: {controller.GainA:F2}");

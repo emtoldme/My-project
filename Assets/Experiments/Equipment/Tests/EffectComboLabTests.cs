@@ -11,6 +11,28 @@ namespace Waffle.Experiments.Equipment.Tests
         static int Total(ComboRun r) => r.Log.Sum(x => x.Damage);
 
         [Test]
+        public void CoarseTick_DrainsEchoChildrenAtTheirScheduledTimes()
+        {
+            var coarse = new ComboRun(ComboConfig.AB(), ComboLabScenario.DefaultTargets());
+            coarse.DirectHit(coarse.Handle(1));
+            coarse.Tick(2f);
+            var fine = ComboLabScenario.RunOne(ComboConfig.AB());
+            Assert.AreEqual(fine.FormatLog(), coarse.FormatLog());
+            Assert.AreEqual(0, coarse.PendingCount);
+        }
+
+        [Test]
+        public void Paused_DirectHitCannotMutateTargetsOrQueue()
+        {
+            var run = new ComboRun(ComboConfig.AB(), ComboLabScenario.DefaultTargets());
+            run.Paused = true;
+            Assert.AreEqual(0, run.DirectHit(run.Handle(1)));
+            Assert.AreEqual(30, run.Hp(1));
+            Assert.AreEqual(0, run.Log.Count);
+            Assert.AreEqual(0, run.PendingCount);
+        }
+
+        [Test]
         public void NoneABAndAB_ProduceDistinctBoundedSequences()
         {
             var none = ComboLabScenario.RunOne(ComboConfig.None());

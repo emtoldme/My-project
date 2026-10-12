@@ -122,6 +122,7 @@ namespace Waffle.Experiments.Equipment
         /// <summary>一次直接命中，立即结算并处理所有已到期事件。返回触发代号。</summary>
         public int DirectHit(TargetHandle target)
         {
+            if (Paused) return 0;
             int trig = nextTrigger++;
             budgets[trig] = new TriggerBudget();
             var p = new Pending { Seq = nextSeq++, ParentSeq = 0, TriggerId = trig, Time = Time,
@@ -210,7 +211,7 @@ namespace Waffle.Experiments.Equipment
             if (depth > config.MaxDepth || budget.Spawned >= config.MaxEventsPerTrigger) return false;
             budget.Spawned++;
             queue.Add(new Pending { Seq = nextSeq++, ParentSeq = parent.Seq, TriggerId = parent.TriggerId,
-                Time = Time + Math.Max(0f, delay), Kind = kind, Depth = depth,
+                Time = parent.Time + Math.Max(0f, delay), Kind = kind, Depth = depth,
                 Source = parent.Target, Target = target });
             return true;
         }

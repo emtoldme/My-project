@@ -1,5 +1,7 @@
 # A-R01 资源规格清单与艺术审查规范 (Asset Brief & Art Review)
 
+> Codex整合复核：尺度、服装、敌人形态、色卡/HDR数值和字体风格均为作者建议，不是用户已批准的正式创作决定；允许有受控的导入适配层，不能因原始FBX单位不同直接拒收。本轮只验证技术。URP通道定义已按项目17.4.0包内LitInput.hlsl修正，禁止把通用ORM直接当URP Lit默认Mask使用。
+
 **文档属性**：主美任务 A-R01 交付物  
 **执行责任人**：主美  
 **基准分支**：`origin/main` (`9c565ee0ca87c6858145e5f656996aa7711f916b`)  
@@ -29,7 +31,7 @@
 为确保后续用户提供的正式资产以及 2 号当前的技术实验能够无缝装配至 Unity 6 URP，制定以下技术规格契约：
 
 ### 1. 尺度、单位与轴向契约 (Scale, Units & Orientation)
-- **绝对单位**：`1 Unity Unit = 1.0 Meter`（1 米）。严禁在 FBX 导入或模型根节点出现 100 倍或 0.01 倍缩放传递至表现代码。
+- **世界单位**：`1 Unity Unit = 1.0 Meter`（1 米），玩法根比例为1。原始FBX厘米制/轴向差异可由导入或Visual适配层统一，需记录结果；不要把100倍/0.01倍导入比例直接传给玩法、残影或碰撞计算。
 - **朝向规范**：正前方严格为 `+Z` 轴，竖直朝上为 `+Y` 轴，右方为 `+X` 轴。
 - **轴心位置 (Pivot)**：
   - 角色/敌人/可移动机械：**脚底与地面接触面的水平投影几何中心**为原点 `(0, 0, 0)`。
@@ -64,14 +66,13 @@
     - 锈蚀机械外壳/磨损涂漆：`Smoothness: 0.25 ~ 0.40`（漫光散射）；
     - 裸露摩擦金属/旧挡风玻璃：`Smoothness: 0.60 ~ 0.80`（局部微高光）；
     - 水洼/潮湿地面：`Smoothness: 0.85 ~ 0.95`（仅限于特定浅坑，不全场平铺）。
-- **标准贴图打包格式（ORM 规范）**：
+- **URP Lit贴图绑定（不等同于通用ORM）**：
   - **BaseColor (RGB) + Alpha**：sRGB 格式，色块干净，避免在 Albedo 贴图上直接烘焙高光污渍；
   - **Normal Map (RGB)**：Normal Map 格式，用于表现农机冲压接缝与铁板铆钉；
-  - **Mask Map / ORM (RGBA)**：Linear 格式（关闭 sRGB）：
-    - R 通道：`Occlusion`（环境光遮蔽 AO，用于凹槽接触阴影）；
-    - G 通道：`Roughness` 或 `Detail Mask`；
-    - B 通道：`Metallic`（金属度遮罩）；
-    - A 通道：`Smoothness`（平滑度通道）。
+  - **Metallic Map**：Linear（关闭sRGB），R=`Metallic`，A=`Smoothness`；需要选择Metallic Alpha作为Smoothness来源。
+  - **Occlusion Map**：Linear，URP Lit读G=`AO`，需绑定到单独Occlusion槽。可用同一打包图R=Metallic、G=AO、A=Smoothness分别绑定两个槽。
+  - **外部ORM输入**：通常R=AO、G=Roughness、B=Metallic，先转换为上述通道（Smoothness=1-Roughness），或显式ShaderGraph拆分；不能原样拖进Metallic槽。
+  - **BaseColor Alpha**：若选择其作为Smoothness来源，要明确与透明/裁切Alpha的用途约束；本轮不默认启用。
   - **Emission (RGB)**：用于模拟信号灯、电子仪器面板、发光异常核心。
 
 ### 4. 字体与 UI 美术规范 (Typography & UI Assets)
@@ -89,7 +90,7 @@
 - **蓝色（未来/技术/控制）**
 - **品红色（干涉/反抗/迷幻声波）**
 
-### 硬性技术约束（防止叙事色彩破坏玩法可读性）：
+### 作者建议与待画面验证项（最终色卡/强度由用户决定）：
 1. **严禁敌我同色混淆**：
    - 尽管“黄色”是麦田的主色调，但环境麦田必须采用**低饱和度、偏暖褐与泥土调的干枯金黄**（如 `#C29B38` / `#8C6D2D`，明度控制在 40%~60%）；
    - **经验/生命道具黄色**：必须采用**高明度、带金属光泽的鲜艳亮金**（`#FFD700`），辅以小范围垂直脉冲，与地表形成明度反差（ΔValue ≥ 40）。

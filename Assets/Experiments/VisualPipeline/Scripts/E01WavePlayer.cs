@@ -44,21 +44,14 @@ namespace Waffle.Experiments.VisualPipeline
             public Color color;
         }
 
-        sealed class Spark
-        {
-            public Transform transform;
-            public Vector3 velocity;
-            public float age = -1f;
-        }
-
         readonly List<Ring> rings = new List<Ring>();
-        readonly List<Spark> sparks = new List<Spark>();
-        readonly MaterialPropertyBlock sparkBlock = new MaterialPropertyBlock();
+        ParticleSystem sparkSystem;
+        bool ownsRingMesh;
 
         void Awake()
         {
             if (loop == null) loop = GetComponent<GameLoop>();
-            if (ringMesh == null) ringMesh = BuildQuad(quadMeters);
+            if (ringMesh == null) { ringMesh = BuildQuad(quadMeters); ownsRingMesh = true; }
             for (int i = 0; i < RingPool; i++)
             {
                 var go = new GameObject("E01_Wave_" + i);
@@ -72,20 +65,25 @@ namespace Waffle.Experiments.VisualPipeline
                 go.SetActive(false);
                 rings.Add(new Ring { go = go, renderer = renderer, block = new MaterialPropertyBlock() });
             }
-            for (int i = 0; i < SparkPool; i++)
-            {
-                var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                go.name = "E01_Spark_" + i;
-                var collider = go.GetComponent<Collider>();
-                if (collider != null) Destroy(collider);
-                go.transform.SetParent(transform, false);
-                go.transform.localScale = new Vector3(0.06f, 0.06f, 0.12f);
-                var renderer = go.GetComponent<Renderer>();
-                if (sparkMaterial != null) renderer.sharedMaterial = sparkMaterial;
-                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                go.SetActive(false);
-                sparks.Add(new Spark { transform = go.transform });
-            }
+            var particles = new GameObject("E01_Particles");
+            particles.transform.SetParent(transform, false);
+            sparkSystem = particles.AddComponent<ParticleSystem>();
+            sparkSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = sparkSystem.main;
+            main.playOnAwake = false;
+            main.loop = false;
+            main.maxParticles = SparkPool;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.startLifetime = sparkLife;
+            main.startSize = 0.08f;
+            main.startSpeed = 0f;
+            var emission = sparkSystem.emission;
+            emission.enabled = false;
+            var shape = sparkSystem.shape;
+            shape.enabled = false;
+            sparkSystem.useAutoRandomSeed = false;
+            sparkSystem.randomSeed = 12345;
+            sparkSystem.GetComponent<ParticleSystemRenderer>().sharedMaterial = sparkMaterial;
         }
 
         void OnEnable()
@@ -102,16 +100,15 @@ namespace Waffle.Experiments.VisualPipeline
 
         void OnEvents(IReadOnlyList<PresentationEvent> events)
         {
-            if (!waveEnabled) return;
             for (int i = 0; i < events.Count; i++)
             {
                 PresentationEvent e = events[i];
+                if (e.Type == PresentationEventType.Restart) { Clear(); continue; }
+                if (!waveEnabled) continue;
                 if (e.Type == PresentationEventType.Shot)
                     Spawn(new Vector3(e.X, 0.05f, e.Z), new Color(0.35f, 0.9f, 1f, 1f));
                 else if (e.Type == PresentationEventType.EnemyHit)
                     Spawn(new Vector3(e.X, 0.05f, e.Z), new Color(1f, 0.45f, 0.72f, 1f));
-                else if (e.Type == PresentationEventType.Restart)
-                    Clear();
             }
         }
 
@@ -140,19 +137,9 @@ namespace Waffle.Experiments.VisualPipeline
                 ring.renderer.SetPropertyBlock(ring.block);
                 ActiveRings++;
             }
-            for (int i = 0; i < sparks.Count; i++)
-            {
-                Spark spark = sparks[i];
-                if (spark.age < 0f) continue;
-                if (!waveEnabled) { HideSpark(spark); continue; }
-                if (dt > 0f)
-                {
-                    spark.age += dt;
-                    spark.transform.position += spark.velocity * dt;
-                }
-                if (spark.age >= sparkLife) HideSpark(spark);
-                else ActiveSparks++;
-            }
+            if (!waveEnabled) sparkSystem.Clear();
+            else if (dt > 0f) sparkSystem.Simulate(dt, false, false, false);
+            ActiveSparks = sparkSystem.particleCount;
         }
 
         void OnGUI()
@@ -179,24 +166,17 @@ namespace Waffle.Experiments.VisualPipeline
                 SpawnCount++;
                 break;
             }
-            int spawned = 0;
-            for (int i = 0; i < sparks.Count && spawned < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
-                if (sparks[i].age >= 0f) continue;
-                float angle = spawned * 2.2f;
-                sparks[i].age = 0f;
-                sparks[i].transform.gameObject.SetActive(true);
-                sparks[i].transform.position = position + Vector3.up * 0.2f;
-                sparks[i].velocity = new Vector3(Mathf.Cos(angle), 1.2f, Mathf.Sin(angle)) * 2.2f;
-                var renderer = sparks[i].transform.GetComponent<Renderer>();
-                if (renderer != null)
+                float angle = i * 2.2f;
+                sparkSystem.Emit(new ParticleSystem.EmitParams
                 {
-                    sparkBlock.Clear();
-                    sparkBlock.SetColor(BaseColorId, color);
-                    sparkBlock.SetColor(ColorId, color);
-                    renderer.SetPropertyBlock(sparkBlock);
-                }
-                spawned++;
+                    position = position + Vector3.up * 0.2f,
+                    velocity = new Vector3(Mathf.Cos(angle), 1.2f, Mathf.Sin(angle)) * 2.2f,
+                    startColor = color,
+                    startLifetime = sparkLife,
+                    startSize = 0.08f
+                }, 1);
             }
         }
 
@@ -206,16 +186,10 @@ namespace Waffle.Experiments.VisualPipeline
             if (ring.go != null) ring.go.SetActive(false);
         }
 
-        void HideSpark(Spark spark)
-        {
-            spark.age = -1f;
-            if (spark.transform != null) spark.transform.gameObject.SetActive(false);
-        }
-
         void Clear()
         {
             for (int i = 0; i < rings.Count; i++) HideRing(rings[i]);
-            for (int i = 0; i < sparks.Count; i++) HideSpark(sparks[i]);
+            if (sparkSystem != null) sparkSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             ActiveRings = 0;
             ActiveSparks = 0;
         }
@@ -234,6 +208,11 @@ namespace Waffle.Experiments.VisualPipeline
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             return mesh;
+        }
+
+        void OnDestroy()
+        {
+            if (ownsRingMesh && ringMesh != null) Destroy(ringMesh);
         }
     }
 }

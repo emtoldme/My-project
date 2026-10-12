@@ -1,5 +1,7 @@
 # E-03 双轨 DSP 同步混音技术实验报告 (DSP Sync & Vertical Layering Report)
 
+> 作者初版未附实际Unity结果。Codex整合时补真实实验场景，加入音轨兼容检查、统一DSP恢复、生命周期清理、环形采样差和跨音频更新读数排除，移除运行中强制seek纠偏。下面原方案中的顺序UnPause/“绝对锁步”不能作为当前实现或已验证结论。实际结果以Docs/Verification/Reverb-Experiments-01为准；全部音频仅TEST_ONLY，不能代表正式音乐。
+
 **任务标识**：Task E-03  
 **作者身份**：音效总监（Sound Director）  
 **基线分支**：`origin/main` (`9c565ee`)  
@@ -61,8 +63,8 @@ public void ResumeSync()
     int resumeSample = sourceA.timeSamples;
     sourceB.timeSamples = resumeSample;
 
-    sourceA.UnPause();
-    sourceB.UnPause();
+        // 初版代码：顺序UnPause并不保证恢复的统一DSP起点。
+        // 当前实现在相同resumeSample上为双轨重新PlayScheduled。
 }
 ```
 
@@ -87,8 +89,8 @@ public void ResumeSync()
 
 ### 客观指标与验收标准
 - **启动时间差**：在预调度下理论差值为 **0 采样点**（$0.00\text{ ms}$）；
-- **正常连续循环漂移**：在常规 Windows DirectSound/WASAPI 驱动下，连续循环 10 次以上，两轨采样差应控制在 **$< 64\text{ samples}$**（$< 1.33\text{ ms}$，远低于人耳 10ms 察觉阈值）；
-- **防爆音**：分层切换无瞬态直流电平方波，音质平滑。
+- **连续循环观察目标**：连续循环10次，记录有效timeSamples环形差及跨音频更新丢弃数；64samples为本实验建议门槛，不是已验证成绩或普遍听觉阈值。主线程观察不能认证硬件输出相位。
+- **防爆音**：需要真实输出捕获/试听；增益插值和采样差通过不能单独证明无瞬态爆音。
 
 ---
 
@@ -97,5 +99,5 @@ public void ResumeSync()
 为便于后续音乐团队或用户提供正式配乐分轨，建议遵守以下格式要求：
 1. **统一时间长度**：所有同组 Stems 文件的 sample 数必须**严格完全一致**（精确到单个采样点）；
 2. **格式标准**：48,000 Hz，24-bit PCM WAV，立体声（2ch）；
-3. **电平余量**：单轨 True Peak 控制在 **$-3.0\text{ dBFS}$** 以内，确保多轨全开叠加时不产生母线削波；
+3. **电平余量**：逐轨峰值和母线峰值分别测量，True Peak用dBTP表述；单轨-3dB不能保证多轨叠加不削波，必须在全开与实际增益组合下验证输出余量。
 4. **尾音与循环**：分轨导出的首尾须带有相同的等功率交叉淡化或完全无缝切点。

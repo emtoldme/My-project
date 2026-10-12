@@ -60,7 +60,7 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
             if (ringShader == null) throw new System.InvalidOperationException("找不到 E01 声波 Shader。");
 
             Material ring = SaveUnlit("M_E01_WaveRing", ringShader, new Color(0.35f, 0.9f, 1f, 1f));
-            Shader sparkShader = Shader.Find("Universal Render Pipeline/Unlit");
+            Shader sparkShader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
             if (sparkShader == null) sparkShader = Shader.Find("Unlit/Color");
             if (sparkShader == null) sparkShader = ringShader;
             Material spark = SaveUnlit("M_E01_Spark", sparkShader, new Color(0.35f, 0.9f, 1f, 1f));
@@ -165,7 +165,7 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
             report.AppendLine("not rural art, not a user-approved model");
             report.AppendLine("source model: " + PlayerModel);
             report.AppendLine("source prefab: " + PlayerPrefab);
-            report.AppendLine("A-R01 brief: Docs/Art/Reverb was not on this baseline");
+            report.AppendLine("A-R01 brief: Docs/Art/Reverb/A-R01_ASSET_BRIEF.md (integrated; model remains TEST_ONLY)");
             var importer = AssetImporter.GetAtPath(PlayerModel) as ModelImporter;
             if (importer == null)
                 report.AppendLine("model importer: MISSING");
@@ -216,6 +216,8 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
                 Bounds after = renderers[0].bounds;
                 for (int i = 1; i < renderers.Length; i++) after.Encapsulate(renderers[i].bounds);
                 visual.position += new Vector3(-after.center.x, -after.min.y, -after.center.z);
+                after = renderers[0].bounds;
+                for (int i = 1; i < renderers.Length; i++) after.Encapsulate(renderers[i].bounds);
                 report.AppendLine("visualLocalScale: " + visual.localScale);
                 report.AppendLine("boundsAfter: center=" + after.center + " size=" + after.size + " minY=" + after.min.y);
             }
@@ -241,17 +243,21 @@ namespace Waffle.Experiments.VisualPipeline.EditorTools
             mesh.triangles = new[] { 0, 2, 1, 2, 3, 1 };
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            var existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
-            if (existing != null) AssetDatabase.DeleteAsset(path);
-            AssetDatabase.CreateAsset(mesh, path);
-            return mesh;
+            return SaveMesh(mesh, path);
         }
 
-        static void SaveMesh(Mesh mesh, string path)
+        static Mesh SaveMesh(Mesh mesh, string path)
         {
             var existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
-            if (existing != null) AssetDatabase.DeleteAsset(path);
+            if (existing != null)
+            {
+                EditorUtility.CopySerialized(mesh, existing);
+                Object.DestroyImmediate(mesh);
+                EditorUtility.SetDirty(existing);
+                return existing;
+            }
             AssetDatabase.CreateAsset(mesh, path);
+            return mesh;
         }
 
         static Material SaveUnlit(string name, Shader shader, Color color)

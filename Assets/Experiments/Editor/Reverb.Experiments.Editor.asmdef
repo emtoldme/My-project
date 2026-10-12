@@ -1,0 +1,5 @@
+{
+  "name": "Reverb.Experiments.Editor",
+  "references": ["Waffle.Experiments.VisualPipeline.Editor", "Reverb.Experiments.AudioSync", "Waffle.Experiments.Equipment"],
+  "includePlatforms": ["Editor"]
+}

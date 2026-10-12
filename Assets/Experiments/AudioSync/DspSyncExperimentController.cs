@@ -3,233 +3,150 @@ using UnityEngine;
 
 namespace Reverb.Experiments.AudioSync
 {
-    /// <summary>
-    /// E-03 同步混音技术实验控制器：
-    /// 验证双轨（或多轨）同采样率/长度音频通过 AudioSettings.dspTime 计划启动同步播放，
-    /// 支持独立垂直分层增益平滑过渡、暂停/恢复采样对齐、重开重置与采样漂移测量。
-    /// 独立实验组件，不与正式 AudioDirector 冲突，不参与默认战斗逻辑。
-    /// </summary>
+    // TEST_ONLY: sampling observations do not certify the hardware audio output.
     [DisallowMultipleComponent]
     public class DspSyncExperimentController : MonoBehaviour
     {
-        [Header("Audio Clips (TEST_ONLY Stems)")]
-        [Tooltip("基础节奏/底床轨道 (Track A)")]
-        [SerializeField] private AudioClip trackA;
-        [Tooltip("动态氛围/高频分层轨道 (Track B)")]
-        [SerializeField] private AudioClip trackB;
-
-        [Header("DSP Scheduling Parameters")]
-        [Tooltip("DSP 启动预调度延迟时间（秒），防止音频线程调度抖动导致跳音")]
+        [SerializeField] private AudioClip trackA, trackB;
         [SerializeField] private double scheduleDelaySec = 0.15;
-
-        [Header("Vertical Layering Gains")]
-        [Range(0f, 1f)]
-        [SerializeField] private float targetGainA = 1.0f;
-        [Range(0f, 1f)]
-        [SerializeField] private float targetGainB = 0.0f;
-        [Tooltip("分层增益平滑过渡时间（秒）")]
-        [SerializeField] private float gainFadeDuration = 1.0f;
-
-        [Header("Playback Status (Read Only)")]
-        [SerializeField] private bool isPlaying = false;
-        [SerializeField] private bool isPaused = false;
-        [SerializeField] private int loopCount = 0;
-        [SerializeField] private int maxSampleDriftDetected = 0;
-        [SerializeField] private int currentSampleDrift = 0;
-
-        private AudioSource sourceA;
-        private AudioSource sourceB;
-        private double scheduledStartTime = 0.0;
-        private float currentGainA = 1.0f;
-        private float currentGainB = 0.0f;
-        private int lastSampleA = 0;
+        [Range(0f, 1f)] [SerializeField] private float targetGainA = 1f, targetGainB;
+        [SerializeField] private float gainFadeDuration = 1f;
+        private AudioSource sourceA, sourceB;
+        private bool isPlaying, isPaused;
+        private double scheduledStartTime, segmentStartTime, completedPlaySeconds;
+        private int pausedSample, loopCount, maxSampleDriftDetected, currentSampleDrift;
+        private int validObservations, discardedObservations, observedWraps, lastSample;
+        private float currentGainA = 1f, currentGainB;
+        private DspStartProbe probeA, probeB;
+        public const float TestOutputTrim = 0.5f;
 
         public bool IsPlaying => isPlaying;
         public bool IsPaused => isPaused;
+        public bool IsScheduled => isPlaying && !isPaused && AudioSettings.dspTime < scheduledStartTime;
         public int LoopCount => loopCount;
         public int MaxSampleDriftDetected => maxSampleDriftDetected;
         public int CurrentSampleDrift => currentSampleDrift;
+        public int ValidObservations => validObservations;
+        public int DiscardedObservations => discardedObservations;
+        public int ObservedWraps => observedWraps;
+        public int SampleRate => trackA != null ? trackA.frequency : 0;
+        public int SamplePositionA => sourceA != null ? sourceA.timeSamples : 0;
+        public int SamplePositionB => sourceB != null ? sourceB.timeSamples : 0;
+        public double ScheduledStartTime => scheduledStartTime;
         public float GainA => currentGainA;
         public float GainB => currentGainB;
+        public bool SourcesRunning => sourceA != null && sourceA.isPlaying && sourceB.isPlaying && !IsScheduled;
+        public bool StartProbeReady => probeA != null && probeB != null && probeA.Captured && probeB.Captured;
+        public double StartProbeDifferenceSamples => StartProbeReady ? Math.Abs(probeA.FirstSignalDsp - probeB.FirstSignalDsp) * AudioSettings.outputSampleRate : double.NaN;
 
-        private void Awake()
-        {
-            EnsureAudioSources();
-        }
-
+        private void Awake() => EnsureAudioSources();
         private void EnsureAudioSources()
         {
-            if (sourceA == null)
-            {
-                sourceA = gameObject.AddComponent<AudioSource>();
-                sourceA.playOnAwake = false;
-                sourceA.loop = true;
-                sourceA.spatialBlend = 0.0f; // 2D 纯立体声
-                sourceA.bypassEffects = true;
-                sourceA.bypassListenerEffects = true;
-                sourceA.bypassReverbZones = true;
-            }
-
-            if (sourceB == null)
-            {
-                sourceB = gameObject.AddComponent<AudioSource>();
-                sourceB.playOnAwake = false;
-                sourceB.loop = true;
-                sourceB.spatialBlend = 0.0f; // 2D 纯立体声
-                sourceB.bypassEffects = true;
-                sourceB.bypassListenerEffects = true;
-                sourceB.bypassReverbZones = true;
-            }
+            if (sourceA == null) sourceA = CreateSource("TEST_ONLY Track A", out probeA);
+            if (sourceB == null) sourceB = CreateSource("TEST_ONLY Track B", out probeB);
         }
-
-        /// <summary>
-        /// 配置测试音轨
-        /// </summary>
+        private AudioSource CreateSource(string name, out DspStartProbe probe)
+        {
+            var child = new GameObject(name);
+            child.transform.SetParent(transform, false);
+            var source = child.AddComponent<AudioSource>();
+            probe = child.AddComponent<DspStartProbe>();
+            source.playOnAwake = false; source.loop = true; source.spatialBlend = 0f;
+            return source;
+        }
         public void ConfigureClips(AudioClip clipA, AudioClip clipB)
         {
-            trackA = clipA;
-            trackB = clipB;
+            StopAndReset(); trackA = clipA; trackB = clipB;
         }
-
-        /// <summary>
-        /// 双轨 DSP 预定同步启动
-        /// </summary>
+        public bool ClipsAreCompatible(out string reason)
+        {
+            if (trackA == null || trackB == null) reason = "Both clips are required.";
+            else if (trackA.frequency != trackB.frequency || trackA.samples != trackB.samples || trackA.channels != trackB.channels)
+                reason = "Clip sample rate, sample count and channel count must match.";
+            else if (trackA.samples <= 0 || trackA.frequency <= 0) reason = "Empty clip.";
+            else if (trackA.loadState != AudioDataLoadState.Loaded || trackB.loadState != AudioDataLoadState.Loaded)
+                reason = "Preload both clips before scheduling.";
+            else { reason = null; return true; }
+            return false;
+        }
         public void StartSyncPlayback()
         {
-            EnsureAudioSources();
-            if (trackA == null || trackB == null)
+            StopAndReset(); EnsureAudioSources();
+            if (!ClipsAreCompatible(out var reason))
             {
-                Debug.LogWarning("[DspSyncExperiment] Clips not configured!");
-                return;
+                Debug.LogWarning("[DspSyncExperiment] " + reason); return;
             }
-
-            sourceA.clip = trackA;
-            sourceB.clip = trackB;
-
-            currentGainA = targetGainA;
-            currentGainB = targetGainB;
-            sourceA.volume = currentGainA;
-            sourceB.volume = currentGainB;
-
-            // 采样点绝对归零
-            sourceA.timeSamples = 0;
-            sourceB.timeSamples = 0;
-
-            // 核心：利用 AudioSettings.dspTime 预定精确启动时间
-            scheduledStartTime = AudioSettings.dspTime + scheduleDelaySec;
-            sourceA.PlayScheduled(scheduledStartTime);
-            sourceB.PlayScheduled(scheduledStartTime);
-
-            isPlaying = true;
-            isPaused = false;
-            loopCount = 0;
-            maxSampleDriftDetected = 0;
-            currentSampleDrift = 0;
-            lastSampleA = 0;
-
-            Debug.Log($"[DspSyncExperiment] Scheduled dual tracks to start at dspTime={scheduledStartTime:F4} (Delay={scheduleDelaySec*1000:F1}ms)");
+            sourceA.clip = trackA; sourceB.clip = trackB;
+            currentGainA = targetGainA; currentGainB = targetGainB;
+            sourceA.volume = currentGainA * TestOutputTrim; sourceB.volume = currentGainB * TestOutputTrim;
+            isPlaying = true; ScheduleAtSample(0);
+            AudioSettings.GetDSPBufferSize(out int bufferSize, out int buffers);
+            Debug.Log($"[DspSyncExperiment] TEST_ONLY scheduled={scheduledStartTime:F6} clipHz={SampleRate} outputHz={AudioSettings.outputSampleRate} buffer={bufferSize}x{buffers}");
         }
-
-        /// <summary>
-        /// 设置分层目标增益（垂直混音）
-        /// </summary>
+        private void ScheduleAtSample(int sample)
+        {
+            sourceA.Stop(); sourceB.Stop();
+            sourceA.timeSamples = sample; sourceB.timeSamples = sample;
+            lastSample = sample;
+            scheduledStartTime = AudioSettings.dspTime + Math.Max(0.05, scheduleDelaySec);
+            probeA.Arm(scheduledStartTime); probeB.Arm(scheduledStartTime);
+            segmentStartTime = scheduledStartTime;
+            sourceA.PlayScheduled(scheduledStartTime); sourceB.PlayScheduled(scheduledStartTime);
+        }
         public void SetLayerGains(float gainA, float gainB)
         {
-            targetGainA = Mathf.Clamp01(gainA);
-            targetGainB = Mathf.Clamp01(gainB);
+            targetGainA = Mathf.Clamp01(gainA); targetGainB = Mathf.Clamp01(gainB);
         }
-
-        /// <summary>
-        /// 暂停播放（冻结时间并保持对齐）
-        /// </summary>
         public void PauseSync()
         {
             if (!isPlaying || isPaused) return;
-
-            sourceA.Pause();
-            sourceB.Pause();
-            isPaused = true;
-            Debug.Log($"[DspSyncExperiment] Paused at sample A={sourceA.timeSamples}, B={sourceB.timeSamples}");
+            bool scheduled = IsScheduled;
+            sourceA.Pause(); sourceB.Pause();
+            pausedSample = scheduled ? 0 : sourceA.timeSamples;
+            completedPlaySeconds += Math.Max(0, AudioSettings.dspTime - segmentStartTime);
+            // Cancel future scheduling too; sequential UnPause is not a DSP-synchronized resume.
+            sourceA.Stop(); sourceB.Stop(); isPaused = true;
         }
-
-        /// <summary>
-        /// 恢复播放（重对齐并同步解冻）
-        /// </summary>
         public void ResumeSync()
         {
             if (!isPlaying || !isPaused) return;
-
-            // 恢复时强制以 Track A 当前采样点为基准对齐 Track B，杜绝驱动唤醒不同步
-            int resumeSample = sourceA.timeSamples;
-            sourceB.timeSamples = resumeSample;
-
-            sourceA.UnPause();
-            sourceB.UnPause();
-            isPaused = false;
-            Debug.Log($"[DspSyncExperiment] Resumed aligned at sample={resumeSample}");
+            ScheduleAtSample(pausedSample); isPaused = false;
         }
-
-        /// <summary>
-        /// 重置与停止播放
-        /// </summary>
         public void StopAndReset()
         {
             if (sourceA != null) sourceA.Stop();
             if (sourceB != null) sourceB.Stop();
-
-            isPlaying = false;
-            isPaused = false;
-            currentSampleDrift = 0;
-            Debug.Log("[DspSyncExperiment] Stopped and reset all tracks.");
+            isPlaying = isPaused = false;
+            pausedSample = loopCount = maxSampleDriftDetected = currentSampleDrift = 0;
+            validObservations = discardedObservations = observedWraps = lastSample = 0;
+            completedPlaySeconds = scheduledStartTime = segmentStartTime = 0;
         }
-
+        public static int CircularSampleDistance(int a, int b, int length)
+        {
+            if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length));
+            int difference = Math.Abs(a - b) % length;
+            return Math.Min(difference, length - difference);
+        }
         private void Update()
         {
             if (!isPlaying || isPaused) return;
-
-            // 1. 平滑增益插值（垂直分层渐入渐出）
-            float dt = Time.unscaledDeltaTime;
-            if (gainFadeDuration > 0.001f)
-            {
-                currentGainA = Mathf.MoveTowards(currentGainA, targetGainA, dt / gainFadeDuration);
-                currentGainB = Mathf.MoveTowards(currentGainB, targetGainB, dt / gainFadeDuration);
-            }
-            else
-            {
-                currentGainA = targetGainA;
-                currentGainB = targetGainB;
-            }
-
-            sourceA.volume = currentGainA;
-            sourceB.volume = currentGainB;
-
-            // 2. 采样漂移与循环监控
-            if (AudioSettings.dspTime >= scheduledStartTime)
-            {
-                int sampleA = sourceA.timeSamples;
-                int sampleB = sourceB.timeSamples;
-
-                // 统计循环次数（以 Track A 回绕为准）
-                if (sampleA < lastSampleA && lastSampleA > (trackA.samples / 2))
-                {
-                    loopCount++;
-                    Debug.Log($"[DspSyncExperiment] Completed loop #{loopCount}, drift at wrap={Mathf.Abs(sampleA - sampleB)} samples");
-                }
-                lastSampleA = sampleA;
-
-                // 测量两轨当前采样偏差
-                currentSampleDrift = Mathf.Abs(sampleA - sampleB);
-                if (currentSampleDrift > maxSampleDriftDetected)
-                {
-                    maxSampleDriftDetected = currentSampleDrift;
-                }
-
-                // 若因驱动极端抖动漂移超过容差（如 128 samples / 约 2.6ms），执行硬锁步校正
-                if (currentSampleDrift > 128)
-                {
-                    sourceB.timeSamples = sampleA;
-                }
-            }
+            float step = gainFadeDuration > 0.001f ? Time.unscaledDeltaTime / gainFadeDuration : 1f;
+            currentGainA = Mathf.MoveTowards(currentGainA, targetGainA, step);
+            currentGainB = Mathf.MoveTowards(currentGainB, targetGainB, step);
+            sourceA.volume = currentGainA * TestOutputTrim; sourceB.volume = currentGainB * TestOutputTrim;
+            if (!SourcesRunning) return;
+            // Reject reads crossing an audio-buffer update; do not seek-correct and hide drift.
+            int before = sourceA.timeSamples, sampleB = sourceB.timeSamples, after = sourceA.timeSamples;
+            if (before != after) { discardedObservations++; return; }
+            currentSampleDrift = CircularSampleDistance(before, sampleB, trackA.samples);
+            maxSampleDriftDetected = Math.Max(maxSampleDriftDetected, currentSampleDrift);
+            if (before < lastSample && lastSample > trackA.samples / 2) observedWraps++;
+            lastSample = before;
+            validObservations++;
+            double played = completedPlaySeconds + Math.Max(0, AudioSettings.dspTime - segmentStartTime);
+            loopCount = (int)(played * trackA.frequency / trackA.samples);
         }
+        private void OnDisable() => StopAndReset();
+        private void OnDestroy() => StopAndReset();
     }
 }

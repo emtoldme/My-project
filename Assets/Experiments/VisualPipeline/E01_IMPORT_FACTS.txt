@@ -1,0 +1,83 @@
+E01 import facts
+label: TEST_ONLY
+not rural art, not a user-approved model
+source model: Assets/Art_ThirdParty/Quaternius_Mech/George.fbx
+source prefab: Assets/Waffle/Prefabs/Visual/Player_George_Visual.prefab
+A-R01 brief: Docs/Art/Reverb/A-R01_ASSET_BRIEF.md (integrated; model remains TEST_ONLY)
+globalScale: 1
+useFileScale: True
+bakeAxisConversion: False
+fileScale: 0.01
+rendererCount: 1
+boundsBefore: center=(-0.02, 3.16, 0.18) size=(4.77, 7.77, 5.75)
+visualLocalScale: (0.23, 0.23, 0.23)
+boundsAfter: center=(0.00, 0.90, 0.00) size=(1.11, 1.80, 1.33) minY=0
+playerRootScale: (1.00, 1.00, 1.00)
+nodes:
+  
+  George
+  RobotArmature
+  RobotArmature/Body
+  RobotArmature/Body/PoleTarget.L
+  RobotArmature/Body/PoleTarget.L/PoleTarget.L_end
+  RobotArmature/Body/PoleTarget.R
+  RobotArmature/Body/PoleTarget.R/PoleTarget.R_end
+  RobotArmature/Body/Torso
+  RobotArmature/Body/Torso/Chest
+  RobotArmature/Body/Torso/Chest/Neck
+  RobotArmature/Body/Torso/Chest/Neck/Head
+  RobotArmature/Body/Torso/Chest/Neck/Head/Head_end
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmI.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmI.L/Index1.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmI.L/Index1.L/Index2.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmI.L/Index1.L/Index2.L/Index2.L_end
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmP.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmP.L/Pinky1.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmP.L/Pinky1.L/Pinky2.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmP.L/Pinky1.L/Pinky2.L/Pinky2.L_end
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmR.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmR.L/Ring1.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmR.L/Ring1.L/Ring2.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmR.L/Ring1.L/Ring2.L/Ring2.L_end
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmT.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmT.L/Thumb1.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmT.L/Thumb1.L/Thumb2.L
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.L/UpperArm.L/LowerArm.L/PalmT.L/Thumb1.L/Thumb2.L/Thumb2.L_end
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmI.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmI.R/Index1.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmI.R/Index1.R/Index2.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmI.R/Index1.R/Index2.R/Index2.R_end
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmP.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmP.R/Pinky1.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmP.R/Pinky1.R/Pinky2.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmP.R/Pinky1.R/Pinky2.R/Pinky2.R_end
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmR.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmR.R/Ring1.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmR.R/Ring1.R/Ring2.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmR.R/Ring1.R/Ring2.R/Ring2.R_end
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmT.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmT.R/Thumb1.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmT.R/Thumb1.R/Thumb2.R
+  RobotArmature/Body/Torso/Chest/Neck/Shoulder.R/UpperArm.R/LowerArm.R/PalmT.R/Thumb1.R/Thumb2.R/Thumb2.R_end
+  RobotArmature/Body/UpperLeg.L
+  RobotArmature/Body/UpperLeg.L/MidLeg.L
+  RobotArmature/Body/UpperLeg.L/MidLeg.L/LowerLeg.L
+  RobotArmature/Body/UpperLeg.L/MidLeg.L/LowerLeg.L/FootBack.L
+  RobotArmature/Body/UpperLeg.L/MidLeg.L/LowerLeg.L/FootBack.L/FootBack.L_end
+  RobotArmature/Body/UpperLeg.R
+  RobotArmature/Body/UpperLeg.R/MidLeg.R
+  RobotArmature/Body/UpperLeg.R/MidLeg.R/LowerLeg.R
+  RobotArmature/Body/UpperLeg.R/MidLeg.R/LowerLeg.R/FootBack.R
+  RobotArmature/Body/UpperLeg.R/MidLeg.R/LowerLeg.R/FootBack.R/FootBack.R_end
+  RobotArmature/Foot.L
+  RobotArmature/Foot.L/Foot.L_end
+  RobotArmature/Foot.R
+  RobotArmature/Foot.R/Foot.R_end
+enemyPrefab: Assets/Waffle/Prefabs/Visual/Enemy_Vanguard_Mike_Visual.prefab (CombatViews may scale the instance to about 1.5m; not changed here)
+axis: FBX import, bakeAxisConversion 0 means Unity converts the axis at import. +Y up in the scene. +Z is the gameplay forward used by GameLoop.
