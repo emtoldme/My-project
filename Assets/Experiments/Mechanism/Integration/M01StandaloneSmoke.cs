@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Rendering;
 using Waffle;
 using Waffle.Experiments.Mechanism.Presentation;
 
@@ -48,9 +49,9 @@ namespace Reverb.Experiments.Mechanism.Integration
             while (Time.realtimeSinceStartup < deadline)
             {
                 if (!capturedEcho && fx.ActiveEchoes > 0)
-                { ScreenCapture.CaptureScreenshot(Path.Combine(output, "echo.png")); capturedEcho = true; }
+                { capturedEcho = CaptureWorld(loop.gameplayCamera, Path.Combine(output, "echo.png")); }
                 if (!capturedLink && fx.ActiveLinks > 0)
-                { ScreenCapture.CaptureScreenshot(Path.Combine(output, "propagation.png")); capturedLink = true; }
+                { capturedLink = CaptureWorld(loop.gameplayCamera, Path.Combine(output, "propagation.png")); }
                 yield return null;
             }
             bool moved = Vector3.Distance(start, beforeDodge) > 0.2f;
@@ -59,13 +60,42 @@ namespace Reverb.Experiments.Mechanism.Integration
             bool echo = controls.Mode != MechanismMode.Echo && controls.Mode != MechanismMode.Combined || controls.EchoHits > 0;
             bool propagation = controls.Mode != MechanismMode.Propagation && controls.Mode != MechanismMode.Combined || controls.PropagationHits > 0;
             bool none = controls.Mode != MechanismMode.None || controls.EchoHits == 0 && controls.PropagationHits == 0;
-            bool passed = moved && dodged && paused && rootScale && echo && propagation && none;
-            ScreenCapture.CaptureScreenshot(Path.Combine(output, "screen.png"));
+            bool rendered = CaptureWorld(loop.gameplayCamera, Path.Combine(output, "world.png"));
+            bool passed = moved && dodged && paused && rootScale && echo && propagation && none && rendered;
             for (int i = 0; i < 5; i++) yield return null;
-            string text = $"TEST_ONLY mode={controls.Mode} passed={passed} movement={moved} dodge={dodged} pause={paused} rootScale={rootScale} echo={controls.EchoHits} propagation={controls.PropagationHits} kills={loop.Sim.State.Kills} time={loop.Sim.State.Now:F3} seed={loop.config.seed}\n";
+            string text = $"TEST_ONLY mode={controls.Mode} passed={passed} movement={moved} dodge={dodged} pause={paused} rootScale={rootScale} rendered={rendered} echo={controls.EchoHits} propagation={controls.PropagationHits} kills={loop.Sim.State.Kills} time={loop.Sim.State.Now:F3} seed={loop.config.seed}\n";
             File.WriteAllText(Path.Combine(output, "smoke.txt"), text);
             Debug.Log("M01_STANDALONE_SMOKE " + text);
             Application.Quit(passed ? 0 : 2);
+        }
+
+        // Hidden Windows do not reliably present the backbuffer. Capture the actual URP camera.
+        // This records the 3D world only; IMGUI text/buttons still need normal-window acceptance.
+        static bool CaptureWorld(Camera camera, string path)
+        {
+            if (camera == null || SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) return false;
+            var target = RenderTexture.GetTemporary(1280, 720, 24);
+            var previous = RenderTexture.active;
+            Texture2D pixels = null;
+            try
+            {
+                var request = new RenderPipeline.StandardRequest { destination = target };
+                if (!RenderPipeline.SupportsRenderRequest(camera, request)) return false;
+                RenderPipeline.SubmitRenderRequest(camera, request);
+                RenderTexture.active = target;
+                pixels = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+                pixels.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0); pixels.Apply();
+                File.WriteAllBytes(path, pixels.EncodeToPNG());
+                var colors = pixels.GetPixels32(); int min = 765, max = 0;
+                for (int i = 0; i < colors.Length; i += 31)
+                { int value = colors[i].r + colors[i].g + colors[i].b; min = Math.Min(min, value); max = Math.Max(max, value); }
+                return max - min > 30;
+            }
+            finally
+            {
+                RenderTexture.active = previous; RenderTexture.ReleaseTemporary(target);
+                if (pixels != null) Destroy(pixels);
+            }
         }
     }
 }
