@@ -1,22 +1,11 @@
-# 项目状态与当前开发入口
+# 项目状态与开发入口
 
-2026-10-12。《麦田里的混响》，总指令见Docs/Project/REVERB_CONTEXT_V1.md。保持用户转发、四位AI独立目录/分支交付、Codex审查整合与自动验证、用户必要体验验收的模式。
+2026-10-12。《麦田里的混响》，长期上下文见Docs/Project/REVERB_CONTEXT_V1.md。保持四位外部AI独立交付，Codex整合/验证，用户转发和阶段体验验收。
 
-用户最新决定：继续技术实验，正式美术稍后准备。本轮不索要正式素材，不开完整关卡或大型系统。新艺术方向仍为乡村怪谈/锈蚀机械/迷幻音波；S2首版画面被拒绝，尚无正式画面通过验收。
+第二轮基线main@2d113dd656933c48b5a510c86ea5993d169e7c2a，四位交付已收齐；验证源码见Docs/Verification/Reverb-Followup-02/REVIEW.md。Unity EditMode130/130、三项实验PlayMode3/3、补充Profiler单项1/1均通过。V2真实16秒双轨回绕10次及三次恢复通过，最大主线程游标差1024，不能认证连续相位；原V1保留。V2端点归零，仍有斜率变化，未经监听不保证无爆音。
 
-## 本轮交付与验证
+同场景off/on/on/off已采ProfilerRecorder/UnityStats，含设备、CPU/GC/绘制统计；GPU不可用，CPU/GC包含编辑器与测试开销，不当作特效净成本或发布性能认证。正式Core/Input/Views、旧场景、渲染配置和Packages未改，本轮无新Windows包。S2旧画面仍未通过美术验收。
 
-基线main@9c565ee0ca87c6858145e5f656996aa7711f916b。四位作者的第一轮交付已保留提交并集中整合；验证源码f1f3155d91d8f9c8d2fa8a90d82ce1eeb9b412e3。Unity6000.4.3f1 / URP17.4.0未升级。
+用户已选择下一阶段：在独立M01试玩中验证回声＋传播是否有趣，正式美术后置。当前只有共享UI合同和下一轮任务卡，没有声称M01已可玩。1号做二维纯规则/宿主接口，2号做独立场景/面板/表现池，主美做辨识审查，音效总监做声响应表。Codex负责唯一CombatModule可选桥和自动验证，之后交独立Windows试玩供用户验收。
 
-- E-01：实际ShaderGraph、受控模型单位适配、真实攻击驱动波纹及ParticleSystem；暂停和禁用清理通过。仍为TEST_ONLY机甲/素色地面。
-- E-02：纯C#组合夹具，无模块/A/B/A+B为10/15/14/23；修复粗dt派生调度和暂停命中，不接正式伤害。
-- E-03：双轨共同DSP起点、暂停恢复/重开/禁用，真实16秒音频循环10次；主线程最大游标差1024样点，音频线程起音探针最后差0。不能据此认证持续相位或声卡输出。原信号循环首尾仍不连续，已派V2技术修订。
-- A-R01：规范审查，修正URP Lit通道；服装/色卡等仍是作者提案。
-
-本轮Unity EditMode125/125、实验PlayMode2/2通过，0失败；证据与限制见Docs/Verification/Reverb-Experiments-01/REVIEW.md。未重跑旧S2 PlayMode14项，未打新包或做性能达标认证；旧S1/S2试玩保留。正式Core/Input/Views、场景和渲染配置未改。
-
-## 下一步与分工
-
-当前可转发提示词为Docs/Integration/REVERB_TASKS_02.md：1号复核组合与未来适配表；2号复核ShaderGraph/粒子并做小规模真实性能观察；主美只校对技术接入检查表；音效总监修订TEST_ONLY循环信号。Codex继续GitHub、共享整合、自动化及必要缺项修复。提示词没有自动发送给外部AI。
-
-REVERB_TASKS_01.md与REVERB_BASELINE_REVIEW.md保留历史，不恢复旧A-04/P-04/C-03/S-04任务。Lore后排；本轮技术检查不代表正式美术或游戏阶段已获用户验收。
+当前转发提示词：REVERB_TASKS_03.md。TASKS_01/02及第一轮审查保留历史。所有对外提示词由用户转发，未自动发外部消息；正式素材本轮不索要，Lore与大系统后排。

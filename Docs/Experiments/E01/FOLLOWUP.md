@@ -27,7 +27,7 @@
 
 - 只有 `RunPhase.Playing` 才把 `LastDt` 加进环的年龄，并 `ParticleSystem.Simulate`。暂停、升级、终局时 dt 为 0，环和粒子停住。
 - `Restart` 在 `waveEnabled` 判断之前就 `Clear()`。关掉声波再重开也会清。
-- `OnDisable` 会清池。关掉组件时临时网格只在自己 `Awake` 造出来的情况下销毁。
+- `OnDisable` 清池；`OnDestroy` 才销毁由自己`Awake`创建的临时网格，禁用再启用不会丢网格。
 - 环最多 6 个，在 `Awake` 建好。播完就关掉，不在每次射击里 `Instantiate`。
 - 粒子是一个 `ParticleSystem`，发射关着，每次事件 `Emit` 3 粒，用游戏 dt 手动推进。这不是方块冒充。
 

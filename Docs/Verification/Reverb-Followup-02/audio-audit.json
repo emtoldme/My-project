@@ -1,0 +1,210 @@
+{
+  "scope": "Offline PCM audit. No True Peak, listening, or hardware output certification.",
+  "files": [
+    {
+      "version": "V1",
+      "file": "TEST_ONLY_track_a_base_16s.wav",
+      "frames": 768000,
+      "channels": 2,
+      "sample_rate": 48000,
+      "first": [
+        0.12061333656311035,
+        0.12061333656311035
+      ],
+      "last": [
+        -0.3501474857330322,
+        -0.3501474857330322
+      ],
+      "first_above_probe_threshold_frame": 0,
+      "end_jump": 0.4707608222961426,
+      "start_slope": [
+        0.016683340072631836,
+        0.016683340072631836
+      ],
+      "end_slope": [
+        0.00032210350036621094,
+        0.00032210350036621094
+      ],
+      "slope_difference": 0.016361236572265625,
+      "sample_peak_dbfs": -2.0000002404171053,
+      "sha256": "c60a39f17093e8550778b1088fd5ce1e1dcc26e72a3cb6740bed828f20142933"
+    },
+    {
+      "version": "V1",
+      "file": "TEST_ONLY_track_b_shimmer_16s.wav",
+      "frames": 768000,
+      "channels": 2,
+      "sample_rate": 48000,
+      "first": [
+        -0.322360634803772,
+        -0.3712095022201538
+      ],
+      "last": [
+        -0.1334526538848877,
+        0.11627542972564697
+      ],
+      "first_above_probe_threshold_frame": 0,
+      "end_jump": 0.4874849319458008,
+      "start_slope": [
+        -0.010991811752319336,
+        -0.0022505521774291992
+      ],
+      "end_slope": [
+        -0.08052361011505127,
+        0.052475690841674805
+      ],
+      "slope_difference": 0.06953179836273193,
+      "sample_peak_dbfs": -2.0000002404171053,
+      "sha256": "06cc20d443617c9127f75899dc38e833b9578a0090df2f854574a2e4d5d0734d"
+    },
+    {
+      "version": "V2",
+      "file": "TEST_ONLY_track_a_base_16s_v2.wav",
+      "frames": 768000,
+      "channels": 2,
+      "sample_rate": 48000,
+      "first": [
+        0.0,
+        0.0
+      ],
+      "last": [
+        0.0,
+        0.0
+      ],
+      "first_above_probe_threshold_frame": 1,
+      "end_jump": 0.0,
+      "start_slope": [
+        0.0054242610931396484,
+        0.0054242610931396484
+      ],
+      "end_slope": [
+        1.1920928955078125e-07,
+        1.1920928955078125e-07
+      ],
+      "slope_difference": 0.005424141883850098,
+      "sample_peak_dbfs": -5.999998424704031,
+      "sha256": "a87c8b4e459d57ac512b3a0fc4cc04d7224dc13e82d79cccafa1280b86bb5a9b"
+    },
+    {
+      "version": "V2",
+      "file": "TEST_ONLY_track_b_shimmer_16s_v2.wav",
+      "frames": 768000,
+      "channels": 2,
+      "sample_rate": 48000,
+      "first": [
+        0.0,
+        0.0
+      ],
+      "last": [
+        0.0,
+        0.0
+      ],
+      "first_above_probe_threshold_frame": 1,
+      "end_jump": 0.0,
+      "start_slope": [
+        0.00816035270690918,
+        0.00816035270690918
+      ],
+      "end_slope": [
+        5.960464477539062e-07,
+        5.960464477539062e-07
+      ],
+      "slope_difference": 0.008159756660461426,
+      "sample_peak_dbfs": -5.999998424704031,
+      "sha256": "2c96ed75a55bad60c396b6c217c2e25c5d5656c63ba7587959d9a499a398359f"
+    }
+  ],
+  "mixes": {
+    "V1": [
+      {
+        "gains": [
+          1,
+          0.7
+        ],
+        "peak_dbfs": 1.2337197402132176,
+        "samples_above_full_scale": 220,
+        "trimmed_peak_dbfs": -4.786880173066407
+      },
+      {
+        "gains": [
+          0.8,
+          1
+        ],
+        "peak_dbfs": 1.521983797339135,
+        "samples_above_full_scale": 1323,
+        "trimmed_peak_dbfs": -4.4986161159404885
+      },
+      {
+        "gains": [
+          0.7,
+          0.6
+        ],
+        "peak_dbfs": -1.1716789344296696,
+        "samples_above_full_scale": 0,
+        "trimmed_peak_dbfs": -7.192278847709294
+      },
+      {
+        "gains": [
+          1,
+          1
+        ],
+        "peak_dbfs": 2.5114271162670923,
+        "samples_above_full_scale": 5105,
+        "trimmed_peak_dbfs": -3.509172797012532
+      }
+    ],
+    "V2": [
+      {
+        "gains": [
+          1,
+          0.7
+        ],
+        "peak_dbfs": -3.929495260711722,
+        "samples_above_full_scale": 0,
+        "trimmed_peak_dbfs": -9.950095173991345
+      },
+      {
+        "gains": [
+          0.8,
+          1
+        ],
+        "peak_dbfs": -3.6110331077112563,
+        "samples_above_full_scale": 0,
+        "trimmed_peak_dbfs": -9.63163302099088
+      },
+      {
+        "gains": [
+          0.7,
+          0.6
+        ],
+        "peak_dbfs": -6.324847025512625,
+        "samples_above_full_scale": 0,
+        "trimmed_peak_dbfs": -12.34544693879225
+      },
+      {
+        "gains": [
+          1,
+          1
+        ],
+        "peak_dbfs": -2.629781241683138,
+        "samples_above_full_scale": 0,
+        "trimmed_peak_dbfs": -8.650381154962762
+      }
+    ]
+  },
+  "reproduction": [
+    {
+      "file": "TEST_ONLY_track_a_base_16s_v2.wav",
+      "pcm_identical": false,
+      "max_difference_lsb": 1.0,
+      "bytes_identical": false
+    },
+    {
+      "file": "TEST_ONLY_track_b_shimmer_16s_v2.wav",
+      "pcm_identical": false,
+      "max_difference_lsb": 1.0,
+      "bytes_identical": false
+    }
+  ],
+  "limits": "V2 endpoint values are zero, but nonzero start slopes preclude a C1/no-click claim. Gains above 1, processing, resampling and hardware output are outside this audit."
+}
