@@ -1,0 +1,6 @@
+{
+  "name": "Reverb.UserArt.VFX.Editor",
+  "references": ["Reverb.UserArt.VFX"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}
