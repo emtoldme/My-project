@@ -1,0 +1,18 @@
+{
+  "sampleRate": 48000,
+  "seconds": 25,
+  "eventCount": 120,
+  "note": "Same timeline, group gains, stereo pans; matched RMS -24dBFS. Not LUFS matched, no BGM or Unity rolloff. Old uses Feedback01 W01 variants.",
+  "files": {
+    "Feedback01_same_timeline.wav": {
+      "rmsDbFs": -24.0,
+      "peakDbFs": -2.88610937614838,
+      "normalizationGainDb": -0.16235029527876035
+    },
+    "SoundR1_same_timeline.wav": {
+      "rmsDbFs": -24.0,
+      "peakDbFs": -1.3210215279218105,
+      "normalizationGainDb": 3.6456785929453344
+    }
+  }
+}
