@@ -1,0 +1,16 @@
+{
+    "name": "Reverb.Experiments.RyeField.Editor",
+    "rootNamespace": "Reverb.Experiments.RyeField.EditorTools",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
