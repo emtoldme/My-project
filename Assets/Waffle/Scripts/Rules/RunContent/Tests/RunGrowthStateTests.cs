@@ -127,6 +127,19 @@ namespace Waffle.RunContent.Tests
             Assert.IsTrue(res.All(r => r.Kind == GrowthResultKind.Skipped && r.HealFraction > 0));
         }
 
+        [Test]
+        public void PeriodicNewWeaponOpportunityRemainsAvailableAfterTheFirstOffer()
+        {
+            var s=new RunGrowthState(4,null,null,new[]{"W01","W02","W03","W04","P01","P02","P04"});
+            for(int i=1;i<=9;i++)
+            {
+                s.EnqueueLevelUpReward();
+                if(i%3==0) Assert.That(s.ReadView().Choices.Any(c=>c.Id.StartsWith("W") && c.CurrentRank==0),Is.True);
+                var pick=s.ReadView().Choices.FirstOrDefault(c=>!c.Id.StartsWith("W") || c.CurrentRank>0);
+                Assert.That(s.TryChoose(s.OfferToken,pick.Id),Is.True);
+            }
+        }
+
         private static RunGrowthState BuildToEvolution(int seed)
         {
             // 使用允许列表把池限制到 W01/P12/E01，以确定性堆满条件
@@ -140,6 +153,8 @@ namespace Waffle.RunContent.Tests
         {
             var s = BuildToEvolution(1);
             Assert.AreEqual(5, s.RankOf("W01")); Assert.GreaterOrEqual(s.RankOf("P12"), 2);
+            Assert.IsFalse(s.ReadView().Evolutions.Single(e => e.Id == "E01").IsEligible, "UI must include the real time gate");
+            s.SetViewRunSeconds(240f);
             Assert.IsTrue(s.ReadView().Evolutions.Single(e => e.Id == "E01").IsEligible);
 
             // 未满4分钟：精英奖励给普通成长，不吞箱

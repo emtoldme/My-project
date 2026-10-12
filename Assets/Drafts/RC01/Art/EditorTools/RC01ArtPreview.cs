@@ -1,6 +1,9 @@
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
+using System.IO;
 #endif
 
 namespace Reverb.Drafts.RC01.Art.EditorTools
@@ -48,7 +51,30 @@ namespace Reverb.Drafts.RC01.Art.EditorTools
                 }
             }
 
-            Debug.Log($"[RC01ArtPreview] Art preview materials verification complete: {loaded}/{paths.Length} ready.");
+            if (loaded != paths.Length) throw new System.InvalidOperationException("RC01 art materials incomplete");
+            Directory.CreateDirectory("Assets/Drafts/RC01/Art/Scenes");
+            float[] smoothness = { .14f,.48f,.12f,.1f };
+            for (int i = 0;i < 4;i++)
+            {
+                EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
+                var mat = AssetDatabase.LoadAssetAtPath<Material>(paths[i]);
+                mat.SetFloat("_Smoothness",smoothness[i]); EditorUtility.SetDirty(mat);
+                var plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                Object.DestroyImmediate(plane.GetComponent<Collider>()); plane.GetComponent<Renderer>().sharedMaterial = mat;
+                var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                cube.name = "TEST_ONLY_MaterialProxy"; cube.transform.position = new Vector3(0,.8f,0);
+                cube.transform.localScale = new Vector3(2,1.6f,2); cube.GetComponent<Renderer>().sharedMaterial = mat;
+                var camera = new GameObject("PreviewCamera").AddComponent<Camera>();
+                camera.orthographic = true; camera.orthographicSize = 5;
+                camera.transform.rotation = Quaternion.Euler(55,45,0);
+                camera.transform.position = -camera.transform.forward*15;
+                var light = new GameObject("PreviewLight").AddComponent<Light>();
+                light.type = LightType.Directional; light.intensity = 1.1f; light.transform.rotation = Quaternion.Euler(50,-30,0);
+                RenderSettings.ambientLight = new Color(.5f,.52f,.5f);
+                EditorSceneManager.SaveScene(SceneManager.GetActiveScene(),"Assets/Drafts/RC01/Art/Scenes/TEST_ONLY_Style_"+i+".unity");
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("RC01_ART_PREVIEWS_PASSED styles=4 test-material-proxies=true");
         }
 #endif
     }

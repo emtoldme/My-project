@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.IO;
 using UnityEditor;
@@ -44,3 +45,5 @@ namespace Reverb.Drafts.RC01.Audio.EditorTools
         }
     }
 }
+
+#endif

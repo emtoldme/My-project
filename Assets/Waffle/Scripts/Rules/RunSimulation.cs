@@ -8,7 +8,7 @@ namespace Waffle
     /// 纯 C#，不依赖 UnityEngine：GameLoop 每帧调用一次 <see cref="Tick"/>，测试里也可以直接调用。
     /// 战斗模块只返回结果；此处统一决定伤害、经验、升级与终局优先级。
     /// </summary>
-    public class RunSimulation
+    public partial class RunSimulation
     {
         public readonly RunConfig Config;
         public readonly RunState State;
@@ -82,6 +82,7 @@ namespace Waffle
                 combatConfig.gemLifetime = Config.gemLifetime;
                 Combat = new CombatModule(combatConfig, Config.seed);
             }
+            if (Config.useRunContent) InitGrowth();
         }
 
         /// <summary>设置相机相对移动方向（已投影到 XZ 并归一化）。</summary>
@@ -104,6 +105,12 @@ namespace Waffle
         /// <summary>按当前升级等级、从 RunConfig 算出的数值（例如当前移速、最大 HP）。</summary>
         public float CurrentValue(UpgradeKind kind)
         {
+            if (Growth != null)
+            {
+                if (kind == UpgradeKind.MoveSpeed) return Config.moveSpeed * ContentStats.MoveSpeedMul;
+                if (kind == UpgradeKind.PickupRange) return Config.magnetRadius * ContentStats.PickupMul;
+                if (kind == UpgradeKind.MaxHp) return Config.maxHp * ContentStats.MaxHpMul;
+            }
             int level = kind >= 0 && (int)kind < UpgradeRules.RealKindCount ? State.UpgradeLevels[(int)kind] : 0;
             return UpgradeRules.Value(kind, level, Config);
         }
@@ -140,6 +147,7 @@ namespace Waffle
             dt *= Slowmo;
             LastDt = dt;
             float now = State.Now;
+            if (Growth != null) TickGrowth();
 
             // ---- T1 闪避请求/缓冲，只有真正发动才产生表现事件 ----
             Trace(trace, "T1 闪避");
@@ -205,6 +213,12 @@ namespace Waffle
                 CombatStepResult gems = Combat.StepGems(combatInput);
                 ForwardCombatEvents(gems);
                 if (gems.XpCollected > 0) AddXp(gems.XpCollected);
+                if (Growth != null)
+                {
+                    State.Kills += gems.Kills;
+                    if (gems.HealFraction > 0) HealContent(gems.HealFraction);
+                    foreach (long token in gems.EliteRewards) Growth.TryEnqueueEliteReward(token, now);
+                }
             }
             if (queuedXp > 0)
             {
@@ -236,7 +250,7 @@ namespace Waffle
 
             // ---- T12 待升级 → LevelUp ----
             Trace(trace, "T12 升级判定");
-            if (State.PendingLevelUps > 0)
+            if (State.PendingLevelUps > 0 || (Growth != null && Growth.HasOffer))
             {
                 DrawPanel();
                 State.TryTransition(RunPhase.LevelUp, "待升级 " + State.PendingLevelUps);
@@ -287,6 +301,9 @@ namespace Waffle
                 log.Info(string.Format("[Waffle] 受击被无敌挡下 dmg={0} now={1:F3}", amount, now));
                 return;
             }
+            if (Growth != null && ShieldCharges > 0)
+            { ShieldCharges--; Emit(PresentationEventType.ShieldBlock, PlayerX, PlayerZ, amount, State.Hp); return; }
+            if (Growth != null) amount = (int)Math.Ceiling(ContentStats.FinalIncoming(amount));
             State.Hp = Math.Max(0, State.Hp - amount);
             InvulnerableUntil = Math.Max(InvulnerableUntil, now + Config.hitIFrame);
             Emit(PresentationEventType.PlayerHurt, PlayerX, PlayerZ, amount, State.Hp);
@@ -354,6 +371,7 @@ namespace Waffle
             if (State.PendingLevelUps > 0)
                 log.Info("[Waffle] 终局，丢弃待升级 " + State.PendingLevelUps);
             State.PendingLevelUps = 0;
+            Growth?.CloseForRunEnd(); Combat?.ClearRunContent();
             queuedXp = 0;
             queuedDamage = 0;
             State.EndReason = reason;
@@ -449,6 +467,7 @@ namespace Waffle
 
         private void DrawPanel()
         {
+            if (Growth != null) { GrowthPanel(); return; }
             CurrentOptions = UpgradeRules.Draw(State.UpgradeLevels, Config, random);
             PanelsShown++;
             panelShownRealTime = realTime;
@@ -463,6 +482,11 @@ namespace Waffle
         /// </summary>
         public bool ChooseUpgrade(int index)
         {
+            if (Growth != null)
+            {
+                var view = ReadContentView();
+                return index >= 0 && index < view.Choices.Count && TryChooseContent(view.OfferToken, view.Choices[index].Id);
+            }
             if (State.Phase != RunPhase.LevelUp) return false;
             if (index < 0 || index > 2) return false;
             if (chooseLocked || lastChooseFrame == State.Frame) return false;

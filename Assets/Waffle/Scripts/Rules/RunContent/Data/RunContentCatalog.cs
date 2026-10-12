@@ -38,7 +38,7 @@ namespace Waffle.RunContent
         private static readonly Lazy<RunContentCatalog> defaultCatalog = new Lazy<RunContentCatalog>(Build);
         public static RunContentCatalog Default => defaultCatalog.Value;
 
-        private const ImplementationStatus RR = ImplementationStatus.RulesReady;
+        private const ImplementationStatus RR = ImplementationStatus.Wired; // RC01 06B: consumed by the unique CombatModule.
         private const ImplementationStatus PL = ImplementationStatus.Planned;
         private static ContentParam P(string k, float v) => new ContentParam(k, v);
         private static ContentRank R(int r, string text, params ContentParam[] ps) => new ContentRank(r, text, ps);
@@ -120,7 +120,7 @@ namespace Waffle.RunContent
                 Pa("P18", "间歇护盾", RR, "Playing时钟周期给吸收1次护盾，不与无敌叠成永久", new[] { "defense", "periodic" }, R(1, "每12s护盾1次", P("shieldEvery", 12), P("shieldCharges", 1)), R(2, "每10s", P("shieldEvery", 10), P("shieldCharges", 1)), R(3, "每8s", P("shieldEvery", 8), P("shieldCharges", 1))),
 
                 // ===== 进化（替换原武器槽，1阶）。前置：武器5阶 + 被动≥2阶 + 局内≥240s，精英奖励触发 =====
-                E("E01", "延迟重奏", RR, "W01直击目标额外0.5s回声×0.8（每命中1次，派生不递归）", "W01", "P12", P("dmg", 12), P("cd", 0.45f), P("pierce", 2), P("count", 2), P("echoBonus", 0.8f)),
+                E("E01", "延迟重奏", RR, "W01原目标0.5s回声系数额外+0.8（每命中1次，派生不递归）", "W01", "P12", P("dmg", 12), P("cd", 0.45f), P("pierce", 2), P("count", 2), P("echoBonus", 0.8f)),
                 E("E02", "回折扇面", RR, "W02外侧弹回收+击退开缺口", "W02", "P15", P("dmg", 10), P("cd", 0.7f), P("count", 7), P("arc", 70), P("range", 6), P("knockback", 1.0f), P("sameTargetHits", 3)),
                 E("E03", "行走屏障", RR, "W03轨道体4个；护盾触发时外扩脉冲", "W03", "P18", P("dmg", 10), P("count", 4), P("radius", 2.2f), P("angSpeed", 240), P("hitCd", 0.45f), P("shieldPulseDmg", 20)),
                 E("E04", "共振网络", PL, "W04区域间有限传播（每区最多2条）", "W04", "P13", P("dmg", 7), P("cd", 2.4f), P("count", 3), P("radius", 2), P("linkBudget", 2)),

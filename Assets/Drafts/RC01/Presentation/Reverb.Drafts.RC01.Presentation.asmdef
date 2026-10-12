@@ -1,17 +1,19 @@
 {
-    "name": "Reverb.Drafts.RC01.Presentation",
-    "rootNamespace": "Reverb.Drafts.RC01.Presentation",
-    "references": [
-        "Waffle.Rules",
-        "Waffle.Runtime"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "Reverb.Drafts.RC01.Presentation",
+  "rootNamespace": "Reverb.Drafts.RC01.Presentation",
+  "references": [
+    "Waffle.Rules",
+    "Waffle.Runtime",
+    "Waffle.Experiments.Mechanism.Presentation",
+    "Unity.InputSystem"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
 }

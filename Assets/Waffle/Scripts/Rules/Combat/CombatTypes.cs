@@ -52,6 +52,7 @@ namespace Waffle.Combat
         public int ContactDamage { get; internal set; }
         public int GemValue { get; internal set; }
         public bool IsElite { get; internal set; }
+        internal string LastSourceId; internal int LastSlot;
         /// <summary>生成时的阶段（0..3），视图可用来换颜色档位。</summary>
         public int Phase { get; internal set; }
         /// <summary>事件编号（调试用）：0 = 普通波次，1 = 方向推进，2 = 包围圈，3 = 精英，9 = 调试生成。</summary>
@@ -72,6 +73,11 @@ namespace Waffle.Combat
         public float Damage { get; internal set; }
         /// <summary>已标记回收（T13 回池），视图应隐藏。</summary>
         public bool Finished { get; internal set; }
+        public string SourceId { get; internal set; }
+        public int Slot { get; internal set; }
+        internal float Speed, Lifetime, MaxDistance, Travelled;
+        internal bool Returning, ReturnAllowed;
+        internal RunShotGroup Group;
         internal bool BornThisTick;
         /// <summary>已命中列表：敌人 (Serial, Generation)。</summary>
         internal readonly List<long> HitKeys = new List<long>(4);
@@ -111,13 +117,15 @@ namespace Waffle.Combat
         public int Kills;
         /// <summary>T10：本 tick 拾取的 XP（含满上限时直接计入的部分）。</summary>
         public int XpCollected;
+        public float HealFraction;
+        public readonly List<long> EliteRewards = new List<long>();
         /// <summary>本步骤产生的表现事件（按发生顺序）。</summary>
         public readonly List<PresentationEvent> Events = new List<PresentationEvent>(32);
 
         internal void Clear()
         {
             ContactDamage = 0; ContactDamageSum = 0; ContactSourceSerial = -1; ContactCount = 0;
-            Kills = 0; XpCollected = 0; Events.Clear();
+            Kills = 0; XpCollected = 0; HealFraction = 0; EliteRewards.Clear(); Events.Clear();
         }
     }
 

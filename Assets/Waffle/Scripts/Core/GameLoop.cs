@@ -13,7 +13,7 @@ namespace Waffle
     /// 其他玩法对象都不写 Update。
     /// </summary>
     [DefaultExecutionOrder(-100)]
-    public class GameLoop : MonoBehaviour
+    public class GameLoop : MonoBehaviour, Waffle.RunContent.IRunContentViewSource, Waffle.RunContent.IRunContentCommands
     {
         [Tooltip("一局的参数（设计初值）")]
         public RunConfig config = new RunConfig();
@@ -124,6 +124,18 @@ namespace Waffle
                 Controls.ApplyPhase(phase);
                 lastPhase = phase;
             }
+        }
+
+        public Waffle.RunContent.RunContentView ReadView() => Sim?.ReadContentView();
+        public bool TryChoose(long token, string id) => ApplyGrowth(() => Sim.TryChooseContent(token, id));
+        public bool TryReroll(long token) => ApplyGrowth(() => Sim.TryRerollContent(token));
+        public bool TryBanish(long token, string id) => ApplyGrowth(() => Sim.TryBanishContent(token, id));
+        public bool TrySkip(long token) => ApplyGrowth(() => Sim.TrySkipContent(token));
+        bool ApplyGrowth(Func<bool> command)
+        {
+            if (Sim == null || restarting) return false;
+            Sim.BeginFrame(Time.frameCount, Time.unscaledTimeAsDouble);
+            bool accepted = command(); SyncAfterStateChange(); DispatchPresentation(); return accepted;
         }
 
         private void OnApplicationFocus(bool hasFocus)

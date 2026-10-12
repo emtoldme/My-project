@@ -41,3 +41,7 @@ RunContentContracts.cs已发布Waffle.RunContent的只读快照和选择请求�
 最新origin/main唯一基线，先fetch记录完整SHA，独立功能分支与工作目录，不共用Unity Library/Temp、不操作用户窗口、不直接push main/强推、不升级Package/替换渲染管线/默认BuildSettings。场景由Unity或幂等Editor工具生成，不手写YAML。复制旧场景时先另存至自己的目录，不能调用会重写M01/RF01源场景的Setup。
 
 用户常规GitHub管理、审查整合、必要修复授权持续有效；本轮新增局内道具/成长/地图草稿已明确授权。完备存档经济、剧情、正式制作、无关大重构不在本轮。验收前明确已实现/草稿/未验证，不能将当前测试素材画面称为主流品质已达标。
+
+## 06B收口状态
+
+四份06A已在integration/rc01-playable整合；实现边界与人工验收见Docs/Integration/RC01_ACCEPTANCE.md，验证见Docs/Verification/RC01/。待本批验收反馈后发下一轮任务；继续工作以最新main为基线，不重复沿旧分支覆盖Codex接线。

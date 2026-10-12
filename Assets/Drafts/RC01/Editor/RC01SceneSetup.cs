@@ -295,12 +295,12 @@ namespace Reverb.Drafts.RC01.EditorTools
             data.size = new Vector3(size, 1f, size);
             data.alphamapResolution = 128;
             data.baseMapResolution = 256;
-            data.SetTerrainLayers(new[]
+            data.terrainLayers = new[]
             {
                 AssetDatabase.LoadAssetAtPath<TerrainLayer>(LayerRoot + "Ground_DrySoil.terrainlayer"),
                 AssetDatabase.LoadAssetAtPath<TerrainLayer>(LayerRoot + "Ground_TrampledPath.terrainlayer"),
                 AssetDatabase.LoadAssetAtPath<TerrainLayer>(LayerRoot + "Ground_DenseStraw.terrainlayer")
-            });
+            };
             int res = data.alphamapResolution;
             var maps = new float[res, res, 3];
             float half = size * 0.5f;

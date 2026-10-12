@@ -13,6 +13,13 @@ namespace Waffle
     /// 所有淡入淡出用 unscaled 时间：升级面板期间 timeScale = 0，音乐仍要能交叉淡化。
     /// 游戏暂停会冻住声部和淡变。禁用组件或收到 Restart 会停声并清掉本局状态；新一局由新实例或 BeginFreshRun 从头开始。
     /// </summary>
+    [System.Serializable]
+    public class AudioContentBinding
+    {
+        public string contentId;
+        public PresentationEventType eventType;
+        public AudioEventRule rule;
+    }
     public class AudioDirector : MonoBehaviour
     {
         enum MusicMode
@@ -23,6 +30,8 @@ namespace Waffle
         }
 
         public GameLoop loop;
+        public AudioContentBinding[] contentBindings = new AudioContentBinding[0];
+        readonly Dictionary<(PresentationEventType,string), Channel> contentChannels = new Dictionary<(PresentationEventType,string), Channel>();
         public bool enableMechanismAudio;
         public AudioEventRule echo = new AudioEventRule("M01_Echo", -3.5f, 0f, 2, 0.06f, 0f, 25f);
         public AudioEventRule propagation = new AudioEventRule("M01_Propagation", -4.5f, 0f, 2, 0.05f, 0f, 25f);
@@ -126,6 +135,9 @@ namespace Waffle
                 BuildChannel(PresentationEventType.EchoPropagationHit, echoPropagation);
             }
 
+            foreach (var binding in contentBindings)
+                if (binding != null && binding.rule != null && binding.contentId != null)
+                    contentChannels[(binding.eventType,binding.contentId)] = BuildChannel(binding.eventType,binding.rule,false);
             combatSource = CreateSource("Music_Combat", musicGroup, true);
             combatSource.clip = combatLoop;
             combatLowpass = combatSource.gameObject.AddComponent<AudioLowPassFilter>();
@@ -221,7 +233,7 @@ namespace Waffle
             if (state.Phase == RunPhase.Paused) SetPaused(true);
         }
 
-        private void BuildChannel(PresentationEventType type, AudioEventRule rule)
+        private Channel BuildChannel(PresentationEventType type, AudioEventRule rule, bool register = true)
         {
             var ch = new Channel { rule = rule };
             int n = Mathf.Max(1, rule.maxVoices);
@@ -234,7 +246,8 @@ namespace Waffle
                 ch.voices.Add(new Voice { source = src, startTime = float.NegativeInfinity });
                 allSfx.Add(src);
             }
-            channels[type] = ch;
+            if (register) channels[type] = ch;
+            return ch;
         }
 
         private AudioSource CreateSource(string name, AudioMixerGroup group, bool loopClip)
@@ -290,12 +303,21 @@ namespace Waffle
             }
 
             Channel ch;
-            if (channels.TryGetValue(e.Type, out ch)) Play(ch, e);
+            string source = e.SourceId;
+            if (e.Type == PresentationEventType.Shot || e.Type == PresentationEventType.EnemyHit)
+            {
+                if (source == "E01") source = "W01";
+                else if (source == "E02") source = "W02";
+                else if (source == "E03") source = "W03";
+            }
+            if (source != null && contentChannels.TryGetValue((e.Type,source),out ch)) Play(ch,e);
+            else if (contentChannels.TryGetValue((e.Type,"*"),out ch)) Play(ch,e);
+            else if (channels.TryGetValue(e.Type, out ch)) Play(ch, e);
         }
 
         private bool IsLastLevelUpChoice()
         {
-            return loop != null && loop.Sim != null && loop.Sim.State.PendingLevelUps == 0;
+            return loop != null && loop.Sim != null && loop.Sim.State.Phase == RunPhase.Playing;
         }
 
         private void Play(Channel ch, PresentationEvent e)
@@ -460,6 +482,7 @@ namespace Waffle
 
         private void ResetChannels()
         {
+            foreach (var ch in contentChannels.Values) { ch.lastPlayTime = float.NegativeInfinity; ch.nextIndex = 0; }
             foreach (var ch in channels.Values)
             {
                 ch.lastPlayTime = float.NegativeInfinity;

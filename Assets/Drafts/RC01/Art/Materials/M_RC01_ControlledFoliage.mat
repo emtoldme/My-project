@@ -30,6 +30,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _PlantHeight: 2
+    - _UseExternalTime: 1
+    - _VisualTime: 0
     - _WindSpatialScale: 0.35
     - _WindSpeed: 0.95
     - _WindStrength: 0.11

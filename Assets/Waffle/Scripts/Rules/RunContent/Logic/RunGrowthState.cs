@@ -11,6 +11,7 @@ namespace Waffle.RunContent
         public int NewWeaponWeight = 30, WeaponUpgradeWeight = 35, PassiveWeight = 35;
         /// <summary>前 N 次出牌内若武器槽未满且有合法新武器，至少出现一次新武器。</summary>
         public int EarlyNewWeaponOffers = 5;
+        public int NewWeaponOfferInterval = 3;
         public float SkipHealFraction = 0.05f, FallbackHealFraction = 0.10f;
         public string StartingWeapon = "W01";
         /// <summary>进入正常池的最低状态。Planned 永远不进池（构造时强制）。</summary>
@@ -54,6 +55,9 @@ namespace Waffle.RunContent
         private long token;
         private int offersMade;
         private RunContentView cachedView;
+        private float viewRunSeconds;
+        public void SetViewRunSeconds(float seconds)
+        { bool crossed = (viewRunSeconds >= 240) != (seconds >= 240); viewRunSeconds = seconds; if (crossed) Dirty(); }
 
         public int Rerolls { get; private set; }
         public int Banishes { get; private set; }
@@ -248,7 +252,8 @@ namespace Waffle.RunContent
             choices.Clear();
             var forced = new List<string>(2);
             // 早期新武器机会
-            if (!offeredNewWeaponEarly && offersMade <= Options.EarlyNewWeaponOffers)
+            if ((!offeredNewWeaponEarly && offersMade <= Options.EarlyNewWeaponOffers)
+                || (Options.NewWeaponOfferInterval > 0 && offersMade % Options.NewWeaponOfferInterval == 0))
             {
                 var nw = Legal(Cat.NewWeapon, forced);
                 if (nw.Count > 0) forced.Add(PickWeighted(nw));
@@ -348,8 +353,8 @@ namespace Waffle.RunContent
             {
                 if (d.Kind != ContentKind.Evolution || !drawable.Contains(d.Id) || consumedEvolutions.Contains(d.Id)) continue;
                 // 时间门槛视图里只显示"需≥N分钟"，资格以精英奖励时宿主给的秒数为准
-                bool ok = IsEvolutionEligible(d, float.MaxValue, out string miss);
-                string req = ok ? "满足装备条件；局内≥" + (int)(d.Evolution.MinRunSeconds / 60) + "分钟后由精英宝箱触发" : "缺：" + miss;
+                bool ok = IsEvolutionEligible(d, viewRunSeconds, out string miss);
+                string req = ok ? "已满足条件；局内≥" + (int)(d.Evolution.MinRunSeconds / 60) + "分钟后由精英宝箱触发" : "缺：" + miss;
                 ev.Add(new RunContentEvolutionView(d.Id, d.EvolvesFromWeapon, d.DisplayName, req, ok));
             }
             cachedView = new RunContentView(OfferToken, Rerolls, Banishes, Skips, cv, wv.ToArray(), pv.ToArray(), ev.ToArray());
