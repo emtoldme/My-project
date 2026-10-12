@@ -12,7 +12,9 @@ W01..W06/P01..P18/D01..D06/E01..E06的功能含义见CONTENT_AND_COMBAT_DRAFT.md
 
 ## 已发布纯C# UI合同
 
-Waffle.RunContent中的RunContentChoiceView（Id/DisplayName/EffectText/CurrentRank/NextRank）、RunContentOwnedView（Id/DisplayName/Rank/MaxRank）、RunContentView（OfferToken/Choices/Weapons/Passives/Rerolls/Banishes/Skips）均已入库；快照数组已防御复制为只读集合。规则作者按变化缓存快照，不在每帧/每个OnGUI分配全表。
+Waffle.RunContent中的RunContentChoiceView（Id/DisplayName/EffectText/CurrentRank/NextRank）、RunContentOwnedView（Id/DisplayName/Rank/MaxRank）、RunContentEvolutionView（Id/WeaponId/DisplayName/RequirementText/IsEligible）、RunContentView（OfferToken/Choices/Weapons/Passives/Evolutions/Rerolls/Banishes/Skips）均已入库；快照数组已防御复制为只读集合。规则作者按变化缓存快照，不在每帧/每个OnGUI分配全表。
+
+进化缺项文本与可用状态由规则宿主给出，UI只显示，不自行重算等级/计时门槛。
 
 IRunContentViewSource.ReadView()供UI读取；IRunContentCommands.TryChoose(token,id)/TryReroll(token)/TryBanish(token,id)/TrySkip(token)是唯一请求路径，bool表示接受/拒绝。1号实现规则核心命令，Codex适配器在实际LevelUp状态和现有升级队列内验证/调用。UI不能写Time.timeScale、HP、等级、RNG或自行出牌；LevelUp暂停和恢复仍属于RunSimulation。预览数据只能在命名TEST_ONLY的独立预览显式使用，正常场景无宿主就显示等待接线并禁用按钮。
 

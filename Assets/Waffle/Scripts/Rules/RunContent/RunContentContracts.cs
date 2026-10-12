@@ -20,19 +20,30 @@ namespace Waffle.RunContent
         { Id = id; DisplayName = displayName; Rank = rank; MaxRank = maxRank; }
     }
 
+    public readonly struct RunContentEvolutionView
+    {
+        public readonly string Id, WeaponId, DisplayName, RequirementText;
+        public readonly bool IsEligible;
+        public RunContentEvolutionView(string id, string weaponId, string displayName, string requirementText, bool isEligible)
+        { Id = id; WeaponId = weaponId; DisplayName = displayName; RequirementText = requirementText; IsEligible = isEligible; }
+    }
+
     public sealed class RunContentView
     {
         public readonly long OfferToken;
         public readonly int Rerolls, Banishes, Skips;
         public readonly IReadOnlyList<RunContentChoiceView> Choices;
         public readonly IReadOnlyList<RunContentOwnedView> Weapons, Passives;
+        public readonly IReadOnlyList<RunContentEvolutionView> Evolutions;
         public RunContentView(long offerToken, int rerolls, int banishes, int skips,
-            RunContentChoiceView[] choices, RunContentOwnedView[] weapons, RunContentOwnedView[] passives)
+            RunContentChoiceView[] choices, RunContentOwnedView[] weapons, RunContentOwnedView[] passives,
+            RunContentEvolutionView[] evolutions = null)
         {
             OfferToken = offerToken; Rerolls = rerolls; Banishes = banishes; Skips = skips;
             Choices = Array.AsReadOnly((RunContentChoiceView[])(choices ?? Array.Empty<RunContentChoiceView>()).Clone());
             Weapons = Array.AsReadOnly((RunContentOwnedView[])(weapons ?? Array.Empty<RunContentOwnedView>()).Clone());
             Passives = Array.AsReadOnly((RunContentOwnedView[])(passives ?? Array.Empty<RunContentOwnedView>()).Clone());
+            Evolutions = Array.AsReadOnly((RunContentEvolutionView[])(evolutions ?? Array.Empty<RunContentEvolutionView>()).Clone());
         }
     }
 
