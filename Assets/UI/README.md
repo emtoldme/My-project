@@ -1,50 +1,41 @@
-# 《麦田里的混响》UI 原型（锈蚀质感）
+# Assets/UI — PR33 修正版（只读 HUD 视图）
 
-可直接在 Unity 中测试的 HUD 原型。风格：深色锈金属 + 麦穗元素 + 青色→品红信号光。
+基于审查意见修正。基线 SHA：`391eabc2aab272029d494f18c15fc23b2cae8bf2`（origin/main，RF01 整合后）。
 
-## 快速测试步骤
+## 修正要点
 
-1. 拉取本分支 `feature/ui-rustpunk-hud`
-2. 在任意场景中创建 UI Canvas（Screen Space - Overlay）
-3. 在 Canvas 下创建空物体，命名为 `ReverbHUD`
-4. 添加 `ReverbHUD.cs` 脚本
-5. 按下面结构创建子物体并拖入脚本引用：
+1. **不再写 Time.timeScale**，不监听正式 Esc。暂停按钮只调用 `IHUDActions.OnTogglePause()`，由 Codex 适配到唯一 `GameLoop.TogglePause`。
+2. **不持有第二套局内状态**。只暴露 `Refresh(HUDSnapshot)`。健康/模式/计数全部来自外部快照。
+3. **模式按钮**调用 `OnRestartWithMode(string)`，由适配层转成 `IMechanismPlaytestControls.RestartWithMode`。
+4. **测试输入默认关闭**（`enableTestInput = false`）。仅独立预览场景由装配工具显式开启。缺引用、MaxHealth==0 均安全。
+5. **颜色统一**：回声紫红、传播金黄、Combined 中间色。不再使用青→品红作为机制色。
 
-### 推荐层级结构
+## 最小接口（供 Codex 适配）
 
-```
-Canvas
-└── ReverbHUD (挂 ReverbHUD.cs)
-    ├── HealthPanel
-    │   ├── Frame (Image, 颜色约 #5A4030, 透明度 0.95)
-    │   ├── Fill (Image, Type=Filled, Fill Method=Horizontal, 初始颜色青色)
-    │   └── Text (TMP_Text)
-    ├── ModePanel
-    │   ├── Glow (Image, 小圆形或方块)
-    │   └── ModeText (TMP_Text)
-    └── PausePanel (默认关闭)
-        ├── Background (Image, 半透明深色)
-        └── HintText (TMP_Text)
+```csharp
+public struct HUDSnapshot { ... }          // 见 HUDSnapshot.cs
+public interface IHUDActions {
+    void OnRestartWithMode(string modeName);
+    void OnTogglePause();
+}
 ```
 
-6. 把对应 Image / TMP 拖到脚本的公开字段
-7. 进入 Play 模式测试：
-   - **H** 减血 10
-   - **J** 加血 10
-   - **M** 切换模式（None / Echo / Propagation / Combined）
-   - **Esc** 暂停 / 继续
+HUD 自身不引用 GameLoop / CombatModule。
 
-## 视觉建议（无正式贴图时）
+## 独立预览
 
-- Frame / 面板背景：深锈色 `#3A2A20` ~ `#5A4030`
-- 边框可加 Outline 或 Shadow 组件模拟厚度
-- Fill 使用脚本中的 Gradient（青 → 品红）
-- 文字颜色：暖白 `#F5E8D0`
-- 如需更强质感，可将之前生成的概念图导入为 Sprite，设为 9-slice 后替换 Frame
+无 Unity 时交付幂等 Editor 工具：
 
-## 文件位置
+- 菜单：`Reverb/UI/Create Preview (Idempotent)`
+- 生成 `Assets/UI/Prefabs/ReverbHUD_Preview.prefab`
+- 生成 `Assets/UI/Scenes/UI_Preview.unity`
+- 预览中 `enableTestInput = true`，H/J 模拟血量，M 循环模式文字（仅本地快照），按钮触发回调（当前无适配则空操作）。
 
-- `Assets/UI/Scripts/ReverbHUD.cs`
-- `Assets/UI/README.md`（本文件）
+**未验证**：实际外观、中文字体渲染、Canvas Scaler 缩放、与真实 GameLoop 的适配。纯色占位不等于正式锈蚀 UI 完成。
 
-这是原型，正式美术仍由项目负责人验收与替换。
+## 文件
+
+- `Scripts/ReverbHUD.cs`
+- `Scripts/HUDSnapshot.cs`
+- `Editor/UIPreviewSetup.cs`
+- 本 README

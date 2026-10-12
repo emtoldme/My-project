@@ -1,134 +1,158 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.InputSystem;
 
 namespace Reverb.UI
 {
     /// <summary>
-    /// 锈蚀质感 HUD 控制器（可直接测试）。
-    /// 挂在 Canvas 下的空物体上，拖入 UI 引用即可。
-    /// 无外部贴图也能运行（使用纯色 + 渐变模拟锈蚀金属 + 信号光）。
-    /// 
-    /// 测试快捷键（Play 模式下）：
-    /// - H / J : 增减生命
-    /// - M : 切换模式 (None → Echo → Propagation → Combined)
-    /// - Esc : 暂停/继续
+    /// 锈蚀质感 HUD 视图（只读）。
+    /// - 只暴露 Refresh(HUDSnapshot) 与按钮回调。
+    /// - 不持有第二套局内状态，不写 Time.timeScale，不监听正式 Esc。
+    /// - 测试输入默认关闭，仅独立预览显式开启。
+    /// - 颜色与已接入反馈统一：回声紫红、传播金黄。
+    /// - 缺引用 / MaxHealth==0 不会抛异常。
     /// </summary>
     public class ReverbHUD : MonoBehaviour
     {
-        [Header("Health / Signal")]
+        [Header("Health")]
         public Image healthFill;
         public TextMeshProUGUI healthText;
-        public Image healthFrame; // 可选，用于边框颜色
+        public Image healthFrame;
 
-        [Header("Mode Indicator")]
+        [Header("Mode")]
         public TextMeshProUGUI modeText;
         public Image modeGlow;
 
-        [Header("Pause")]
+        [Header("Stats (optional)")]
+        public TextMeshProUGUI statsText;
+
+        [Header("Pause Panel (optional)")]
         public GameObject pausePanel;
-        public TextMeshProUGUI pauseHint;
 
-        [Header("Test Settings")]
-        public bool enableTestInput = true;
-        public float maxHealth = 100f;
+        [Header("Test Preview Only")]
+        [Tooltip("仅独立预览场景开启。正常试玩必须关闭。")]
+        public bool enableTestInput = false;
 
-        private float currentHealth = 100f;
-        private int modeIndex = 0;
-        private readonly string[] modes = { "None", "Echo", "Propagation", "Combined" };
+        private IHUDActions _actions;
+        private HUDSnapshot _last;
 
-        private Gradient signalGradient;
+        // 与已接入反馈统一的颜色（紫红回声 / 金黄传播）
+        private static readonly Color EchoColor = new Color(0.85f, 0.25f, 0.45f, 1f);       // 紫红
+        private static readonly Color PropagationColor = new Color(1f, 0.82f, 0.25f, 1f);  // 金黄
+        private static readonly Color CombinedColor = new Color(0.9f, 0.55f, 0.35f, 1f);
+        private static readonly Color NeutralColor = new Color(0.55f, 0.5f, 0.45f, 0.8f);
+        private static readonly Color FrameColor = new Color(0.32f, 0.24f, 0.18f, 0.95f);   // 锈铁
 
-        private void Awake()
+        public void BindActions(IHUDActions actions)
         {
-            signalGradient = new Gradient();
-            signalGradient.SetKeys(
-                new GradientColorKey[] {
-                    new GradientColorKey(new Color(0.0f, 0.94f, 1.0f), 0f),   // Cyan
-                    new GradientColorKey(new Color(1.0f, 0.0f, 0.67f), 1f)    // Magenta
-                },
-                new GradientAlphaKey[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 1f) }
-            );
+            _actions = actions;
         }
 
-        private void Start()
+        public void Refresh(HUDSnapshot snapshot)
         {
-            currentHealth = maxHealth;
-            UpdateHealth(currentHealth);
-            SetMode(modes[modeIndex]);
-            if (pausePanel != null) pausePanel.SetActive(false);
-            if (pauseHint != null) pauseHint.text = "Esc 暂停 / 继续";
+            _last = snapshot;
+            ApplyHealth(snapshot);
+            ApplyMode(snapshot.ModeName);
+            ApplyStats(snapshot);
+            ApplyPause(snapshot.IsPaused);
         }
 
-        private void Update()
+        private void ApplyHealth(HUDSnapshot s)
         {
-            if (!enableTestInput) return;
-
-            var keyboard = Keyboard.current;
-            if (keyboard == null) return;
-
-            if (keyboard.hKey.wasPressedThisFrame)
-                UpdateHealth(currentHealth - 10f);
-            if (keyboard.jKey.wasPressedThisFrame)
-                UpdateHealth(currentHealth + 10f);
-            if (keyboard.mKey.wasPressedThisFrame)
-                CycleMode();
-            if (keyboard.escapeKey.wasPressedThisFrame)
-                TogglePause(!pausePanel.activeSelf);
-        }
-
-        public void UpdateHealth(float current)
-        {
-            currentHealth = Mathf.Clamp(current, 0f, maxHealth);
-            float t = currentHealth / maxHealth;
+            float max = Mathf.Max(s.MaxHealth, 0.0001f); // 防除零
+            float t = Mathf.Clamp01(s.CurrentHealth / max);
 
             if (healthFill != null)
             {
                 healthFill.fillAmount = t;
-                healthFill.color = signalGradient.Evaluate(1f - t);
+                // 低血偏向紫红，高血偏向金黄（仍属同一语义体系）
+                healthFill.color = Color.Lerp(EchoColor, PropagationColor, t);
             }
 
             if (healthText != null)
-                healthText.text = $"{Mathf.RoundToInt(currentHealth)} / {Mathf.RoundToInt(maxHealth)}";
+                healthText.text = $"{Mathf.RoundToInt(s.CurrentHealth)} / {Mathf.RoundToInt(max)}";
 
             if (healthFrame != null)
-                healthFrame.color = new Color(0.35f, 0.25f, 0.18f, 0.95f); // 锈铁色
+                healthFrame.color = FrameColor;
         }
 
-        public void SetMode(string mode)
+        private void ApplyMode(string modeName)
         {
             if (modeText != null)
-                modeText.text = mode.ToUpper();
+                modeText.text = string.IsNullOrEmpty(modeName) ? "NONE" : modeName.ToUpperInvariant();
 
             if (modeGlow != null)
             {
-                Color c = mode switch
+                modeGlow.color = modeName switch
                 {
-                    "Echo" => new Color(0f, 0.94f, 1f, 0.9f),
-                    "Propagation" => new Color(1f, 0f, 0.67f, 0.9f),
-                    "Combined" => new Color(0.85f, 0.4f, 1f, 0.95f),
-                    _ => new Color(0.5f, 0.5f, 0.5f, 0.6f)
+                    "Echo" => EchoColor,
+                    "Propagation" => PropagationColor,
+                    "Combined" => CombinedColor,
+                    _ => NeutralColor
                 };
-                modeGlow.color = c;
             }
         }
 
-        public void CycleMode()
+        private void ApplyStats(HUDSnapshot s)
         {
-            modeIndex = (modeIndex + 1) % modes.Length;
-            SetMode(modes[modeIndex]);
+            if (statsText == null) return;
+            if (!s.ControlsReady)
+            {
+                statsText.text = "Controls: not ready";
+                return;
+            }
+            statsText.text = $"Echo {s.EchoHits}  Prop {s.PropagationHits}  Pend {s.PendingCount}";
         }
 
-        public void TogglePause(bool show)
+        private void ApplyPause(bool paused)
         {
             if (pausePanel != null)
-                pausePanel.SetActive(show);
-            Time.timeScale = show ? 0f : 1f;
+                pausePanel.SetActive(paused);
         }
 
-        // 外部战斗系统可调用
-        public void OnPlayerDamaged(float newHealth) => UpdateHealth(newHealth);
-        public void OnModeChanged(string mode) => SetMode(mode);
+        // 按钮回调（由 UI Button OnClick 或预览工具调用）
+        public void OnClickRestartNone() => _actions?.OnRestartWithMode("None");
+        public void OnClickRestartEcho() => _actions?.OnRestartWithMode("Echo");
+        public void OnClickRestartPropagation() => _actions?.OnRestartWithMode("Propagation");
+        public void OnClickRestartCombined() => _actions?.OnRestartWithMode("Combined");
+        public void OnClickTogglePause() => _actions?.OnTogglePause();
+
+        // 仅预览用：本地模拟快照，不驱动真实系统
+        private void Update()
+        {
+            if (!enableTestInput) return;
+
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb == null) return;
+
+            if (kb.hKey.wasPressedThisFrame)
+                SimulateHealth(-10f);
+            if (kb.jKey.wasPressedThisFrame)
+                SimulateHealth(+10f);
+            if (kb.mKey.wasPressedThisFrame)
+                SimulateCycleMode();
+            // 注意：不监听 Esc，避免与正式输入竞争
+        }
+
+        private void SimulateHealth(float delta)
+        {
+            var s = _last;
+            s.MaxHealth = Mathf.Max(s.MaxHealth, 1f);
+            s.CurrentHealth = Mathf.Clamp(s.CurrentHealth + delta, 0f, s.MaxHealth);
+            Refresh(s);
+        }
+
+        private void SimulateCycleMode()
+        {
+            var s = _last;
+            s.ModeName = s.ModeName switch
+            {
+                "None" => "Echo",
+                "Echo" => "Propagation",
+                "Propagation" => "Combined",
+                _ => "None"
+            };
+            Refresh(s);
+        }
     }
 }
