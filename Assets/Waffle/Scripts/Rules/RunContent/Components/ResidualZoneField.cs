@@ -13,7 +13,9 @@ namespace Waffle.RunContent.Components
         public const int HardPointCap = 12, HitsPerTickCap = 24;
         public const float LinkWidth = 0.4f;
 
-        public struct Point { public Vec2 Position; public float BornAt, EndsAt; }
+        public struct Point { public int Serial; public Vec2 Position; public float BornAt, EndsAt; }
+        int nextSerial = 1;
+        readonly List<long> expiredKeys = new List<long>();
         readonly List<Point> points = new List<Point>(HardPointCap);
         readonly Dictionary<long, float> readyAt = new Dictionary<long, float>();
         public IReadOnlyList<Point> Points => points;
@@ -22,7 +24,7 @@ namespace Waffle.RunContent.Components
         {
             max = Math.Max(1, Math.Min(HardPointCap, max));
             while (points.Count >= max) points.RemoveAt(0); // 最旧的先消失
-            points.Add(new Point { Position = at, BornAt = now, EndsAt = now + Math.Max(0.1f, life) });
+            points.Add(new Point { Serial = nextSerial++, Position = at, BornAt = now, EndsAt = now + Math.Max(0.1f, life) });
             output.Add(new RuleCommand { Kind = RuleCommandKind.ZoneSpawned, ContentId = id, Slot = slot, RootId = id,
                 Position = at, Radius = radius, Duration = life });
         }
@@ -46,7 +48,9 @@ namespace Waffle.RunContent.Components
                 output.Add(new RuleCommand { Kind = RuleCommandKind.TargetDamage, ContentId = id, Slot = slot, RootId = id,
                     Serial = e.Serial, Generation = e.Generation, Position = e.Position, From = at, Damage = damage, Depth = 1 });
             }
-            if (readyAt.Count > 256) readyAt.Clear(); // 防止长局字典增长；最坏多一次接触
+            expiredKeys.Clear();
+            foreach (var pair in readyAt) if (pair.Value <= now) expiredKeys.Add(pair.Key);
+            foreach (var key in expiredKeys) readyAt.Remove(key);
         }
 
         bool Touches(in EnemySnapshot e, float radius, bool link, out Vec2 at)

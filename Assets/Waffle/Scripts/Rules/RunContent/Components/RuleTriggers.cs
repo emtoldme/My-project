@@ -24,7 +24,7 @@ namespace Waffle.RunContent.Components
     {
         Vec2 last; bool hasLast; float carried;
         public float Carried => carried;
-        public void Rebase(Vec2 pos) { last = pos; hasLast = true; }
+        public void Rebase(Vec2 pos) { last = pos; hasLast = true; carried = 0f; }
         /// <summary>返回本 tick 跨过 spacing 的次数（上限 maxEmits，余量丢弃以防爆发）。</summary>
         public int Feed(Vec2 pos, float maxLegalStep, float spacing, int maxEmits)
         {
@@ -32,7 +32,7 @@ namespace Waffle.RunContent.Components
             float d = Vec2.Distance(last, pos);
             last = pos;
             if (spacing <= 0f || d <= 0f || float.IsNaN(d)) return 0;
-            if (maxLegalStep > 0f && d > maxLegalStep) return 0; // 传送式位移不积攒
+            if (maxLegalStep > 0f && d > maxLegalStep) { carried = 0f; return 0; } // 传送式位移不积攒
             carried += d;
             int n = 0;
             while (carried >= spacing && n < maxEmits) { carried -= spacing; n++; }

@@ -168,6 +168,7 @@ namespace Waffle
                 DodgeReadyAt = now + CurrentValue(UpgradeKind.DodgeCooldown);
                 InvulnerableUntil = Math.Max(InvulnerableUntil, now + dodgeLeft);
                 DodgeBufferUntil = -1f;
+                Combat?.NotifyRunDodge(new Vec2(PlayerX, PlayerZ));
                 Emit(PresentationEventType.Dodge, PlayerX, PlayerZ, dodgeLeft, 0);
             }
 
@@ -315,6 +316,7 @@ namespace Waffle
             return new CombatInput
             {
                 Dt = dt, RunTime = now, PlayerPos = new Vec2(PlayerX, PlayerZ), ViewRadius = ViewRadius,
+                MaxLegalMovementStep = Math.Max(CurrentValue(UpgradeKind.MoveSpeed), Config.dodgeSpeed) * dt * 1.25f,
                 Stats = new CombatPlayerStats
                 {
                     Damage = CurrentValue(UpgradeKind.Damage), FireInterval = CurrentValue(UpgradeKind.FireRate),

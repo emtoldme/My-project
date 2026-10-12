@@ -1204,6 +1204,9 @@ GameObject:
   - component: {fileID: 1268887284}
   - component: {fileID: 1268887283}
   - component: {fileID: 1268887282}
+  - component: {fileID: 1268887290}
+  - component: {fileID: 1268887289}
+  - component: {fileID: 1268887291}
   m_Layer: 0
   m_Name: GameLoop
   m_TagString: Untagged
@@ -1257,7 +1260,34 @@ MonoBehaviour:
   config:
     extraXpStepAfterFour: 0.4
     useRunContent: 1
-    runContentAllowList: []
+    runContentAllowList:
+    - W01
+    - W02
+    - W03
+    - W04
+    - W05
+    - W06
+    - P01
+    - P02
+    - P03
+    - P04
+    - P05
+    - P06
+    - P07
+    - P08
+    - P09
+    - P12
+    - P13
+    - P15
+    - P17
+    - P18
+    - E01
+    - E02
+    - E03
+    - D01
+    - D02
+    - D03
+    - D04
     runDuration: 600
     maxDt: 0.05
     maxHp: 100
@@ -1954,6 +1984,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f1c519f2d7a7fa4dafc1dada0ea1788, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Reverb.Experiments.Mechanism.Integration::Reverb.Experiments.Mechanism.Integration.M01DisplayControls
+--- !u!114 &1268887289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64654db844d08e743a0a2bfb106b6cc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.Drafts.RC01.Pipeline::Reverb.Drafts.RC01.Pipeline.RC02AudioConfiguration
+  catalog: {fileID: 11400000, guid: 85d37cf3ccb3b4d4a8eb9d1771a38d56, type: 2}
+  musicProfileId: harvest_road
+--- !u!114 &1268887290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb2ae489b715410da56886b17c4ea86b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.Drafts.RC01.Pipeline::Reverb.Drafts.RC01.Pipeline.RC02CatalogPresenter
+  catalog: {fileID: 11400000, guid: 85d37cf3ccb3b4d4a8eb9d1771a38d56, type: 2}
+  encounters: {fileID: 11400000, guid: 3c225fc1e6b2a92428b77626321ba9c0, type: 2}
+  loop: {fileID: 1268887280}
+  suppressed: 0
+--- !u!114 &1268887291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b92fb893e319a84e96192470f8c4e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.Drafts.RC01.Presentation::Reverb.Drafts.RC01.Presentation.RC02PlaythroughCapture
 --- !u!1001 &1493455762
 PrefabInstance:
   m_ObjectHideFlags: 0

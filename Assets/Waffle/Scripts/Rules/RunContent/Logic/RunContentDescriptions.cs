@@ -49,7 +49,20 @@ namespace Waffle.RunContent
                     limit="区域不追踪敌人；敌人离开后不继续受伤。";break;
                 case "P01": effect="提高所有武器伤害，回声和传播也随原命中变强。";Add("damagePct","伤害加成","%");limit="各阶为累计加成，不是每次乘上一个新倍率。";break;
                 case "P02": effect="缩短武器发射、落区伤害和环绕接触的间隔。";Add("ratePct","攻击频率加成","%");limit="频率+10%表示间隔÷1.10；不增加护卫球转速、移速或护盾频率。";break;
-                case "P04": effect="扩大散射射程、护卫轨道和共振区域。";Add("areaPct","范围加成","%");limit="不扩大定向脉冲索敌范围，也不增加伤害或弹数。";break;
+                case "W05":
+                    effect="锁定近处敌人后向邻居跳跃电弧，适合成群目标。";Add("dmg","首击伤害");Add("cd","间隔","秒");Add("bounces","后续最多跳数","跳");Add("range","首目标范围","米");Add("jump","跳距","米");
+                    if(next.Get("fork")>1) changes.Add("第2跳分叉，整次最多"+N(next.Get("budget"))+"目标");
+                    limit="每跳保留90%伤害，同链不重复目标；只有首击触发回声/传播/击退，无邻居会提前结束。";break;
+                case "W06":
+                    effect="按实际移动距离留下伤害残留，靠绕行让追兵踩入；站立不产生新点。";Add("dmg","接触伤害");Add("spacing","布置间距","米");Add("life","寿命","秒");Add("max","同时上限","点");
+                    if(next.Get("link")>0) changes.Add("相邻点之间连线造成接触伤害，线宽0.4米");
+                    if(next.Get("detonate")>0) changes.Add("实际闪避引爆最近3点，每点15伤、半径1.5米");
+                    limit="同一敌人基础间隔0.6秒，多个点不叠加接触频率；残留/引爆不再触发回声传播。";break;
+                case "P03": effect="提高脉冲和散射弹体的飞行速度。";Add("projSpeedPct","弹速加成","%");limit="各阶累计；不增加射速，不影响电弧、残留、区域或护卫球。";break;
+                case "P04": effect="扩大散射射程、护卫轨道、共振区域、电弧索敌/跳距和残留半径。";Add("areaPct","范围加成","%");limit="不扩大定向脉冲索敌范围或残留连线宽度，也不增加伤害或弹数。";break;
+                case "P05": effect="延长共振区域与移动残留的有效寿命。";Add("durationPct","持续时间加成","%");limit="各阶累计；不延长无敌、闪避或回声延迟。";break;
+                case "P08": effect="降低实际受到的伤害，提高容错。";Add("damageReductionPct","减伤","%");limit="各阶累计；最终伤害向上取整且至少1，不增加护盾次数。";break;
+                case "P17": effect="真正发动闪避时，在起点释放一次伤害脉冲。";Add("dodgeDmg","脉冲伤害");Add("dodgeRadius","半径","米");Add("dodgeCd","独立冷却","秒");limit="失败按键不触发，每次最多16敌；不缩短闪避冷却，也不触发回声传播。";break;
                 case "P06": effect="提高常规移动速度，方便走位和收集。";Add("moveSpeedPct","移速加成","%");limit="不改变闪避距离、速度或冷却。";break;
                 case "P07": effect="提高最大生命，并立刻补上新增的生命差值。";Add("maxHpPct","最大生命加成","%");limit="原来缺失的生命不会补满；不是全额回复。";break;
                 case "P09": effect="扩大经验宝石及回复、磁吸、清场道具的吸取范围，进入范围后自动飞向玩家。";Add("pickupPct","吸取半径加成","%");limit="不增加经验价值；精英箱仍需靠近开启。各阶为累计加成。";break;

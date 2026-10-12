@@ -39,7 +39,6 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
             if (catalog == null)
             {
                 catalog = ScriptableObject.CreateInstance<RC02ContentCatalog>();
-                AssetDatabase.CreateAsset(catalog, CatalogPath);
             }
             var previous = new Dictionary<string, RC02CatalogEntry>();
             foreach (var entry in catalog.entries)
@@ -56,7 +55,9 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
                     if (path == SeedPath) errors.Add("缺少种子包 " + path);
                     continue;
                 }
-                Package package = JsonUtility.FromJson<Package>(File.ReadAllText(path));
+                Package package;
+                try { package = JsonUtility.FromJson<Package>(File.ReadAllText(path)); }
+                catch (Exception ex) { errors.Add(path + " JSON: " + ex.Message); continue; }
                 if (package == null || package.schemaVersion != 1)
                 {
                     errors.Add(path + " schemaVersion 必须是 1");
@@ -68,6 +69,11 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
                     Accept(path, raw, previous, merged, seenIds, seenKeys, errors);
             }
 
+            File.WriteAllText(ReportPath, ReportPreview(merged, errors));
+            AssetDatabase.ImportAsset(ReportPath);
+            if (errors.Count > 0)
+                throw new InvalidOperationException("RC02_CATALOG_REFRESH_FAILED " + string.Join(" | ", errors));
+            if (!AssetDatabase.Contains(catalog)) AssetDatabase.CreateAsset(catalog, CatalogPath);
             catalog.schemaVersion = 1;
             catalog.packages = string.Join(", ", packageNames);
             catalog.entries = merged;
@@ -76,8 +82,6 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
             File.WriteAllText(ReportPath, Report(catalog, errors));
             AssetDatabase.ImportAsset(ReportPath);
             AssetDatabase.SaveAssets();
-            if (errors.Count > 0)
-                throw new InvalidOperationException("RC02_CATALOG_REFRESH_FAILED " + string.Join(" | ", errors));
             Debug.Log("RC02_CATALOG_REFRESH_PASSED entries=" + merged.Count + " packages=" + catalog.packages);
         }
 
@@ -109,6 +113,7 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
 
         static void Accept(string file, Entry raw, Dictionary<string, RC02CatalogEntry> previous, List<RC02CatalogEntry> merged, HashSet<string> seenIds, HashSet<string> seenKeys, List<string> errors)
         {
+            if (file == SeedPath && raw != null && merged.Exists(e => e.kind == raw.kind && (raw.kind == "music" || e.contentId == raw.contentId))) return;
             if (raw == null || string.IsNullOrEmpty(raw.id))
             {
                 errors.Add(file + " 有一条缺少 id");
@@ -140,7 +145,7 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
             }
             else
             {
-                if (!string.IsNullOrEmpty(raw.profileId) || !Enum.TryParse(raw.eventType, out PresentationEventType _))
+                if (!string.IsNullOrEmpty(raw.profileId) || !Enum.TryParse(raw.eventType, out PresentationEventType parsed) || !Enum.IsDefined(typeof(PresentationEventType), parsed))
                 {
                     errors.Add(raw.id + " eventType 不是现有枚举");
                     return;
@@ -163,17 +168,20 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
                 return;
             }
             int maxInstances = raw.maxInstances > 0 ? raw.maxInstances : raw.kind == "art" ? 8 : raw.kind == "audio" ? 4 : 1;
-            if (raw.minInterval < 0f)
+            if (raw.maxInstances < 0 || raw.maxInstances > 128 || raw.minInterval < 0f || float.IsNaN(raw.minInterval) || float.IsInfinity(raw.minInterval))
             {
                 errors.Add(raw.id + " minInterval 不能为负");
                 return;
             }
             var parameters = new List<RC02Parameter>();
+            var parameterKeys = new HashSet<string>();
             if (raw.parameters != null)
             {
                 foreach (Param param in raw.parameters)
                 {
                     if (param == null || string.IsNullOrEmpty(param.key)) continue;
+                    if (!parameterKeys.Add(param.key) || float.IsNaN(param.value) || float.IsInfinity(param.value))
+                    { errors.Add(raw.id + " 重复或非有限参数 " + param.key); return; }
                     if (!Allowed(raw.kind, param.key)) notes.Add("未知参数 " + param.key);
                     else if ((param.key == "bpm" || param.key == "beatsPerBar") && param.value > 0f)
                         notes.Add(param.key + " 已记录但不启用拍点对齐");
@@ -187,6 +195,8 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
                 foreach (Asset item in raw.assets)
                 {
                     if (item == null || string.IsNullOrEmpty(item.path)) continue;
+                    if (!item.path.StartsWith("Assets/", StringComparison.Ordinal) || item.path.Contains(".."))
+                    { errors.Add(raw.id + " 资源路径必须在Assets内 " + item.path); return; }
                     var bound = new RC02AssetRef { role = item.role, assetPath = item.path };
                     var loaded = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(item.path);
                     if (loaded == null)
@@ -215,6 +225,7 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
         static void EnsureEncounter()
         {
             var sheet = AssetDatabase.LoadAssetAtPath<RC02EncounterSheet>(EncounterPath);
+            if (sheet != null) return;
             if (sheet == null)
             {
                 sheet = ScriptableObject.CreateInstance<RC02EncounterSheet>();
@@ -245,7 +256,6 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
 
         static IEnumerable<string> PackagePaths()
         {
-            yield return SeedPath;
             foreach (string root in new[]
             {
                 "Docs/Design/RC02/Art",
@@ -255,14 +265,16 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
             })
             {
                 if (!Directory.Exists(root)) continue;
-                foreach (string file in Directory.GetFiles(root, "*.json", SearchOption.AllDirectories))
+                foreach (string file in Directory.GetFiles(root, "*-manifest.json", SearchOption.AllDirectories))
                     yield return file.Replace('\\', '/');
             }
+            yield return SeedPath;
         }
 
         static bool ContentIdOk(string id)
         {
             if (id == "*") return true;
+            if (id == "P12_P13") return true;
             if (string.IsNullOrEmpty(id) || id.Length != 3 || !char.IsDigit(id[1]) || !char.IsDigit(id[2])) return false;
             int n = (id[1] - '0') * 10 + (id[2] - '0');
             if (id[0] == 'W' || id[0] == 'E' || id[0] == 'D') return n >= 1 && n <= 6;
@@ -289,7 +301,7 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
         {
             if (old == null || old.assets == null) return null;
             for (int i = 0; i < old.assets.Length; i++)
-                if (old.assets[i] != null && old.assets[i].role == role && old.assets[i].assetPath == path)
+                if (old.assets[i] != null && old.assets[i].role == role)
                     return old.assets[i].asset;
             return null;
         }
@@ -308,6 +320,14 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
                 if (entry.kind != "art")
                     text.AppendLine("  audio/music record only. Do not add a second player. AudioDirector already owns the live harvest cues.");
             }
+            return text.ToString();
+        }
+
+        static string ReportPreview(List<RC02CatalogEntry> entries, List<string> errors)
+        {
+            var text = new StringBuilder();
+            text.AppendLine("RC02 validation: entries=" + entries.Count + " errors=" + errors.Count);
+            foreach (var error in errors) text.AppendLine(error);
             return text.ToString();
         }
     }

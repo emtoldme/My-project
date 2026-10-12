@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Waffle
 {
+    public interface IPresentationEventOwner { bool OwnsPresentation(PresentationEvent item); }
     /// <summary>
     /// 表现事件种类（给音效/特效用，只读，不影响玩法）。
     /// 带“预留”的种类已定义，但本阶段框架里没有对应玩法步骤，由 C-00/C-01 战斗接入后在相应 tick 步骤发出。
@@ -53,6 +54,7 @@ namespace Waffle
         public int Data;
         public string SourceId, RootSourceId;
         public int Slot;
+        public int ChainId, ChainDepth, ChainBudget;
         public float Radius, Duration;
         // Derived hits carry source and target positions; existing events leave these at zero.
         public float FromX, FromZ;

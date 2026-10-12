@@ -13,7 +13,7 @@ namespace Waffle
         int growthLevelRewards;
         readonly List<GrowthResult> growthResults = new List<GrowthResult>();
         public static readonly string[] RC01EnabledIds = {
-            "W01","W02","W03","W04","P01","P02","P04","P06","P07","P09","P12","P13","P15","P18",
+            "W01","W02","W03","W04","W05","W06","P01","P02","P03","P04","P05","P06","P07","P08","P09","P12","P13","P15","P17","P18",
             "E01","E02","E03","D01","D02","D03","D04" };
 
         void InitGrowth()

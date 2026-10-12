@@ -41,6 +41,16 @@ namespace Reverb.Drafts.RC01.Pipeline
         public string status;
         public string source;
         public string issues;
+        public float Parameter(string key, float fallback)
+        {
+            foreach (var p in parameters) if (p.key == key) return p.value;
+            return fallback;
+        }
+        public T Asset<T>(string role) where T : UnityEngine.Object
+        {
+            foreach (var a in assets) if (a.role == role && a.asset is T found) return found;
+            return null;
+        }
     }
 
     public class RC02ContentCatalog : ScriptableObject

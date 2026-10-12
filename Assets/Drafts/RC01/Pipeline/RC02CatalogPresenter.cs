@@ -4,230 +4,150 @@ using Waffle;
 
 namespace Reverb.Drafts.RC01.Pipeline
 {
-    /// <summary>
-    /// 只消费已分发的表现事件。不播声音，不扣血，不改 timeScale。
-    /// 同一物体上若已有旧表现，重叠的事件不播，避免双播。
-    /// </summary>
-    public class RC02CatalogPresenter : MonoBehaviour
+    public class RC02CatalogPresenter : MonoBehaviour, IPresentationEventOwner
     {
         public RC02ContentCatalog catalog;
         public RC02EncounterSheet encounters;
         public GameLoop loop;
         public int suppressed;
-        readonly List<Live> live = new List<Live>(16);
-        readonly Dictionary<string, float> nextTime = new Dictionary<string, float>();
+        public int SpawnedCount { get; private set; }
+        public int ActiveCount => live.Count + trails.Count;
+        readonly Dictionary<string, Stack<Live>> pools = new Dictionary<string, Stack<Live>>();
+        readonly Dictionary<string, float> readyAt = new Dictionary<string, float>();
+        readonly List<Live> live = new List<Live>();
+        readonly Dictionary<int, Live> trails = new Dictionary<int, Live>();
+        readonly List<int> stale = new List<int>();
+        readonly List<LineRenderer> links = new List<LineRenderer>();
+        bool frozen, terminal;
         GameObject preview;
-        bool paused;
-
         class Live
         {
             public GameObject go;
+            public RC02VisualTemplate template;
             public ParticleSystem[] particles;
-            public string id;
-            public RC02PausePolicy policy;
-            public float life;
-            public float duration;
-            public bool frozen;
+            public TrailRenderer[] ribbons;
+            public RC02CatalogEntry entry;
+            public float age, duration;
         }
-
-        void Awake()
+        void Awake() { if (loop == null) loop = GetComponent<GameLoop>(); }
+        void OnEnable() { if (loop != null) loop.PresentationDispatched += OnEvents; }
+        void Start()
         {
-            if (loop == null) loop = GetComponent<GameLoop>();
-        }
-
-        void OnEnable()
-        {
-            if (loop != null) loop.PresentationDispatched += OnEvents;
-        }
-
-        void OnDisable()
-        {
-            if (loop != null) loop.PresentationDispatched -= OnEvents;
-        }
-
-        void OnEvents(IReadOnlyList<PresentationEvent> events)
-        {
-            if (catalog == null || events == null) return;
-            for (int i = 0; i < events.Count; i++)
+            if (catalog == null) return;
+            foreach (var entry in catalog.entries)
             {
-                PresentationEvent item = events[i];
-                if (item.Type == PresentationEventType.Restart)
-                {
-                    Clear();
-                    continue;
-                }
-                if (!catalog.TrySelect("art", item.Type.ToString(), item.SourceId, out RC02CatalogEntry entry, out _))
-                    continue;
-                if (OwnedByOldView(item.Type))
-                {
-                    suppressed++;
-                    continue;
-                }
-                if (IsPreviewOnly(entry)) continue;
-                Spawn(entry, item);
+                if (entry.kind != "art" || entry.Asset<GameObject>("prefab") == null) continue;
+                var pool = new Stack<Live>(); pools.Add(entry.id, pool);
+                for (int i = 0; i < entry.maxInstances; i++) pool.Push(Create(entry));
             }
         }
-
-        void LateUpdate()
+        void OnDisable() { if (loop != null) loop.PresentationDispatched -= OnEvents; Clear(); ClearPreview(); }
+        Live Create(RC02CatalogEntry entry)
         {
-            if (loop == null || loop.Sim == null) return;
-            bool nowPaused = loop.Sim.State.Phase == RunPhase.Paused;
-            float dt = loop.Sim.LastDt;
-            if (nowPaused && !paused) OnPause();
-            if (!nowPaused && paused) OnResume();
-            paused = nowPaused;
-            if (paused) return;
-            for (int i = live.Count - 1; i >= 0; i--)
-            {
-                Live item = live[i];
-                item.life += dt;
-                if (item.life >= item.duration) Release(i);
-            }
+            var go = Instantiate(entry.Asset<GameObject>("prefab"), transform); go.name = "RC02_" + entry.id; go.SetActive(false);
+            return new Live { go=go, template=go.GetComponent<RC02VisualTemplate>(), entry=entry,
+                particles=go.GetComponentsInChildren<ParticleSystem>(true), ribbons=go.GetComponentsInChildren<TrailRenderer>(true) };
         }
-
-        public GameObject Preview(RC02CatalogEntry entry)
+        public Texture Icon(string id)
         {
-            if (entry == null) return null;
-            ClearPreview();
-            var go = MakeVisual(entry, Vector3.zero, Vector3.forward);
-            go.name = "TEST_ONLY_CatalogPreview";
-            go.hideFlags = HideFlags.DontSave;
-            preview = go;
-            return go;
-        }
-
-        public void ClearPreview()
-        {
-            if (preview == null) return;
-            if (Application.isPlaying) Destroy(preview);
-            else DestroyImmediate(preview);
-            preview = null;
-        }
-
-        void Spawn(RC02CatalogEntry entry, PresentationEvent item)
-        {
-            int cap = Mathf.Max(1, entry.maxInstances);
-            int active = 0;
-            for (int i = 0; i < live.Count; i++) if (live[i].id == entry.id) active++;
-            if (active >= cap) return;
-            if (nextTime.TryGetValue(entry.id, out float ready) && item.Now < ready) return;
-            nextTime[entry.id] = item.Now + Mathf.Max(0f, entry.minInterval);
-            var direction = new Vector3(item.DirectionX, 0f, item.DirectionZ);
-            if (direction.sqrMagnitude < 0.0001f) direction = Vector3.forward;
-            float life = Parameter(entry, "tailSeconds", item.Duration > 0f ? item.Duration : 0.6f);
-            var go = MakeVisual(entry, new Vector3(item.X, 0.05f, item.Z), direction.normalized);
-            float width = Parameter(entry, "width", item.Radius > 0f ? item.Radius : 0.4f);
-            go.transform.localScale = Vector3.one * Mathf.Max(0.05f, width);
-            live.Add(new Live
-            {
-                go = go, id = entry.id, policy = entry.pausePolicy,
-                duration = Mathf.Max(0.05f, life),
-                particles = go.GetComponentsInChildren<ParticleSystem>(true)
-            });
-        }
-
-        GameObject MakeVisual(RC02CatalogEntry entry, Vector3 position, Vector3 forward)
-        {
-            UnityEngine.Object asset = First(entry, "prefab");
-            GameObject go;
-            if (asset is GameObject prefab)
-                go = Instantiate(prefab, position, Quaternion.LookRotation(forward, Vector3.up));
-            else
-            {
-                go = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                RemoveCollider(go);
-                var material = First(entry, "material") as Material;
-                if (material != null) go.GetComponent<Renderer>().sharedMaterial = material;
-                go.transform.SetPositionAndRotation(position, Quaternion.LookRotation(Vector3.up, forward));
-            }
-            go.name = "RC02_" + entry.id;
-            return go;
-        }
-
-        static void RemoveCollider(GameObject go)
-        {
-            var collider = go.GetComponent<Collider>();
-            if (collider == null) return;
-            if (Application.isPlaying) Destroy(collider);
-            else DestroyImmediate(collider);
-        }
-
-        static UnityEngine.Object First(RC02CatalogEntry entry, string role)
-        {
-            if (entry.assets == null) return null;
-            for (int i = 0; i < entry.assets.Length; i++)
-                if (entry.assets[i] != null && entry.assets[i].role == role) return entry.assets[i].asset;
+            if (catalog != null) foreach (var entry in catalog.entries) if (entry.contentId==id && entry.Asset<Texture>("icon")!=null) return entry.Asset<Texture>("icon");
             return null;
         }
-
-        static float Parameter(RC02CatalogEntry entry, string key, float fallback)
+        public bool OwnsPresentation(PresentationEvent item)
         {
-            if (entry.parameters == null) return fallback;
-            for (int i = 0; i < entry.parameters.Length; i++)
-                if (entry.parameters[i].key == key) return entry.parameters[i].value;
-            return fallback;
+            return isActiveAndEnabled && catalog != null && catalog.TrySelect("art",item.Type.ToString(),item.SourceId,out var entry,out _)
+                && entry.Asset<GameObject>("prefab") != null;
         }
-
-        bool OwnedByOldView(PresentationEventType type)
+        void OnEvents(IReadOnlyList<PresentationEvent> events)
         {
-            if (type == PresentationEventType.Shot || type == PresentationEventType.EnemyHit || type == PresentationEventType.EnemyKilled)
-                return Has("RF01FeedbackBridge");
-            if (type == PresentationEventType.EchoHit || type == PresentationEventType.PropagationHit || type == PresentationEventType.EchoPropagationHit)
-                return Has("RC01BattleView") || Has("M01PlaytestController");
-            if (type == PresentationEventType.WeaponZone || type == PresentationEventType.WeaponOrbit)
-                return Has("RC01BattleView");
-            return false;
-        }
-
-        bool Has(string typeName)
-        {
-            var behaviours = GetComponents<MonoBehaviour>();
-            for (int i = 0; i < behaviours.Length; i++)
-                if (behaviours[i] != null && behaviours[i].GetType().Name == typeName) return true;
-            return false;
-        }
-
-        static bool IsPreviewOnly(RC02CatalogEntry entry)
-        {
-            return entry.contentId == "W05" || entry.contentId == "W06";
-        }
-
-        void OnPause()
-        {
-            for (int i = live.Count - 1; i >= 0; i--)
+            foreach (var item in events)
             {
-                if (live[i].policy == RC02PausePolicy.Stop) Release(i);
-                else Freeze(live[i], true);
+                if (item.Type==PresentationEventType.Restart || item.Type==PresentationEventType.Victory || item.Type==PresentationEventType.Defeat)
+                { terminal=true; Clear(); continue; }
+                if (terminal || !OwnsPresentation(item)) continue;
+                if (item.Type==PresentationEventType.WeaponZone && item.SourceId=="W06" && item.Value==0) continue;
+                catalog.TrySelect("art",item.Type.ToString(),item.SourceId,out var entry,out _);
+                if (readyAt.TryGetValue(entry.id,out float next) && item.Now<next) continue;
+                var slot=Rent(entry,item); if(slot==null) continue;
+                readyAt[entry.id]=item.Now+entry.minInterval;
+                slot.duration=item.Duration>0 ? item.Duration : entry.Parameter("tailSeconds",.25f); live.Add(slot);
             }
         }
-
-        void OnResume()
+        Live Rent(RC02CatalogEntry entry, PresentationEvent item)
         {
-            for (int i = 0; i < live.Count; i++) Freeze(live[i], false);
+            if(!pools.TryGetValue(entry.id,out var pool)||pool.Count==0) { suppressed++; return null; }
+            var slot=pool.Pop(); slot.age=0; slot.duration=.25f; slot.go.SetActive(true);
+            if(slot.template!=null) slot.template.Prepare(entry,item);
+            else { slot.go.transform.SetPositionAndRotation(new Vector3(item.X,.1f,item.Z),Quaternion.identity);
+                slot.go.transform.localScale=Vector3.one*(item.Radius>0?item.Radius:entry.Parameter("scale",1)); }
+            foreach(var r in slot.ribbons) r.Clear();
+            foreach(var p in slot.particles) { p.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear); p.Play(true); }
+            SpawnedCount++; return slot;
         }
-
-        static void Freeze(Live item, bool freeze)
+        void Return(Live slot)
         {
-            item.frozen = freeze;
-            if (item.particles == null) return;
-            for (int i = 0; i < item.particles.Length; i++)
+            foreach(var p in slot.particles) p.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);
+            foreach(var r in slot.ribbons) r.Clear(); slot.go.SetActive(false);
+            if(pools.TryGetValue(slot.entry.id,out var pool)) pool.Push(slot);
+        }
+        void LateUpdate()
+        {
+            if(loop?.Sim==null || terminal) return;
+            bool hold=loop.Sim.State.Phase!=RunPhase.Playing;
+            if(hold!=frozen)
             {
-                if (item.particles[i] == null) continue;
-                if (freeze) item.particles[i].Pause(true);
-                else item.particles[i].Play(true);
+                for(int i=live.Count-1;i>=0;i--)
+                    if(hold&&live[i].entry.pausePolicy==RC02PausePolicy.Stop) { Return(live[i]); live.RemoveAt(i); } else Freeze(live[i],hold);
+                foreach(var slot in trails.Values) Freeze(slot,hold); frozen=hold;
+            }
+            if(hold) return; SyncTrails();
+            for(int i=live.Count-1;i>=0;i--)
+            {
+                var slot=live[i]; slot.age+=loop.Sim.LastDt;
+                if(slot.age>=slot.duration) { Return(slot); live.RemoveAt(i); } else slot.template?.Tint(1-slot.age/Mathf.Max(.05f,slot.duration));
             }
         }
-
-        void Clear()
+        void SyncTrails()
         {
-            for (int i = live.Count - 1; i >= 0; i--) Release(i);
-            nextTime.Clear();
+            var combat=loop.Sim.Combat; var points=combat?.RunTrails;
+            if(points==null||catalog==null||!catalog.TrySelect("art","WeaponZone","W06",out var entry,out _)) return;
+            stale.Clear(); foreach(var key in trails.Keys) stale.Add(key);
+            for(int i=0;i<points.Count;i++)
+            {
+                var point=points[i]; stale.Remove(point.Serial);
+                if(!trails.TryGetValue(point.Serial,out var slot))
+                {
+                    slot=Rent(entry,new PresentationEvent { SourceId="W06",X=point.Position.X,Z=point.Position.Y,Radius=combat.RunTrailRadius });
+                    if(slot!=null) trails.Add(point.Serial,slot);
+                }
+                if(slot!=null) slot.template?.Tint(Mathf.Clamp01((point.EndsAt-loop.Sim.State.Now)/.5f));
+            }
+            foreach(var key in stale) { Return(trails[key]); trails.Remove(key); }
+            int count=combat.RunTrailLinks?Mathf.Max(0,points.Count-1):0;
+            while(links.Count<count)
+            {
+                var line=new GameObject("RC02_TrailLink").AddComponent<LineRenderer>(); line.transform.SetParent(transform);
+                line.useWorldSpace=true; line.positionCount=2; line.sharedMaterial=entry.Asset<Material>("material"); line.widthMultiplier=.4f; links.Add(line);
+            }
+            for(int i=0;i<links.Count;i++)
+            {
+                links[i].gameObject.SetActive(i<count); if(i>=count) continue;
+                links[i].SetPosition(0,new Vector3(points[i].Position.X,.1f,points[i].Position.Y));
+                links[i].SetPosition(1,new Vector3(points[i+1].Position.X,.1f,points[i+1].Position.Y));
+            }
         }
-
-        void Release(int index)
+        static void Freeze(Live slot,bool hold) { foreach(var p in slot.particles) if(hold) p.Pause(true); else p.Play(true); }
+        public void Clear()
         {
-            if (live[index].go != null) Destroy(live[index].go);
-            live.RemoveAt(index);
+            foreach(var slot in live) Return(slot); live.Clear(); foreach(var slot in trails.Values) Return(slot); trails.Clear();
+            foreach(var line in links) if(line!=null) line.gameObject.SetActive(false); readyAt.Clear();
         }
+        public GameObject Preview(RC02CatalogEntry entry)
+        {
+            ClearPreview(); var prefab=entry?.Asset<GameObject>("prefab"); if(prefab==null) return null;
+            preview=Instantiate(prefab); preview.name="TEST_ONLY_CatalogPreview"; preview.hideFlags=HideFlags.DontSave;
+            preview.GetComponent<RC02VisualTemplate>()?.Prepare(entry,new PresentationEvent { X=1,FromX=-1,DirectionZ=1,Radius=1 }); return preview;
+        }
+        public void ClearPreview() { if(preview==null) return; if(Application.isPlaying) Destroy(preview); else DestroyImmediate(preview); preview=null; }
     }
 }

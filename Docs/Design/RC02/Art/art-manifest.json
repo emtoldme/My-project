@@ -101,7 +101,7 @@
       "parameters": [
         {
           "key": "width",
-          "value": 1.5
+          "value": 0.065
         },
         {
           "key": "scale",
@@ -126,7 +126,7 @@
       "id": "rc02.art.w05.hit",
       "kind": "art",
       "contentId": "W05",
-      "eventType": "PropagationHit",
+      "eventType": "EnemyHit",
       "profileId": "",
       "assets": [
         {
@@ -189,7 +189,7 @@
       "parameters": [
         {
           "key": "width",
-          "value": 0.4
+          "value": 0.065
         },
         {
           "key": "scale",
@@ -254,7 +254,7 @@
       "id": "rc02.art.p17.dodge",
       "kind": "art",
       "contentId": "P17",
-      "eventType": "Dodge",
+      "eventType": "WeaponZone",
       "profileId": "",
       "assets": [
         {
@@ -273,7 +273,7 @@
       "parameters": [
         {
           "key": "width",
-          "value": 2.5
+          "value": 0.065
         },
         {
           "key": "scale",

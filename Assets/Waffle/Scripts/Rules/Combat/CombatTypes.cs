@@ -31,6 +31,7 @@ namespace Waffle.Combat
         public Vec2 PlayerPos;
         /// <summary>视野半径 R_view（m）；框架按相机计算，未提供（≤0）时用 14。</summary>
         public float ViewRadius;
+        public float MaxLegalMovementStep;
         public CombatPlayerStats Stats;
     }
 
