@@ -5,6 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Reverb.Experiments.Mechanism.Integration;
+using Waffle.Experiments.Mechanism.Presentation;
 using Waffle;
 
 namespace Waffle.Experiments.Mechanism.EditorTools
@@ -25,6 +26,17 @@ namespace Waffle.Experiments.Mechanism.EditorTools
             loop.combatConfig.gemValue = 0; loop.combatConfig.eliteGemValue = 0;
             loop.gameObject.AddComponent<M01PlaytestController>();
             loop.gameObject.AddComponent<M01StandaloneSmoke>();
+            // A scene reference retains the transparent shader variant in standalone builds.
+            const string materialPath = "Assets/Experiments/Mechanism/Materials/M_M01_Transparent.mat";
+            Directory.CreateDirectory("Assets/Experiments/Mechanism/Materials");
+            var material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+            if (material == null)
+            {
+                material = M01DerivedFx.CreateTransparentCopy(loop.GetComponent<M01DerivedFx>().lineMaterial, Color.white);
+                material.name = "M_M01_Transparent";
+                AssetDatabase.CreateAsset(material, materialPath);
+            }
+            loop.GetComponent<M01DerivedFx>().lineMaterial = material;
             var audio = loop.gameObject.AddComponent<AudioDirector>();
             audio.loop = loop; audio.enableMechanismAudio = true; audio.sfxTrimDb = -18f;
             audio.shoot.clips = Clips("Assets/Audio/S03/sfx_s03_shot.wav");
@@ -58,8 +70,26 @@ namespace Waffle.Experiments.Mechanism.EditorTools
             Directory.CreateDirectory(Path.GetDirectoryName(output));
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { M01PlaytestSetup.ScenePath },
                 locationPathName = output, target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development });
+            var warnings = new System.Collections.Generic.List<string>();
+            foreach (var step in report.steps)
+                foreach (var message in step.messages)
+                    if (message.type == LogType.Warning || message.type == LogType.Error || message.type == LogType.Exception)
+                        warnings.Add(step.name + ": " + message.content);
+            File.WriteAllText(Path.Combine(Path.GetDirectoryName(output), "build-report.json"),
+                JsonUtility.ToJson(new BuildEvidence { result = report.summary.result.ToString(),
+                    warningCount = report.summary.totalWarnings, errorCount = report.summary.totalErrors,
+                    totalBytes = report.summary.totalSize, messages = warnings.ToArray() }, true));
             if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new Exception("M01 build failed: " + report.summary.result);
             Debug.Log("M01_BUILD_PASSED warnings=" + report.summary.totalWarnings + " errors=" + report.summary.totalErrors + " path=" + output);
+        }
+
+        [Serializable]
+        class BuildEvidence
+        {
+            public string result;
+            public int warningCount, errorCount;
+            public ulong totalBytes;
+            public string[] messages;
         }
     }
 }

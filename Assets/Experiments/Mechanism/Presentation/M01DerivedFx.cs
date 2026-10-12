@@ -202,9 +202,12 @@ namespace Waffle.Experiments.Mechanism.Presentation
         }
 
         Material Tint(Color color)
+        { return CreateTransparentCopy(lineMaterial, color); }
+
+        public static Material CreateTransparentCopy(Material source, Color color)
         {
-            if (lineMaterial == null) return null;
-            var copy = new Material(lineMaterial) { name = "M01_" + color.r.ToString("F2") + "_Runtime" };
+            if (source == null) return null;
+            var copy = new Material(source) { name = "M01_" + color.r.ToString("F2") + "_Runtime" };
             if (copy.HasProperty("_BaseColor")) copy.SetColor("_BaseColor", color);
             if (copy.HasProperty("_Color")) copy.SetColor("_Color", color);
             copy.SetFloat("_Surface", 1f);
