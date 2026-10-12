@@ -1,0 +1,1 @@
+fullscreen=True restoredWindow=True pausedFullscreen=True passed=True desktop=2560x1600 window=1280x720
