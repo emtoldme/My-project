@@ -43,6 +43,37 @@ namespace Reverb.Experiments.Mechanism.Integration
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Escape));
             yield return new WaitForSecondsRealtime(0.1f);
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            bool displayPassed = true;
+            if (Array.IndexOf(args, "--m01-display-smoke") >= 0)
+            {
+                var display = GetComponent<M01DisplayControls>();
+                display.SetFullscreen(false);
+                yield return new WaitForSecondsRealtime(.5f);
+                int windowWidth = Screen.width, windowHeight = Screen.height;
+                var desktop = Screen.currentResolution;
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F11));
+                yield return new WaitForSecondsRealtime(.5f);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                bool fullscreen = Screen.fullScreen && Screen.fullScreenMode == FullScreenMode.FullScreenWindow
+                    && Screen.width == desktop.width && Screen.height == desktop.height;
+                yield return new WaitForSecondsRealtime(.1f);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F11));
+                yield return new WaitForSecondsRealtime(.5f);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                bool windowed = !Screen.fullScreen && Screen.width == windowWidth && Screen.height == windowHeight;
+                if (loop.Sim.State.Phase != RunPhase.Paused) loop.TogglePause();
+                float frozen = loop.Sim.State.Now;
+                yield return new WaitForSecondsRealtime(.1f);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F11));
+                yield return new WaitForSecondsRealtime(.5f);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                bool pausedFullscreen = Screen.fullScreen && loop.Sim.State.Phase == RunPhase.Paused && loop.Sim.State.Now == frozen;
+                display.SetFullscreen(false);
+                yield return new WaitForSecondsRealtime(.5f);
+                displayPassed = fullscreen && windowed && pausedFullscreen && !Screen.fullScreen;
+                File.WriteAllText(Path.Combine(output, "display.txt"), $"fullscreen={fullscreen} restoredWindow={windowed} pausedFullscreen={pausedFullscreen} passed={displayPassed} desktop={desktop.width}x{desktop.height} window={windowWidth}x{windowHeight}\n");
+                if (loop.Sim.State.Phase == RunPhase.Paused) loop.TogglePause();
+            }
             var fx = GetComponent<M01DerivedFx>();
             bool capturedEcho = false, capturedLink = false;
             float deadline = Time.realtimeSinceStartup + 7f;
@@ -61,7 +92,7 @@ namespace Reverb.Experiments.Mechanism.Integration
             bool propagation = controls.Mode != MechanismMode.Propagation && controls.Mode != MechanismMode.Combined || controls.PropagationHits > 0;
             bool none = controls.Mode != MechanismMode.None || controls.EchoHits == 0 && controls.PropagationHits == 0;
             bool rendered = CaptureWorld(loop.gameplayCamera, Path.Combine(output, "world.png"));
-            bool passed = moved && dodged && paused && rootScale && echo && propagation && none && rendered;
+            bool passed = moved && dodged && paused && rootScale && echo && propagation && none && rendered && displayPassed;
             for (int i = 0; i < 5; i++) yield return null;
             string text = $"TEST_ONLY mode={controls.Mode} passed={passed} movement={moved} dodge={dodged} pause={paused} rootScale={rootScale} rendered={rendered} echo={controls.EchoHits} propagation={controls.PropagationHits} kills={loop.Sim.State.Kills} time={loop.Sim.State.Now:F3} seed={loop.config.seed}\n";
             File.WriteAllText(Path.Combine(output, "smoke.txt"), text);

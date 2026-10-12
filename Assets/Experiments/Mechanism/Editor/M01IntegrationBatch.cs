@@ -26,6 +26,7 @@ namespace Waffle.Experiments.Mechanism.EditorTools
             loop.combatConfig.gemValue = 0; loop.combatConfig.eliteGemValue = 0;
             loop.gameObject.AddComponent<M01PlaytestController>();
             loop.gameObject.AddComponent<M01StandaloneSmoke>();
+            loop.gameObject.AddComponent<M01DisplayControls>();
             // A scene reference retains the transparent shader variant in standalone builds.
             const string materialPath = "Assets/Experiments/Mechanism/Materials/M_M01_Transparent.mat";
             Directory.CreateDirectory("Assets/Experiments/Mechanism/Materials");
@@ -67,6 +68,9 @@ namespace Waffle.Experiments.Mechanism.EditorTools
         public static void Build()
         {
             string output = Path.GetFullPath(Path.Combine(Application.dataPath, "../../Builds/M01-MechanismPlaytest/Reverb.exe"));
+            string[] args = Environment.GetCommandLineArgs();
+            int outputFlag = Array.IndexOf(args, "--m01-build-output");
+            if (outputFlag >= 0 && outputFlag + 1 < args.Length) output = Path.GetFullPath(args[outputFlag + 1]);
             Directory.CreateDirectory(Path.GetDirectoryName(output));
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { M01PlaytestSetup.ScenePath },
                 locationPathName = output, target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development });
