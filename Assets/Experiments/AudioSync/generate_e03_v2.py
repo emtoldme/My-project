@@ -3,20 +3,19 @@ E-03 TEST_ONLY 测试信号 V2 生成脚本 (generate_e03_v2.py)
 -------------------------------------------------------
 任务：fix/e03-test-signal-loops
 作者：音效总监 (Sound Director)
-运行环境：Python 3.x + numpy + soundfile
+运行环境：Python 3.x + numpy；--output-dir 可输出到独立目录复现
 
 设计目标：
-1. 彻底消除 V1 首尾阶跃 (0.47 / 0.49 满幅)，实现 C1 阶完全平滑的无缝循环端点 (end_jump = 0.0)；
-2. 留足峰值余量：单轨 Peak 严格控制在 -6.0 dBFS，未 Trim 叠加在任意增益组合下均 <= -3.61 dBFS (0 削波)；
+1. 首尾样点归零；起音标记仍带来斜率变化，不等于 C1 连续或听感认证；
+2. 单轨样点峰值约 -6.0 dBFS；叠加峰值由实际增益和审计结果确定；
 3. 保留同步起音标记：在第 1 号采样点 (sample index 1) 注入严格对齐的高频瞬态 (value = 0.0054 / 0.0082 > 1e-6)，
-   确保 DspStartProbe 在音频线程精确同帧捕获，起音差为 0 采样点；
+   给 DspStartProbe 提供相同起音位置；实际捕获差需 Unity 运行测量；
 4. 保持格式严格一致：48,000 Hz, 24-bit PCM WAV, 2 声道, 768,000 帧 (16.0 秒)。
 """
 
 from pathlib import Path
-import math, os
+import math, argparse, wave
 import numpy as np
-import soundfile as sf
 
 SR = 48000
 DUR = 16.0
@@ -117,12 +116,25 @@ data_a = np.column_stack((track_a_l, track_a_r))
 data_b = np.column_stack((track_b_l, track_b_r))
 
 # 5. 输出 48kHz 24-bit PCM WAV
-out_dir = Path(__file__).resolve().parents[3] / 'Assets/Experiments/AudioSync'
+parser = argparse.ArgumentParser()
+parser.add_argument('--output-dir', type=Path, default=Path(__file__).resolve().parent)
+out_dir = parser.parse_args().output_dir.resolve()
+out_dir.mkdir(parents=True, exist_ok=True)
 file_a = out_dir / 'TEST_ONLY_track_a_base_16s_v2.wav'
 file_b = out_dir / 'TEST_ONLY_track_b_shimmer_16s_v2.wav'
 
-sf.write(str(file_a), data_a, SR, subtype='PCM_24')
-sf.write(str(file_b), data_b, SR, subtype='PCM_24')
+def write_pcm24(path, data):
+    # Portable PCM24 floor quantization; reproduction audit records any one-LSB library difference.
+    pcm = np.floor(np.clip(data, -1.0, 1.0 - 1.0 / 8388608) * 8388608).astype(np.int32)
+    packed = np.stack((pcm & 255, (pcm >> 8) & 255, (pcm >> 16) & 255), axis=-1).astype(np.uint8)
+    with wave.open(str(path), 'wb') as output:
+        output.setnchannels(2)
+        output.setsampwidth(3)
+        output.setframerate(SR)
+        output.writeframes(packed.tobytes())
+
+write_pcm24(file_a, data_a)
+write_pcm24(file_b, data_b)
 
 print(f"Generated V2 files in {out_dir}:")
 print(f"  {file_a.name}: Peak={20*math.log10(np.max(np.abs(data_a))):.3f} dBFS, end_jump={np.abs(data_a[0]-data_a[-1]).max():.10f}")
