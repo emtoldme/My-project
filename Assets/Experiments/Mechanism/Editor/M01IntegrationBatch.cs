@@ -93,7 +93,8 @@ namespace Waffle.Experiments.Mechanism.EditorTools
                 JsonUtility.ToJson(new BuildEvidence { result = report.summary.result.ToString(),
                     warningCount = report.summary.totalWarnings, errorCount = report.summary.totalErrors,
                     totalBytes = report.summary.totalSize, messages = warnings.ToArray() }, true));
-            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new Exception("M01 build failed: " + report.summary.result);
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded || report.summary.totalErrors > 0)
+                throw new Exception("M01 build failed: " + report.summary.result + ", errors=" + report.summary.totalErrors);
             Debug.Log("M01_BUILD_PASSED warnings=" + report.summary.totalWarnings + " errors=" + report.summary.totalErrors + " path=" + output);
         }
 

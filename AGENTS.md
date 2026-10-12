@@ -1,37 +1,43 @@
-# 《麦田里的混响》：开发协作约定
+# 《麦田里的混响》开发协作约定
 
-更新：2026-10-12。长期源指令见Docs/Project/REVERB_CONTEXT_V1.md。M01实测见Docs/Verification/M01/REVIEW.md，反馈与显示修复见Docs/Verification/M01-Feedback/REVIEW.md。用户肯定组合乐趣/改变玩法、闪避可保留；声波作用不明显，全屏已修复。用户现已提交首批美术素材，资产清单与实际验证以Docs/Verification/Art-Intake-01/REVIEW.md为准。TASKS_04/05四位交付已收齐，由Codex在integration/rf01-playtest集中整合；本轮验收见Docs/Integration/RF01_ACCEPTANCE.md；已交任务见Docs/Integration/REVERB_TASKS_05.md，TASKS_01/02/03为历史。保持原四位外部AI分担负载，用户转发需求，各AI独立目录/分支交GitHub，Codex审查、本地接线和自动化，再交用户体验验收。
+更新2026-10-12。用户最新指令：取消之前四模式试玩，进入四图战斗/局内成长/美术/音效草稿，使用测试素材，优先丰富局内道具与升级并对齐主流幸存者的构筑体验，设定后置。当前任务唯一入口Docs/Integration/REVERB_TASKS_06.md；设计草稿与并行合同在Docs/Design/RC01/。TASKS_01..05与RF01验收要求保留历史，不能据旧“冻结/不扩道具/等正式美术”限制阻止当前已授权推进。
 
-## 当前范围
+## 工作方式
 
-继续独立“回声＋传播”机制试玩，同时接入用户已提供的地面、植被、调频器与声波VFX候选素材。不自行制作或采购正式素材；“用户提交正式素材”代表来源与使用意图，包内prototyping_only/TEST_ONLY和角色WIP标记仍如实保留，最终品质须用户验收。复用Unity6000.4.3f1/URP17.4.0及已有实验，不扩完整关卡/大框架/存档/装备编辑器，不升级依赖。新方向仍为乡村怪谈/锈蚀机械/迷幻音波，S2首版视觉被拒绝，旧雕塑返工任务撤回。
+保持原四位外部AI：用户转发需求，各自独立分支上传GitHub；Codex审查、管理仓库、共享接线、本地自动化与打包，用户体验每阶段。用户负责感受/方向等必要人工检查；不要把Git冲突/可自动测试任务交给用户。没有Unity如实声明，Codex执行装配并生成meta。初期只编译与关键路径，完备测试/平衡/性能矩阵中后期计划进行。
 
-M01-R1只改机制反馈：回声预备→原目标二次受伤→传播去向与实际结果。回声不是AOE，不靠扩大地面圈暗示范围。保留现有数值/延迟/距离/闪避；组合值得深化已获用户肯定，不重复要求方向确认。Codex修全屏，四位按TASKS_04分担反馈工作；未交付不得宣称新动效/音色已完成。
+长期项目背景Docs/Project/REVERB_CONTEXT_V1.md，用户新指令优先。Windows PC / Unity6000.4.3f1 / URP17.4.0 / 斜俯视3D幸存者，WASD移动/自动攻击/手动闪避，F11全屏。保持乡村怪谈/旧机械/迷幻音波视听统一，但本轮功能名、测试素材与草稿先行，不增加剧情、正式角色制作或正式配乐阻塞玩法。
 
-M01独立场景比较None/Echo/Propagation/Combined，切换即同seed重开；保留WASD/自动攻击/Space闪避/Esc暂停。默认S1/S2不启用新机制。纯规则只由唯一CombatModule应用HP、死亡、掉落；只读PresentationDispatched不能反写伤害。最小可选规则钩子与共享程序集由Codex收口。
+## 当前可交付目标
+
+首轮完整目录6攻击家族/18被动/6进化/6类拾取，4武器槽/6被动槽、三选一＋重抽/放逐/跳过、精英奖励与进化。06A先并行交目录/规则核心/四图草稿/首图装配与视听样板；06B Codex接第一张完整局，先4攻击/10被动/3进化/4拾取、至少3可辨构筑；06C补齐完整目录并逐图实现。只把可获得且有真实效果的项目算实装，不能用换皮/阶数/表格/组合数学夸大丰富度。每个可玩批次用户验收。
+
+四张地图沿背景中的秋收之路、旧农贸市场、第四粮仓、无线电荒原，每图交空间、分钟压力、敌群/事件/奖励与反制草稿。第一张先实际接线，后续复用同一规则链，普通事件不切场传送。
 
 ## 唯一写入范围
 
-| 执行者 | 任务 | 可写范围 |
-|---|---|---|
-| 1号 | TASKS_04规则交付冻结；审查新视效取消/代号/事件边界 | TASKS_05只写Docs/Experiments/M01/ART_INTAKE_RULE_GUARDS.md；规则修复须Codex明确派回 |
-| 2号 | TASKS_04表现交付冻结；独立麦田环境装配 | Assets/Experiments/RyeField/、Docs/Experiments/RF01/；不改M01/用户原始素材 |
-| 主美 | 首批资源与RF01实际镜头审查 | 仅Docs/Art/Reverb/；不得把概念图/源码检查写成实机通过 |
-| 音效总监 | 已交短音冻结；新武器/声波事件声画映射 | 仅Docs/Experiments/M01-Audio/RF01_EVENT_SOUND_MAP.md；无新增BGM授权 |
-| Codex | 首批资源导入、M01-R1整合、VFX时钟与暂停、验证、GitHub | Assets/ReverbInTheRye/、SourceArt/、ArtIntake及共享接线；不同时写外部任务文件 |
+| 执行者 | 唯一范围与责任 |
+|---|---|
+| 1号 | Assets/Waffle/Scripts/Rules/RunContent/Logic/、Data/、Tests/；Docs/Design/RC01/Growth/。成长核心/目录/数值唯一作者；Tests自建Editor-only asmdef，不将NUnit编入运行时Rules |
+| 2号 | Assets/Drafts/RC01/Scenes/、Environments/、Presentation/、Editor/；Docs/Design/RC01/Scenes/。四图战斗草稿、独立场景/UI装配；只读规则 |
+| 主美 | Assets/Drafts/RC01/Art/；Docs/Design/RC01/Art/。测试材质副本/四图风格样板与图示语义 |
+| 音效 | Assets/Drafts/RC01/Audio/；Docs/Design/RC01/Audio/。测试短音/既有循环映射与四图声音草稿 |
+| Codex | 中央任务/合同、RunContentContracts.cs、共享父目录meta、GameLoop/RunSimulation/CombatModule/AudioDirector与程序集最小接线、GitHub和本地验证 |
 
-IMechanismPlaytestControls和MechanismMode是已提交合同，不能自行改名/复制；M01PlaytestController已实现合同，通过M01CombatBridge接唯一CombatModule。模式配置跨场景重开传递，局内队列/预算/计数每局新建，不用static局内状态。1号不复制真实HP，2号不猜EnemyHit来源或实现规则；两者不相互合并分支。重建必须用集成入口M01IntegrationBatch.Setup，基础作者入口只生成未接线场景。
+共享父目录meta已提供，不覆盖不同GUID。四位不互相合并/改文件，不擅改旧规则/管理器/用户原素材；跨范围最小请求交Codex。原PR33 HUD仍未接入，2号不能直接合入其独立Time.timeScale/假生命/假模式逻辑，不另抢Assets/UI目录。
 
-## 工程与交付
+## 唯一权威与合同
 
-最新origin/main是唯一基线。先fetch记录完整SHA，再在独立工作目录开功能分支，不共用Unity Library/Temp、不操作别人窗口、不直接push main、不强推、不升级Package。跨目录只提最小请求，不能复制管理器绕开边界。
+GameLoop→RunSimulation→RunState、GameInput、CombatModule仍唯一。新成长模块只管装备与选择，不复制XP/HP/时钟；Codex接现有经验与升级队列。多武器/拾取效果由同一规则伤害/死亡/掉落链处理；视图不能碰撞扣血、根据粒子计时决定伤害或再造CombatModule。
 
-正式主线沿唯一GameLoop→RunSimulation→RunState、GameInput、CombatModule及AudioDirector/VfxDirector。新玩法只在M01显式启用；新场景不自动替换默认BuildSettings。已提供素材使用SourceArt/Intake01/intake-manifest.json追溯，不把.blend/GLB/离线预览放入Unity Assets重复导入，不擅改原文件。资源检查场景A01不等于游戏场景或美术验收。其余正式美术/音乐/音效/人声由用户提供或指定，作者颜色/数值/服装/字体提案非用户批准要求。
+RunContentContracts.cs已发布Waffle.RunContent的只读快照和选择请求；各作者引用同一合同，不复制。固定ID见Docs/Design/RC01/CONTENT_CONTRACT.md。真实升级暂停/恢复归RunSimulation；HUD不能写Time.timeScale、自己抽卡/切规则或另监听Esc。预览数据只允许显式TEST_ONLY独立预览，无宿主正常场景禁按钮等待接线。
 
-用户已授权Codex常规GitHub管理、审查整合与必要修复，持续有效；大重构/删功能/依赖升级不在授权内。初期只编译/导入与关键路径检查，中后期再按计划完善测试。没有Unity要如实声明，由Codex导入、生成meta、运行，不让用户处理自动化/Git冲突。测试/Profiler观察不能证明美术质量、游戏乐趣或发布性能。Codex实际接线和自动检查后构建独立试玩，再由用户验收。
+玩家四模式面板已移除，普通独立运行固定当前组合基底；内部模式枚举与回归测试可保留，仅用于Editor/显式自动化，不是游戏入口，不再要求用户逐模式验收。成长接线后P12/P13从局内取得，组合自然形成；旧RF01的XP关闭/固定武器实验配置不能延用到新的正式成长试玩。
 
-## RF01 集成收口
+## 素材与工程
 
-RF01IntegrationBatch.Setup 生成独立 RF01_MechanismPlaytest 场景；Build 显式只构建 RF01，不替换默认 BuildSettings。复用唯一 GameLoop/CombatModule/AudioDirector；SonicAttackVFX 仅收真实 Shot/EnemyHit/EnemyKilled，M01DerivedFx 仅收真实派生命中与只读待回声快照。18个Sonic实例开局预热；粒子、干涉Shader和本局克隆的植被材质按局内时钟冻结。Shot事件附带真实发射方向供表现读取，不改伤害规则。终局清除待触发标记，保留本局命中统计。
+用户原素材Assets/ReverbInTheRye和SourceArt/Intake01保留来源/原型标签；角色.blend仍WIP，不自动导入骨骼/假报品质完成。本轮可用现有测试模型/材质/声音与独立副本；不采购、不重塑原模型、不生成正式音乐/人声。主美零塑料/100%可见、音效无爆音等必须有对应实机/测量证据，不能靠源码或平均数认证。
 
-四位已交版本冻结，等待RF01用户验收后再由Codex下达下一轮需求；不要自行扩大地图、导入角色WIP或做新增配乐。主美审查中的“100%无遮挡”、未经Blender实际打开确认的拓扑/骨骼/UV结论仍属待验证提案；Codex的实机证据优先。
+最新origin/main唯一基线，先fetch记录完整SHA，独立功能分支与工作目录，不共用Unity Library/Temp、不操作用户窗口、不直接push main/强推、不升级Package/替换渲染管线/默认BuildSettings。场景由Unity或幂等Editor工具生成，不手写YAML。复制旧场景时先另存至自己的目录，不能调用会重写M01/RF01源场景的Setup。
+
+用户常规GitHub管理、审查整合、必要修复授权持续有效；本轮新增局内道具/成长/地图草稿已明确授权。完备存档经济、剧情、正式制作、无关大重构不在本轮。验收前明确已实现/草稿/未验证，不能将当前测试素材画面称为主流品质已达标。

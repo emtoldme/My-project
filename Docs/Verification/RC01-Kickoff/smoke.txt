@@ -1,0 +1,1 @@
+mode=Combined passed=True movement=True dodge=True pause=True rootScale=True rendered=True echo=9 propagation=12 anticipation=True feedback=True shots=10 direct=10 deaths=3 kills=3 time=8.841 seed=12345

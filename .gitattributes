@@ -172,3 +172,6 @@ LightingData.asset     binary
 
 # Project addition: Unity JSON stays LF across platforms and renders as JSON on GitHub
 *.json                  unity-json
+
+# TerrainData is binary even when Unity uses ForceText for other .asset files.
+Assets/**/Terrain/*.asset binary -eol -linguist-language

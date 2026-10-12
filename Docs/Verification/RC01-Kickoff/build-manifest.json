@@ -1,0 +1,23 @@
+{
+  "label": "RC01 preparation; growth content not implemented",
+  "sourceCommit": "b6504ea72ba8f227731d4525bda640c14ed73abb",
+  "scene": "Assets/Experiments/RyeField/Scenes/RF01_MechanismPlaytest.unity",
+  "normalMode": "Combined",
+  "files": [
+    {
+      "path": "Reverb.exe",
+      "bytes": 667648,
+      "sha256": "748b8feff0cf8e727ed412006cfe11f0591bdfec6bd5634e89acacae0ab8b38e"
+    },
+    {
+      "path": "UnityPlayer.dll",
+      "bytes": 85139880,
+      "sha256": "eabd06b4d7cc2a357c088296d446d689cc4d5534355c7b02b266ad286c1fb22e"
+    },
+    {
+      "path": "Reverb_Data/Managed/Waffle.Rules.dll",
+      "bytes": 52224,
+      "sha256": "e3eb5cba5722865ac83ea293131a707b9420a04ac0b34ac784972920510b2837"
+    }
+  ]
+}
