@@ -32,13 +32,16 @@ namespace Reverb.Drafts.RC01.Presentation
             if (sim != null)
             {
                 var st = sim.State;
-                GUILayout.BeginArea(ImguiScale.Fit(new Rect(16,16,360,148)), GUI.skin.box);
+                GUILayout.BeginArea(ImguiScale.Fit(new Rect(16,16,360,selecting ? 108 : 148)), GUI.skin.box);
                 GUILayout.Label("秋收之路 · 战斗草稿    " + RunHud.FormatClock(st.Now) + " / 10:00");
                 GUILayout.Label("HP " + st.Hp + "/" + st.MaxHp + "    Lv " + st.Level + "    击杀 " + st.Kills);
                 GUILayout.Label("经验 " + st.Xp + "/" + st.XpToNext + "    护盾 " + sim.ShieldCharges);
-                float cd = Mathf.Max(0,sim.DodgeReadyAt-st.Now);
-                GUILayout.Label(cd > 0 ? "闪避 " + cd.ToString("F1") + "s" : "闪避就绪 · Space");
-                GUILayout.Label("WASD移动 · 自动攻击 · Esc暂停 · F11全屏");
+                if (!selecting)
+                {
+                    float cd = Mathf.Max(0,sim.DodgeReadyAt-st.Now);
+                    GUILayout.Label(cd > 0 ? "闪避 " + cd.ToString("F1") + "s" : "闪避就绪 · Space");
+                    GUILayout.Label("WASD移动 · 自动攻击 · Esc暂停 · F11全屏");
+                }
                 GUILayout.EndArea();
             }
             if (view != null)

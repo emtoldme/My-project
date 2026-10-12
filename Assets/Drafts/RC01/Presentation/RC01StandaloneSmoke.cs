@@ -100,12 +100,14 @@ namespace Reverb.Drafts.RC01.Presentation
             Check(sim.State.Phase==RunPhase.Playing && sim.State.PendingLevelUps==0,"queueDrained");
             Check(sim.Growth.RankOf("W01")==5 && sim.Growth.RankOf("P12")>=2,"evolutionPrerequisites");
             if(sim.State.Phase!=RunPhase.Playing) { Finish(); yield break; }
+            // Prevent a debug time jump from filling the enemy pool with historical scheduled waves.
+            sim.Combat.Config.spawningEnabled=false;
             sim.DebugSetTime(241); sim.Combat.DebugSpawnPickup("ELITE",new Vec2(sim.PlayerX,sim.PlayerZ));
             yield return new WaitForSecondsRealtime(.4f);
             var evo=sim.ReadContentView(); bool offered=false; foreach(var c in evo.Choices) if(c.Id=="E01") offered=true;
             Check(offered,"eliteOffersEvolution"); if(offered) Check(loop.TryChoose(evo.OfferToken,"E01"),"evolved");
-            sim.Combat.DebugSpawnEnemy(new Vec2(sim.PlayerX+1.8f,sim.PlayerZ),10000,0);
-            sim.Combat.DebugSpawnEnemy(new Vec2(sim.PlayerX+3,sim.PlayerZ+1),10000,0);
+            Check(sim.Combat.DebugSpawnEnemy(new Vec2(sim.PlayerX+1.8f,sim.PlayerZ),10000,0)!=null,"nearTargetSpawned");
+            Check(sim.Combat.DebugSpawnEnemy(new Vec2(sim.PlayerX+3,sim.PlayerZ+1),10000,0)!=null,"neighborSpawned");
             yield return new WaitForSecondsRealtime(3);
             Check((damageSources.Contains("W01") || damageSources.Contains("E01")) && damageSources.Contains("W02") && damageSources.Contains("W03") && damageSources.Contains("W04"),"fourWeaponDamageFamilies");
             Check(sim.Combat.RunEchoHits>0 && sim.Combat.RunPropagationHits>0,"acquiredMechanismsDealDamage");
@@ -113,7 +115,7 @@ namespace Reverb.Drafts.RC01.Presentation
             ScreenCapture.CaptureScreenshot(Path.Combine(output,"combat-ui.png"));
             yield return new WaitForSecondsRealtime(.15f);
             observations.Add("damageSources="+string.Join(",",damageSources));
-            observations.Add("debugXp=2000 debugTime=241 god=true; this is wiring evidence, not natural balance");
+            observations.Add("debugXp=2000 debugTime=241 god=true spawning=false for jump; this is wiring evidence, not natural balance");
             if(!passed) { Finish(); yield break; }
             awaitingRestart=true; loop.Restart();
         }

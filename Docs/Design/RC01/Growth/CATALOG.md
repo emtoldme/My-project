@@ -2,7 +2,9 @@
 
 基线 `b8d3931c83bf8fc94d678f6c9c127fa6b6a478d4`。代码唯一数据源：`Assets/Waffle/Scripts/Rules/RunContent/Data/RunContentCatalog.cs`（schemaVersion=1）。本文是该数据的说明，数值不一致时以代码为准并视为文档缺陷。所有数值为草稿初值。
 
-## 状态口径（不把表格数量当实装数量）
+> Codex 06B接线更新：下表保留作者06A交付快照；当前代码中首批4/10/3/4已标记Wired，实际可玩与未完成项以Docs/Integration/RC01_ACCEPTANCE.md为准。P12＋P13现有一次有限回声传播组合，不会无限递归。
+
+## 状态口径（06A交付历史快照）
 
 | 状态 | 含义 | 进正常抽卡池 |
 |---|---|---|
