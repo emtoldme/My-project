@@ -1,0 +1,134 @@
+[
+  {
+    "source": "Assets/Audio/S03/bgm_s03_mathrock_polymeter_24s_loop.wav",
+    "output": "Assets/Waffle/S2/Audio/bgm_s03_mathrock_polymeter_24s_loop.wav",
+    "gain_db": 0.0,
+    "attack_fade_seconds": 0.012,
+    "release_fade_seconds": 0.012,
+    "seconds": 24.0,
+    "first_sample": [
+      0.0,
+      0.0
+    ],
+    "last_sample": [
+      -0.0,
+      -0.0
+    ],
+    "source_sha256": "d228c777b492863f1797f512180a4389d9665f4132539517b3207a7f07a68f19",
+    "output_sha256": "bb15b4bd64bdd91524259296ca8641a83e6f004edc7a37880c0989cedf090033"
+  },
+  {
+    "source": "Assets/Audio/S03/bgm_s03_postrock_space_24s_loop.wav",
+    "output": "Assets/Waffle/S2/Audio/bgm_s03_postrock_space_24s_loop.wav",
+    "gain_db": -4.13,
+    "attack_fade_seconds": 0.012,
+    "release_fade_seconds": 0.012,
+    "seconds": 24.0,
+    "first_sample": [
+      -0.0,
+      -0.0
+    ],
+    "last_sample": [
+      0.0,
+      0.0
+    ],
+    "source_sha256": "7d811f3a532808916663b66b922b69fb6369d346b3f23f2c79e3b56c86812754",
+    "output_sha256": "4da6895ce486b2e96ab053bcd62fc98fc304e09e83373d6ef952e577a8cd1b89"
+  },
+  {
+    "source": "Assets/Audio/S03/sfx_s03_dodge.wav",
+    "output": "Assets/Waffle/S2/Audio/sfx_s03_dodge.wav",
+    "gain_db": 0.0,
+    "attack_fade_seconds": 0.001,
+    "release_fade_seconds": 0.008,
+    "seconds": 0.22,
+    "first_sample": [
+      -0.0
+    ],
+    "last_sample": [
+      0.0
+    ],
+    "source_sha256": "8ac41d38c6c1aa44541ff9074b0878404d9e60f6f0023c713a906fb9531a2127",
+    "output_sha256": "3ee9e2d2e26b912af4988c7f864bdf508298aa93fa99bf1a63c53080fad258cd"
+  },
+  {
+    "source": "Assets/Audio/S03/sfx_s03_enemy_hit.wav",
+    "output": "Assets/Waffle/S2/Audio/sfx_s03_enemy_hit.wav",
+    "gain_db": 0.0,
+    "attack_fade_seconds": 0.001,
+    "release_fade_seconds": 0.008,
+    "seconds": 0.07,
+    "first_sample": [
+      -0.0
+    ],
+    "last_sample": [
+      0.0
+    ],
+    "source_sha256": "fd3136c0a4877fda0d9c91ca55bab98adcb147cff66343113740e498a8f8a0d1",
+    "output_sha256": "584ed4d555af875da84b8eb8e00eb328fa50ac6cc8edabb8b06e589916055ca8"
+  },
+  {
+    "source": "Assets/Audio/S03/sfx_s03_gem_pickup.wav",
+    "output": "Assets/Waffle/S2/Audio/sfx_s03_gem_pickup.wav",
+    "gain_db": 0.0,
+    "attack_fade_seconds": 0.001,
+    "release_fade_seconds": 0.008,
+    "seconds": 0.18,
+    "first_sample": [
+      0.0
+    ],
+    "last_sample": [
+      0.0
+    ],
+    "source_sha256": "a025dfa1083664cc73d0e519c5e32be46f2e3a2071f1ebbf6281810e2ca56657",
+    "output_sha256": "3cfc7b8dd3bad419266c2b05a1b3f1a85eab51833feadffc76118b7da76f13a6"
+  },
+  {
+    "source": "Assets/Audio/S03/sfx_s03_levelup_chosen.wav",
+    "output": "Assets/Waffle/S2/Audio/sfx_s03_levelup_chosen.wav",
+    "gain_db": 0.0,
+    "attack_fade_seconds": 0.001,
+    "release_fade_seconds": 0.008,
+    "seconds": 0.65,
+    "first_sample": [
+      0.0
+    ],
+    "last_sample": [
+      0.0
+    ],
+    "source_sha256": "1a838d628698ae8d3ea4cc8bceb2b76138de0c7f72c965b591a85a48eae35efa",
+    "output_sha256": "56d5cf9dfb7df6c6c09a5a0eca7d5ab9fc64fb370dd3c6adfc6601e9a80b515e"
+  },
+  {
+    "source": "Assets/Audio/S03/sfx_s03_player_hurt.wav",
+    "output": "Assets/Waffle/S2/Audio/sfx_s03_player_hurt.wav",
+    "gain_db": 0.0,
+    "attack_fade_seconds": 0.001,
+    "release_fade_seconds": 0.008,
+    "seconds": 0.32,
+    "first_sample": [
+      0.0
+    ],
+    "last_sample": [
+      0.0
+    ],
+    "source_sha256": "c661b870c7ce52d1d56f74d1066ba88b377d40252b45b11bdd73e1fc305c4420",
+    "output_sha256": "620e542b6eec5f1c3da6cc9b3508261e29452da96b1dd73ee7372f50793270c0"
+  },
+  {
+    "source": "Assets/Audio/S03/sfx_s03_shot.wav",
+    "output": "Assets/Waffle/S2/Audio/sfx_s03_shot.wav",
+    "gain_db": 0.0,
+    "attack_fade_seconds": 0.001,
+    "release_fade_seconds": 0.008,
+    "seconds": 0.09,
+    "first_sample": [
+      0.0
+    ],
+    "last_sample": [
+      0.0
+    ],
+    "source_sha256": "1b57bc9a266bada20e118934c75c084dc481453c9a1c414180a23aeef1c946bc",
+    "output_sha256": "ef8e1849827515b9f10e458b41c4cd9ba37d9f339a1074d53880c2b08108ae5a"
+  }
+]

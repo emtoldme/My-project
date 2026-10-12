@@ -59,7 +59,8 @@ namespace Waffle
         private MaterialPropertyBlock block;
         private Renderer[] playerRenderers;
         private SkinnedMeshRenderer playerSkin;
-        private MeshFilter playerMeshFilter;
+        private MeshFilter[] playerMeshFilters;
+        private CombineInstance[] playerCombines;
         private float hurtFlashLeft;
         private bool secondAfterimagePending;
         private float secondAfterimageLeft;
@@ -82,11 +83,22 @@ namespace Waffle
                 playerRenderers = playerVisual.GetComponentsInChildren<Renderer>(true);
                 playerSkin = playerVisual.GetComponentInChildren<SkinnedMeshRenderer>(true);
                 if (playerSkin == null)
+                {
+                    var filters = new List<MeshFilter>();
+                    var combines = new List<CombineInstance>();
                     foreach (var filter in playerVisual.GetComponentsInChildren<MeshFilter>())
                     {
                         var renderer = filter.GetComponent<MeshRenderer>();
-                        if (renderer != null && renderer.enabled) { playerMeshFilter = filter; break; }
+                        if (renderer == null || !renderer.enabled || filter.sharedMesh == null) continue;
+                        for (int sub = 0; sub < filter.sharedMesh.subMeshCount; sub++)
+                        {
+                            filters.Add(filter);
+                            combines.Add(new CombineInstance { mesh = filter.sharedMesh, subMeshIndex = sub });
+                        }
                     }
+                    playerMeshFilters = filters.ToArray();
+                    playerCombines = combines.ToArray();
+                }
             }
         }
 
@@ -100,6 +112,7 @@ namespace Waffle
         {
             if (subscribed != null) subscribed.PresentationDispatched -= OnEvents;
             subscribed = null;
+            ClearAll();
         }
 
         private Fx CreateFx(PrimitiveType type, Material mat, string name)
@@ -212,9 +225,19 @@ namespace Waffle
                 // snapshot transform. The default overload baked it twice (~23x).
                 playerSkin.BakeMesh(fx.bakedMesh, true);
             }
-            else if (playerMeshFilter != null) mf.sharedMesh = playerMeshFilter.sharedMesh;
+            else if (playerMeshFilters != null && playerMeshFilters.Length > 0)
+            {
+                // Capture all sculpture parts in the visual root's coordinate space.
+                // Arrays and destination meshes are preheated; only the pose changes.
+                Matrix4x4 toLocal = playerVisual.worldToLocalMatrix;
+                for (int i = 0; i < playerMeshFilters.Length; i++)
+                    playerCombines[i].transform = toLocal * playerMeshFilters[i].transform.localToWorldMatrix;
+                fx.bakedMesh.Clear();
+                fx.bakedMesh.CombineMeshes(playerCombines, true, true);
+                mf.sharedMesh = fx.bakedMesh;
+            }
             else return;
-            Transform src = playerSkin != null ? playerSkin.transform : (playerMeshFilter != null ? playerMeshFilter.transform : playerVisual);
+            Transform src = playerSkin != null ? playerSkin.transform : playerVisual;
             fx.go.transform.rotation = src.rotation;
             fx.velocity = Vector3.zero; fx.shrink = false;
             Activate(fx, src.position, src.lossyScale, afterimageDuration);

@@ -1,0 +1,17 @@
+{
+    "name": "Waffle.S2",
+    "rootNamespace": "Waffle.S2",
+    "references": [
+        "Waffle.Rules",
+        "Waffle.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

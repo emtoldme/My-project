@@ -39,6 +39,7 @@ namespace Waffle
 
         private RunPhase lastPhase;
         private bool restarting;
+        private InputActionAsset runActions;
 
         private void Awake()
         {
@@ -46,7 +47,14 @@ namespace Waffle
             Sim = new RunSimulation(config, new UnityRunLog(), combatConfig ?? new CombatConfig());
 
             InputActionAsset asset = actions != null ? actions : InputSystem.actions;
-            Controls = new GameInput(asset);
+            // Scene unload can destroy the old loop after the new loop wakes up.
+            // Each run owns its enabled maps so old cleanup cannot disable new input.
+            if (asset != null)
+            {
+                asset.Disable();
+                runActions = Instantiate(asset);
+            }
+            Controls = new GameInput(runActions);
 
             Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
             if (cam != null)
@@ -178,6 +186,7 @@ namespace Waffle
         private void OnDestroy()
         {
             if (Controls != null) Controls.DisableAll();
+            if (runActions != null) Destroy(runActions);
         }
     }
 }
