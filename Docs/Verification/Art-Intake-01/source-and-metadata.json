@@ -1,0 +1,389 @@
+{
+  "inputFiles": 98,
+  "inputHashMismatches": [],
+  "uniqueGuids": 538,
+  "duplicateGuids": {},
+  "newAssetMissingMeta": [],
+  "textures": [
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Textures/Rye_Foliage_Atlas.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DenseStraw_BaseColor.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DenseStraw_MetallicSmoothness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "metallic_min": 0,
+      "metallic_max": 0,
+      "metallic_mean": 0.0,
+      "smoothness_mean": 0.108043779111376
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DenseStraw_Normal.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DrySoil_BaseColor.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DrySoil_MetallicSmoothness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "metallic_min": 0,
+      "metallic_max": 0,
+      "metallic_mean": 0.0,
+      "smoothness_mean": 0.1499856761857575
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DrySoil_Normal.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_TrampledPath_BaseColor.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_TrampledPath_MetallicSmoothness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "metallic_min": 0,
+      "metallic_max": 0,
+      "metallic_mean": 0.0,
+      "smoothness_mean": 0.15803920147465725
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_TrampledPath_Normal.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_BaseColor.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_Metallic.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_Normal_OpenGL.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_Roughness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_Unity_MetallicSmoothness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "metallic_min": 0,
+      "metallic_max": 235,
+      "metallic_mean": 0.08616060369154986,
+      "smoothness_mean": 0.32396493425556255
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_BaseColor.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_Metallic.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_Normal_OpenGL.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_Roughness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_Unity_MetallicSmoothness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "metallic_min": 194,
+      "metallic_max": 250,
+      "metallic_mean": 0.9412416607725854,
+      "smoothness_mean": 0.6147018245622223
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_BaseColor.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_Metallic.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_Normal_OpenGL.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_Roughness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_Unity_MetallicSmoothness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "metallic_min": 153,
+      "metallic_max": 242,
+      "metallic_mean": 0.8773980869966395,
+      "smoothness_mean": 0.6093039045146867
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_BaseColor.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_Metallic.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_Normal_OpenGL.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_Roughness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_Unity_MetallicSmoothness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "metallic_min": 0,
+      "metallic_max": 0,
+      "metallic_mean": 0.0,
+      "smoothness_mean": 0.6399979647468118
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_BaseColor.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_Metallic.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_Normal_OpenGL.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_Roughness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_Unity_MetallicSmoothness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "metallic_min": 0,
+      "metallic_max": 0,
+      "metallic_mean": 0.0,
+      "smoothness_mean": 0.26994444155225567
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_BaseColor.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_Metallic.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_Normal_OpenGL.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_Roughness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "L"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_Unity_MetallicSmoothness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "metallic_min": 0,
+      "metallic_max": 0,
+      "metallic_mean": 0.0,
+      "smoothness_mean": 0.09997860777611826
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/07_Tube_Filament_Emission.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/08_Analog_Meter_Face_RGBA.png",
+      "size": [
+        1024,
+        512
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/09_Tuning_Dial_RGBA.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA"
+    }
+  ]
+}

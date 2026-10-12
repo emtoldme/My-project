@@ -1,0 +1,38 @@
+{
+  "project": "Reverb in the Rye",
+  "version": "0.2",
+  "engine": "Unity 6 URP",
+  "source_type": "AI reference images and procedurally quilted derivatives",
+  "texture_resolution": [
+    1024,
+    1024
+  ],
+  "materials": [
+    {
+      "name": "Ground_DrySoil",
+      "maps": [
+        "BaseColor",
+        "Normal",
+        "MetallicSmoothness"
+      ]
+    },
+    {
+      "name": "Ground_DenseStraw",
+      "maps": [
+        "BaseColor",
+        "Normal",
+        "MetallicSmoothness"
+      ]
+    },
+    {
+      "name": "Ground_TrampledPath",
+      "maps": [
+        "BaseColor",
+        "Normal",
+        "MetallicSmoothness"
+      ]
+    }
+  ],
+  "prototyping_only": true,
+  "license_provenance_note": "Verify rights and remake with production-quality PBR before release."
+}

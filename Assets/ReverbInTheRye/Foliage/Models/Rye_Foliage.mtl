@@ -1,0 +1,9 @@
+# Atlas-based original rye foliage material
+newmtl Rye_Foliage
+Ka 0.18 0.18 0.18
+Kd 1.0 1.0 1.0
+Ks 0.02 0.02 0.02
+Ns 8.0
+d 1.0
+illum 2
+map_Kd ../Textures/Rye_Foliage_Atlas.png

@@ -1,0 +1,594 @@
+{
+  "base": "d143e7adefeb321c4b1fa6668f1cb493d4c8947e",
+  "note": "Original input hashes; runtime adaptations are recorded separately. Character files remain WIP, outside Unity Assets.",
+  "files": [
+    {
+      "path": "SourceArt/Intake01/Ground/Ground_TrampledPath_Repeat_2x2.jpg",
+      "source": "ReverbInTheRye_Ground_v02.zip!Ground_TrampledPath_Repeat_2x2.jpg",
+      "bytes": 330447,
+      "sha256": "e765943e3b498d34906cf21409fe039b6ce1a6654532a7f569ecd0ddd51ebdd4"
+    },
+    {
+      "path": "SourceArt/Intake01/Ground/Ground_DenseStraw_Repeat_2x2.jpg",
+      "source": "ReverbInTheRye_Ground_v02.zip!Ground_DenseStraw_Repeat_2x2.jpg",
+      "bytes": 378942,
+      "sha256": "92c0cf77d4921e093866e9354bb32f4795141bd71f076acd08ddb6fcfede1002"
+    },
+    {
+      "path": "SourceArt/Intake01/Ground/README_使用说明.txt",
+      "source": "ReverbInTheRye_Ground_v02.zip!README_使用说明.txt",
+      "bytes": 3149,
+      "sha256": "7a81aa06e02be216beb4898dbfba7800c9fadfaf79d5019291d701ae6f07f133"
+    },
+    {
+      "path": "SourceArt/Intake01/Ground/Ground_Pack_Overview.jpg",
+      "source": "ReverbInTheRye_Ground_v02.zip!Ground_Pack_Overview.jpg",
+      "bytes": 517136,
+      "sha256": "1025fc4b7adf8cdfcce13a4e92c208e7e918814121d7b94819d17d00e703b13c"
+    },
+    {
+      "path": "SourceArt/Intake01/Ground/Rye_Field_Blend_Concept.jpg",
+      "source": "ReverbInTheRye_Ground_v02.zip!Rye_Field_Blend_Concept.jpg",
+      "bytes": 678994,
+      "sha256": "a9227d22bbf9a588ce2c07b7cfb71d33f0cddec5ddcbea87ce791202779639ac"
+    },
+    {
+      "path": "SourceArt/Intake01/Ground/Ground_DrySoil_Repeat_2x2.jpg",
+      "source": "ReverbInTheRye_Ground_v02.zip!Ground_DrySoil_Repeat_2x2.jpg",
+      "bytes": 439474,
+      "sha256": "032ec0e7d334ed79e42706f238d64141b1ad3f43075ec504696ba2e5ce49c58c"
+    },
+    {
+      "path": "SourceArt/Intake01/Ground/manifest.json",
+      "source": "ReverbInTheRye_Ground_v02.zip!manifest.json",
+      "bytes": 779,
+      "sha256": "fc2e2273fd64bdddcf5cc2a221c3b4ac70084f6bcbc2334fa1b55df9178140d9"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_TrampledPath_MetallicSmoothness.png",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Textures/Ground_TrampledPath_MetallicSmoothness.png",
+      "bytes": 190268,
+      "sha256": "764beec2f8a6783dce2297d0c8c85d1d211d301f451231aa92c71f1ae49ce2cd"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DrySoil_Normal.png",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Textures/Ground_DrySoil_Normal.png",
+      "bytes": 1482434,
+      "sha256": "d05696e983080a4bdb2a7b21abca0994156285efccf0cd276dcb70e211331edd"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DrySoil_MetallicSmoothness.png",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Textures/Ground_DrySoil_MetallicSmoothness.png",
+      "bytes": 181610,
+      "sha256": "d5ba7c358a0fd00c8a166134af17d850ad5a6ef552e491c4996e15749dd173b9"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DenseStraw_BaseColor.png",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Textures/Ground_DenseStraw_BaseColor.png",
+      "bytes": 2255789,
+      "sha256": "8e48fe024fe6955208b5fe708431739d289e2224c92bcb011b5bc9c325c431de"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_TrampledPath_Normal.png",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Textures/Ground_TrampledPath_Normal.png",
+      "bytes": 1120397,
+      "sha256": "b6cdc0dfa5461bcb7ffcb434e27f48305c3cd73584b6b86ed9dc5b69491ad71f"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_TrampledPath_BaseColor.png",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Textures/Ground_TrampledPath_BaseColor.png",
+      "bytes": 2121333,
+      "sha256": "608bdc5b69ce6d2131fd8019589503650a8b02a12d60f56c0d404d998a95e56c"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DenseStraw_MetallicSmoothness.png",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Textures/Ground_DenseStraw_MetallicSmoothness.png",
+      "bytes": 214300,
+      "sha256": "fb2a4ec62b0354728a2d635ac79cbc85a44ea0e6b02adf2776ceab7d5de76e9e"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DenseStraw_Normal.png",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Textures/Ground_DenseStraw_Normal.png",
+      "bytes": 1305678,
+      "sha256": "967034c00d099793727d9b433603b88d20f61c4336fd55b00ad5d495ea02be98"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Textures/Ground_DrySoil_BaseColor.png",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Textures/Ground_DrySoil_BaseColor.png",
+      "bytes": 2400000,
+      "sha256": "f78a316d5770e42e04ad2de7a81ab1088588b5efe6c3dbecf354c4fc3a6f1fdf"
+    },
+    {
+      "path": "SourceArt/Intake01/Ground/Original_ReverbGroundSetup.cs.txt",
+      "source": "ReverbInTheRye_Ground_v02.zip!Assets/ReverbInTheRye/Ground/Editor/ReverbGroundSetup.cs",
+      "bytes": 4650,
+      "sha256": "8890fbf386b9612ccf3647747361dbb919ceaba98297ad54ed248d312b92cb96"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/README_导入与使用.md",
+      "source": "ReverbInTheRye_Foliage_v01.zip!README_导入与使用.md",
+      "bytes": 6175,
+      "sha256": "854435b0a47f8a47e70f20d26bacfbb7b2af6b9aa93997925b08ac603ca949a2"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/mesh_stats.json",
+      "source": "ReverbInTheRye_Foliage_v01.zip!mesh_stats.json",
+      "bytes": 1616,
+      "sha256": "d6d279fed1c1991535d9de974822ad36a5abf1a1569fb99ad1b1eb4ecb1951db"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Previews/Wheat_Cluster_B_Preview.jpg",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Previews/Wheat_Cluster_B_Preview.jpg",
+      "bytes": 24349,
+      "sha256": "a517f3639478547bf12934c682f7eb031badc121443c8b38eab5c9761672ef78"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Previews/Cut_Stubble_A_Preview.jpg",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Previews/Cut_Stubble_A_Preview.jpg",
+      "bytes": 18959,
+      "sha256": "e9f9ae50e418637d293ad6f6eba8d16f0f8adb90b4999d57420b34051192b429"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Previews/Wheat_Cluster_A_Preview.jpg",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Previews/Wheat_Cluster_A_Preview.jpg",
+      "bytes": 24726,
+      "sha256": "689f892745f0a5803e29fadc7fa0d9d7236d8961f2c6249f99aff25a96a439a1"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Previews/Foliage_Models_Overview.jpg",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Previews/Foliage_Models_Overview.jpg",
+      "bytes": 122339,
+      "sha256": "2b8997960173b71c090a7168efc76688597bdf8fa5ebc7f5d65e6287bf127862"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Previews/Wheat_Field_Geometry_Preview.jpg",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Previews/Wheat_Field_Geometry_Preview.jpg",
+      "bytes": 548111,
+      "sha256": "d16d7bf718d6788f4b152136485fdd0ca3ee6a8c3c651e8675a3553b2f431f5d"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Previews/Wild_Grass_A_Preview.jpg",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Previews/Wild_Grass_A_Preview.jpg",
+      "bytes": 19560,
+      "sha256": "a71e111c17b32427c7cf1aeba153cd33a1271f74e3b859413c40a06ff245664e"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Source/render_rye_foliage_preview.py",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Source/render_rye_foliage_preview.py",
+      "bytes": 6075,
+      "sha256": "a7e437cd79ce936850768ea9a2ad62329532f9f935dd7a5ab2b8c6868e2449c0"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Source/build_rye_foliage.py",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Source/build_rye_foliage.py",
+      "bytes": 10281,
+      "sha256": "109302a0d77d685f8d0970338ce35333b03d582da66e4b5d8b5cced58c772123"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Blender_Models/Wheat_Cluster_B_LOD1.glb",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Blender_Models/Wheat_Cluster_B_LOD1.glb",
+      "bytes": 1265928,
+      "sha256": "562b77ea0de525042571210918c53d86875b8e31f5a400f00370fb0b1df6d630"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Blender_Models/Wild_Grass_A.glb",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Blender_Models/Wild_Grass_A.glb",
+      "bytes": 1263912,
+      "sha256": "61be2c61f15091edbe6dd35bf2d39bb526e0245b8358ec061ec6be99e5ba51fa"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Blender_Models/Wheat_Cluster_B.glb",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Blender_Models/Wheat_Cluster_B.glb",
+      "bytes": 1297904,
+      "sha256": "2d803dc8d646a5baf52d765ae637ea19feeca1d7be12dd3c37a5ffaf63274a24"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Blender_Models/Cut_Stubble_A.glb",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Blender_Models/Cut_Stubble_A.glb",
+      "bytes": 1272268,
+      "sha256": "8415dc156ee7758ae042fcfe8c79b1b9425163ed8dcfad7cea093e30fcd6a507"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Blender_Models/Wheat_Cluster_A.glb",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Blender_Models/Wheat_Cluster_A.glb",
+      "bytes": 1310432,
+      "sha256": "c76c9c5d438a4760dbf97484dc566bae48a3acaf6fa9b349dd05ec80e65dc1e1"
+    },
+    {
+      "path": "SourceArt/Intake01/Foliage/Blender_Models/Wheat_Cluster_A_LOD1.glb",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Blender_Models/Wheat_Cluster_A_LOD1.glb",
+      "bytes": 1271984,
+      "sha256": "26f58a2e3954e781007b1911dfd5f4a0b0dc2da7603dd4189626ad6cf2cefcad"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Textures/Rye_Foliage_Atlas.png",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Textures/Rye_Foliage_Atlas.png",
+      "bytes": 1135246,
+      "sha256": "bc73b5d08a05904892489f0e362fc3d4ef8cbb620c05a2e426ec6383bd54e2cb"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Shaders/RyeFoliageWind.shader",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Shaders/RyeFoliageWind.shader",
+      "bytes": 6647,
+      "sha256": "b4cbd07bffc856ae8b59f9f996d208d85404e27220d6bc81e67393e60dd3dd2a"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Models/Wheat_Cluster_B_LOD1.obj",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Models/Wheat_Cluster_B_LOD1.obj",
+      "bytes": 44847,
+      "sha256": "3e6316b32ecb5a00d20131e8bd8bbe239da41cebf12ba4a507e9c838a7c14673"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Models/Wheat_Cluster_A_LOD1.obj",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Models/Wheat_Cluster_A_LOD1.obj",
+      "bytes": 59655,
+      "sha256": "e3322583beb71ef0330687ef20cf46a7f731f5eda18376aa51845e3ba6788d46"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Models/Wild_Grass_A.obj",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Models/Wild_Grass_A.obj",
+      "bytes": 39988,
+      "sha256": "ac3858e11d128909493c86b0e7d1cfa5f9bad98c162430465884a663ad8d34c8"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Models/Rye_Foliage.mtl",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Models/Rye_Foliage.mtl",
+      "bytes": 176,
+      "sha256": "b24c32c4f613adcd656a154453535fe23d6fd29198b38514556628c2d3ad3cc1"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Models/Wheat_Cluster_B.obj",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Models/Wheat_Cluster_B.obj",
+      "bytes": 125798,
+      "sha256": "80e798b6d936f3b6d0fe0aa2faae9a1ebcabcfba64641abc85965772b53c4633"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Models/Wheat_Cluster_A.obj",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Models/Wheat_Cluster_A.obj",
+      "bytes": 158502,
+      "sha256": "7186f7050d4596369e999837687297f00347388414073beebccf02c047de1254"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Models/Cut_Stubble_A.obj",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Models/Cut_Stubble_A.obj",
+      "bytes": 61009,
+      "sha256": "13e447a6a8f6f102a091db83f528a73b02a0e89d3c2f354123ef4d2c0022cb6d"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Foliage/Editor/ReverbFoliageSetup.cs",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Foliage/Editor/ReverbFoliageSetup.cs",
+      "bytes": 7433,
+      "sha256": "0bb9cdb9250e949db73b2f635e523ae8215ec5deae6be8cb318db4e471ce55c9"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Ground/Editor/ReverbGroundSetup.cs",
+      "source": "ReverbInTheRye_Foliage_v01.zip!Assets/ReverbInTheRye/Ground/Editor/ReverbGroundSetup.cs",
+      "bytes": 4651,
+      "sha256": "03681cc0f35b7b189ddb97a836c620b8cebaffdca807e9cd010933f9bb868f37"
+    },
+    {
+      "path": "SourceArt/Intake01/SonicVFX/Docs/README_导入与预览.md",
+      "source": "ReverbInTheRye_SonicVFX_v0.1.zip!Docs/README_导入与预览.md",
+      "bytes": 6298,
+      "sha256": "b7466acf0181dc3da966fa66456d526a23ed45dae5b75e7a3753c3fe12166fc2"
+    },
+    {
+      "path": "SourceArt/Intake01/SonicVFX/Docs/Codex_技术验证提示词.md",
+      "source": "ReverbInTheRye_SonicVFX_v0.1.zip!Docs/Codex_技术验证提示词.md",
+      "bytes": 2870,
+      "sha256": "8c740d5d57f7cd7c17da2ea716446cd5804d87838f38af5ab2865f914b207208"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/VFX/Scripts/SonicAttackVFX.cs",
+      "source": "ReverbInTheRye_SonicVFX_v0.1.zip!Scripts/SonicAttackVFX.cs",
+      "bytes": 16767,
+      "sha256": "2affda50145f51f3d1930958495ce295ead7eebae2a426546d8e2e65448721f7"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/VFX/Shaders/ResonancePulseURP.shader",
+      "source": "ReverbInTheRye_SonicVFX_v0.1.zip!Shaders/ResonancePulseURP.shader",
+      "bytes": 3158,
+      "sha256": "62997606ba4700da4edfdf44ebff4d82f29f768a26cc6d428c81418d123c6aff"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/VFX/Shaders/StrawDustURP.shader",
+      "source": "ReverbInTheRye_SonicVFX_v0.1.zip!Shaders/StrawDustURP.shader",
+      "bytes": 1846,
+      "sha256": "3243c8797aaa708d4aea67e74713d4c169e20102e9d6dfc60af85d5eccfd1484"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/VFX/Editor/SonicVFXSetupEditor.cs",
+      "source": "ReverbInTheRye_SonicVFX_v0.1.zip!Editor/SonicVFXSetupEditor.cs",
+      "bytes": 3104,
+      "sha256": "63fa46830ebd85470d7d938f92acddd167095db12bc1d46f75c920cfa5528a59"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_BaseColor.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\01_Olive_ChippedPaint_BaseColor.png",
+      "bytes": 781076,
+      "sha256": "9dca32c110338ab15b2300cc047a853092d6841c788b6841a101df29bcec5efd"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_Metallic.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\01_Olive_ChippedPaint_Metallic.png",
+      "bytes": 238704,
+      "sha256": "d0d63752ff0759a86d2201e3a02be54db3febcc0aa64307fabdd4bd4dc0b5631"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_Normal_OpenGL.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\01_Olive_ChippedPaint_Normal_OpenGL.png",
+      "bytes": 1445661,
+      "sha256": "0ba1171326b496d351173e8241a2fd63e581b6a2e2d38e159a3e678fae0ffc35"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_Roughness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\01_Olive_ChippedPaint_Roughness.png",
+      "bytes": 382202,
+      "sha256": "2fe9db4d3571c9bbe61b1ceec3896430943291ba347cb706ecd8703e608bc80b"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/01_Olive_ChippedPaint_Unity_MetallicSmoothness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\01_Olive_ChippedPaint_Unity_MetallicSmoothness.png",
+      "bytes": 897819,
+      "sha256": "207d88033701e0264abaaf482e4dfa4834cacd55e6d86b6895d9614038089bf7"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_BaseColor.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\02_Aged_Brass_BaseColor.png",
+      "bytes": 610135,
+      "sha256": "da8f12fec83c54ac651a570428fb6d52c2dd318f0572bcc2a04a7c3fc54b19f3"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_Metallic.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\02_Aged_Brass_Metallic.png",
+      "bytes": 130537,
+      "sha256": "2eaeef03c04a423cce21493b9d3cf663c1084c3e01547059fd23b6baae2726d3"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_Normal_OpenGL.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\02_Aged_Brass_Normal_OpenGL.png",
+      "bytes": 978942,
+      "sha256": "ce348c7a08f48cd36fa24514677c45ecb31d0583e5065bcd063e317ad86b75d5"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_Roughness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\02_Aged_Brass_Roughness.png",
+      "bytes": 260745,
+      "sha256": "28db40b684c68e0ed3b8bec84456faaa3421eb8602176550cda8068cdf7aceb4"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/02_Aged_Brass_Unity_MetallicSmoothness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\02_Aged_Brass_Unity_MetallicSmoothness.png",
+      "bytes": 552192,
+      "sha256": "aa769994bdb73514431e7a3173e2a035937dbe1a630dbb0f47cddf7740310f7b"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_BaseColor.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\03_Oxidized_Copper_BaseColor.png",
+      "bytes": 515624,
+      "sha256": "2268ea0f6677a20434af24bef8d470741475a9bb8d0dbf705511d812cc78278b"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_Metallic.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\03_Oxidized_Copper_Metallic.png",
+      "bytes": 147556,
+      "sha256": "87ddb13127a3cfe53de4f5c9e26c237b5d14c634e5b730d1d5bd4fc8bc6267d9"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_Normal_OpenGL.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\03_Oxidized_Copper_Normal_OpenGL.png",
+      "bytes": 1161876,
+      "sha256": "c3a6d7b24865f84f6818e66423669043c85a27c8a314b35836f5da4e167df4e8"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_Roughness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\03_Oxidized_Copper_Roughness.png",
+      "bytes": 396096,
+      "sha256": "caaca35ce3ca0eab380749670113178e36577045c053340803e95c2f68450b62"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/03_Oxidized_Copper_Unity_MetallicSmoothness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\03_Oxidized_Copper_Unity_MetallicSmoothness.png",
+      "bytes": 799534,
+      "sha256": "b69dd7822de362b2648145fb5226a53336e198fef89b7602a2db6dc3467c3b3a"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_BaseColor.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\04_Brown_Bakelite_BaseColor.png",
+      "bytes": 192884,
+      "sha256": "9fb56ea67ec2753c7a2526f5e6dad73ee74cf89f78d1251425f9cddba6ec9535"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_Metallic.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\04_Brown_Bakelite_Metallic.png",
+      "bytes": 1097,
+      "sha256": "c8b6bb3e837f846489438b47ae42f3960b820a17095ea66df3c5fa00fcd60665"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_Normal_OpenGL.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\04_Brown_Bakelite_Normal_OpenGL.png",
+      "bytes": 1834108,
+      "sha256": "aab0333c28624f3da2a86007139b21723dae14cd960c66d5218ad8ee2898af48"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_Roughness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\04_Brown_Bakelite_Roughness.png",
+      "bytes": 518700,
+      "sha256": "d964ec4e855966b39f255f7ae4fdaca4962689f61516c354b78e6df6eec3e078"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/04_Brown_Bakelite_Unity_MetallicSmoothness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\04_Brown_Bakelite_Unity_MetallicSmoothness.png",
+      "bytes": 792248,
+      "sha256": "2c2c7c404125b468f1f68354e917601949986b219828632108ee935d3aa5467f"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_BaseColor.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\05_Worn_Wood_BaseColor.png",
+      "bytes": 751419,
+      "sha256": "bda45d83f334dfef78dadf82650f06337ffb4a263d9a5ccdb5a432b03357c838"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_Metallic.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\05_Worn_Wood_Metallic.png",
+      "bytes": 1097,
+      "sha256": "c8b6bb3e837f846489438b47ae42f3960b820a17095ea66df3c5fa00fcd60665"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_Normal_OpenGL.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\05_Worn_Wood_Normal_OpenGL.png",
+      "bytes": 1955203,
+      "sha256": "03758767e4e52b97a2df97385bfbdf0d1ba464d33e266f8ce59bb05e4a69df15"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_Roughness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\05_Worn_Wood_Roughness.png",
+      "bytes": 266499,
+      "sha256": "42933735514327577a21248bee8176de169d0363f418c4b8187b5c6b9dc38081"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/05_Worn_Wood_Unity_MetallicSmoothness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\05_Worn_Wood_Unity_MetallicSmoothness.png",
+      "bytes": 399379,
+      "sha256": "a3d1cee858cab1f59a2ad6a135575a3afec230b857469ea1010b733257ad0a9d"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_BaseColor.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\06_Dusty_Canvas_BaseColor.png",
+      "bytes": 770501,
+      "sha256": "188aa199d0747c58d3748b40992e093a5b4b4b084d07e635451b48ba764eba24"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_Metallic.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\06_Dusty_Canvas_Metallic.png",
+      "bytes": 1097,
+      "sha256": "c8b6bb3e837f846489438b47ae42f3960b820a17095ea66df3c5fa00fcd60665"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_Normal_OpenGL.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\06_Dusty_Canvas_Normal_OpenGL.png",
+      "bytes": 1360615,
+      "sha256": "5173a36798ea61b0ab2496126a30f6842b92d026d3452a169a70ba63528f3042"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_Roughness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\06_Dusty_Canvas_Roughness.png",
+      "bytes": 241626,
+      "sha256": "cf4c3827c4060aec600949cd8e259c6be4946b33462cbf0f3c5216f16bc0e6da"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/06_Dusty_Canvas_Unity_MetallicSmoothness.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\06_Dusty_Canvas_Unity_MetallicSmoothness.png",
+      "bytes": 357816,
+      "sha256": "924e2e5d1c771e8a5f445c86142c93704775e2d2fbc11c846ce78be3b3af855f"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/07_Tube_Filament_Emission.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\07_Tube_Filament_Emission.png",
+      "bytes": 116287,
+      "sha256": "2de216b0de40c2be2b311a4dbfde82907da34d2d1e1a0f6bf3586037e0dc2117"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/08_Analog_Meter_Face_RGBA.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\08_Analog_Meter_Face_RGBA.png",
+      "bytes": 17309,
+      "sha256": "afb4f9a0f6d573bde5838b3e72c7ae840dbceaef23213f97b605e45bcf4e928e"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Textures/09_Tuning_Dial_RGBA.png",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\textures\\09_Tuning_Dial_RGBA.png",
+      "bytes": 29662,
+      "sha256": "fae5f111f8100693a79211f59f7a5767b2e0a31e338a4c48b03cfff50a944f92"
+    },
+    {
+      "path": "Assets/ReverbInTheRye/Weapons/OldSonicModulator/Models/WPN_OldSonicModulator.fbx",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\WPN_OldSonicModulator.fbx",
+      "bytes": 462476,
+      "sha256": "a7fbc028dfccd54fea31c4fc88889c7b4da8780811ef993a221743b4e40018bf"
+    },
+    {
+      "path": "SourceArt/Intake01/Weapon/Old_Sonic_Modulator.blend",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\Old_Sonic_Modulator.blend",
+      "bytes": 337549,
+      "sha256": "2b09fdcd2b24ef756f09ae1b7fd248d54bb1d88bbaa3109c6d5e06eb484737d1"
+    },
+    {
+      "path": "SourceArt/Intake01/Weapon/README_中文_制作指南.md",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\README_中文_制作指南.md",
+      "bytes": 6226,
+      "sha256": "fc807f95c039b3cdc783e57b07e2f7f37fd9e722667481be8c9e359b659145d8"
+    },
+    {
+      "path": "SourceArt/Intake01/Weapon/generate_weapon.py",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\generate_weapon.py",
+      "bytes": 16135,
+      "sha256": "463c044602e093f214e77031a3e827389a47853a9f90be5bfcaee9cb0ec428c1"
+    },
+    {
+      "path": "SourceArt/Intake01/Weapon/refine_tubes.py",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\refine_tubes.py",
+      "bytes": 10608,
+      "sha256": "b708eef3f1b8076b8bd6144042d5dd752dd5306eee4f1cf0b8d1e2b0fac76fb3"
+    },
+    {
+      "path": "SourceArt/Intake01/Weapon/upgrade_tubes.py",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\upgrade_tubes.py",
+      "bytes": 8003,
+      "sha256": "02afac74597dc25163a041ecbb1ec2f92b027ff8daab83691c0df276cf912029"
+    },
+    {
+      "path": "SourceArt/Intake01/Weapon/材质预览图.jpg",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\材质预览图.jpg",
+      "bytes": 170696,
+      "sha256": "065a5b8c45ede7458ea0cce1f5d77f81055f71cf15eb448d21e29b82b5bde159"
+    },
+    {
+      "path": "SourceArt/Intake01/Weapon/Blender_Install_PBR_Materials.py",
+      "source": "G:\\图书馆\\Old_Sonic_Modulator_AssetKit\\scripts\\Blender_Install_PBR_Materials.py",
+      "bytes": 4374,
+      "sha256": "d42cd0a1ea8ccdfb9a8e07789c326f8c99ea3d4f11adb104e407e976bdc7aec8"
+    },
+    {
+      "path": "SourceArt/Intake01/CharacterWIP/Protagonist_Blockout_v01.blend",
+      "source": "G:\\图书馆\\新建文件夹 (2)\\Protagonist_Blockout_v01.blend",
+      "bytes": 96117,
+      "sha256": "6f6519d6af663c377307f6b1f8ba01fdab56ee933bf9535c41208a35c735dbfe"
+    },
+    {
+      "path": "SourceArt/Intake01/CharacterWIP/Protagonist_Blockout_FrontView.png",
+      "source": "G:\\图书馆\\新建文件夹 (2)\\Protagonist_Blockout_FrontView.png",
+      "bytes": 491110,
+      "sha256": "054d86818dbef26aff2ffc6d803864a7f81a13a1a027e0e21a108f38c8b78163"
+    },
+    {
+      "path": "SourceArt/Intake01/CharacterWIP/Protagonist_Blockout_IsoView.png",
+      "source": "G:\\图书馆\\新建文件夹 (2)\\Protagonist_Blockout_IsoView.png",
+      "bytes": 441985,
+      "sha256": "b29b1d2b13de457c172f565ac3e9b8162d2049e2b5c0981526bcd3a47f8c4526"
+    },
+    {
+      "path": "SourceArt/Intake01/CharacterWIP/Protagonist_Blockout_SideView.png",
+      "source": "G:\\图书馆\\新建文件夹 (2)\\Protagonist_Blockout_SideView.png",
+      "bytes": 351401,
+      "sha256": "56fcf84c5a4519c1cf3b27bfa79a3299bed37b057c188c95ee51c58968271409"
+    },
+    {
+      "path": "SourceArt/Intake01/CharacterWIP/Scarecrow_v04_ArmRig.blend",
+      "source": "G:\\图书馆\\新建文件夹 (2)\\Scarecrow_v04_ArmRig.blend",
+      "bytes": 118573,
+      "sha256": "a70cf9d4040c37b774732f70fcf4339e5294e0d7e5183a7b454e803f08d750dc"
+    },
+    {
+      "path": "SourceArt/Intake01/CharacterWIP/Scarecrow_v04_Rest_Front.png",
+      "source": "G:\\图书馆\\新建文件夹 (2)\\Scarecrow_v04_Rest_Front.png",
+      "bytes": 368784,
+      "sha256": "bd6f00a0dd7cac1b196b36552897d8413048c5629980241c322370f1b35d7a3e"
+    },
+    {
+      "path": "SourceArt/Intake01/CharacterWIP/Scarecrow_v04_Rest_Side.png",
+      "source": "G:\\图书馆\\新建文件夹 (2)\\Scarecrow_v04_Rest_Side.png",
+      "bytes": 325817,
+      "sha256": "e23173d28bb07523e79e8f80f0b8ac6efc1bd1edacd064a6c6975d872e12d93c"
+    }
+  ]
+}

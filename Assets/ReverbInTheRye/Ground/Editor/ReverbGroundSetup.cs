@@ -1,0 +1,106 @@
+using UnityEngine;
+using UnityEditor;
+using System.IO;
+
+public static class ReverbGroundSetup
+{
+    const string Root = "Assets/ReverbInTheRye/Ground";
+    static readonly string[] Names = {"Ground_DrySoil", "Ground_DenseStraw", "Ground_TrampledPath"};
+    static readonly float[] Smoothness = {0.15f, 0.11f, 0.16f};
+
+    [MenuItem("Tools/Reverb in the Rye/Create Ground Materials")]
+    public static void CreateGroundMaterials()
+    {
+        Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+        if (shader == null)
+        {
+            Debug.LogError("未找到 URP/Lit。请先确认当前项目已安装并启用 Universal Render Pipeline。");
+            return;
+        }
+
+        EnsureFolder(Root + "/Materials");
+        EnsureFolder(Root + "/TerrainLayers");
+        foreach (string name in Names)
+        {
+            string folder = Root + "/Textures/";
+            string basePath = folder + name + "_BaseColor.png";
+            string normalPath = folder + name + "_Normal.png";
+            string metalPath = folder + name + "_MetallicSmoothness.png";
+
+            SetupTexture(basePath, false, true);
+            SetupTexture(normalPath, true, false);
+            SetupTexture(metalPath, false, false);
+
+            var albedo = AssetDatabase.LoadAssetAtPath<Texture2D>(basePath);
+            var normal = AssetDatabase.LoadAssetAtPath<Texture2D>(normalPath);
+            var metal = AssetDatabase.LoadAssetAtPath<Texture2D>(metalPath);
+            if (albedo == null || normal == null || metal == null)
+            {
+                Debug.LogError("缺少贴图文件：" + name);
+                continue;
+            }
+            int index = System.Array.IndexOf(Names, name);
+            string materialPath = Root + "/Materials/" + name + ".mat";
+            Material mat = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+            if (mat == null)
+            {
+                mat = new Material(shader);
+                AssetDatabase.CreateAsset(mat, materialPath);
+            }
+            else mat.shader = shader;
+
+            mat.SetTexture("_BaseMap", albedo);
+            mat.SetColor("_BaseColor", Color.white);
+            mat.SetTexture("_BumpMap", normal);
+            mat.SetFloat("_BumpScale", 0.45f);
+            mat.EnableKeyword("_NORMALMAP");
+            mat.SetFloat("_Metallic", 0f);
+            mat.SetFloat("_Smoothness", 1f);
+            mat.SetFloat("_SmoothnessTextureChannel", 0f);
+            mat.SetTexture("_MetallicGlossMap", metal);
+            mat.EnableKeyword("_METALLICSPECGLOSSMAP");
+            EditorUtility.SetDirty(mat);
+
+            string layerPath = Root + "/TerrainLayers/" + name + ".terrainlayer";
+            TerrainLayer layer = AssetDatabase.LoadAssetAtPath<TerrainLayer>(layerPath);
+            if (layer == null)
+            {
+                layer = new TerrainLayer();
+                AssetDatabase.CreateAsset(layer, layerPath);
+            }
+            layer.diffuseTexture = albedo;
+            layer.normalMapTexture = normal;
+            layer.normalScale = 0.45f;
+            layer.metallic = 0f;
+            layer.smoothness = Smoothness[index];
+            layer.tileSize = new Vector2(4f,4f); // 4m * 4m per repeat; tune to scale
+            EditorUtility.SetDirty(layer);
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("Reverb Ground: 3 Materials + 3 TerrainLayers 已生成。请打开对应目录进行使用。");
+    }
+
+    static void EnsureFolder(string path)
+    {
+        if (AssetDatabase.IsValidFolder(path)) return;
+        var parent = Path.GetDirectoryName(path).Replace('\\', '/');
+        var name = Path.GetFileName(path);
+        if (!AssetDatabase.IsValidFolder(parent)) EnsureFolder(parent);
+        AssetDatabase.CreateFolder(parent, name);
+    }
+
+    static void SetupTexture(string path, bool isNormal, bool isColor)
+    {
+        var imp = AssetImporter.GetAtPath(path) as TextureImporter;
+        if (imp == null) return;
+        bool changed = false;
+        var desiredType = isNormal ? TextureImporterType.NormalMap : TextureImporterType.Default;
+        if (imp.textureType != desiredType) { imp.textureType = desiredType; changed = true; }
+        if (imp.sRGBTexture != isColor) { imp.sRGBTexture = isColor; changed = true; }
+        if (imp.wrapMode != TextureWrapMode.Repeat) { imp.wrapMode = TextureWrapMode.Repeat; changed = true; }
+        if (!imp.mipmapEnabled) { imp.mipmapEnabled = true; changed = true; }
+        if (imp.maxTextureSize < 1024) { imp.maxTextureSize = 1024; changed = true; }
+        if (changed) imp.SaveAndReimport();
+    }
+}

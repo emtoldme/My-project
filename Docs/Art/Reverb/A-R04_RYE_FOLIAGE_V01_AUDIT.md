@@ -1,5 +1,7 @@
 # A-R04 用户自制立体麦田植被包 v0.1 专业审查与接入方案 (Rye Foliage v0.1 Audit & Ingestion Plan)
 
+> Codex接入复核：本文件为作者审查意见。实际导入证据、尚未验证与原判断修正见[Art-Intake-01/REVIEW.md](../../Verification/Art-Intake-01/REVIEW.md)。其中绝对品质/可见度、开局预热、折射与性能判断不能视作已通过。
+
 **文档属性**：主美专项植被资产技术审查交付物  
 **审查对象**：用户自制并提供的立体麦田植被素材包 `@G:\图书馆\ReverbInTheRye_Foliage_v01.zip`  
 **基准分支**：`review/foliage-v01-audit`（基于 `origin/main` @ `d143e7a`）  

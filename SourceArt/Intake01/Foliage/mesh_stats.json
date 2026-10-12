@@ -1,0 +1,104 @@
+[
+  {
+    "model": "Wheat_Cluster_A",
+    "triangles": 870,
+    "vertices_no_index_reuse": 2610,
+    "bounds_m": {
+      "minimum": [
+        -0.551,
+        -0.0,
+        -0.383
+      ],
+      "maximum": [
+        0.452,
+        1.988,
+        0.535
+      ]
+    }
+  },
+  {
+    "model": "Wheat_Cluster_B",
+    "triangles": 696,
+    "vertices_no_index_reuse": 2088,
+    "bounds_m": {
+      "minimum": [
+        -0.401,
+        -0.0,
+        -0.449
+      ],
+      "maximum": [
+        0.605,
+        1.907,
+        0.604
+      ]
+    }
+  },
+  {
+    "model": "Wheat_Cluster_A_LOD1",
+    "triangles": 336,
+    "vertices_no_index_reuse": 1008,
+    "bounds_m": {
+      "minimum": [
+        -0.242,
+        -0.0,
+        -0.32
+      ],
+      "maximum": [
+        0.361,
+        1.738,
+        0.388
+      ]
+    }
+  },
+  {
+    "model": "Wheat_Cluster_B_LOD1",
+    "triangles": 252,
+    "vertices_no_index_reuse": 756,
+    "bounds_m": {
+      "minimum": [
+        -0.39,
+        -0.001,
+        -0.403
+      ],
+      "maximum": [
+        0.419,
+        1.647,
+        0.323
+      ]
+    }
+  },
+  {
+    "model": "Cut_Stubble_A",
+    "triangles": 340,
+    "vertices_no_index_reuse": 1020,
+    "bounds_m": {
+      "minimum": [
+        -0.229,
+        -0.002,
+        -0.397
+      ],
+      "maximum": [
+        0.304,
+        0.495,
+        0.305
+      ]
+    }
+  },
+  {
+    "model": "Wild_Grass_A",
+    "triangles": 224,
+    "vertices_no_index_reuse": 672,
+    "bounds_m": {
+      "minimum": [
+        -0.405,
+        0.008,
+        -0.377
+      ],
+      "maximum": [
+        0.344,
+        0.252,
+        0.453
+      ]
+    }
+  }
+]

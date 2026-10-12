@@ -1,5 +1,7 @@
 # A-R02 用户提供地面材质包 v0.2 专业审查与接入方案 (Ground Materials v0.2 Audit & Ingestion Plan)
 
+> Codex接入复核：本文件为作者审查意见。实际导入证据、尚未验证与原判断修正见[Art-Intake-01/REVIEW.md](../../Verification/Art-Intake-01/REVIEW.md)。其中绝对品质/可见度、开局预热、折射与性能判断不能视作已通过。
+
 **文档属性**：主美专项技术审查交付物  
 **审查对象**：用户制作并提供的地面材质包 `@G:\图书馆\ReverbInTheRye_Ground_v02.zip`  
 **基准分支**：`review/ground-v02-audit`（基于 `origin/main` @ `d143e7a`）  
