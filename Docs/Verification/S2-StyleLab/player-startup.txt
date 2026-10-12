@@ -1,0 +1,11 @@
+Forcing GfxDevice: Direct3D 11
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4070 Laptop GPU (ID=0x2860)
+[Waffle] 开局 seed=12345 frame=0
+[Waffle] +1 XP → Lv1 1/5，本次升级 0 次，待升级 0
+[Waffle] +1 XP → Lv1 2/5，本次升级 0 次，待升级 0
+[Waffle] +1 XP → Lv1 3/5，本次升级 0 次，待升级 0
+[Waffle] +1 XP → Lv1 4/5，本次升级 0 次，待升级 0
+[Waffle] +1 XP → Lv2 0/8，本次升级 1 次，待升级 1
+[Waffle] 升级面板 #1：Lv2 选项 [Damage, FireRate, PickupRange] 待升级 1
+[Waffle] 状态 Playing→LevelUp（待升级 1） now=34.760 frame=32012 timeScale=0

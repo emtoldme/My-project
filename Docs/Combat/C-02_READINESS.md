@@ -1,5 +1,7 @@
 # C-02 战斗边界就绪报告（1 号）
 
+> Codex整合复验（2026-10-12）：Unity6000.4.3f1 EditMode规则程序集117项通过，含本轮6条用例；.meta已由Unity导入确认。下文“Unity未运行”是作者交付时的环境记录。
+
 ## 基线与提交
 - 基线：`origin/main@8e5fe719db2e1d57468e5f451be3e7732e7ea797`
 - 分支：`feature/c02-combat-guards`（独立目录 `/workspace/wf-c02`）

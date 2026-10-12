@@ -1,0 +1,33 @@
+{
+  "source_commit": "6f9ed0fcc663f1975eada65d50a86aacbe6e638c",
+  "unity": "6000.4.3f1",
+  "target": "StandaloneWindows64",
+  "options": "Development",
+  "scene": "Assets/Waffle/Scenes/S2_StyleLab.unity",
+  "build_result": "Succeeded",
+  "build_errors": 0,
+  "build_warnings": 487,
+  "startup": "D3D11; GameLoop start, XP and first LevelUp observed; 50.3s process observation, then test-owned process stopped; no manual input/listening acceptance. Monitor live-read sharing error ignored; conclusion derived from closed player log.",
+  "files": [
+    {
+      "file": "Waffle.exe",
+      "bytes": 667648,
+      "sha256": "748b8feff0cf8e727ed412006cfe11f0591bdfec6bd5634e89acacae0ab8b38e"
+    },
+    {
+      "file": "Waffle_Data/Managed/Waffle.Runtime.dll",
+      "bytes": 46080,
+      "sha256": "04b107870770f0af4d585c291cba98d7bce8aaffcd4faf57afe0828c818f0f60"
+    },
+    {
+      "file": "Waffle_Data/Managed/Waffle.Rules.dll",
+      "bytes": 48640,
+      "sha256": "c138bb814eff2237644622e110c36c82fbf9b327507419fe2689dffd22b2309c"
+    },
+    {
+      "file": "Waffle_Data/Managed/Waffle.S2.dll",
+      "bytes": 22528,
+      "sha256": "966fbfc59cea0dcd97e197f8fa3bac24890d632b744a0b009e7fa1aef64f1071"
+    }
+  ]
+}
