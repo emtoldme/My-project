@@ -12,6 +12,7 @@ namespace Reverb.Experiments.Mechanism.Rules
             public MechanismTarget Origin;
             public MechanismVec2 HitPosition;
             public int InitialDamage;
+            public double HitTime;
             public int PendingChildren;
             public MechanismTarget PropagatedA, PropagatedB;
             public int PropagatedCount;
@@ -58,7 +59,7 @@ namespace Reverb.Experiments.Mechanism.Rules
         {
             if (Mode == MechanismMode.None || hit.Damage <= 0) return false;
             Chain c = chainPool.Count > 0 ? chainPool.Pop() : new Chain();
-            c.Origin = hit.Target; c.HitPosition = hit.Position; c.InitialDamage = hit.Damage;
+            c.Origin = hit.Target; c.HitPosition = hit.Position; c.InitialDamage = hit.Damage; c.HitTime = hit.Time;
             c.PendingChildren = 0; c.PropagatedCount = 0;
             activeChains++;
             if (PropagationEnabled) Enqueue(hit.Time + cfg.PropagationDelay, DerivedKind.Propagation, c, hit.Position);
@@ -76,6 +77,23 @@ namespace Reverb.Experiments.Mechanism.Rules
                 pending.RemoveAt(0);
                 Resolve(p);
                 if (--p.Chain.PendingChildren == 0) Recycle(p.Chain);
+            }
+        }
+
+        /// <summary>
+        /// 只读：把仍在排队、原目标仍有效的回声（不含传播）按待处理顺序复制到 destination（先清空）。
+        /// 不推进时间、不出队、不改计数/目标选择、不申请伤害、不保留历史。
+        /// </summary>
+        public void CopyPendingEchoes(List<PendingEchoInfo> destination)
+        {
+            if (destination == null) throw new ArgumentNullException(nameof(destination));
+            destination.Clear();
+            for (int i = 0; i < pending.Count; i++)
+            {
+                Pending p = pending[i];
+                if (p.Kind != DerivedKind.Echo) continue;
+                if (!host.TryGetLiveTarget(p.Chain.Origin, out _)) continue;
+                destination.Add(new PendingEchoInfo(p.Chain.Origin, p.Chain.HitTime, p.Time));
             }
         }
 
