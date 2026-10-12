@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using Waffle;
+using Waffle.Combat;
+
+var outputs=new List<object>();
+var routes=new[]{new[]{"W01","P12","P13","W04","P01","P02","P09","P07"},new[]{"W02","P15","P04","P06","P07","P09","P02"},new[]{"W03","P18","P04","P07","P06","P09","P02"}};
+foreach(var route in routes)
+{
+ var config=new RunConfig { useRunContent=true,runDuration=600,arenaHalfExtent=18.5f,gemLifetime=60,seed=20261012,levelUpInputGuard=0 };
+ var c=new CombatConfig { aliveCap=48,eventOverflow=8,enemyPoolSize=56,projectilePoolSize=128,gemPoolSize=220,maxGems=200,
+ phaseStarts=new[]{0f,120,240,360,480},phaseHp=new[]{12f,20,28,40,48},phaseSpeed=new[]{1.55f,1.9f,2.25f,2.6f,2.9f},
+ waveCounts=new[]{2,3,3,4,4},waveIntervals=new[]{2.6f,1.9f,1.45f,1.1f,.9f},pushTimes=new[]{115f,355},pushCounts=new[]{8,12},
+ ringTimes=new[]{180f,420,540},ringCounts=new[]{10,14,16},eliteTimes=new[]{120f,240,360,480,570},eliteHpMultiplier=8,eliteSpeedMultiplier=.65f,gemValue=2,eliteGemValue=25,targetRange=10,contactDamage=6,eliteContactDamage=12 };
+ var sim=new RunSimulation(config,new NullRunLog(),c); sim.ViewRadius=20;
+ var choices=new List<object>();var sources=new HashSet<string>(); var evos=new List<object>(); long frame=0;
+ float firstChoice=-1; int maxAlive=0;
+ while(!sim.State.Phase.IsTerminal() && frame<50000)
+ {
+  frame++;
+  if(sim.State.Phase==RunPhase.LevelUp)
+  {
+   if(firstChoice<0) firstChoice=sim.State.Now;
+   var view=sim.ReadContentView(); var card=view.Choices.OrderByDescending(x=>x.Id.StartsWith("E")?1000: (Array.IndexOf(route,x.Id)<0?0:100-Array.IndexOf(route,x.Id)*8)).First();
+   sim.BeginFrame(frame,frame); if(!sim.TryChooseContent(view.OfferToken,card.Id)) throw new Exception("choice rejected");
+   choices.Add(new {at=sim.State.Now,id=card.Id,rank=card.NextRank});
+  }
+  else
+  {
+   float t=sim.State.Now*.16f;
+   Vec2 target=new Vec2((float)Math.Cos(t)*12,(float)Math.Sin(t)*12);
+   foreach(var p in sim.Combat.Pickups)
+    if((p.Id=="ELITE" || p.Id=="D02" && sim.State.Hp<sim.State.MaxHp*.7f) && Vec2.Distance(new Vec2(sim.PlayerX,sim.PlayerZ),p.Position)<6) { target=p.Position; break; }
+   Vec2 player=new Vec2(sim.PlayerX,sim.PlayerZ);
+   var closest=sim.Combat.Enemies.Where(e=>e.IsAlive).OrderBy(e=>Vec2.Distance(e.Position,player)).FirstOrDefault();
+   if(closest!=null && Vec2.Distance(closest.Position,player)<2.8f) target=player+(player-closest.Position).Normalized*5;
+   Vec2 delta=(target-player).Normalized;
+   bool danger=sim.Combat.Enemies.Any(e=>e.IsAlive && Vec2.Distance(e.Position,new Vec2(sim.PlayerX,sim.PlayerZ))<1.7f);
+   sim.Tick(.05f,new InputSnapshot { MoveX=delta.X,MoveY=delta.Y,DodgePressed=danger,ChoosePressed=-1 },frame,frame);
+   maxAlive=Math.Max(maxAlive,sim.Combat.AliveCount);
+  }
+  foreach(var e in sim.Presentation.Events)
+  {
+   if(e.Type==PresentationEventType.EnemyHit && e.SourceId!=null) sources.Add(e.SourceId);
+   if(e.Type==PresentationEventType.Evolved) evos.Add(new{at=e.Now,id=e.SourceId});
+  }
+  sim.Presentation.Clear();
+ }
+ outputs.Add(new { route=route[0],phase=sim.State.Phase.ToString(),seconds=sim.State.Now,level=sim.State.Level,kills=sim.State.Kills,hp=sim.State.Hp,
+ firstChoice,choiceCount=choices.Count,maxAlive,damageSources=sources,evolutions=evos,choices,view=sim.ReadContentView().Weapons.Select(w=>new {w.Id,w.Rank}).ToArray(),
+ enemyPoolMiss=sim.Combat.Counters.EnemyPoolMiss,projectilePoolMiss=sim.Combat.Counters.ProjectilePoolMiss,echoHits=sim.Combat.RunEchoHits,propagationHits=sim.Combat.RunPropagationHits });
+}
+string json=JsonSerializer.Serialize(outputs,new JsonSerializerOptions{WriteIndented=true});
+System.IO.File.WriteAllText(System.IO.Path.Combine(AppContext.BaseDirectory,"natural-runs.json"),json);
+foreach(var o in outputs) Console.WriteLine(JsonSerializer.Serialize(o));

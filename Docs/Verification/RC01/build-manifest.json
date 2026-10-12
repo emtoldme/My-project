@@ -1,0 +1,30 @@
+{
+  "sourceCommit": "05390eab25cf50f27fe5e929bc8951a2f0ac5ed3",
+  "scene": "Assets/Drafts/RC01/Scenes/RC01_HarvestRoad.unity",
+  "unity": "6000.4.3f1",
+  "platform": "Windows x64 Development",
+  "content": {
+    "weapons": 4,
+    "passives": 10,
+    "evolutions": 3,
+    "pickups": 4
+  },
+  "files": {
+    "Reverb.exe": {
+      "sha256": "748b8feff0cf8e727ed412006cfe11f0591bdfec6bd5634e89acacae0ab8b38e",
+      "bytes": 667648
+    },
+    "Reverb_Data/Managed/Waffle.Rules.dll": {
+      "sha256": "b2e79550975ecb67552b9f2912ccf8c8e053c4524b5627360c8c620e16a468c7",
+      "bytes": 103424
+    },
+    "Reverb_Data/Managed/Waffle.Runtime.dll": {
+      "sha256": "879402d7b8634b7b7697f59cacb2b54e179b00cec199deb9ed517d53021f934a",
+      "bytes": 48640
+    },
+    "Reverb_Data/Managed/Reverb.Drafts.RC01.Presentation.dll": {
+      "sha256": "01f8b76055b57b995ed259ae8ba8cd7474be9695f9dc0526e85e1252a2ce5cb6",
+      "bytes": 29696
+    }
+  }
+}
