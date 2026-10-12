@@ -1255,6 +1255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Waffle.Runtime::Waffle.GameLoop
   config:
+    extraXpStepAfterFour: 0.4
     useRunContent: 1
     runContentAllowList: []
     runDuration: 600
@@ -1430,14 +1431,16 @@ MonoBehaviour:
       pitch: 1
       dropWhenFull: 1
       clips:
-      - {fileID: 8300000, guid: ab77f31f18ce4e8b9462fa6728547902, type: 3}
-      volumeDb: -3
+      - {fileID: 8300000, guid: 453466980d32479cbb04d527624fb2cd, type: 3}
+      - {fileID: 8300000, guid: 0244239c48eb486c82f9c4e964397f59, type: 3}
+      - {fileID: 8300000, guid: 3084b52852f04f8bbd5baf3a8a45d92f, type: 3}
+      volumeDb: -5
       pitchRandom: 0.05
       maxVoices: 3
       minInterval: 0.08
       spatialBlend: 0
       maxDistance: 25
-      sequential: 0
+      sequential: 1
   - contentId: W02
     eventType: 1
     rule:
@@ -1583,7 +1586,7 @@ MonoBehaviour:
     volumeDb: -3.5
     pitchRandom: 0.03
     maxVoices: 2
-    minInterval: 0.06
+    minInterval: 0.1
     spatialBlend: 0.5
     maxDistance: 25
     sequential: 0
@@ -1596,7 +1599,7 @@ MonoBehaviour:
     volumeDb: -4.5
     pitchRandom: 0.04
     maxVoices: 2
-    minInterval: 0.05
+    minInterval: 0.09
     spatialBlend: 0.6
     maxDistance: 25
     sequential: 0
@@ -1609,14 +1612,14 @@ MonoBehaviour:
     volumeDb: -5
     pitchRandom: 0.04
     maxVoices: 1
-    minInterval: 0.06
+    minInterval: 0.12
     spatialBlend: 0.7
     maxDistance: 25
     sequential: 0
   musicGroup: {fileID: 0}
   sfxGroup: {fileID: 0}
   sfxTrimDb: -10
-  musicDb: -16
+  musicDb: -18
   combatLoop: {fileID: 8300000, guid: eddb6161bb5443b3baa34c4b03da07aa, type: 3}
   levelUpLoop: {fileID: 8300000, guid: 24365e02f2c44e918a8fc5a053136eb8, type: 3}
   levelUpLoopDb: -2
@@ -1647,24 +1650,28 @@ MonoBehaviour:
     pitch: 1
     dropWhenFull: 1
     clips:
-    - {fileID: 8300000, guid: a126e1c6a2234082a21774f30a9f0370, type: 3}
-    volumeDb: -3
+    - {fileID: 8300000, guid: 1e1c4be755ac40c3a2a3c8edf88bf902, type: 3}
+    - {fileID: 8300000, guid: b48c3ee4a3e24cb6a5b0e9abf5400935, type: 3}
+    - {fileID: 8300000, guid: 8dbb0ab923f74c0e819c169282f489ab, type: 3}
+    volumeDb: -5
     pitchRandom: 0.05
     maxVoices: 4
-    minInterval: 0.04
+    minInterval: 0.075
     spatialBlend: 0.4
     maxDistance: 25
-    sequential: 0
+    sequential: 1
   enemyDeath:
     name: EnemyDeath
     pitch: 1
     dropWhenFull: 1
     clips:
     - {fileID: 8300000, guid: b542d9ec81b645519a955094de66ae42, type: 3}
+    - {fileID: 8300000, guid: 9715009741364694ad0363469d4528dd, type: 3}
+    - {fileID: 8300000, guid: a8d5ecb94c4d4847acfbeb015fbfdfec, type: 3}
     volumeDb: -2
     pitchRandom: 0.08
     maxVoices: 3
-    minInterval: 0.06
+    minInterval: 0.1
     spatialBlend: 0.8
     maxDistance: 25
     sequential: 0
@@ -1673,7 +1680,8 @@ MonoBehaviour:
     pitch: 1
     dropWhenFull: 0
     clips:
-    - {fileID: 8300000, guid: 77f974374706419ba6d7625a71b2c09f, type: 3}
+    - {fileID: 8300000, guid: 4da6c5ea24ba44cd9bd68b92fd7fcab8, type: 3}
+    - {fileID: 8300000, guid: c01df0fadfef45c69d7001e890d39be8, type: 3}
     volumeDb: 0.5
     pitchRandom: 0
     maxVoices: 1
@@ -1686,21 +1694,26 @@ MonoBehaviour:
     pitch: 1
     dropWhenFull: 0
     clips:
-    - {fileID: 8300000, guid: 912ffd53d59a4e00be38ec9a03e30c7d, type: 3}
+    - {fileID: 8300000, guid: 5e7bbe928bc14f3bb36a12a96d3c0c26, type: 3}
+    - {fileID: 8300000, guid: 439f7c1b1cc34a609546df5d92c216e0, type: 3}
     volumeDb: -1
     pitchRandom: 0.03
     maxVoices: 1
     minInterval: 0.2
     spatialBlend: 0
     maxDistance: 25
-    sequential: 0
+    sequential: 1
   gemPickup:
     name: Event_Gem_Pickup
     pitch: 1
     dropWhenFull: 0
     clips:
-    - {fileID: 8300000, guid: cf8f3fbb61164e7fa5123057f5e08f40, type: 3}
-    volumeDb: -2.5
+    - {fileID: 8300000, guid: 413535198303456e958ce36071a23685, type: 3}
+    - {fileID: 8300000, guid: 17900858ec5949cbb76877ec3a57defc, type: 3}
+    - {fileID: 8300000, guid: 38268aac551d4ca2859d47b1b9368b72, type: 3}
+    - {fileID: 8300000, guid: d03d603dea594947a62d193124cc76d1, type: 3}
+    - {fileID: 8300000, guid: 25bbaa41fcbc4e8d812525a4bf7bcc83, type: 3}
+    volumeDb: -5.5
     pitchRandom: 0
     maxVoices: 5
     minInterval: 0.03

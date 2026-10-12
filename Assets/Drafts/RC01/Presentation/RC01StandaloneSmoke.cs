@@ -40,6 +40,10 @@ namespace Reverb.Drafts.RC01.Presentation
                 Finish(); yield break;
             }
             observations.Clear(); Check(loop.Sim.Growth!=null,"growthHost");
+            var audio=GetComponent<AudioDirector>();
+            if(loop.config.extraXpStepAfterFour>0)
+                Check(audio!=null && audio.enemyDeath.clips.Length==3 && audio.enemyHit.clips.Length==3
+                    && audio.dodge.clips.Length==2 && audio.gemPickup.clips.Length==5,"feedbackAudioVariations");
             Check(loop.Sim.Growth.RankOf("P12")==0 && loop.Sim.Growth.RankOf("P13")==0,"noFreeMechanisms");
             loop.PresentationDispatched+=Record;
             if(loop.Sim.State.Phase==RunPhase.Paused) loop.TogglePause();
@@ -79,6 +83,11 @@ namespace Reverb.Drafts.RC01.Presentation
                 if(sim.State.Phase!=RunPhase.LevelUp) { yield return new WaitForSecondsRealtime(.15f); if(sim.State.Phase!=RunPhase.LevelUp && sim.QueuedXp==0) break; continue; }
                 yield return new WaitForSecondsRealtime(.35f);
                 var view=sim.ReadContentView();
+                if(!numericChecked && loop.config.extraXpStepAfterFour>0)
+                {
+                    bool detailed=true; foreach(var c in view.Choices) detailed &= c.EffectText.Contains("\n");
+                    Check(detailed,"detailedChoiceDescriptions");
+                }
                 if(!numericChecked)
                 {
                     ScreenCapture.CaptureScreenshot(Path.Combine(output,"growth-ui.png"));

@@ -17,7 +17,7 @@ namespace Reverb.Drafts.RC01.EditorTools
     public static class RC01IntegrationBatch
     {
         public const string ScenePath = "Assets/Drafts/RC01/Scenes/RC01_HarvestRoad.unity";
-        [Serializable] class Cue { public string id, assetPath; public float pitch = 1, pitchJitter, volumeDb, minInterval, spatialBlend; public int maxVoices = 1; }
+        [Serializable] class Cue { public string id, assetPath; public string[] variants; public float pitch = 1, pitchJitter, volumeDb, minInterval, spatialBlend; public int maxVoices = 1; }
         [Serializable] class Categories { public Cue[] weapons, mechanisms, pickups, growthUi; }
         [Serializable] class Map { public Categories categories; }
 
@@ -30,6 +30,7 @@ namespace Reverb.Drafts.RC01.EditorTools
             EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             var loop = UnityEngine.Object.FindAnyObjectByType<GameLoop>();
             if (loop == null) throw new Exception("RC01 GameLoop missing");
+            loop.config.extraXpStepAfterFour = .4f;
             loop.config.useRunContent = true; loop.config.runDuration = 600;
             loop.config.arenaHalfExtent = 18.5f; loop.config.gemLifetime = 60;
             var c = loop.combatConfig;
@@ -99,10 +100,25 @@ namespace Reverb.Drafts.RC01.EditorTools
             EditorSceneManager.SaveScene(SceneManager.GetActiveScene()); AssetDatabase.SaveAssets();
             Debug.Log("RC01_INTEGRATED_SETUP_PASSED weapons=4 passives=10 evolutions=3 pickups=4 xp=enabled previewMaps=3");
         }
+        public static void ApplyFeedback()
+        {
+            EditorSceneManager.OpenScene(ScenePath,OpenSceneMode.Single);
+            var loop=UnityEngine.Object.FindAnyObjectByType<GameLoop>();
+            var audio=UnityEngine.Object.FindAnyObjectByType<AudioDirector>();
+            if(loop==null || audio==null) throw new Exception("RC01 host missing");
+            loop.config.extraXpStepAfterFour=.4f;
+            ConfigureAudio(audio,loop);
+            if(audio.enemyDeath.clips.Length!=3 || audio.gemPickup.clips.Length!=5) throw new Exception("Feedback variants missing");
+            EditorSceneManager.MarkSceneDirty(loop.gameObject.scene);
+            EditorSceneManager.SaveScene(loop.gameObject.scene);
+            AssetDatabase.SaveAssets();
+            Debug.Log("RC01_FEEDBACK_APPLIED xpExtra=.4 shot=3 hit=3 death=3 dodge=2 hurt=2 gem=5");
+        }
+
         static void ConfigureAudio(AudioDirector audio, GameLoop loop)
         {
             audio.loop = loop; audio.enableMechanismAudio = true;
-            audio.sfxTrimDb = -10; audio.musicDb = -16;
+            audio.sfxTrimDb = -10; audio.musicDb = -18;
             audio.combatLoop = Load<AudioClip>("Assets/Audio/S03/bgm_s03_mathrock_polymeter_24s_loop.wav");
             audio.levelUpLoop = Load<AudioClip>("Assets/Audio/Music/bgm_levelup_suspended_loop.wav");
             var map = JsonUtility.FromJson<Map>(File.ReadAllText("Docs/Design/RC01/Audio/cue-map.json"));
@@ -137,14 +153,37 @@ namespace Reverb.Drafts.RC01.EditorTools
             audio.gemPickup.clips = new[] { Load<AudioClip>("Assets/Audio/S03/sfx_s03_gem_pickup.wav") };
             audio.victory.clips = new[] { Load<AudioClip>("Assets/Audio/SFX/sfx_game_victory.wav") };
             audio.defeat.clips = new[] { Load<AudioClip>("Assets/Audio/SFX/sfx_game_defeat.wav") };
+            // Reuse delivered variations instead of one clip on every hit/shot/pickup.
+            foreach (var b in bindings)
+                if (b.contentId == "W01") { b.rule.clips = Variants("sfx_player_shoot",3); b.rule.volumeDb -= 2; b.rule.sequential = true; }
+            audio.enemyHit.clips = Variants("sfx_enemy_hit",3); audio.enemyHit.sequential = true;
+            audio.enemyHit.volumeDb -= 2; audio.enemyHit.minInterval = .075f;
+            audio.enemyDeath.minInterval = .10f;
+            audio.dodge.clips = Variants("sfx_player_dodge",2); audio.dodge.sequential = true;
+            audio.playerHurt.clips = Variants("sfx_player_hurt",2); audio.playerHurt.sequential = true;
+            audio.gemPickup.clips = Variants("sfx_gem_pickup",5); audio.gemPickup.volumeDb -= 3;
+            audio.echo.minInterval = .10f; audio.propagation.minInterval = .09f; audio.echoPropagation.minInterval = .12f;
             audio.contentBindings = bindings.ToArray();
         }
         static AudioEventRule Rule(Cue c) => new AudioEventRule(c.id,c.volumeDb,c.pitchJitter,Math.Max(1,c.maxVoices),c.minInterval,c.spatialBlend,25)
-            { clips = new[] { Load<AudioClip>(c.assetPath) }, pitch = c.pitch, dropWhenFull = true };
+            { clips = CueClips(c), pitch = c.pitch, dropWhenFull = true };
+        static AudioClip[] CueClips(Cue cue)
+        {
+            if (cue.variants == null || cue.variants.Length == 0) return new[] { Load<AudioClip>(cue.assetPath) };
+            var clips = new AudioClip[cue.variants.Length];
+            for (int i=0;i<clips.Length;i++) clips[i]=Load<AudioClip>(cue.variants[i]);
+            return clips;
+        }
+        static AudioClip[] Variants(string name,int count)
+        {
+            var clips=new AudioClip[count];
+            for(int i=0;i<count;i++) clips[i]=Load<AudioClip>("Assets/Audio/SFX/"+name+"_"+(i+1).ToString("00")+".wav");
+            return clips;
+        }
         static T Load<T>(string path) where T : UnityEngine.Object => AssetDatabase.LoadAssetAtPath<T>(path) ?? throw new Exception("Missing asset " + path);
         public static void Build()
         {
-            string output = Path.GetFullPath(Path.Combine(Application.dataPath,"../../Builds/RC01-HarvestRoad/Reverb.exe"));
+            string output = Path.GetFullPath(Path.Combine(Application.dataPath,"../../Builds/RC01-Feedback01/Reverb.exe"));
             M01IntegrationBatch.BuildScene(ScenePath,output);
         }
     }

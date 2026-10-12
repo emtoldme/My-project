@@ -10,6 +10,7 @@ namespace Waffle
     public class RunState
     {
         private readonly IRunLog log;
+        public readonly float ExtraXpStepAfterFour;
 
         public RunPhase Phase { get; private set; } = RunPhase.Playing;
         /// <summary>进入 Paused 之前的状态（只会是 Playing 或 LevelUp）。</summary>
@@ -40,14 +41,15 @@ namespace Waffle
         /// <summary>状态切换事件（实例事件，不是 static）。参数：旧状态、新状态。</summary>
         public event Action<RunPhase, RunPhase> PhaseChanged;
 
-        public RunState(int maxHp, IRunLog log)
+        public RunState(int maxHp, IRunLog log, float extraXpStepAfterFour = 0)
         {
             this.log = log ?? new NullRunLog();
+            ExtraXpStepAfterFour = float.IsNaN(extraXpStepAfterFour) || float.IsInfinity(extraXpStepAfterFour) ? 0 : Math.Max(0, extraXpStepAfterFour);
             MaxHp = maxHp;
             Hp = maxHp;
         }
 
-        public int XpToNext { get { return XpRules.XpToNext(Level); } }
+        public int XpToNext { get { return XpRules.XpToNext(Level, ExtraXpStepAfterFour); } }
 
         /// <summary>§8.6 状态切换表。LevelUp → LevelUp 表示"重抽下一张面板"。</summary>
         public bool CanTransition(RunPhase to)

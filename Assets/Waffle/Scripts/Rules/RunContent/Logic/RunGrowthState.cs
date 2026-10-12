@@ -342,7 +342,7 @@ namespace Waffle.RunContent
                 string id = choices[i];
                 if (id == RunContentCatalog.HealFallbackId) { cv[i] = new RunContentChoiceView(id, "回复", "回复" + (int)(Options.FallbackHealFraction * 100) + "%最大生命（候选已耗尽）", 0, 0); continue; }
                 var d = Catalog.Get(id); int cur = d.Kind == ContentKind.Evolution ? 0 : RankOf(id);
-                cv[i] = new RunContentChoiceView(id, d.DisplayName, d.RankAt(cur + 1)?.EffectText ?? d.Description, cur, cur + 1);
+                cv[i] = new RunContentChoiceView(id, d.DisplayName, RunContentDescriptions.Choice(d, cur), cur, cur + 1);
             }
             var wv = new List<RunContentOwnedView>();
             foreach (var o in weapons) if (o != null) wv.Add(new RunContentOwnedView(o.Def.Id, o.Def.DisplayName, o.Rank, o.Def.MaxRank));

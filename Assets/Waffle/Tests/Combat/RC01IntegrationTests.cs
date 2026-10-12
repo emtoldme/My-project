@@ -17,6 +17,31 @@ namespace Waffle.Tests.Combat
             var combat = new CombatModule(Quiet(),1); combat.EnableRunContent(growth,1); return combat;
         }
         [Test]
+        public void GentleXpAdjustmentKeepsEarlyLevelsAndUsesTheDisplayedThreshold()
+        {
+            for(int level=1;level<=4;level++) Assert.That(XpRules.XpToNext(level,.4f),Is.EqualTo(XpRules.XpToNext(level)));
+            var sim=new RunSimulation(new RunConfig { extraXpStepAfterFour=.4f },null);
+            sim.State.Level=10; sim.State.Xp=34;
+            Assert.That(sim.State.XpToNext,Is.EqualTo(35));
+            sim.DebugGiveXp(1); sim.Tick(.05f,default,1,1);
+            Assert.That(sim.State.Level,Is.EqualTo(11)); Assert.That(sim.State.Xp,Is.Zero);
+            Assert.That(sim.State.PendingLevelUps,Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ChoiceExplanationUsesActualRankParametersAndExplainsRestrictions()
+        {
+            var c=RunContentCatalog.Default;
+            var pulse=RunContentDescriptions.Choice(c.Get("W01"),1);
+            Assert.That(pulse,Does.Contain("10 → 13"));
+            Assert.That(RunContentDescriptions.Choice(c.Get("P09"),0),Does.Contain("精英箱仍需靠近"));
+            Assert.That(RunContentDescriptions.Choice(c.Get("P12"),1),Does.Contain("50% → 65%"));
+            Assert.That(RunContentDescriptions.Choice(c.Get("W04"),4),Does.Contain("12伤害"));
+            foreach(var d in c.All) if(d.Status==ImplementationStatus.Wired && d.Kind!=ContentKind.Pickup)
+                for(int rank=0;rank<d.MaxRank;rank++) Assert.That(RunContentDescriptions.Choice(d,rank),Does.Contain("\n"),d.Id+" rank "+rank);
+        }
+
+        [Test]
         public void FanLimitsSameTargetHitsAcrossOneVolley()
         {
             var combat = Weapon("W02"); var enemy = combat.DebugSpawnEnemy(new Vec2(1.5f,0),100,0);

@@ -32,10 +32,10 @@ namespace Reverb.Drafts.RC01.Presentation
             if (sim != null)
             {
                 var st = sim.State;
-                GUILayout.BeginArea(ImguiScale.Fit(new Rect(16,16,360,selecting ? 108 : 148)), GUI.skin.box);
+                GUILayout.BeginArea(ImguiScale.Fit(new Rect(16,16,360,selecting ? 84 : 148)), GUI.skin.box);
                 GUILayout.Label("秋收之路 · 战斗草稿    " + RunHud.FormatClock(st.Now) + " / 10:00");
                 GUILayout.Label("HP " + st.Hp + "/" + st.MaxHp + "    Lv " + st.Level + "    击杀 " + st.Kills);
-                GUILayout.Label("经验 " + st.Xp + "/" + st.XpToNext + "    护盾 " + sim.ShieldCharges);
+                if (!selecting) GUILayout.Label("经验 " + st.Xp + "/" + st.XpToNext + "    护盾 " + sim.ShieldCharges);
                 if (!selecting)
                 {
                     float cd = Mathf.Max(0,sim.DodgeReadyAt-st.Now);
@@ -54,9 +54,10 @@ namespace Reverb.Drafts.RC01.Presentation
             }
             if (selecting)
             {
-                Rect panel = ImguiScale.Fit(new Rect((ImguiScale.Width-760)/2,(ImguiScale.Height-440)/2,760,440));
+                Rect panel = ImguiScale.Fit(new Rect((ImguiScale.Width-1000)/2,(ImguiScale.Height-480)/2,1000,480));
                 GUILayout.BeginArea(panel,GUI.skin.box);
                 GUILayout.Label(preview ? "TEST_ONLY 排版预览" : "选择成长 · 1 / 2 / 3 或点击卡片");
+                GUILayout.Label("数值为基础参数，实际战斗受已装备被动加成影响。选择占用武器或被动槽。");
                 if (view == null) GUILayout.Label("等待成长接线");
                 else
                 {
@@ -104,7 +105,7 @@ namespace Reverb.Drafts.RC01.Presentation
                 for (int i = 0; i < view.Choices.Count && i < 3; i++)
                 {
                     RunContentChoiceView card = view.Choices[i];
-                    GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(220f), GUILayout.Height(205f));
+                    GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(318f), GUILayout.Height(285f));
                     GUILayout.Label(card.DisplayName);
                     GUILayout.Label(card.CurrentRank + " → " + card.NextRank);
                     GUILayout.Label(card.EffectText);
