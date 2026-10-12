@@ -108,6 +108,9 @@ namespace Reverb.Drafts.RC01.EditorTools
             if(loop==null || audio==null) throw new Exception("RC01 host missing");
             loop.config.extraXpStepAfterFour=.4f;
             ConfigureAudio(audio,loop);
+            string configured=EditorJsonUtility.ToJson(audio);
+            ConfigureAudio(audio,loop);
+            if(configured!=EditorJsonUtility.ToJson(audio)) throw new Exception("RC01 audio setup must be idempotent");
             if(audio.enemyDeath.clips.Length!=3 || audio.gemPickup.clips.Length!=5) throw new Exception("Feedback variants missing");
             EditorSceneManager.MarkSceneDirty(loop.gameObject.scene);
             EditorSceneManager.SaveScene(loop.gameObject.scene);
@@ -161,7 +164,7 @@ namespace Reverb.Drafts.RC01.EditorTools
             audio.enemyDeath.minInterval = .10f;
             audio.dodge.clips = Variants("sfx_player_dodge",2); audio.dodge.sequential = true;
             audio.playerHurt.clips = Variants("sfx_player_hurt",2); audio.playerHurt.sequential = true;
-            audio.gemPickup.clips = Variants("sfx_gem_pickup",5); audio.gemPickup.volumeDb -= 3;
+            audio.gemPickup.clips = Variants("sfx_gem_pickup",5); audio.gemPickup.volumeDb = -5.5f;
             audio.echo.minInterval = .10f; audio.propagation.minInterval = .09f; audio.echoPropagation.minInterval = .12f;
             // Overlay only R1's delivered groups; pickup/hurt/dodge/music keep the feedback baseline.
             var polish=JsonUtility.FromJson<Map>(File.ReadAllText("Docs/Design/RC01/Audio/PolishR1/cue-map.json"));
