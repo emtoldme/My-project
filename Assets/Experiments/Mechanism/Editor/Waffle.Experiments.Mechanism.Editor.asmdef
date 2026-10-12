@@ -1,0 +1,22 @@
+{
+    "name": "Waffle.Experiments.Mechanism.Editor",
+    "rootNamespace": "Waffle.Experiments.Mechanism.EditorTools",
+    "references": [
+        "Waffle.Rules",
+        "Waffle.Runtime",
+        "Waffle.Experiments.Mechanism.Presentation",
+        "Reverb.Experiments.Mechanism.Contracts",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
