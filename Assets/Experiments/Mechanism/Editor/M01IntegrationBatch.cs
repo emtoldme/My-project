@@ -37,6 +37,9 @@ namespace Waffle.Experiments.Mechanism.EditorTools
                 material.name = "M_M01_Transparent";
                 AssetDatabase.CreateAsset(material, materialPath);
             }
+            material.shader = Shader.Find("Reverb/M01Feedback") ?? throw new Exception("M01 feedback shader missing");
+            material.SetColor("_BaseColor", Color.white);
+            EditorUtility.SetDirty(material);
             loop.GetComponent<M01DerivedFx>().lineMaterial = material;
             var audio = loop.gameObject.AddComponent<AudioDirector>();
             audio.loop = loop; audio.enableMechanismAudio = true; audio.sfxTrimDb = -18f;
@@ -45,10 +48,11 @@ namespace Waffle.Experiments.Mechanism.EditorTools
             audio.enemyDeath.clips = Clips("Assets/Audio/SFX/sfx_enemy_death_01.wav", "Assets/Audio/SFX/sfx_enemy_death_02.wav");
             audio.playerHurt.clips = Clips("Assets/Audio/S03/sfx_s03_player_hurt.wav");
             audio.dodge.clips = Clips("Assets/Audio/S03/sfx_s03_dodge.wav");
-            audio.echo.clips = Clips("Assets/Audio/SFX/sfx_enemy_hit_01.wav");
-            audio.propagation.clips = Clips("Assets/Audio/S03/sfx_s03_shot.wav");
-            audio.echoPropagation.clips = Clips("Assets/Audio/S03/sfx_s03_shot.wav");
-            audio.echo.pitch = 0.85f; audio.propagation.pitch = 1.15f; audio.echoPropagation.pitch = 0.9f;
+            audio.echo.clips = Clips("Assets/Experiments/Mechanism/Audio/TEST_ONLY_sfx_echo_hit.wav");
+            audio.propagation.clips = Clips("Assets/Experiments/Mechanism/Audio/TEST_ONLY_sfx_propagation.wav");
+            audio.echoPropagation.clips = Clips("Assets/Experiments/Mechanism/Audio/TEST_ONLY_sfx_propagation.wav");
+            audio.echo.pitch = 1f; audio.propagation.pitch = 1f; audio.echoPropagation.pitch = 0.85f;
+            audio.echo.pitchRandom = audio.propagation.pitchRandom = audio.echoPropagation.pitchRandom = 0f;
             foreach (var rule in new[] { audio.shoot, audio.enemyHit, audio.enemyDeath, audio.echo, audio.propagation, audio.echoPropagation })
             { rule.dropWhenFull = true; rule.spatialBlend = 0f; rule.maxVoices = Mathf.Min(2, rule.maxVoices); }
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
@@ -72,7 +76,13 @@ namespace Waffle.Experiments.Mechanism.EditorTools
             int outputFlag = Array.IndexOf(args, "--m01-build-output");
             if (outputFlag >= 0 && outputFlag + 1 < args.Length) output = Path.GetFullPath(args[outputFlag + 1]);
             Directory.CreateDirectory(Path.GetDirectoryName(output));
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { M01PlaytestSetup.ScenePath },
+            BuildScene(M01PlaytestSetup.ScenePath, output);
+        }
+
+        public static void BuildScene(string scenePath, string output)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(output));
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { scenePath },
                 locationPathName = output, target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development });
             var warnings = new System.Collections.Generic.List<string>();
             foreach (var step in report.steps)

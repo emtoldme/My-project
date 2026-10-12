@@ -193,7 +193,7 @@ namespace Reverb.Experiments.RyeField.EditorTools
             data.size = new Vector3(FieldSize, 1f, FieldSize);
             data.alphamapResolution = 128;
             data.baseMapResolution = 256;
-            data.SetTerrainLayers(new[] { soil, path, straw });
+            data.terrainLayers = new[] { soil, path, straw };
             int res = data.alphamapResolution;
             var maps = new float[res, res, 3];
             for (int y = 0; y < res; y++)
@@ -204,10 +204,11 @@ namespace Reverb.Experiments.RyeField.EditorTools
                     float wz = -Half + (y + 0.5f) / res * FieldSize;
                     float dist = Mathf.Sqrt(wx * wx + wz * wz);
                     float pathWeight = PathWeight(wx, wz);
-                    float strawWeight = Mathf.SmoothStep(5.4f, 8.2f, dist);
+                    float edgeWeight = SmoothRange(5.4f, 8.2f, dist);
+                    float strawWeight = edgeWeight;
                     strawWeight *= Mathf.Lerp(0.82f, 1f, Noise(wx, wz));
                     strawWeight *= 1f - pathWeight;
-                    float soilWeight = (1f - Mathf.SmoothStep(5.4f, 8.2f, dist)) * (1f - pathWeight);
+                    float soilWeight = (1f - edgeWeight) * (1f - pathWeight);
                     float sum = soilWeight + pathWeight + strawWeight;
                     if (sum < 0.0001f) soilWeight = 1f;
                     else
@@ -378,8 +379,12 @@ namespace Reverb.Experiments.RyeField.EditorTools
         static float PathWeight(float x, float z)
         {
             float dist = PolylineDistance(x, z);
-            return 1f - Mathf.SmoothStep(0.85f, 2.4f, dist);
+            return 1f - SmoothRange(0.85f, 2.4f, dist);
         }
+
+        // Mathf.SmoothStep interpolates output values; it does not accept distance edges like HLSL smoothstep.
+        static float SmoothRange(float start, float end, float value)
+            => Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(start, end, value));
 
         static float PolylineDistance(float x, float z)
         {

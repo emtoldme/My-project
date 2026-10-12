@@ -503,7 +503,9 @@ namespace Waffle.Combat
             p.HitKeys.Clear();
             projectiles.Add(p);
             Counters.ShotsFired++;
-            Emit(PresentationEventType.Shot, player, stats.Damage, target.Serial);
+            Result.Events.Add(new PresentationEvent { Type = PresentationEventType.Shot, Now = now,
+                X = player.X, Z = player.Y, Value = stats.Damage, Data = target.Serial,
+                DirectionX = dir.X, DirectionZ = dir.Y });
         }
 
         /// <summary>最近的 Alive 敌人（水平距离 ≤ targetRange；距离相同取 Serial 小的）。</summary>

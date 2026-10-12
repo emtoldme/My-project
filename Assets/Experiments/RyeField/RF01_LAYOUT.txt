@@ -1,0 +1,14 @@
+RF01 layout
+label: first sample, not a finished map
+seed: 20261012
+size: 24m
+clearingRadius: 6m
+instances: 220
+wheat: 200
+short: 20
+lod1Deactivated: 200
+wheatInsideClearing: 0
+colliders: 0
+groundTileMeters: 4 (source TerrainLayer, not edited)
+camera: ortho 9, pitch 55, yaw 45, target origin
+weapon: original scale at (16,0,-16), not parented to a character

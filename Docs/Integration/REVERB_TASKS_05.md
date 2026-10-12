@@ -1,5 +1,7 @@
 # 首批美术接入：让素材形成可验收的麦田战场
 
+状态：四位交付已收齐，Codex集中收口；原交付冻结。实际接线与自动检查以Docs/Verification/RF01/REVIEW.md为准；用户验收见Docs/Integration/RF01_ACCEPTANCE.md。
+
 2026-10-12。用户已提供地面、立体麦田、旧式调频器和声波VFX。继续原四位AI分担，由用户转发下面各段；Codex负责GitHub与本地整合。首批清单、候选性质和检查证据见Docs/Verification/Art-Intake-01/REVIEW.md。
 
 TASKS_04规则/表现/短音已提交，Codex接管这些已交版本的整合。四位不要继续同时改旧交付文件；发现缺陷先提最小请求。本轮从包含本卡和素材的最新origin/main独立开分支，记录完整基线SHA，不互相合并、不push main、不升级依赖。无Unity如实声明，Editor工具可源码交付，由Codex运行并生成meta/场景。提交PR或明确分支与SHA。

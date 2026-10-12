@@ -9,6 +9,8 @@ Shader "ReverbInTheRye/FoliageWindURP"
         _WindSpeed ("Wind Speed", Range(0,6)) = 1.15
         _WindSpatialScale ("Wind Spatial Frequency", Range(0,4)) = 0.45
         _PlantHeight ("Plant Reference Height (meters)", Range(0.1,3)) = 2.0
+        _UseExternalTime ("Use Presentation Clock", Float) = 0
+        _VisualTime ("Presentation Time", Float) = 0
     }
     SubShader
     {
@@ -29,6 +31,8 @@ Shader "ReverbInTheRye/FoliageWindURP"
             float _WindSpeed;
             float _WindSpatialScale;
             float _PlantHeight;
+            float _UseExternalTime;
+            float _VisualTime;
         CBUFFER_END
 
         float3 BendFoliage(float3 posOS)
@@ -40,7 +44,8 @@ Shader "ReverbInTheRye/FoliageWindURP"
             float2 wind = _WindDirection.xz;
             wind = wind / max(length(wind),0.0001);
             float mask = pow(saturate(posOS.y / max(_PlantHeight,0.01)),1.7);
-            float phase = _Time.y * _WindSpeed +
+            float visualTime = lerp(_Time.y, _VisualTime, saturate(_UseExternalTime));
+            float phase = visualTime * _WindSpeed +
                           dot(pivotWS.xz,float2(0.73,1.37)) +
                           dot(posWS.xz,float2(0.83,0.56)) * _WindSpatialScale;
             float bend = (sin(phase) + .30*sin(phase*2.2 + pivotWS.z)) * _WindStrength * mask;

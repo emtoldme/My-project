@@ -1,6 +1,6 @@
 # 《麦田里的混响》：开发协作约定
 
-更新：2026-10-12。长期源指令见Docs/Project/REVERB_CONTEXT_V1.md。M01实测见Docs/Verification/M01/REVIEW.md，反馈与显示修复见Docs/Verification/M01-Feedback/REVIEW.md。用户肯定组合乐趣/改变玩法、闪避可保留；声波作用不明显，全屏已修复。用户现已提交首批美术素材，资产清单与实际验证以Docs/Verification/Art-Intake-01/REVIEW.md为准。TASKS_04交付由Codex收口；下一轮外部任务见Docs/Integration/REVERB_TASKS_05.md，TASKS_01/02/03为历史。保持原四位外部AI分担负载，用户转发需求，各AI独立目录/分支交GitHub，Codex审查、本地接线和自动化，再交用户体验验收。
+更新：2026-10-12。长期源指令见Docs/Project/REVERB_CONTEXT_V1.md。M01实测见Docs/Verification/M01/REVIEW.md，反馈与显示修复见Docs/Verification/M01-Feedback/REVIEW.md。用户肯定组合乐趣/改变玩法、闪避可保留；声波作用不明显，全屏已修复。用户现已提交首批美术素材，资产清单与实际验证以Docs/Verification/Art-Intake-01/REVIEW.md为准。TASKS_04/05四位交付已收齐，由Codex在integration/rf01-playtest集中整合；本轮验收见Docs/Integration/RF01_ACCEPTANCE.md；已交任务见Docs/Integration/REVERB_TASKS_05.md，TASKS_01/02/03为历史。保持原四位外部AI分担负载，用户转发需求，各AI独立目录/分支交GitHub，Codex审查、本地接线和自动化，再交用户体验验收。
 
 ## 当前范围
 
@@ -29,3 +29,9 @@ IMechanismPlaytestControls和MechanismMode是已提交合同，不能自行改�
 正式主线沿唯一GameLoop→RunSimulation→RunState、GameInput、CombatModule及AudioDirector/VfxDirector。新玩法只在M01显式启用；新场景不自动替换默认BuildSettings。已提供素材使用SourceArt/Intake01/intake-manifest.json追溯，不把.blend/GLB/离线预览放入Unity Assets重复导入，不擅改原文件。资源检查场景A01不等于游戏场景或美术验收。其余正式美术/音乐/音效/人声由用户提供或指定，作者颜色/数值/服装/字体提案非用户批准要求。
 
 用户已授权Codex常规GitHub管理、审查整合与必要修复，持续有效；大重构/删功能/依赖升级不在授权内。初期只编译/导入与关键路径检查，中后期再按计划完善测试。没有Unity要如实声明，由Codex导入、生成meta、运行，不让用户处理自动化/Git冲突。测试/Profiler观察不能证明美术质量、游戏乐趣或发布性能。Codex实际接线和自动检查后构建独立试玩，再由用户验收。
+
+## RF01 集成收口
+
+RF01IntegrationBatch.Setup 生成独立 RF01_MechanismPlaytest 场景；Build 显式只构建 RF01，不替换默认 BuildSettings。复用唯一 GameLoop/CombatModule/AudioDirector；SonicAttackVFX 仅收真实 Shot/EnemyHit/EnemyKilled，M01DerivedFx 仅收真实派生命中与只读待回声快照。18个Sonic实例开局预热；粒子、干涉Shader和本局克隆的植被材质按局内时钟冻结。Shot事件附带真实发射方向供表现读取，不改伤害规则。终局清除待触发标记，保留本局命中统计。
+
+四位已交版本冻结，等待RF01用户验收后再由Codex下达下一轮需求；不要自行扩大地图、导入角色WIP或做新增配乐。主美审查中的“100%无遮挡”、未经Blender实际打开确认的拓扑/骨骼/UV结论仍属待验证提案；Codex的实机证据优先。

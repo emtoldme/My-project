@@ -76,6 +76,7 @@ namespace Waffle.Experiments.Mechanism.Presentation
         Material echoMaterial;
         Material linkMaterial;
         Font font;
+        bool ownsFont;
         int syncSerial;
 
         void Awake()
@@ -83,7 +84,10 @@ namespace Waffle.Experiments.Mechanism.Presentation
             if (loop == null) loop = GetComponent<GameLoop>();
             echoMaterial = Tint(EchoColor);
             linkMaterial = Tint(LinkColor);
-            font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            font = Font.CreateDynamicFontFromOSFont(new[] { "Microsoft YaHei", "SimHei", "Arial Unicode MS" }, 32);
+            ownsFont = font != null;
+            if (font != null) font.RequestCharactersInTexture("回声传播 -0123456789", 32, FontStyle.Normal);
+            if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             for (int i = 0; i < echoCapacity; i++) echoes.Add(CreatePulse("M01_Echo_", i, echoMaterial, 0.045f));
             for (int i = 0; i < linkCapacity; i++)
@@ -111,6 +115,7 @@ namespace Waffle.Experiments.Mechanism.Presentation
         {
             if (echoMaterial != null) Destroy(echoMaterial);
             if (linkMaterial != null) Destroy(linkMaterial);
+            if (ownsFont && font != null) Destroy(font);
         }
 
         void OnEvents(IReadOnlyList<PresentationEvent> events)
@@ -333,6 +338,7 @@ namespace Waffle.Experiments.Mechanism.Presentation
             text.anchor = TextAnchor.MiddleCenter;
             text.alignment = TextAlignment.Center;
             var renderer = text.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = font.material;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
             go.SetActive(false);
