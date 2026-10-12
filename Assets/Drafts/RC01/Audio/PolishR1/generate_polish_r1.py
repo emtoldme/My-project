@@ -324,4 +324,4 @@ evo_shimmer = bandpass_noise(dur_evo, 1500, 6500, decay_rate=4.5, seed=803) * 0.
 evo_full = normalize_peak(apply_fade(evo_impact + evo_chord + evo_shimmer, 48, 512))
 sf.write(str(OUT_DIR / "TEST_ONLY_sfx_evolution_flourish_v1.wav"), evo_full, SR, subtype='PCM_24')
 
-print("All 21 audio variants generated successfully.")
+print("All 22 audio variants generated successfully.")
