@@ -18,6 +18,7 @@ namespace Reverb.Experiments.Mechanism.Integration
         M01DerivedFx fx;
         M01CombatBridge bridge;
         bool restarting;
+        bool comparisonAllowed;
         bool terminal;
         int terminalEchoHits, terminalPropagationHits;
         readonly List<PendingEchoInfo> pendingEchoes = new List<PendingEchoInfo>(16);
@@ -37,12 +38,14 @@ namespace Reverb.Experiments.Mechanism.Integration
         {
             loop = GetComponent<GameLoop>(); fx = GetComponent<M01DerivedFx>();
             if (loop == null || loop.Sim?.Combat == null) { enabled = false; return; }
+            string[] args = Environment.GetCommandLineArgs();
+            comparisonAllowed = Application.isEditor || Array.IndexOf(args, "--m01-smoke-output") >= 0;
+            if (!comparisonAllowed) nextMode = MechanismMode.Combined;
             if (!commandLineRead)
             {
                 commandLineRead = true;
-                string[] args = Environment.GetCommandLineArgs();
                 for (int i = 0; i + 1 < args.Length; i++)
-                    if (args[i] == "--m01-mode" && Enum.TryParse(args[i + 1], out MechanismMode mode) && Enum.IsDefined(typeof(MechanismMode), mode)) nextMode = mode;
+                    if (comparisonAllowed && args[i] == "--m01-mode" && Enum.TryParse(args[i + 1], out MechanismMode mode) && Enum.IsDefined(typeof(MechanismMode), mode)) nextMode = mode;
             }
             bridge = new M01CombatBridge(loop.Sim.Combat, nextMode);
             // Identical close initial cluster exposes the mechanism immediately in every mode.
@@ -104,7 +107,7 @@ namespace Reverb.Experiments.Mechanism.Integration
         public void RestartWithMode(MechanismMode mode)
         {
             if (!IsReady || !Enum.IsDefined(typeof(MechanismMode), mode)) return;
-            nextMode = mode;
+            nextMode = comparisonAllowed ? mode : MechanismMode.Combined;
             loop.Restart();
         }
     }

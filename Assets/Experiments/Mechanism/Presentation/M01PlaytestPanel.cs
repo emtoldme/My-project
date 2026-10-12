@@ -23,9 +23,9 @@ namespace Waffle.Experiments.Mechanism.Presentation
             IMechanismPlaytestControls controls = FindOnThisObject();
             bool ready = controls != null && controls.IsReady;
 
-            Rect box = ImguiScale.Fit(new Rect(16f, ImguiScale.Height - 214f, 560f, 198f));
+            Rect box = ImguiScale.Fit(new Rect(16f, ImguiScale.Height - 142f, 560f, 126f));
             GUILayout.BeginArea(box, GUI.skin.box);
-            GUILayout.Label(ready ? "TEST_ONLY 机制  " + controls.Mode : "等待机制接线");
+            GUILayout.Label(ready ? "战斗草稿 · 回声与传播" : "等待战斗接线");
             if (ready)
             {
                 GUILayout.Label("回声 " + controls.EchoHits
@@ -41,26 +41,11 @@ namespace Waffle.Experiments.Mechanism.Presentation
                 GUILayout.Label("回声预备 " + fx.ActiveCues + "    标记收在原目标身上，不是范围");
             else
                 GUILayout.Label("回声预备：等待规则快照");
-            GUILayout.Label("seed " + loop.config.seed + "    切换即同种子重开 · 固定武器对照");
+            GUILayout.Label("测试素材 · 局内道具与成长正在接入");
             GUILayout.Label("紫红标记：0.5秒后这一个目标再受伤。数字只在打中后出现");
             GUILayout.Label("金色连线：伤害跳向另一目标，最多5米");
 
-            bool previous = GUI.enabled;
-            GUI.enabled = ready;
-            GUILayout.BeginHorizontal();
-            ModeButton(controls, MechanismMode.None, "无模块");
-            ModeButton(controls, MechanismMode.Echo, "回声");
-            ModeButton(controls, MechanismMode.Propagation, "传播");
-            ModeButton(controls, MechanismMode.Combined, "组合");
-            GUILayout.EndHorizontal();
-            GUI.enabled = previous;
             GUILayout.EndArea();
-        }
-
-        static void ModeButton(IMechanismPlaytestControls controls, MechanismMode mode, string label)
-        {
-            if (GUILayout.Button(label, GUILayout.Height(28f)) && controls != null && controls.IsReady)
-                controls.RestartWithMode(mode);
         }
 
         IMechanismPlaytestControls FindOnThisObject()
