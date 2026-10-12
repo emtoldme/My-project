@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "packageId": "rc02.music.pipeline.v1",
+  "description": "RC02 音乐档案与状态机配置清单 v1，管理各关卡循环与升级/暂停状态机，支持无缝热替换",
+  "entries": [
+    {
+      "id": "rc02.music.profile.harvest_road",
+      "kind": "music",
+      "contentId": "*",
+      "eventType": "",
+      "profileId": "harvest_road",
+      "assets": [
+        { "role": "combatLoop", "path": "Assets/Audio/S03/bgm_s03_mathrock_polymeter_24s_loop.wav" },
+        { "role": "levelUpLoop", "path": "Assets/Audio/Music/bgm_levelup_suspended_loop.wav" }
+      ],
+      "parameters": [
+        { "key": "musicGainDb", "value": -18.0 },
+        { "key": "fadeSeconds", "value": 1.2 },
+        { "key": "bpm", "value": 0.0 },
+        { "key": "beatsPerBar", "value": 0.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.0,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Autumn harvest road: math rock 7/8 & 4/4 polymeter electric guitar clean loop (24s)"
+    },
+    {
+      "id": "rc02.music.profile.old_market",
+      "kind": "music",
+      "contentId": "*",
+      "eventType": "",
+      "profileId": "old_market",
+      "assets": [
+        { "role": "combatLoop", "path": "Assets/Audio/Music/bgm_combat_master_64s_seamless.wav" },
+        { "role": "levelUpLoop", "path": "Assets/Audio/Music/bgm_levelup_suspended_loop.wav" }
+      ],
+      "parameters": [
+        { "key": "musicGainDb", "value": -18.0 },
+        { "key": "fadeSeconds", "value": 1.0 },
+        { "key": "bpm", "value": 0.0 },
+        { "key": "beatsPerBar", "value": 0.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.0,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Old agricultural market draft: mid-frequency metallic groove full loop (64s)"
+    },
+    {
+      "id": "rc02.music.profile.fourth_granary",
+      "kind": "music",
+      "contentId": "*",
+      "eventType": "",
+      "profileId": "fourth_granary",
+      "assets": [
+        { "role": "combatLoop", "path": "Assets/Audio/S03/bgm_s03_postrock_space_24s_loop.wav" },
+        { "role": "levelUpLoop", "path": "Assets/Audio/Music/bgm_levelup_suspended_loop.wav" }
+      ],
+      "parameters": [
+        { "key": "musicGainDb", "value": -18.0 },
+        { "key": "fadeSeconds", "value": 1.5 },
+        { "key": "bpm", "value": 0.0 },
+        { "key": "beatsPerBar", "value": 0.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.0,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Fourth granary draft: deep cavernous post-rock swell loop (24s)"
+    },
+    {
+      "id": "rc02.music.profile.radio_wasteland",
+      "kind": "music",
+      "contentId": "*",
+      "eventType": "",
+      "profileId": "radio_wasteland",
+      "assets": [
+        { "role": "combatLoop", "path": "Assets/Audio/S03/bgm_s03_postrock_space_24s_loop.wav" },
+        { "role": "levelUpLoop", "path": "Assets/Audio/Music/bgm_levelup_suspended_loop.wav" }
+      ],
+      "parameters": [
+        { "key": "musicGainDb", "value": -18.0 },
+        { "key": "fadeSeconds", "value": 1.5 },
+        { "key": "bpm", "value": 0.0 },
+        { "key": "beatsPerBar", "value": 0.0 }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.0,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "Radio wasteland draft: wide stereo electromagnetic shimmer loop (24s)"
+    }
+  ]
+}
