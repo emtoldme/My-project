@@ -1,5 +1,15 @@
 # M01 机制试玩场景
 
+## Codex 集成后的入口（2026-10-12）
+
+作者原始交付记录保留在下面；其中“等待接线”“没有场景/AudioDirector”“8/12 池”仅描述作者提交时，不能作为当前工程状态。
+
+当前请用菜单 `Experiments/Setup Integrated M01 Playtest`，或执行 `Waffle.Experiments.Mechanism.EditorTools.M01IntegrationBatch.Setup`。它生成真实 M01 场景、规则桥、6/6 表现池和唯一 AudioDirector，启用真实派生伤害，使用紫红双环/金色定向连线。透明材质在 M01/Materials 内单独保存，不覆盖 E01。
+
+独立构建入口为 `M01IntegrationBatch.Build`，通过 BuildPlayerOptions 显式只传 M01 场景，因此播放器可以重开；不必修改持久 Build Settings。模式配置跨重载保留，每局 CombatModule/桥/队列重新创建，同 seed 12345。XP/升级在本试玩冻结以固定武器数值。验收见 Docs/Integration/M01_ACCEPTANCE.md；技术证据见 Docs/Verification/M01/REVIEW.md。
+
+## 作者原始交付记录（接线前的历史）
+
 2026-10-12。基线 `origin/main` `dc8b096d7529cc07298b2407928a73009e1072e6`（Merge PR #23）。分支 `feature/m01-playtest-scene`。
 
 只写了 `Assets/Experiments/Mechanism/Presentation/`、`Editor/`、`Scenes/` 和本目录。没有改 1 号规则、共享合同、正式 Core/Input/Views、E-01 资源、Build Settings 或包。本环境没有 Unity。菜单没跑，场景文件还没生成，没有播放，没有截图。
