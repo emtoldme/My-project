@@ -32,7 +32,7 @@
 | E-01真实战斗事件 | Shot/Hit各1；波纹实际渲染差异1447像素；暂停冻结、禁用清理通过 | e01-runtime.txt、e01-wave-on/off.png |
 | E-02对照 | 无模块/A/B/A+B总伤害10/15/14/23，队列清空 | e02-comparison.txt |
 | E-03真实16秒双轨 | 实际回绕10次；起音及三次恢复的音频线程首信号差均小于64个输出样点，最后一次0 | e03-runtime.txt、测试源码及XML |
-| 资源身份 | 377个唯一GUID，无重复；实验目录未缺meta | metadata-check.json |
+| 资源身份 | 最终工作区376个唯一GUID，无重复；实验目录未缺meta | metadata-check.json |
 
 ShaderGraph实际生成、绑定和绘制；粒子由一个真实Unity ParticleSystem手动按游戏dt推进，不是方块冒充粒子。截图是1280×720相机捕获，不含IMGUI，只证明接入和可见性，仍是旧机甲占位与素色地面，没有正式乡村画面。
 
