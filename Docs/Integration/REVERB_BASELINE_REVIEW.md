@@ -1,5 +1,7 @@
 # 《麦田里的混响》技术基线审查
 
+> 历史记录：本轮四位作者已交付并整合。当前结果见Docs/Verification/Reverb-Experiments-01/REVIEW.md，后续只执行REVERB_TASKS_02.md，不重复领取此处旧任务。
+
 2026-10-12。读取用户提供的总指令v1.0，并保留既有外部AI协作模式。检查基线main@959d541b59998b1652348ae1e297882ffcaabb4d；后续本轮改动仅为上下文、审查与任务文档。用户源指令存Docs/Project/REVERB_CONTEXT_V1.md。
 
 ## 结论

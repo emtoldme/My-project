@@ -1,24 +1,22 @@
 # 项目状态与当前开发入口
 
-2026-10-12。当前项目《麦田里的混响》；用户总指令v1.0存Docs/Project/REVERB_CONTEXT_V1.md。保持原外部AI协作，Codex统筹与技术验证、用户转发/创作决策/体验验收。
+2026-10-12。《麦田里的混响》，总指令见Docs/Project/REVERB_CONTEXT_V1.md。保持用户转发、四位AI独立目录/分支交付、Codex审查整合与自动验证、用户必要体验验收的模式。
 
-当前先完成技术基线审查，再开展最多三个独立小实验，见REVERB_BASELINE_REVIEW.md、REVERB_TASKS_01.md。不是立即实现全部新策划。A-04/P-04/C-03/S-04雕塑返工任务撤回，旧卡仅历史；正式美术/音乐由用户提供或指定。
+用户最新决定：继续技术实验，正式美术稍后准备。本轮不索要正式素材，不开完整关卡或大型系统。新艺术方向仍为乡村怪谈/锈蚀机械/迷幻音波；S2首版画面被拒绝，尚无正式画面通过验收。
 
-## 基线事实
+## 本轮交付与验证
 
-main@959d541b59998b1652348ae1e297882ffcaabb4d具备Unity6000.4.3f1、URP17.4.0、GameLoop/RunSimulation/RunState、GameInput、纯C# CombatModule、XP/升级、池化视图和统一只读表现事件。AudioDirector已有基本混音/交叉淡化/生命周期，未有DSP同步分轨实现。装备机制组合、完整资产动画管线、乡村画面与Lore未验证。
+基线main@9c565ee0ca87c6858145e5f656996aa7711f916b。四位作者的第一轮交付已保留提交并集中整合；验证源码f1f3155d91d8f9c8d2fa8a90d82ce1eeb9b412e3。Unity6000.4.3f1 / URP17.4.0未升级。
 
-本轮Unity EditMode117通过/0失败，XML见Docs/Verification/Reverb-Baseline。未重跑PlayMode或重新打包。历史PlayMode14通过与S2包构建/启动仅对旧版本范围有效；S2首版画面已被用户拒绝，不代表艺术质量。S1-DodgeFix和S2-StyleLab包保留对照。
+- E-01：实际ShaderGraph、受控模型单位适配、真实攻击驱动波纹及ParticleSystem；暂停和禁用清理通过。仍为TEST_ONLY机甲/素色地面。
+- E-02：纯C#组合夹具，无模块/A/B/A+B为10/15/14/23；修复粗dt派生调度和暂停命中，不接正式伤害。
+- E-03：双轨共同DSP起点、暂停恢复/重开/禁用，真实16秒音频循环10次；主线程最大游标差1024样点，音频线程起音探针最后差0。不能据此认证持续相位或声卡输出。原信号循环首尾仍不连续，已派V2技术修订。
+- A-R01：规范审查，修正URP Lit通道；服装/色卡等仍是作者提案。
 
-## 当前分工
+本轮Unity EditMode125/125、实验PlayMode2/2通过，0失败；证据与限制见Docs/Verification/Reverb-Experiments-01/REVIEW.md。未重跑旧S2 PlayMode14项，未打新包或做性能达标认证；旧S1/S2试玩保留。正式Core/Input/Views、场景和渲染配置未改。
 
-| 执行者 | 任务 |
-|---|---|
-| 1号 | E-02 隔离两模块组合规则实验 |
-| 2号 | E-01 资源导入、URP和声波表现通路 |
-| 主美 | A-R01 资源规格和新方向审查，不擅自制作正式资产 |
-| 音效总监 | E-03 DSP同步/混音技术实验，不编造正式配乐 |
-| Codex | 共享接口、审查、GitHub、本地Unity验证与必要缺项修复 |
-| 用户 | 指定正式资源、玩法/美术/声音方向，体验并验收 |
+## 下一步与分工
 
-任务提示词待用户转发，未自动发送消息。三个实验尚未实现；Lore后排，不扩整关和大型系统。旧12分钟/装备数量是历史范围，不是新策划不可变指标。
+当前可转发提示词为Docs/Integration/REVERB_TASKS_02.md：1号复核组合与未来适配表；2号复核ShaderGraph/粒子并做小规模真实性能观察；主美只校对技术接入检查表；音效总监修订TEST_ONLY循环信号。Codex继续GitHub、共享整合、自动化及必要缺项修复。提示词没有自动发送给外部AI。
+
+REVERB_TASKS_01.md与REVERB_BASELINE_REVIEW.md保留历史，不恢复旧A-04/P-04/C-03/S-04任务。Lore后排；本轮技术检查不代表正式美术或游戏阶段已获用户验收。
