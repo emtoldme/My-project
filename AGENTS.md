@@ -6,22 +6,22 @@
 
 正式主线只有一套 Waffle.GameLoop → RunSimulation → RunState 与 GameInput。状态、时钟、暂停、输入切换、升级、终局和重开不得另建平行实现。1号旧Survivor.GameManager分支保留参考，不直接整条合并。
 
-main是唯一共享开发基线。当前任务详见 Docs/Integration/PROJECT_STATUS.md、TASK_BOARD.md、NEXT_TASKS.md；历史交接文档不能覆盖当前任务卡。编号按交付分支识别，不按Grok/Gemini名字推定。
+main是唯一共享开发基线。当前任务详见 Docs/Integration/S2_VISUAL_REWORK.md、PROJECT_STATUS.md、TASK_BOARD.md；NEXT_TASKS.md仅为历史派工入口。用户已拒绝S2首版视觉，当前为S2-02返工，历史交接文档不能覆盖当前任务卡。编号按交付分支识别，不按Grok/Gemini名字推定。
 
 | 当前任务及可写范围 | 唯一执行者 |
 |---|---|
-| C-02：Assets/Waffle/Scripts/Rules/Combat/、Assets/Waffle/Tests/Combat/、Docs/Combat/ | 1号，已有战斗事件关键边界 |
+| C-03：仅Docs/Combat/C-03_PRESENTATION_REVIEW.md | 1号，审查表现边界，不改规则/资源/测试 |
 | 共享Core/Input/Views、正式S1场景、共享Editor/程序集配置 | Codex，跨目录接线与修复 |
-| P-03：Assets/Waffle/S2/、Assets/Waffle/Scenes/S2_StyleLab.unity及.meta、Docs/Integration/P-03_HANDOFF.md | 2号，独立可玩视听样板与装配工具 |
-| A-03：Assets/Art/S2/、Docs/Art/A-03_STYLEKIT.md | 主美，可导入雕塑模型与材质 |
-| S-03：Docs/Audio/、Assets/Audio/S03/ | 音效总监，短音乐与同源音色、来源证据 |
+| P-04：Assets/Waffle/S2/（排除Audio/）、Assets/Waffle/Scenes/S2_StyleLab.unity及.meta、Docs/Integration/P-04_HANDOFF.md | 2号，场景构图/照明、配套HUD/动效；不改共享渲染设置 |
+| A-04：Assets/Art/S2/、Docs/Art/ | 主美，V2精制结构/材料/场地组合，保留V1比较 |
+| S-04：仅Docs/Audio/ | 音效总监，补真实来源证据；暂停扩曲和资源改写 |
 | GitHub合并、任务板、整合修复与自动化证据 | Codex |
 
 2号继续负责游戏素材、场景和效果的接入能力；每轮按任务卡分配实际可写范围，后续场景/VFX任务再单独派发，不能和Codex同时修改。跨范围需求写明调用处、输入输出、时序与验收条件，由Codex协调；不要复制管理器绕过边界。
 
 主美负责视觉规范和素材，音效总监负责声音规范和素材；正式场景、共享材质、Mixer及表现入口不由素材作者并行修改。Codex可跨目录修复和接线，但必须记录变更并避开已派出的写入任务。
 
-当前C-02、P-03、A-03、S-03均已交付，由Codex整合为首个联合样板。四位等待用户样板反馈及新的具体任务，不重复执行旧任务卡、不自行扩充S3；Codex负责本轮整合范围内的修复与验证。
+当前C-02、P-03、A-03、S-03已技术整合，但用户认为画面简陋、塑料、缺乏细节，S2视觉验收未通过。按S2_VISUAL_REWORK.md执行A-04/P-04精制小样和C-03/S-04限定支持；先Codex视觉预审再给用户看，不重复旧任务卡、不扩S3。主美写美术目录，2号写装配目录，Codex负责共享接线，禁止并行覆盖。
 
 ## 开工与交付
 
