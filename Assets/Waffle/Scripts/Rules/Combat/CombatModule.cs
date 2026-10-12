@@ -186,11 +186,7 @@ namespace Waffle.Combat
 
                 if (g.Life == GemLife.Magnet)
                 {
-                    Vec2 to = player - g.Position;
-                    float d = to.Length;
-                    float step = g.MagnetSpeed * dt;
-                    g.Position = step >= d ? player : g.Position + to * (step / d);
-                    g.MagnetSpeed = Math.Min(Config.magnetMaxSpeed, g.MagnetSpeed + Config.magnetAcceleration * dt);
+                    g.Position = AdvanceAttraction(g.Position, player, ref g.MagnetSpeed, dt);
                 }
 
                 if (Vec2.SqrDistance(g.Position, player) <= pickSqr)
@@ -207,6 +203,17 @@ namespace Waffle.Combat
             Result.XpCollected = xp;
             Counters.TotalXpCollected += xp;
             return Result;
+        }
+
+        // One attraction motion for XP and ordinary drops; collection/rewards stay in their existing T10 paths.
+        private Vec2 AdvanceAttraction(Vec2 position, Vec2 target, ref float speed, float dt)
+        {
+            Vec2 to = target - position;
+            float distance = to.Length;
+            float step = Math.Max(0f, speed) * dt;
+            Vec2 next = distance <= step || distance <= .00001f ? target : position + to * (step / distance);
+            speed = Math.Min(Config.magnetMaxSpeed, speed + Config.magnetAcceleration * dt);
+            return next;
         }
 
         /// <summary>T13：把本 tick 标记回收的对象放回池（代号 +1）。每个 tick 都要调用，包括失败/胜利那一 tick。</summary>

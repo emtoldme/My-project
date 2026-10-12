@@ -234,6 +234,9 @@ namespace Reverb.Drafts.RC01.EditorTools
         public static void Build()
         {
             string output = Path.GetFullPath(Path.Combine(Application.dataPath,"../../Builds/RC01-SoundR1/Reverb.exe"));
+            string[] args = Environment.GetCommandLineArgs();
+            int outputFlag = Array.IndexOf(args, "--rc01-build-output");
+            if (outputFlag >= 0 && outputFlag + 1 < args.Length) output = Path.GetFullPath(args[outputFlag + 1]);
             M01IntegrationBatch.BuildScene(ScenePath,output);
         }
     }

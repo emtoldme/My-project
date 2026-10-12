@@ -1,0 +1,19 @@
+{
+  "files": {
+    "Reverb_Data/Managed/Waffle.Rules.dll": {
+      "bytes": 109568,
+      "sha256": "48b7fa7ab0d19f5621b48a9eed0fce1b870d7736f0ffa38de63025eb3ef84769"
+    },
+    "Reverb_Data/Managed/Reverb.Drafts.RC01.Presentation.dll": {
+      "bytes": 33280,
+      "sha256": "e411b47bd64ea3fd07d6a21629141f2344a9f3510c8e038af94f7dd0be61f890"
+    },
+    "Reverb.exe": {
+      "bytes": 667648,
+      "sha256": "748b8feff0cf8e727ed412006cfe11f0591bdfec6bd5634e89acacae0ab8b38e"
+    }
+  },
+  "sourceCommit": "a6ba29708288d8cf5fa73a8794390e433ba333d1",
+  "scene": "Assets/Drafts/RC01/Scenes/RC01_HarvestRoad.unity",
+  "unity": "6000.4.3f1"
+}

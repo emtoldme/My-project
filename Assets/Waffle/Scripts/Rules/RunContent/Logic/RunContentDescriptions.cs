@@ -52,7 +52,7 @@ namespace Waffle.RunContent
                 case "P04": effect="扩大散射射程、护卫轨道和共振区域。";Add("areaPct","范围加成","%");limit="不扩大定向脉冲索敌范围，也不增加伤害或弹数。";break;
                 case "P06": effect="提高常规移动速度，方便走位和收集。";Add("moveSpeedPct","移速加成","%");limit="不改变闪避距离、速度或冷却。";break;
                 case "P07": effect="提高最大生命，并立刻补上新增的生命差值。";Add("maxHpPct","最大生命加成","%");limit="原来缺失的生命不会补满；不是全额回复。";break;
-                case "P09": effect="更远地吸引经验宝石，加快收集。";Add("pickupPct","经验磁吸半径加成","%");limit="不增加经验价值；回复、清场和精英箱仍需靠近拾取。";break;
+                case "P09": effect="扩大经验宝石及回复、磁吸、清场道具的吸取范围，进入范围后自动飞向玩家。";Add("pickupPct","吸取半径加成","%");limit="不增加经验价值；精英箱仍需靠近开启。各阶为累计加成。";break;
                 case "P12": effect="直接命中后0.5秒，同一敌人再受一次回声伤害。";Ratio("echoCoef","额外伤害相当于原命中的");limit="目标提前死亡则取消；与传播同时拥有时，回声可再传给1名邻居一次。";break;
                 case "P13": effect="直接命中后0.1秒，把部分伤害传给附近其他敌人。";Ratio("propCoef","传播伤害相当于原命中的");Add("propRadius","搜索半径","米");Add("propBudget","每次最多邻居","名");limit="不是无限连锁；没有邻居时无效，派生不继续递归。";break;
                 case "P15": effect="直接命中时把敌人向远离玩家的方向推开。";Add("knockback","推退距离","米");limit="同一敌人每0.5秒最多一次；精英仅获得35%的推退距离。";break;

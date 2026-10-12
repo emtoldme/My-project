@@ -31,6 +31,8 @@ namespace Waffle.Combat
         public long Serial { get; internal set; }
         public string Id { get; internal set; }
         public Vec2 Position { get; internal set; }
+        public bool IsAttracted { get; internal set; }
+        internal float AttractionSpeed;
         internal float ExpiresAt;
     }
     public readonly struct RunEchoCue
@@ -297,7 +299,13 @@ namespace Waffle.Combat
             for (int i = pickups.Count - 1; i >= 0; i--)
             {
                 var p = pickups[i];
-                if (now >= p.ExpiresAt) { pickups.RemoveAt(i); continue; }
+                if (!p.IsAttracted && now >= p.ExpiresAt) { pickups.RemoveAt(i); continue; }
+                // Ordinary drops share the player's attraction range. Elite rewards remain deliberate contact pickups.
+                float range = Math.Max(0f, input.Stats.MagnetRadius);
+                if (p.Id != "ELITE" && !p.IsAttracted && Vec2.SqrDistance(player, p.Position) <= range * range)
+                { p.IsAttracted = true; p.AttractionSpeed = Config.magnetStartSpeed; }
+                if (p.IsAttracted)
+                    p.Position = AdvanceAttraction(p.Position, player, ref p.AttractionSpeed, Math.Max(0f, input.Dt));
                 if (Vec2.SqrDistance(player, p.Position) > Config.pickupRadius * Config.pickupRadius) continue;
                 pickups.RemoveAt(i); RunPickupsCollected++;
                 if (p.Id == "D02") Result.HealFraction += .2f;

@@ -1,6 +1,6 @@
 # 《麦田里的混响》开发协作约定
 
-更新2026-10-12。用户最新指令：取消之前四模式试玩，进入四图战斗/局内成长/美术/音效草稿，使用测试素材，优先丰富局内道具与升级并对齐主流幸存者的构筑体验，设定后置。内容任务入口Docs/Integration/REVERB_TASKS_06.md；音效反馈R1当前增量任务见Docs/Integration/REVERB_TASKS_07.md；设计草稿与并行合同在Docs/Design/RC01/。TASKS_01..05与RF01验收要求保留历史，不能据旧“冻结/不扩道具/等正式美术”限制阻止当前已授权推进。
+更新2026-10-12。用户最新指令：声音R1先接受为当前基线，优先修玩法bug、增量玩法与可复用组件系统，搭好美术/音乐管线便于后续润色填充；目前不需要更多测试投入，仅做必要编译/导入/针对性诊断，完备验证中后期安排。最新任务入口Docs/Integration/REVERB_TASKS_08.md、合同Docs/Design/RC02/COMPONENT_PIPELINE_CONTRACT.md。仍保持取消四模式、局内成长/地图草稿、测试素材和设定后置。TASKS_01..07为阶段历史，不能据旧冻结状态阻止当前推进。
 
 ## 工作方式
 
@@ -23,6 +23,8 @@
 | 主美 | Assets/Drafts/RC01/Art/；Docs/Design/RC01/Art/。测试材质副本/四图风格样板与图示语义 |
 | 音效 | Assets/Drafts/RC01/Audio/；Docs/Design/RC01/Audio/。测试短音/既有循环映射与四图声音草稿 |
 | Codex | 中央任务/合同、RunContentContracts.cs、共享父目录meta、GameLoop/RunSimulation/CombatModule/AudioDirector与程序集最小接线、GitHub和本地验证 |
+
+TASKS_08本批覆盖以上旧范围：1号另获准Rules/RunContent/Components/与Docs/Design/RC02/Growth/，本轮不扩测试；2号本批只写RC01/Pipeline/、独立Scenes/RC02_AssemblyLab.unity及Docs/Design/RC02/Pipeline/，不改当前HarvestRoad与旧Presentation/Editor；主美只写RC01/Art/ComponentsV1/与Docs/Design/RC02/Art/；音效只写RC01/Audio/PipelineV1/与Docs/Design/RC02/Audio/。具体以TASKS_08为准。中央宿主仍Codex所有；四位不修改彼此接口与资源。
 
 共享父目录meta已提供，不覆盖不同GUID。四位不互相合并/改文件，不擅改旧规则/管理器/用户原素材；跨范围最小请求交Codex。原PR33 HUD仍未接入，2号不能直接合入其独立Time.timeScale/假生命/假模式逻辑，不另抢Assets/UI目录。
 
@@ -53,3 +55,9 @@ RunContentContracts.cs已发布Waffle.RunContent的只读快照和选择请求�
 ## 音效R1收口
 
 TASKS_07音效交付57d2e45（PR42）：8组22短音与3试听。Codex按真实事件接线、适配30米斜俯视听音距离并支持按事件清除暂停尾音；测量与验收边界见Docs/Verification/RC01-SoundR1/。听感待用户验收，不把合成材料语义或离线峰值当实物拟音/主流品质认证。升级说明/经验微调保留，不派四位重复写本批共享代码。
+
+## RC02启动与吸取反馈
+
+用户已接受R1声音为当前基线，不继续重做音色。吸取诊断：经验3/3.75/4.5/5.25米原已生效，普通回复/磁吸/清场道具此前固定接触1米；本批统一普通掉落物磁吸，复用同一移动函数、真实T10奖励路径，精英箱仍接触。HUD显示实际半径，说明同步。新版规则代码a6ba297，组件/视听管线本批仅发布合同与分工，不能称四位新系统已实现。
+
+TASKS_08A先组件适配W01＋新增W05/W06与P03/P05/P08/P17，Codex接线后目标6/14/3/4；08B再补原6/18/6/6。2号搭目录导入/预览和独立场景，主美交三类模板，音效交复用R1/旧音乐的绑定与档案。不增加音频宿主，不一次重写全部旧武器。必要检查后给用户阶段试玩，其余时间投入玩法与生产管线。

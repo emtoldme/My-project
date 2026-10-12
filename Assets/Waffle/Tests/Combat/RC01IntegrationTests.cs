@@ -34,7 +34,7 @@ namespace Waffle.Tests.Combat
             var c=RunContentCatalog.Default;
             var pulse=RunContentDescriptions.Choice(c.Get("W01"),1);
             Assert.That(pulse,Does.Contain("10 → 13"));
-            Assert.That(RunContentDescriptions.Choice(c.Get("P09"),0),Does.Contain("精英箱仍需靠近"));
+            Assert.That(RunContentDescriptions.Choice(c.Get("P09"),0),Does.Contain("精英箱仍需靠近开启"));
             Assert.That(RunContentDescriptions.Choice(c.Get("P12"),1),Does.Contain("50% → 65%"));
             Assert.That(RunContentDescriptions.Choice(c.Get("W04"),4),Does.Contain("12伤害"));
             foreach(var d in c.All) if(d.Status==ImplementationStatus.Wired && d.Kind!=ContentKind.Pickup)
