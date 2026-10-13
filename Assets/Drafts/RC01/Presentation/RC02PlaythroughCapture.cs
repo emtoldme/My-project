@@ -16,13 +16,22 @@ namespace Reverb.Drafts.RC01.Presentation
     public sealed class RC02PlaythroughCapture : MonoBehaviour
     {
         readonly HashSet<string> hits = new HashSet<string>();
+        GameLoop captureLoop;
+        void Update()
+        {
+            // Focus loss must not strand this explicit automated fixture on the pause menu.
+            if(captureLoop?.Sim!=null && captureLoop.Sim.State.Phase==RunPhase.Paused) captureLoop.TogglePause();
+        }
         IEnumerator Start()
         {
             var args=Environment.GetCommandLineArgs(); int flag=Array.IndexOf(args,"--rc02-capture");
             if(flag<0 || flag+1>=args.Length) yield break;
+            Application.runInBackground=true; Application.targetFrameRate=60;
+            InputSystem.settings.backgroundBehavior=InputSettings.BackgroundBehavior.IgnoreFocus;
             string output=Path.GetFullPath(args[flag+1]); Directory.CreateDirectory(output);
             yield return null;
             var loop=GetComponent<GameLoop>(); var sim=loop.Sim;
+            captureLoop=loop;
             sim.God=true; sim.Combat.Config.spawningEnabled=false;
             loop.PresentationDispatched+=Observe;
             sim.DebugGiveXp(2000);
