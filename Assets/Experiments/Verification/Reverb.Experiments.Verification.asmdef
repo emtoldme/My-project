@@ -1,9 +1,0 @@
-{
-  "name": "Reverb.Experiments.Verification",
-  "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Waffle.Rules", "Waffle.Runtime", "Waffle.Experiments.VisualPipeline", "Reverb.Experiments.AudioSync"],
-  "includePlatforms": [],
-  "overrideReferences": true,
-  "precompiledReferences": ["nunit.framework.dll"],
-  "autoReferenced": false,
-  "defineConstraints": ["UNITY_INCLUDE_TESTS"]
-}

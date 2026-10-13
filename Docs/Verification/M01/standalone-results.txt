@@ -1,4 +1,0 @@
-TEST_ONLY mode=Combined passed=True movement=True dodge=True pause=True rootScale=True rendered=True echo=9 propagation=12 kills=3 time=7.543 seed=12345
-TEST_ONLY mode=None passed=True movement=True dodge=True pause=True rootScale=True rendered=True echo=0 propagation=0 kills=1 time=6.571 seed=12345
-TEST_ONLY mode=Echo passed=True movement=True dodge=True pause=True rootScale=True rendered=True echo=11 propagation=0 kills=2 time=6.573 seed=12345
-TEST_ONLY mode=Propagation passed=True movement=True dodge=True pause=True rootScale=True rendered=True echo=0 propagation=9 kills=2 time=6.589 seed=12345

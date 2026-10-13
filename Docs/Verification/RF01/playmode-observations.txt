@@ -1,4 +1,0 @@
-mode=Combined cueSeen=True echo=2 propagation=5 shot=3 direct=3 deaths=0 pool=18 pause/terminal/reload=passed
-mode=None cueSeen=False echo=0 propagation=0 shot=3 direct=3 deaths=0 pool=18 pause/terminal/reload=passed
-mode=Echo cueSeen=True echo=2 propagation=0 shot=3 direct=3 deaths=0 pool=18 pause/terminal/reload=passed
-mode=Propagation cueSeen=False echo=0 propagation=3 shot=3 direct=3 deaths=0 pool=18 pause/terminal/reload=passed

@@ -1,0 +1,1013 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d3e22431d2446abb49312f42e62ff58, type: 3}
+  m_Name: RC02ContentCatalog
+  m_EditorClassIdentifier: Reverb.Drafts.RC01.Pipeline::Reverb.Drafts.RC01.Pipeline.RC02ContentCatalog
+  schemaVersion: 1
+  packages: rc02.art.v1, rc02.audio.pipeline.v1, rc02.music.pipeline.v1
+  entries:
+  - id: rc02.art.w01.shot
+    kind: art
+    contentId: W01
+    eventType: Shot
+    profileId: 
+    assets:
+    - role: prefab
+      assetPath: Assets/Game/Art/Effects/Prefabs/TEST_ONLY_Projectile_DirectedPulse.prefab
+      asset: {fileID: 1000000000000000, guid: 2fdfa08d8726499da1ce1feead8240c5, type: 3}
+    - role: material
+      assetPath: Assets/Game/Art/Effects/Materials/M_VFX_DirectedPulse.mat
+      asset: {fileID: 2100000, guid: b9c16d08799144debf788c314408da49, type: 2}
+    parameters:
+    - key: width
+      value: 0.15
+    - key: scale
+      value: 0.8
+    - key: tailSeconds
+      value: 0.12
+    - key: intensity
+      value: 1.2
+    maxInstances: 16
+    minInterval: 0.05
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: W01 Directed Pulse projectile template; see package README
+    issues: 
+  - id: rc02.art.w01.hit
+    kind: art
+    contentId: W01
+    eventType: EnemyHit
+    profileId: 
+    assets:
+    - role: prefab
+      assetPath: Assets/Game/Art/Effects/Prefabs/TEST_ONLY_Hit_EchoPulse.prefab
+      asset: {fileID: 1000000000000000, guid: 82e8c91ff9f5432b86ad6d4e2e1cc944, type: 3}
+    - role: material
+      assetPath: Assets/Game/Art/Effects/Materials/M_VFX_DirectedPulse.mat
+      asset: {fileID: 2100000, guid: b9c16d08799144debf788c314408da49, type: 2}
+    parameters:
+    - key: width
+      value: 0.3
+    - key: scale
+      value: 0.5
+    - key: tailSeconds
+      value: 0.1
+    - key: intensity
+      value: 1
+    maxInstances: 20
+    minInterval: 0.04
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: W01 Direct hit impact sparks; see package README
+    issues: 
+  - id: rc02.art.w04.zone
+    kind: art
+    contentId: W04
+    eventType: WeaponZone
+    profileId: 
+    assets:
+    - role: prefab
+      assetPath: Assets/Game/Art/Effects/Prefabs/TEST_ONLY_Zone_ResonanceField.prefab
+      asset: {fileID: 1000000000000000, guid: e8368a03fd1d473e9f08cb6a0e3532f5, type: 3}
+    - role: material
+      assetPath: Assets/Game/Art/Effects/Materials/M_VFX_ResonanceZone.mat
+      asset: {fileID: 2100000, guid: 12bad1074d844d5e9d070c9aa209c4de, type: 2}
+    parameters:
+    - key: width
+      value: 0.065
+    - key: scale
+      value: 1.5
+    - key: tailSeconds
+      value: 2
+    - key: intensity
+      value: 1.1
+    maxInstances: 8
+    minInterval: 0.2
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: W04 Stationary Resonance field ground zone; see package README
+    issues: 
+  - id: rc02.art.w05.hit
+    kind: art
+    contentId: W05
+    eventType: EnemyHit
+    profileId: 
+    assets:
+    - role: prefab
+      assetPath: Assets/Game/Art/Effects/Prefabs/TEST_ONLY_Arc_ChainElectric.prefab
+      asset: {fileID: 1000000000000000, guid: 2e3f988f9f3c46fe8e78baedd9e7db19, type: 3}
+    - role: material
+      assetPath: Assets/Game/Art/Effects/Materials/M_VFX_ChainArc.mat
+      asset: {fileID: 2100000, guid: 79b9f08bf0724c47ae05e7824c06f222, type: 2}
+    - role: icon
+      assetPath: Assets/Game/Art/Effects/Icons/icon_W05_chain_arc.png
+      asset: {fileID: 2800000, guid: 030fc7637cea48f89ccbab30eb452b02, type: 3}
+    parameters:
+    - key: width
+      value: 0.08
+    - key: scale
+      value: 1
+    - key: tailSeconds
+      value: 0.16
+    - key: intensity
+      value: 1.5
+    maxInstances: 12
+    minInterval: 0.05
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: W05 Chain Arc electric jump line; mapped to PropagationHit
+    issues: 
+  - id: rc02.art.w06.zone
+    kind: art
+    contentId: W06
+    eventType: WeaponZone
+    profileId: 
+    assets:
+    - role: prefab
+      assetPath: Assets/Game/Art/Effects/Prefabs/TEST_ONLY_Trail_MotionResonance.prefab
+      asset: {fileID: 1000000000000000, guid: b3b0b4d094e74074a832ce272ac822ef, type: 3}
+    - role: material
+      assetPath: Assets/Game/Art/Effects/Materials/M_VFX_MotionEcho.mat
+      asset: {fileID: 2100000, guid: eb246f8cccdf40e09d21fef939ead1c6, type: 2}
+    - role: icon
+      assetPath: Assets/Game/Art/Effects/Icons/icon_W06_motion_echo.png
+      asset: {fileID: 2800000, guid: f4762bed3016495da002c346fcc30929, type: 3}
+    parameters:
+    - key: width
+      value: 0.065
+    - key: scale
+      value: 0.4
+    - key: tailSeconds
+      value: 3
+    - key: intensity
+      value: 0.9
+    maxInstances: 16
+    minInterval: 0.1
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: W06 Motion trail residual node; mapped to WeaponZone
+    issues: 
+  - id: rc02.art.p12.hit
+    kind: art
+    contentId: P12
+    eventType: EchoHit
+    profileId: 
+    assets:
+    - role: prefab
+      assetPath: Assets/Game/Art/Effects/Prefabs/TEST_ONLY_Hit_EchoPulse.prefab
+      asset: {fileID: 1000000000000000, guid: 82e8c91ff9f5432b86ad6d4e2e1cc944, type: 3}
+    - role: material
+      assetPath: Assets/Game/Art/Effects/Materials/M_VFX_EchoHit.mat
+      asset: {fileID: 2100000, guid: fdc32d6311544f5f80406fe276733a1b, type: 2}
+    parameters:
+    - key: width
+      value: 0.5
+    - key: scale
+      value: 0.6
+    - key: tailSeconds
+      value: 0.24
+    - key: intensity
+      value: 1.4
+    maxInstances: 12
+    minInterval: 0.05
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: P12 Centripetal Magenta Echo hit ring; mapped to EchoHit
+    issues: 
+  - id: rc02.art.p17.dodge
+    kind: art
+    contentId: P17
+    eventType: WeaponZone
+    profileId: 
+    assets:
+    - role: prefab
+      assetPath: Assets/Game/Art/Effects/Prefabs/TEST_ONLY_Zone_DodgeDischarge.prefab
+      asset: {fileID: 1000000000000000, guid: 7655d856b7a34ccbb8da5bf6f889a9d0, type: 3}
+    - role: material
+      assetPath: Assets/Game/Art/Effects/Materials/M_VFX_DodgeDischarge.mat
+      asset: {fileID: 2100000, guid: 1a25c82d0266443ab619bce49ffa060a, type: 2}
+    - role: icon
+      assetPath: Assets/Game/Art/Effects/Icons/icon_P17_dodge_discharge.png
+      asset: {fileID: 2800000, guid: 6d988538dc424f17a6101f0f8617c857, type: 3}
+    parameters:
+    - key: width
+      value: 0.065
+    - key: scale
+      value: 2.5
+    - key: tailSeconds
+      value: 0.35
+    - key: intensity
+      value: 1.6
+    maxInstances: 4
+    minInterval: 0.4
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: P17 Dodge discharge radial pulse ring; mapped to Dodge
+    issues: 
+  - id: rc02.art.p03.icon
+    kind: art
+    contentId: P03
+    eventType: LevelUpChosen
+    profileId: 
+    assets:
+    - role: icon
+      assetPath: Assets/Game/Art/Effects/Icons/icon_P03_pulse_drive.png
+      asset: {fileID: 2800000, guid: 0d0341947b68434e9c90db74ad9d7fec, type: 3}
+    parameters:
+    - key: scale
+      value: 1
+    maxInstances: 1
+    minInterval: 0
+    pausePolicy: 1
+    status: TEST_ONLY
+    source: P03 Pulse Drive card icon
+    issues: 
+  - id: rc02.art.p05.icon
+    kind: art
+    contentId: P05
+    eventType: LevelUpChosen
+    profileId: 
+    assets:
+    - role: icon
+      assetPath: Assets/Game/Art/Effects/Icons/icon_P05_resonance_sustain.png
+      asset: {fileID: 2800000, guid: b4611a705b35492483c41c600a65a68a, type: 3}
+    parameters:
+    - key: scale
+      value: 1
+    maxInstances: 1
+    minInterval: 0
+    pausePolicy: 1
+    status: TEST_ONLY
+    source: P05 Resonance Sustain card icon
+    issues: 
+  - id: rc02.art.p08.icon
+    kind: art
+    contentId: P08
+    eventType: LevelUpChosen
+    profileId: 
+    assets:
+    - role: icon
+      assetPath: Assets/Game/Art/Effects/Icons/icon_P08_shock_absorber.png
+      asset: {fileID: 2800000, guid: a5438bdca5c1481fb5da894e6ca39e7b, type: 3}
+    parameters:
+    - key: scale
+      value: 1
+    maxInstances: 1
+    minInterval: 0
+    pausePolicy: 1
+    status: TEST_ONLY
+    source: P08 Shock Absorber card icon
+    issues: 
+  - id: rc02.audio.w01.shot
+    kind: audio
+    contentId: W01
+    eventType: Shot
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v1.wav
+      asset: {fileID: 8300000, guid: d190eed9429749e39ce1e200a8416a4f, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v2.wav
+      asset: {fileID: 8300000, guid: 717c5b3df5e54e15ab7e0d98d2c2fffb, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v3.wav
+      asset: {fileID: 8300000, guid: 9fbd72582fe043af94dd5f393d62ccdb, type: 3}
+    parameters:
+    - key: gainDb
+      value: -3.5
+    - key: pitchMin
+      value: 0.96
+    - key: pitchMax
+      value: 1.04
+    - key: spatialBlend
+      value: 0
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 64
+    maxInstances: 3
+    minInterval: 0.07
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 synthesized mineral capacitor transients (65~85ms)
+    issues: 
+  - id: rc02.audio.w02.shot
+    kind: audio
+    contentId: W02
+    eventType: Shot
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v1.wav
+      asset: {fileID: 8300000, guid: 826eafaf689145d6a4774fb404e8af95, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v2.wav
+      asset: {fileID: 8300000, guid: 7eb5dbf1719d43928d4dda8617416292, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w02_spread_v3.wav
+      asset: {fileID: 8300000, guid: fdb5444f49fd4fa3a3a1a13420fa1c0d, type: 3}
+    parameters:
+    - key: gainDb
+      value: -3.5
+    - key: pitchMin
+      value: 0.95
+    - key: pitchMax
+      value: 1.05
+    - key: spatialBlend
+      value: 0.2
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 70
+    maxInstances: 2
+    minInterval: 0.1
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 synthesized pneumatic cylinder stroke (110~135ms)
+    issues: 
+  - id: rc02.audio.w03.hit
+    kind: audio
+    contentId: W03
+    eventType: EnemyHit
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v1.wav
+      asset: {fileID: 8300000, guid: 02bf45bc8fc04e0992636597c0cedf68, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v2.wav
+      asset: {fileID: 8300000, guid: fd27bec1e3de47d592a716b24add3d46, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w03_orbit_hit_v3.wav
+      asset: {fileID: 8300000, guid: 58ff0acaca024505b85ef75d4d77c8f8, type: 3}
+    parameters:
+    - key: gainDb
+      value: -4
+    - key: pitchMin
+      value: 0.96
+    - key: pitchMax
+      value: 1.04
+    - key: spatialBlend
+      value: 0.4
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 80
+    maxInstances: 2
+    minInterval: 0.09
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 metallic orbital impact harmonic pulses (120~150ms)
+    issues: 
+  - id: rc02.audio.w04.zone
+    kind: audio
+    contentId: W04
+    eventType: WeaponZone
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v1.wav
+      asset: {fileID: 8300000, guid: 592fd38442864385a80d691e0443a00b, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v2.wav
+      asset: {fileID: 8300000, guid: c3b7308c405e4d25aa54cc250caf4786, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w04_zone_drop_v3.wav
+      asset: {fileID: 8300000, guid: bbbf3975b6e84ac5bba76c0a89eff3cf, type: 3}
+    parameters:
+    - key: gainDb
+      value: -3
+    - key: pitchMin
+      value: 0.96
+    - key: pitchMax
+      value: 1.04
+    - key: spatialBlend
+      value: 0.3
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 72
+    maxInstances: 2
+    minInterval: 0.12
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 resonant pitch-down implosion bursts (150~185ms)
+    issues: 
+  - id: rc02.audio.w05.chain
+    kind: audio
+    contentId: W05
+    eventType: EnemyHit
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_propagation_v1.wav
+      asset: {fileID: 8300000, guid: 2047249e25424da384ff7ed0134635a6, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_propagation_v2.wav
+      asset: {fileID: 8300000, guid: 8627df982725408a826e243eb38d7106, type: 3}
+    parameters:
+    - key: gainDb
+      value: -4
+    - key: pitchMin
+      value: 1.1
+    - key: pitchMax
+      value: 1.2
+    - key: spatialBlend
+      value: 0.5
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 85
+    maxInstances: 2
+    minInterval: 0.06
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 propagation chirp reused at higher pitch for chain arc
+    issues: 
+  - id: rc02.audio.w06.residue
+    kind: audio
+    contentId: W06
+    eventType: WeaponZone
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/S03/sfx_s03_dodge.wav
+      asset: {fileID: 8300000, guid: 912ffd53d59a4e00be38ec9a03e30c7d, type: 3}
+    parameters:
+    - key: gainDb
+      value: -4.5
+    - key: pitchMin
+      value: 1.2
+    - key: pitchMax
+      value: 1.3
+    - key: spatialBlend
+      value: 0.4
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 90
+    maxInstances: 2
+    minInterval: 0.12
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: S03 dodge transient reused at +1.25 pitch for movement residue detonation
+    issues: 
+  - id: rc02.audio.p12.echo
+    kind: audio
+    contentId: P12
+    eventType: EchoHit
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_echo_hit_v1.wav
+      asset: {fileID: 8300000, guid: bddff433e1ed4b8c88bd3a3e2df91e57, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_echo_hit_v2.wav
+      asset: {fileID: 8300000, guid: 0768e3840952442f9ae5e8c59dd3b7dc, type: 3}
+    parameters:
+    - key: gainDb
+      value: -3.5
+    - key: pitchMin
+      value: 0.97
+    - key: pitchMax
+      value: 1.03
+    - key: spatialBlend
+      value: 0.5
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 75
+    maxInstances: 2
+    minInterval: 0.08
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 hollow secondary cavity resonance (180~200ms)
+    issues: 
+  - id: rc02.audio.p13.propagation
+    kind: audio
+    contentId: P13
+    eventType: PropagationHit
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_propagation_v1.wav
+      asset: {fileID: 8300000, guid: 2047249e25424da384ff7ed0134635a6, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_propagation_v2.wav
+      asset: {fileID: 8300000, guid: 8627df982725408a826e243eb38d7106, type: 3}
+    parameters:
+    - key: gainDb
+      value: -4.5
+    - key: pitchMin
+      value: 0.96
+    - key: pitchMax
+      value: 1.04
+    - key: spatialBlend
+      value: 0.6
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 85
+    maxInstances: 2
+    minInterval: 0.07
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 fast frequency glide micro-chirp (95~110ms)
+    issues: 
+  - id: rc02.audio.p12_13.echo_propagation
+    kind: audio
+    contentId: P12_P13
+    eventType: EchoPropagationHit
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_propagation_v1.wav
+      asset: {fileID: 8300000, guid: 2047249e25424da384ff7ed0134635a6, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_propagation_v2.wav
+      asset: {fileID: 8300000, guid: 8627df982725408a826e243eb38d7106, type: 3}
+    parameters:
+    - key: gainDb
+      value: -5
+    - key: pitchMin
+      value: 0.82
+    - key: pitchMax
+      value: 0.88
+    - key: spatialBlend
+      value: 0.7
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 90
+    maxInstances: 1
+    minInterval: 0.1
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 propagation chirp pitch-dropped for secondary echo jump
+    issues: 
+  - id: rc02.audio.p17.dodge_discharge
+    kind: audio
+    contentId: P17
+    eventType: WeaponZone
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_w01_pulse_v3.wav
+      asset: {fileID: 8300000, guid: 9fbd72582fe043af94dd5f393d62ccdb, type: 3}
+    parameters:
+    - key: gainDb
+      value: -3.5
+    - key: pitchMin
+      value: 1.15
+    - key: pitchMax
+      value: 1.25
+    - key: spatialBlend
+      value: 0.2
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 68
+    maxInstances: 1
+    minInterval: 0.15
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 W01 pulse v3 tuned higher for dodge electric burst
+    issues: 
+  - id: rc02.audio.generic.enemy_hit
+    kind: audio
+    contentId: '*'
+    eventType: EnemyHit
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_enemy_hit_01.wav
+      asset: {fileID: 8300000, guid: 1e1c4be755ac40c3a2a3c8edf88bf902, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_enemy_hit_02.wav
+      asset: {fileID: 8300000, guid: b48c3ee4a3e24cb6a5b0e9abf5400935, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_enemy_hit_03.wav
+      asset: {fileID: 8300000, guid: 8dbb0ab923f74c0e819c169282f489ab, type: 3}
+    parameters:
+    - key: gainDb
+      value: -5
+    - key: pitchMin
+      value: 0.95
+    - key: pitchMax
+      value: 1.05
+    - key: spatialBlend
+      value: 0.4
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 95
+    maxInstances: 4
+    minInterval: 0.075
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: Generic fallback hit sounds (3 variations)
+    issues: 
+  - id: rc02.audio.generic.enemy_death
+    kind: audio
+    contentId: '*'
+    eventType: EnemyKilled
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v1.wav
+      asset: {fileID: 8300000, guid: 37aab7a6084541369a24decfdf913d10, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v2.wav
+      asset: {fileID: 8300000, guid: 0217c40991b84765872203c27df28e06, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_enemy_death_v3.wav
+      asset: {fileID: 8300000, guid: e7d55b4d77284cce98b67a85e9120ded, type: 3}
+    parameters:
+    - key: gainDb
+      value: -2.5
+    - key: pitchMin
+      value: 0.94
+    - key: pitchMax
+      value: 1.06
+    - key: spatialBlend
+      value: 0.8
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 50
+    maxInstances: 3
+    minInterval: 0.08
+    pausePolicy: 1
+    status: TEST_ONLY
+    source: 'PolishR1 material fracture and sub-bass release death (320~400ms, pausePolicy:
+      stop)'
+    issues: 
+  - id: rc02.audio.ui.levelup_appear
+    kind: audio
+    contentId: '*'
+    eventType: LevelUpShown
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_ui_levelup_appear.wav
+      asset: {fileID: 8300000, guid: f64f314d93664bbbb3f854986a8de693, type: 3}
+    parameters:
+    - key: gainDb
+      value: 0
+    - key: pitchMin
+      value: 1
+    - key: pitchMax
+      value: 1
+    - key: spatialBlend
+      value: 0
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 30
+    maxInstances: 1
+    minInterval: 0.1
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: Level up cards presented suspended sound
+    issues: 
+  - id: rc02.audio.ui.growth_confirm
+    kind: audio
+    contentId: '*'
+    eventType: LevelUpChosen
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_ui_growth_confirm_v1.wav
+      asset: {fileID: 8300000, guid: 67d7df6cf6bb4c1d9884e5710601129c, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_ui_growth_confirm_v2.wav
+      asset: {fileID: 8300000, guid: d6b321e7818b4d14be452512751904d5, type: 3}
+    parameters:
+    - key: gainDb
+      value: -1.5
+    - key: pitchMin
+      value: 0.98
+    - key: pitchMax
+      value: 1.02
+    - key: spatialBlend
+      value: 0
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 20
+    maxInstances: 1
+    minInterval: 0.1
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 mechanical reed snap and positive ascending triad (480~540ms)
+    issues: 
+  - id: rc02.audio.ui.evolution
+    kind: audio
+    contentId: '*'
+    eventType: Evolved
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/PolishR1/TEST_ONLY_sfx_evolution_flourish_v1.wav
+      asset: {fileID: 8300000, guid: 4fab2cc858984c398fef6944447539e8, type: 3}
+    parameters:
+    - key: gainDb
+      value: -2
+    - key: pitchMin
+      value: 1
+    - key: pitchMax
+      value: 1
+    - key: spatialBlend
+      value: 0
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 10
+    maxInstances: 1
+    minInterval: 0.25
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: PolishR1 G-major resonant chord flourish (1250ms)
+    issues: 
+  - id: rc02.audio.pickup.gem
+    kind: audio
+    contentId: D01
+    eventType: GemPickup
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_gem_pickup_01.wav
+      asset: {fileID: 8300000, guid: 413535198303456e958ce36071a23685, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_gem_pickup_02.wav
+      asset: {fileID: 8300000, guid: 17900858ec5949cbb76877ec3a57defc, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_gem_pickup_03.wav
+      asset: {fileID: 8300000, guid: 38268aac551d4ca2859d47b1b9368b72, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_gem_pickup_04.wav
+      asset: {fileID: 8300000, guid: d03d603dea594947a62d193124cc76d1, type: 3}
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_gem_pickup_05.wav
+      asset: {fileID: 8300000, guid: 25bbaa41fcbc4e8d812525a4bf7bcc83, type: 3}
+    parameters:
+    - key: gainDb
+      value: -5.5
+    - key: pitchMin
+      value: 0.98
+    - key: pitchMax
+      value: 1.02
+    - key: spatialBlend
+      value: 0
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 100
+    maxInstances: 3
+    minInterval: 0.04
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: Fixed -5.5dB calibrated gem pickup tones (5 sequential variants)
+    issues: 
+  - id: rc02.audio.pickup.heal
+    kind: audio
+    contentId: D02
+    eventType: PickupCollected
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/SFX/sfx_ui_levelup_confirm.wav
+      asset: {fileID: 8300000, guid: 6c8b35e98add4087a6d76303ec3003f9, type: 3}
+    parameters:
+    - key: gainDb
+      value: -2.5
+    - key: pitchMin
+      value: 1.15
+    - key: pitchMax
+      value: 1.15
+    - key: spatialBlend
+      value: 0
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 60
+    maxInstances: 1
+    minInterval: 0.1
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: Warm tube arp for 20% health restore feedback
+    issues: 
+  - id: rc02.audio.pickup.magnet
+    kind: audio
+    contentId: D03
+    eventType: PickupCollected
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/Shared/S03/sfx_s03_dodge.wav
+      asset: {fileID: 8300000, guid: 912ffd53d59a4e00be38ec9a03e30c7d, type: 3}
+    parameters:
+    - key: gainDb
+      value: -3
+    - key: pitchMin
+      value: 1.4
+    - key: pitchMax
+      value: 1.4
+    - key: spatialBlend
+      value: 0
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 60
+    maxInstances: 1
+    minInterval: 0.2
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: Gravitational pull wind whoosh
+    issues: 
+  - id: rc02.audio.pickup.pulse
+    kind: audio
+    contentId: D04
+    eventType: PickupCollected
+    profileId: 
+    assets:
+    - role: clip
+      assetPath: Assets/Game/Audio/TEST_ONLY_sfx_resonance_drop.wav
+      asset: {fileID: 8300000, guid: c2b53d6a9454488591ded7b53fa9e4db, type: 3}
+    parameters:
+    - key: gainDb
+      value: -1.5
+    - key: pitchMin
+      value: 0.85
+    - key: pitchMax
+      value: 0.85
+    - key: spatialBlend
+      value: 0
+    - key: minDistance
+      value: 30
+    - key: maxDistance
+      value: 65
+    - key: priority
+      value: 40
+    maxInstances: 1
+    minInterval: 0.3
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: Full-screen sonic blast sub-bass shockwave
+    issues: 
+  - id: rc02.music.profile.harvest_road
+    kind: music
+    contentId: '*'
+    eventType: 
+    profileId: harvest_road
+    assets:
+    - role: combatLoop
+      assetPath: Assets/Game/Audio/Shared/S03/bgm_s03_mathrock_polymeter_24s_loop.wav
+      asset: {fileID: 8300000, guid: eddb6161bb5443b3baa34c4b03da07aa, type: 3}
+    - role: levelUpLoop
+      assetPath: Assets/Game/Audio/Shared/Music/bgm_levelup_suspended_loop.wav
+      asset: {fileID: 8300000, guid: 24365e02f2c44e918a8fc5a053136eb8, type: 3}
+    parameters:
+    - key: musicGainDb
+      value: -18
+    - key: fadeSeconds
+      value: 1.2
+    - key: bpm
+      value: 0
+    - key: beatsPerBar
+      value: 0
+    maxInstances: 1
+    minInterval: 0
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: 'Autumn harvest road: math rock 7/8 & 4/4 polymeter electric guitar clean
+      loop (24s)'
+    issues: 
+  - id: rc02.music.profile.old_market
+    kind: music
+    contentId: '*'
+    eventType: 
+    profileId: old_market
+    assets:
+    - role: combatLoop
+      assetPath: Assets/Game/Audio/Shared/Music/bgm_combat_master_64s_seamless.wav
+      asset: {fileID: 8300000, guid: 194be2bc433043589a763519e19530f4, type: 3}
+    - role: levelUpLoop
+      assetPath: Assets/Game/Audio/Shared/Music/bgm_levelup_suspended_loop.wav
+      asset: {fileID: 8300000, guid: 24365e02f2c44e918a8fc5a053136eb8, type: 3}
+    parameters:
+    - key: musicGainDb
+      value: -18
+    - key: fadeSeconds
+      value: 1
+    - key: bpm
+      value: 0
+    - key: beatsPerBar
+      value: 0
+    maxInstances: 1
+    minInterval: 0
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: 'Old agricultural market draft: mid-frequency metallic groove full loop
+      (64s)'
+    issues: 
+  - id: rc02.music.profile.fourth_granary
+    kind: music
+    contentId: '*'
+    eventType: 
+    profileId: fourth_granary
+    assets:
+    - role: combatLoop
+      assetPath: Assets/Game/Audio/Shared/S03/bgm_s03_postrock_space_24s_loop.wav
+      asset: {fileID: 8300000, guid: 969e54df494a412e8cfb4b5a7cc9bea9, type: 3}
+    - role: levelUpLoop
+      assetPath: Assets/Game/Audio/Shared/Music/bgm_levelup_suspended_loop.wav
+      asset: {fileID: 8300000, guid: 24365e02f2c44e918a8fc5a053136eb8, type: 3}
+    parameters:
+    - key: musicGainDb
+      value: -18
+    - key: fadeSeconds
+      value: 1.5
+    - key: bpm
+      value: 0
+    - key: beatsPerBar
+      value: 0
+    maxInstances: 1
+    minInterval: 0
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: 'Fourth granary draft: deep cavernous post-rock swell loop (24s)'
+    issues: 
+  - id: rc02.music.profile.radio_wasteland
+    kind: music
+    contentId: '*'
+    eventType: 
+    profileId: radio_wasteland
+    assets:
+    - role: combatLoop
+      assetPath: Assets/Game/Audio/Shared/S03/bgm_s03_postrock_space_24s_loop.wav
+      asset: {fileID: 8300000, guid: 969e54df494a412e8cfb4b5a7cc9bea9, type: 3}
+    - role: levelUpLoop
+      assetPath: Assets/Game/Audio/Shared/Music/bgm_levelup_suspended_loop.wav
+      asset: {fileID: 8300000, guid: 24365e02f2c44e918a8fc5a053136eb8, type: 3}
+    parameters:
+    - key: musicGainDb
+      value: -18
+    - key: fadeSeconds
+      value: 1.5
+    - key: bpm
+      value: 0
+    - key: beatsPerBar
+      value: 0
+    maxInstances: 1
+    minInterval: 0
+    pausePolicy: 0
+    status: TEST_ONLY
+    source: 'Radio wasteland draft: wide stereo electromagnetic shimmer loop (24s)'
+    issues: 

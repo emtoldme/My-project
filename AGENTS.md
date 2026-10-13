@@ -1,67 +1,25 @@
-# 《麦田里的混响》开发协作约定
+# 《麦田里的混响》当前协作约定
 
-更新2026-10-12。用户最新指令：声音R1先接受为当前基线，优先修玩法bug、增量玩法与可复用组件系统，搭好美术/音乐管线便于后续润色填充；目前不需要更多测试投入，仅做必要编译/导入/针对性诊断，完备验证中后期安排。最新任务入口Docs/Integration/REVERB_TASKS_08.md、合同Docs/Design/RC02/COMPONENT_PIPELINE_CONTRACT.md。仍保持取消四模式、局内成长/地图草稿、测试素材和设定后置。TASKS_01..07为阶段历史，不能据旧冻结状态阻止当前推进。
+更新 2026-10-13。用户当前要求：整合所有有效修改，拆除冗余脚手架、过期任务与废弃素材，随后由用户亲自修改美术。此要求覆盖旧阶段的场景生成/派工指令。当前入口 README.md、Docs/ART_EDITING.md、Docs/PROJECT_STATUS.md。
 
-## 工作方式
+## 工作区与协作
 
-保持原四位外部AI：用户转发需求，各自独立分支上传GitHub；Codex审查、管理仓库、共享接线、本地自动化与打包，用户体验每阶段。用户负责感受/方向等必要人工检查；不要把Git冲突/可自动测试任务交给用户。没有Unity如实声明，Codex执行装配并生成meta。初期只编译与关键路径，完备测试/平衡/性能矩阵中后期计划进行。
+用户编辑工程为 `G:/图书馆/新建文件夹 (2)/My project`，在独立 `art/manual-editing` 分支。`My project-integration` 是 Codex 的整合与构建工作目录，不是第二个美术版本。不要同时打开两个工程修改同一批资源；用户编辑期间不重建场景、Prefab、材质、地形，也不自动覆盖其改动。
 
-长期项目背景Docs/Project/REVERB_CONTEXT_V1.md，用户新指令优先。Windows PC / Unity6000.4.3f1 / URP17.4.0 / 斜俯视3D幸存者，WASD移动/自动攻击/手动闪避，F11全屏。保持乡村怪谈/旧机械/迷幻音波视听统一，但本轮功能名、测试素材与草稿先行，不增加剧情、正式角色制作或正式配乐阻塞玩法。
+四位外部 AI 的协作方式保留：用户转发需求、各自独立目录和分支上传，Codex 审查接线合并。旧 TASKS_01..08、实验和交接板已从当前树移除，不能重新执行。当前暂不发新一轮内容任务；等用户完成美术修改或提出新需求。
 
-## 当前可交付目标
+最新 origin/main 是开发基线。不要直接推 main、强推或盲合旧分支。原 PR33 是废弃假 HUD，不合入实际游戏。旧工程本地改动已保存于 safety/local-editor-20261013（a9f7b60），清理前基线为 8ba5162；保留 Git 历史以便恢复。不要清理用户根目录中的 Blender、图包、SourceArt/Intake01、Assets/ReverbInTheRye、Art_ThirdParty 与授权来源。
 
-首轮完整目录6攻击家族/18被动/6进化/6类拾取，4武器槽/6被动槽、三选一＋重抽/放逐/跳过、精英奖励与进化。06A先并行交目录/规则核心/四图草稿/首图装配与视听样板；06B Codex接第一张完整局，先4攻击/10被动/3进化/4拾取、至少3可辨构筑；06C补齐完整目录并逐图实现。只把可获得且有真实效果的项目算实装，不能用换皮/阶数/表格/组合数学夸大丰富度。每个可玩批次用户验收。
+## 当前真实状态
 
-四张地图沿背景中的秋收之路、旧农贸市场、第四粮仓、无线电荒原，每图交空间、分钟压力、敌群/事件/奖励与反制草稿。第一张先实际接线，后续复用同一规则链，普通事件不切场传送。
+Unity 6000.4.3f1 / URP17.4，Windows PC 斜俯视幸存者。唯一主场景 Assets/Game/Scenes/Main.unity；Build Settings 只含主场景。其他三张位于 Scenes/Layouts 的场景只是有效布局草稿，不是完成关卡。当前 6攻击/14被动/3进化/4拾取、4武器槽/6被动槽、三选一与重抽/放逐/跳过。正式美术/音乐尚未完成；声音R1为用户接受的基线。
 
-## 唯一写入范围
+GameLoop → RunSimulation → CombatModule 唯一管理 HP/XP/时钟/随机/伤害/死亡/奖励。规则位于 Assets/Waffle/Scripts/Rules；表现位于 Assets/Game/Presentation；内容目录与工具位于 Assets/Game/Content。新美术 Prefab 不扣血、不加另一个 GameLoop/播放器，不用粒子寿命决定伤害。W01组件迁移样板仍默认关闭，W05/W06/P17已真实接线；所有派生有限、每局清空、暂停/升级冻结。
 
-| 执行者 | 唯一范围与责任 |
-|---|---|
-| 1号 | Assets/Waffle/Scripts/Rules/RunContent/Logic/、Data/、Tests/；Docs/Design/RC01/Growth/。成长核心/目录/数值唯一作者；Tests自建Editor-only asmdef，不将NUnit编入运行时Rules |
-| 2号 | Assets/Drafts/RC01/Scenes/、Environments/、Presentation/、Editor/；Docs/Design/RC01/Scenes/。四图战斗草稿、独立场景/UI装配；只读规则 |
-| 主美 | Assets/Drafts/RC01/Art/；Docs/Design/RC01/Art/。测试材质副本/四图风格样板与图示语义 |
-| 音效 | Assets/Drafts/RC01/Audio/；Docs/Design/RC01/Audio/。测试短音/既有循环映射与四图声音草稿 |
-| Codex | 中央任务/合同、RunContentContracts.cs、共享父目录meta、GameLoop/RunSimulation/CombatModule/AudioDirector与程序集最小接线、GitHub和本地验证 |
+三份视听清单统一放 Assets/Game/Content/Manifests，导入为 RC02ContentCatalog.asset，运行时只消费序列化引用。目录刷新不生成/重建美术资产。唯一 AudioDirector 消费声音/音乐；音乐仍整段测试循环、无动态分轨或拍点同步。
 
-TASKS_08本批覆盖以上旧范围：1号另获准Rules/RunContent/Components/与Docs/Design/RC02/Growth/，本轮不扩测试；2号本批只写RC01/Pipeline/、独立Scenes/RC02_AssemblyLab.unity及Docs/Design/RC02/Pipeline/，不改当前HarvestRoad与旧Presentation/Editor；主美只写RC01/Art/ComponentsV1/与Docs/Design/RC02/Art/；音效只写RC01/Audio/PipelineV1/与Docs/Design/RC02/Audio/。具体以TASKS_08为准。中央宿主仍Codex所有；四位不修改彼此接口与资源。
+## 修改边界
 
-共享父目录meta已提供，不覆盖不同GUID。四位不互相合并/改文件，不擅改旧规则/管理器/用户原素材；跨范围最小请求交Codex。原PR33 HUD仍未接入，2号不能直接合入其独立Time.timeScale/假生命/假模式逻辑，不另抢Assets/UI目录。
+用户当前拥有 Assets/Game/Art、Environments、Scenes 的美术修改权；原始素材同样保留可用。Codex处理共享规则、接线、仓库与必要编译。后续外部 AI 获得明确新目录后才能写入，不能以旧任务范围覆盖用户美术。移动 Unity 资源必须保留 .meta/GUID；场景保存/组件删除由 Unity 执行，不手写 YAML。
 
-## 唯一权威与合同
-
-GameLoop→RunSimulation→RunState、GameInput、CombatModule仍唯一。新成长模块只管装备与选择，不复制XP/HP/时钟；Codex接现有经验与升级队列。多武器/拾取效果由同一规则伤害/死亡/掉落链处理；视图不能碰撞扣血、根据粒子计时决定伤害或再造CombatModule。
-
-RunContentContracts.cs已发布Waffle.RunContent的只读快照和选择请求；各作者引用同一合同，不复制。固定ID见Docs/Design/RC01/CONTENT_CONTRACT.md。真实升级暂停/恢复归RunSimulation；HUD不能写Time.timeScale、自己抽卡/切规则或另监听Esc。预览数据只允许显式TEST_ONLY独立预览，无宿主正常场景禁按钮等待接线。
-
-玩家四模式面板已移除，普通独立运行固定当前组合基底；内部模式枚举与回归测试可保留，仅用于Editor/显式自动化，不是游戏入口，不再要求用户逐模式验收。成长接线后P12/P13从局内取得，组合自然形成；旧RF01的XP关闭/固定武器实验配置不能延用到新的正式成长试玩。
-
-## 素材与工程
-
-用户原素材Assets/ReverbInTheRye和SourceArt/Intake01保留来源/原型标签；角色.blend仍WIP，不自动导入骨骼/假报品质完成。本轮可用现有测试模型/材质/声音与独立副本；不采购、不重塑原模型、不生成正式音乐/人声。主美零塑料/100%可见、音效无爆音等必须有对应实机/测量证据，不能靠源码或平均数认证。
-
-最新origin/main唯一基线，先fetch记录完整SHA，独立功能分支与工作目录，不共用Unity Library/Temp、不操作用户窗口、不直接push main/强推、不升级Package/替换渲染管线/默认BuildSettings。场景由Unity或幂等Editor工具生成，不手写YAML。复制旧场景时先另存至自己的目录，不能调用会重写M01/RF01源场景的Setup。
-
-用户常规GitHub管理、审查整合、必要修复授权持续有效；本轮新增局内道具/成长/地图草稿已明确授权。完备存档经济、剧情、正式制作、无关大重构不在本轮。验收前明确已实现/草稿/未验证，不能将当前测试素材画面称为主流品质已达标。
-
-## 06B收口状态
-
-四份06A已在integration/rc01-playable整合；实现边界与人工验收见Docs/Integration/RC01_ACCEPTANCE.md，验证见Docs/Verification/RC01/。待本批验收反馈后发下一轮任务；继续工作以最新main为基线，不重复沿旧分支覆盖Codex接线。
-
-## RC01首次反馈
-
-用户认为升级稍频繁但可接受、说明需明确、音效简陋。Codex微调等级4之后经验门槛、按实际阶参数生成说明并调整UI、接已有声音变体/密度；音色重做交TASKS_07音效总监，唯一写PolishR1子目录，不改共享宿主。其他三位本次不重复抢写。
-
-## 音效R1收口
-
-TASKS_07音效交付57d2e45（PR42）：8组22短音与3试听。Codex按真实事件接线、适配30米斜俯视听音距离并支持按事件清除暂停尾音；测量与验收边界见Docs/Verification/RC01-SoundR1/。听感待用户验收，不把合成材料语义或离线峰值当实物拟音/主流品质认证。升级说明/经验微调保留，不派四位重复写本批共享代码。
-
-## RC02启动与吸取反馈
-
-用户已接受R1声音为当前基线，不继续重做音色。吸取诊断：经验3/3.75/4.5/5.25米原已生效，普通回复/磁吸/清场道具此前固定接触1米；本批统一普通掉落物磁吸，复用同一移动函数、真实T10奖励路径，精英箱仍接触。HUD显示实际半径，说明同步。新版规则代码a6ba297，组件/视听管线本批仅发布合同与分工，不能称四位新系统已实现。
-
-TASKS_08A先组件适配W01＋新增W05/W06与P03/P05/P08/P17，Codex接线后目标6/14/3/4；08B再补原6/18/6/6。2号搭目录导入/预览和独立场景，主美交三类模板，音效交复用R1/旧音乐的绑定与档案。不增加音频宿主，不一次重写全部旧武器。必要检查后给用户阶段试玩，其余时间投入玩法与生产管线。
-
-## RC02-08A 整合收口（2026-10-13）
-
-四位交付 PR45/46/47/48 已保留作者提交整合。真实内容为6攻击/14被动/3进化/4拾取；W05/W06/P03/P05/P08/P17已Wired。W01组件迁移示例保持关闭。新增CombatComponents唯一伤害接线、事件目录接管、预算池化模板、W06规则快照表现、AudioDirector配置注入、导入错误保护。目录33记录不是33种玩法；其他地图/压力表未执行，正式素材仍后置。阶段交付见Docs/Integration/RC02_ACCEPTANCE.md，最小检查见Docs/Verification/RC02-Components/。收到用户玩法反馈后推进08B，不能重派四位覆盖已接线代码；继续独立目录、用户转发与Codex合并。
+只做必要编译、引用检查和短时运行，不扩测试套件或全面平衡/性能矩阵。已保留纯规则与战斗用例；依赖已移除实验场景的旧场景测试一起移除。美术体验由用户验收，不能靠源码/截图宣称主流画质达标。

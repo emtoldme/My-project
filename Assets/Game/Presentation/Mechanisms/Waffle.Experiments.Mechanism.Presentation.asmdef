@@ -1,0 +1,17 @@
+{
+  "name": "Waffle.Experiments.Mechanism.Presentation",
+  "rootNamespace": "Waffle.Experiments.Mechanism.Presentation",
+  "references": [
+    "Waffle.Rules",
+    "Waffle.Runtime"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

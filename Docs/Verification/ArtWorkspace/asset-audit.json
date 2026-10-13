@@ -1,0 +1,44 @@
+{
+  "sourceCommit": "593d39865a0f8a1c0e3c711f203ac315fcc17d9f",
+  "trackedBefore": 1682,
+  "trackedAfter": 936,
+  "scenesBefore": 20,
+  "scenesAfter": 4,
+  "invalidGuids": [],
+  "duplicateGuids": {},
+  "missingMeta": [],
+  "unchangedSourceDirectories": [
+    "Assets/ReverbInTheRye",
+    "Assets/Art_ThirdParty",
+    "SourceArt/Intake01"
+  ],
+  "sourceDirectoryChanges": [],
+  "terrainAssets": [
+    {
+      "path": "Assets/Game/Environments/Terrain/RC01_FourthGranary.asset",
+      "unchangedFrom": "Assets/Drafts/RC01/Environments/Terrain/RC01_FourthGranary.asset",
+      "sha256": "c194913e88bc8ad90fe4fd1694f8e940013f79b93519577d4a3c2d335fcf1940"
+    },
+    {
+      "path": "Assets/Game/Environments/Terrain/RC01_HarvestRoad.asset",
+      "unchangedFrom": "Assets/Drafts/RC01/Environments/Terrain/RC01_HarvestRoad.asset",
+      "sha256": "b39244210084d96c0d71f6b8d8af190a87de4cdb01fb5e026d5789065215bd24"
+    },
+    {
+      "path": "Assets/Game/Environments/Terrain/RC01_OldMarket.asset",
+      "unchangedFrom": "Assets/Drafts/RC01/Environments/Terrain/RC01_OldMarket.asset",
+      "sha256": "4db5f0a4ac3c2c382d3a0523d58f062108579d820f11a7e30ddf8092ca77e3f7"
+    },
+    {
+      "path": "Assets/Game/Environments/Terrain/RC01_RadioWasteland.asset",
+      "unchangedFrom": "Assets/Drafts/RC01/Environments/Terrain/RC01_RadioWasteland.asset",
+      "sha256": "204ed59de1bdfb6732294c6d8e7690b59415a2e985abf28df0e7c08901852b47"
+    }
+  ],
+  "startup": {
+    "startedRun": true,
+    "enteredLevelUp": true,
+    "exceptions": []
+  },
+  "exeSha256": "748b8feff0cf8e727ed412006cfe11f0591bdfec6bd5634e89acacae0ab8b38e"
+}
