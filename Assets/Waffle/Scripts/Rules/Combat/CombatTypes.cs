@@ -29,6 +29,7 @@ namespace Waffle.Combat
         public float RunTime;
         /// <summary>玩家 XZ 位置（X = x，Y = z）。</summary>
         public Vec2 PlayerPos;
+        public Vec2 PlayerPreviousPos;
         /// <summary>视野半径 R_view（m）；框架按相机计算，未提供（≤0）时用 14。</summary>
         public float ViewRadius;
         public float MaxLegalMovementStep;
@@ -53,6 +54,10 @@ namespace Waffle.Combat
         public int ContactDamage { get; internal set; }
         public int GemValue { get; internal set; }
         public bool IsElite { get; internal set; }
+        public bool IsBoss { get; internal set; }
+        public string ArchetypeId { get; internal set; }
+        public int RelocationVersion { get; internal set; }
+        public Waffle.GameplayNext.GameplayRequestKey SpawnRequest { get; internal set; }
         internal string LastSourceId; internal int LastSlot;
         /// <summary>生成时的阶段（0..3），视图可用来换颜色档位。</summary>
         public int Phase { get; internal set; }

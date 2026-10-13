@@ -126,6 +126,7 @@ namespace Waffle
         /// </summary>
         public void Tick(float frameDt, InputSnapshot input, long frame, double realTimeNow)
         {
+            gameplayTickStarted = true;
             BeginFrame(frame, realTimeNow);
             Presentation.Clear(); // T0：上一帧没分发的事件不再保留
             bool trace = TraceTicks != 0;
@@ -174,10 +175,12 @@ namespace Waffle
 
             // ---- T2 玩家移动（相机相对，长度 ≤ 1，夹在场地内） ----
             Trace(trace, "T2 玩家移动");
+            Vec2 previousPlayer = new Vec2(PlayerX, PlayerZ);
             MovePlayer(input.MoveX, input.MoveY, dt);
 
             Trace(trace, "T3 刷怪");
             CombatInput combatInput = MakeCombatInput(dt, now);
+            combatInput.PlayerPreviousPos = previousPlayer;
             CombatStepResult combatResult = Combat != null ? Combat.StepCombat(combatInput) : null;
             if (combatResult != null)
             {
@@ -199,7 +202,7 @@ namespace Waffle
             // ---- T9 失败判定 ----
             Trace(trace, "T9 失败判定");
             bool diedThisTick = State.Hp <= 0;
-            if (diedThisTick && Config.defeatWinsSameTick)
+            if (diedThisTick && (Config.defeatWinsSameTick || IsBossClearMode))
             {
                 // Defeat 的时钟固定在死亡那个 tick 开始时的 now
                 EnterTerminal(RunPhase.Defeat, "hp<=0");
@@ -209,6 +212,7 @@ namespace Waffle
 
             // ---- T10：拾取与调试XP均走正常升级流程 ----
             Trace(trace, "T10 宝石/XP");
+            ApplyObjectiveReward();
             if (Combat != null)
             {
                 CombatStepResult gems = Combat.StepGems(combatInput);
@@ -230,6 +234,7 @@ namespace Waffle
 
             // ---- T11 计时 ----
             Trace(trace, "T11 计时");
+            if (ResolveGameplayEnding(now, dt)) { Recycle(trace); return; }
             if (now + dt >= Config.runDuration)
             {
                 State.Now = Config.runDuration;
@@ -379,6 +384,7 @@ namespace Waffle
             State.EndReason = reason;
             if (State.TryTransition(phase, reason))
             {
+                CaptureRunOutcome();
                 log.Info(string.Format("[Waffle] 终局 {0} now={1:F3} 原因={2} 等级={3} 击杀={4}",
                     phase, State.Now, reason, State.Level, State.Kills));
             }
@@ -427,6 +433,7 @@ namespace Waffle
         {
             if (restartEmitted) return;
             restartEmitted = true;
+            Combat?.ClearGameplay();
             Emit(PresentationEventType.Restart, PlayerX, PlayerZ, 0f, (int)State.Phase);
         }
 

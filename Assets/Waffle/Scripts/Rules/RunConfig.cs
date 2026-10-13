@@ -12,6 +12,7 @@ namespace Waffle
         /// <summary>等级超过4后，每级额外增加的经验门槛；0保留旧节奏。</summary>
         public float extraXpStepAfterFour;
         public bool useRunContent;
+        public Waffle.GameplayNext.GameplayNextSettings gameplayNext = new Waffle.GameplayNext.GameplayNextSettings();
         public string[] runContentAllowList;
         /// <summary>一局时长（s），§1.7。</summary>
         public float runDuration = 180f;

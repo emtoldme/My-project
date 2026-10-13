@@ -1,0 +1,5 @@
+{
+  "name": "Reverb.GameplayNext.Presentation",
+  "references": ["Waffle.Rules", "Waffle.Runtime"],
+  "autoReferenced": true
+}

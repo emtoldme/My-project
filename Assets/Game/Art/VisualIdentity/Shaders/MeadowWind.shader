@@ -25,6 +25,7 @@ Shader "Reverb/Meadow Wind"
         TEXTURE2D(_BaseMap);SAMPLER(sampler_BaseMap);
         TEXTURE2D(_GroundMask);SAMPLER(sampler_GroundMask);
         float4 _ReverbPlayer;
+        float4 _ReverbWeather,_ReverbWind;
         CBUFFER_START(UnityPerMaterial)
         float4 _BaseMap_ST;half4 _BaseColor;float4 _WindDirection,_FieldBounds,_Clearing;
         float _WindStrength,_WindSpeed,_PlantHeight,_UseExternalTime,_VisualTime,_Cutoff;
@@ -35,7 +36,8 @@ Shader "Reverb/Meadow Wind"
             float t=lerp(_Time.y,_VisualTime,_UseExternalTime);
             float h=pow(saturate(p.y/max(_PlantHeight,0.1)),1.8);
             float wave=sin(dot(w.xz,float2(0.72,0.49))+t*_WindSpeed)+0.35*sin(w.x*2.7+w.z*1.3+t*2.2);
-            w.xz+=normalize(_WindDirection.xz)*wave*_WindStrength*h;
+            float2 wind=lerp(_WindDirection.xz,_ReverbWind.xy,_ReverbWind.w);
+            w.xz+=normalize(wind)*wave*_WindStrength*h*(1+_ReverbWind.z*2.5);
             return w;
         }
         void ClipLanes(float3 w)
@@ -62,6 +64,10 @@ Shader "Reverb/Meadow Wind"
             #pragma editor_sync_compilation
             #pragma multi_compile_instancing
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile_fragment _ _LIGHT_COOKIES
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma multi_compile_fog
             struct A{float4 p:POSITION;float3 n:NORMAL;float2 uv:TEXCOORD0;UNITY_VERTEX_INPUT_INSTANCE_ID};
@@ -69,7 +75,7 @@ Shader "Reverb/Meadow Wind"
             V vert(A a){UNITY_SETUP_INSTANCE_ID(a);V o;o.w=Bend(a.p.xyz);o.p=TransformWorldToHClip(o.w);o.n=TransformObjectToWorldNormal(a.n);o.uv=a.uv;o.fog=ComputeFogFactor(o.p.z);o.height=saturate(a.p.y/1.7);return o;}
             half4 frag(V i):SV_Target
             {
-                ClipLanes(i.w);Light light=GetMainLight(TransformWorldToShadowCoord(i.w));
+                ClipLanes(i.w);Light light=GetMainLight(TransformWorldToShadowCoord(i.w),i.w,half4(1,1,1,1));
                 half3 n=normalize(i.n);
                 half wrap=abs(dot(n,light.direction));
                 half3 sky=max(SampleSH(half3(0,1,0)),half3(0.1,0.13,0.16));
@@ -77,7 +83,15 @@ Shader "Reverb/Meadow Wind"
                 half3 albedo=tex.rgb*_BaseColor.rgb;
                 albedo*=lerp(half3(.6,.88,.62),half3(1.13,1.08,.78),i.height);
                 half3 diffuse=sky*0.9+light.color*(0.4+wrap*0.6)*lerp(0.38,1,light.shadowAttenuation);
+                albedo*=lerp(1,.8,_ReverbWeather.y);
                 half3 color=albedo*diffuse;
+                InputData inputData=(InputData)0;
+                inputData.positionWS=i.w;inputData.normalizedScreenSpaceUV=GetNormalizedScreenSpaceUV(i.p);
+                uint count=GetAdditionalLightsCount();
+                LIGHT_LOOP_BEGIN(count)
+                    Light additional=GetAdditionalLight(lightIndex,i.w,half4(1,1,1,1));
+                    color+=albedo*additional.color*additional.distanceAttenuation*additional.shadowAttenuation*(.25+abs(dot(n,additional.direction))*.5);
+                LIGHT_LOOP_END
                 return half4(MixFog(color,i.fog),1);
             }
             ENDHLSL
@@ -92,14 +106,20 @@ Shader "Reverb/Meadow Wind"
             #pragma fragment frag
             #pragma editor_sync_compilation
             #pragma multi_compile_instancing
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
             float3 _LightDirection;
+            float3 _LightPosition;
             struct A{float4 p:POSITION;float3 n:NORMAL;float2 uv:TEXCOORD0;UNITY_VERTEX_INPUT_INSTANCE_ID};
             struct V{float4 p:SV_POSITION;float3 w:TEXCOORD0;float2 uv:TEXCOORD1;};
             V vert(A a)
             {
                 UNITY_SETUP_INSTANCE_ID(a);V o;
                 float3 w=Bend(a.p.xyz);
-                float4 p=TransformWorldToHClip(ApplyShadowBias(w,TransformObjectToWorldNormal(a.n),_LightDirection));
+                float3 lightDirection=_LightDirection;
+                #if defined(_CASTING_PUNCTUAL_LIGHT_SHADOW)
+                lightDirection=normalize(_LightPosition-w);
+                #endif
+                float4 p=TransformWorldToHClip(ApplyShadowBias(w,TransformObjectToWorldNormal(a.n),lightDirection));
                 #if UNITY_REVERSED_Z
                 p.z=min(p.z,UNITY_NEAR_CLIP_VALUE);
                 #else

@@ -1,5 +1,7 @@
 # 声学花园：当前视觉方案
 
+动态光影和天气增量见 [天气说明](WEATHER_LIGHTING.md)：雨天/雷雨/晴天过渡、移动云影、扫描灯软阴影、风雨、水花、积水涟漪和湿润材质。
+
 2026-10-13。用户要求 Codex 直接重构画面，暂不联系其他协作 AI。本轮主场景采用金色麦田、象牙色陶瓷、石墨色机械结构、少量香槟金和玉绿色信号。目标是自然材质衬托精密设施，战斗与环境有清晰层次。是否达到用户期望的优秀画面，以实际试玩验收为准。
 
 Unity 6000.4.3f1、URP17.4 Forward+。标准 URP Lit / Terrain Lit 构成环境材质，4级联4096软阴影、SSAO、HDR调色、ACES、SMAA和轻量 Bloom；一个宽覆盖反射探针使用标准非图集路径。没有更换渲染管线、安装第三方渲染插件或引入光追依赖。功能依据可见 [Unity 渲染管线功能对照](https://docs.unity3d.com/6000.0/Documentation/Manual/render-pipelines-feature-comparison.html)，实际 API 以本地17.4包与构建结果为准。

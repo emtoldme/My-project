@@ -313,7 +313,7 @@ namespace Waffle.Combat
                 pickups.RemoveAt(i); RunPickupsCollected++;
                 if (p.Id == "D02") Result.HealFraction += .2f;
                 else if (p.Id == "D03")
-                { foreach (var g in gems) if (g.Life == GemLife.Free) { g.Life = GemLife.Magnet; g.MagnetSpeed = Config.magnetStartSpeed; } }
+                { MagnetizeFreeGems(); }
                 else if (p.Id == "D04") DamageArea(player, 100, 30, "D04", -1, 40, .3f);
                 else if (p.Id == "ELITE") Result.EliteRewards.Add(p.Serial);
                 EmitRun(p.Id == "ELITE" ? PresentationEventType.EliteReward : PresentationEventType.PickupCollected, p.Position, p.Id, -1, 0, 0);

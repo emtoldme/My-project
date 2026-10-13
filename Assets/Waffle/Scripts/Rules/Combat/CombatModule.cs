@@ -127,7 +127,8 @@ namespace Waffle.Combat
             BeginTick(input);
             float dt = Math.Max(0f, input.Dt);
 
-            SpawnStep();                 // T3
+            StepGameplayModules(input);
+            if (GameplayView == null || gameplayModules.Encounters == null) SpawnStep(); // T3
             EnemyMoveStep(dt);           // T4
             WeaponStep(dt, input.Stats); // T5
             ProjectileStep(dt);          // T6
@@ -140,6 +141,7 @@ namespace Waffle.Combat
             if (runGrowth != null) { StepRunComponents(input); ResolveRunPending(); }
             DeathStep();                 // T7
             ContactStep();               // T8
+            ResolveGameplayAttacks(input);
             return Result;
         }
 
@@ -200,6 +202,7 @@ namespace Waffle.Combat
             }
 
             if (runGrowth != null) DeathStep();
+            if (GameplayView != null) CaptureGameplayView(now + dt);
             Result.XpCollected = xp;
             Counters.TotalXpCollected += xp;
             return Result;
@@ -303,6 +306,7 @@ namespace Waffle.Combat
 
         private void SpawnStep()
         {
+            if (GameplayView != null && bossSpawned && !bossDefeated) return;
             if (!Config.spawningEnabled || now >= Config.runDuration) return;
 
             // 普通波次：每个阶段第一波在阶段开始时刷，之后按间隔累加（保留余数）
@@ -377,6 +381,7 @@ namespace Waffle.Combat
             e.Phase = phase;
             e.SpawnSource = source;
             e.IsElite = elite;
+            e.IsBoss = false; e.ArchetypeId = "legacy-chaser"; e.RelocationVersion = 0; e.SpawnRequest = default;
             e.MaxHp = elite ? hp * Config.eliteHpMultiplier : hp;
             e.Hp = e.MaxHp;
             e.Speed = elite ? speed * Config.eliteSpeedMultiplier : speed;
@@ -464,11 +469,19 @@ namespace Waffle.Combat
                 e.PrevPosition = e.Position;
                 Vec2 chase = (player - e.Position).Normalized * e.Speed;
                 Vec2 vel = chase + sepBuffer[i];
+                bool allowRelocation = !e.IsBoss;
+                if (movements.TryGetValue(new Waffle.GameplayNext.EnemyKey(e.Serial, e.Generation), out var movement))
+                {
+                    vel = movement.Velocity + (movement.UseSeparation ? sepBuffer[i] : Vec2.Zero);
+                    if (vel.Length > gameplaySettings.maxMovementSpeed) vel = vel.Normalized * gameplaySettings.maxMovementSpeed;
+                    allowRelocation = movement.AllowRelocation && !e.IsBoss;
+                }
                 float lim = Config.arenaHalfSize - e.Radius;
                 e.Position = ClampSquare(e.Position + vel * dt, lim);
 
-                if (Vec2.Distance(e.Position, player) > relocateDist)
+                if (allowRelocation && Vec2.Distance(e.Position, player) > relocateDist)
                 {
+                    CancelGameplayOwner(e); e.RelocationVersion++;
                     Vec2 dir = MoveDirOrRandom();
                     float half = Deg(Config.forwardSectorHalfAngleDeg);
                     Vec2 p = player + Vec2.FromAngle((float)Math.Atan2(dir.Y, dir.X) + spawnRng.Range(-half, half))

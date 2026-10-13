@@ -25,12 +25,14 @@ Shader "Reverb/Ceramic Armor"
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile_fragment _ _LIGHT_COOKIES
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
             #pragma multi_compile_fog
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             TEXTURE2D(_BaseMap);SAMPLER(sampler_BaseMap);
+            float4 _ReverbWeather;
             CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;half4 _BaseColor,_EmissionColor;half _Metallic,_Smoothness,_Cutoff,_Cull;
             CBUFFER_END
@@ -50,7 +52,9 @@ Shader "Reverb/Ceramic Armor"
                 SurfaceData surface=(SurfaceData)0;
                 surface.albedo=lerp(half3(.055,.075,.08),panel,painted);
                 surface.alpha=1;surface.normalTS=half3(0,0,1);surface.occlusion=1;
-                surface.metallic=lerp(.7,_Metallic,painted);surface.smoothness=_Smoothness;
+                half wet=_ReverbWeather.y*saturate(normalize(i.n).y*.7+.3);
+                surface.albedo*=lerp(1,.83,wet);
+                surface.metallic=lerp(.7,_Metallic,painted);surface.smoothness=lerp(_Smoothness,.72,wet);
                 surface.emission=_EmissionColor.rgb;
                 InputData data=(InputData)0;
                 data.positionWS=i.w;data.normalWS=normalize(i.n);data.viewDirectionWS=GetWorldSpaceNormalizeViewDir(i.w);
