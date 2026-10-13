@@ -41,11 +41,16 @@ namespace Reverb.Drafts.RC01.Pipeline
             {
                 float radius = item.Radius > 0 ? item.Radius : entry.Parameter("scale", .5f);
                 if (shape == RC02VisualShape.Hit) transform.position += Vector3.up * .3f;
-                line.positionCount = 48;
-                for (int i = 0; i < 48; i++) { float a = i * Mathf.PI * 2 / 48; line.SetPosition(i, new Vector3(Mathf.Cos(a)*radius, 0, Mathf.Sin(a)*radius)); }
+                SetRadius(radius);
             }
             if (line != null) line.widthMultiplier = Mathf.Clamp(entry.Parameter("width", .065f), .025f, .2f);
             Tint(1);
+        }
+        public void SetRadius(float radius)
+        {
+            if (line == null || (shape != RC02VisualShape.Ring && shape != RC02VisualShape.Hit)) return;
+            line.positionCount = 48;
+            for (int i = 0; i < 48; i++) { float a = i * Mathf.PI * 2 / 48; line.SetPosition(i, new Vector3(Mathf.Cos(a)*radius, 0, Mathf.Sin(a)*radius)); }
         }
         public void Tint(float alpha)
         {

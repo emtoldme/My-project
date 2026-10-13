@@ -27,7 +27,7 @@ namespace Reverb.Drafts.RC01.Pipeline
             public ParticleSystem[] particles;
             public TrailRenderer[] ribbons;
             public RC02CatalogEntry entry;
-            public float age, duration;
+            public float age, duration, radius;
         }
         void Awake() { if (loop == null) loop = GetComponent<GameLoop>(); }
         void OnEnable() { if (loop != null) loop.PresentationDispatched += OnEvents; }
@@ -76,7 +76,7 @@ namespace Reverb.Drafts.RC01.Pipeline
         Live Rent(RC02CatalogEntry entry, PresentationEvent item)
         {
             if(!pools.TryGetValue(entry.id,out var pool)||pool.Count==0) { suppressed++; return null; }
-            var slot=pool.Pop(); slot.age=0; slot.duration=.25f; slot.go.SetActive(true);
+            var slot=pool.Pop(); slot.age=0; slot.duration=.25f; slot.radius=item.Radius; slot.go.SetActive(true);
             if(slot.template!=null) slot.template.Prepare(entry,item);
             else { slot.go.transform.SetPositionAndRotation(new Vector3(item.X,.1f,item.Z),Quaternion.identity);
                 slot.go.transform.localScale=Vector3.one*(item.Radius>0?item.Radius:entry.Parameter("scale",1)); }
@@ -120,7 +120,12 @@ namespace Reverb.Drafts.RC01.Pipeline
                     slot=Rent(entry,new PresentationEvent { SourceId="W06",X=point.Position.X,Z=point.Position.Y,Radius=combat.RunTrailRadius });
                     if(slot!=null) trails.Add(point.Serial,slot);
                 }
-                if(slot!=null) slot.template?.Tint(Mathf.Clamp01((point.EndsAt-loop.Sim.State.Now)/.5f));
+                if(slot!=null)
+                {
+                    if(!Mathf.Approximately(slot.radius,combat.RunTrailRadius))
+                    { slot.radius=combat.RunTrailRadius; slot.template?.SetRadius(slot.radius); }
+                    slot.template?.Tint(Mathf.Clamp01((point.EndsAt-loop.Sim.State.Now)/.5f));
+                }
             }
             foreach(var key in stale) { Return(trails[key]); trails.Remove(key); }
             int count=combat.RunTrailLinks?Mathf.Max(0,points.Count-1):0;
@@ -128,12 +133,17 @@ namespace Reverb.Drafts.RC01.Pipeline
             {
                 var line=new GameObject("RC02_TrailLink").AddComponent<LineRenderer>(); line.transform.SetParent(transform);
                 line.useWorldSpace=true; line.positionCount=2; line.sharedMaterial=entry.Asset<Material>("material"); line.widthMultiplier=.4f; links.Add(line);
+                line.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off; line.receiveShadows=false;
             }
             for(int i=0;i<links.Count;i++)
             {
                 links[i].gameObject.SetActive(i<count); if(i>=count) continue;
                 links[i].SetPosition(0,new Vector3(points[i].Position.X,.1f,points[i].Position.Y));
                 links[i].SetPosition(1,new Vector3(points[i+1].Position.X,.1f,points[i+1].Position.Y));
+                // Preserve the true 0.4m contact band without an opaque white ribbon.
+                Color tint=entry.Asset<GameObject>("prefab").GetComponent<RC02VisualTemplate>()?.color ?? new Color(.63f,.49f,.33f);
+                tint.a=.4f*Mathf.Clamp01((Mathf.Min(points[i].EndsAt,points[i+1].EndsAt)-loop.Sim.State.Now)/.5f);
+                links[i].startColor=links[i].endColor=tint;
             }
         }
         static void Freeze(Live slot,bool hold) { foreach(var p in slot.particles) if(hold) p.Pause(true); else p.Play(true); }
