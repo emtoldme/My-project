@@ -1,5 +1,7 @@
 # 麦田里的混响 · Reverb in the Rye
 
+下一轮玩法开发：[总规划与四份任务卡](Docs/Project/GameplayNext/README.md)。当前为待派发计划，包含敌人/遭遇、地图目标、终局首领、玩法反馈及统一接线约定。
+
 Unity 6000.4.3f1 / URP17.4 的 3D 幸存者原型。当前有 6 攻击、14 被动、3 进化、4 类拾取。
 
 **主场景：`Assets/Game/Scenes/Main.unity`**。打开工程后使用菜单 **Reverb → 美术工作台**；从工作台打开主场景、角色、环境、材质与特效。
