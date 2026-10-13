@@ -4,6 +4,7 @@
   "references": [
     "Waffle.Rules",
     "Waffle.Runtime",
+    "Reverb.GameplayNext.Presentation",
     "Waffle.Experiments.Mechanism.Presentation",
     "Unity.InputSystem",
     "Unity.RenderPipelines.Core.Runtime",

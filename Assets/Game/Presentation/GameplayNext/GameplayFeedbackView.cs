@@ -24,6 +24,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
 
         [Header("预览模式开关（仅在隔离测试场景或未接线时生效）")]
         public bool isPreviewMode = false;
+        public bool scenicView;
 
         // UI 风格定义
         static readonly Color Ink = new Color(.035f, .065f, .075f, .94f);
@@ -377,6 +378,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
 
         void OnGUI()
         {
+            if(scenicView&&loop?.Sim!=null&&!loop.Sim.State.Phase.IsTerminal())return;
             InitStyles();
             var oldMatrix = GUI.matrix;
             ImguiScale.Apply();

@@ -15,7 +15,7 @@ namespace Reverb.Drafts.RC01.Presentation
             if(loop?.Sim==null)return;
             var state=loop.Sim.State;
             Shader.SetGlobalVector("_ReverbPlayer",new Vector4(loop.Sim.PlayerX,0,loop.Sim.PlayerZ,1));
-            if(crowns!=null)foreach(var crown in crowns)if(crown!=null)crown.localRotation=Quaternion.Euler(0,state.Now*6,0);
+            if(crowns!=null)foreach(var crown in crowns)if(crown!=null)crown.localRotation=Quaternion.Euler(0,state.Now*.45f,0);
             if(pollen==null)return;
             bool hold=state.Phase!=RunPhase.Playing;
             if(hold==held)return;held=hold;

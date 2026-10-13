@@ -19,9 +19,9 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
 
         // 颜色设计：使用高对比边界 + 填充扫描 + 几何方向，避免单一依靠红黄颜色
         static readonly Color TelegraphBorderColor = new Color(1.0f, 0.42f, 0.15f, 0.95f); // 警示橙红高亮边界
-        static readonly Color TelegraphFillColor = new Color(1.0f, 0.35f, 0.10f, 0.28f);   // 半透充能扫频填充
+        static readonly Color TelegraphFillColor = new Color(1.0f, 0.35f, 0.10f, 0.10f);   // 半透充能扫频填充
         static readonly Color ActiveBorderColor = new Color(1.0f, 0.95f, 0.30f, 1.0f);     // 生效瞬间亮黄白极性高光
-        static readonly Color ActiveFillColor = new Color(1.0f, 0.85f, 0.20f, 0.55f);      // 生效瞬间高能量冲击面
+        static readonly Color ActiveFillColor = new Color(1.0f, 0.85f, 0.20f, 0.24f);      // 生效瞬间高能量冲击面
         static readonly Color ResolvedBorderColor = new Color(0.6f, 0.6f, 0.6f, 0.25f);    // 消散灰白残响
 
         sealed class IndicatorSlot

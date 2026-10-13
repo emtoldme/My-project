@@ -18,8 +18,12 @@ namespace Waffle
         [Tooltip("相机到目标的距离（正交时只影响裁剪，不影响画面大小）")] public float distance = 30f;
         [Tooltip("跟随缓冲秒数；短促位移时让人物在画面中先行，再平滑回中")]
         public float followSmoothTime = 0.08f;
+        public float perspectiveFov = 42f;
+        [Range(0f,.15f)] public float motionLead = .07f;
         public GameLoop loop;
         private Vector3 followVelocity;
+        private Vector3 previousTarget, lead, impulse;
+        public void AddVisualImpulse(Vector3 amount) { impulse = Vector3.ClampMagnitude(impulse + amount, .2f); }
 
         private void Awake()
         {
@@ -34,10 +38,13 @@ namespace Waffle
             {
                 cam.orthographic = orthographic;
                 if (orthographic) cam.orthographicSize = orthographicSize;
+                else cam.fieldOfView = perspectiveFov;
                 cam.farClipPlane = Mathf.Max(cam.farClipPlane, distance + 60f);
             }
             transform.rotation = Quaternion.Euler(pitch, yaw, 0f);
             followVelocity = Vector3.zero;
+            previousTarget = target != null ? target.position : Vector3.zero;
+            lead = impulse = Vector3.zero;
             transform.position = DesiredPosition();
         }
 
@@ -47,6 +54,11 @@ namespace Waffle
             if (loop != null && loop.Sim != null && loop.Sim.State.Phase != RunPhase.Playing) return;
             float dt = loop != null && loop.Sim != null ? loop.Sim.LastDt : Mathf.Min(Time.unscaledDeltaTime, 0.05f);
             if (dt <= 0f) return;
+            Vector3 current = target != null ? target.position : Vector3.zero;
+            Vector3 velocity = Vector3.ClampMagnitude((current - previousTarget) / dt, 15f);
+            previousTarget = current;
+            lead = Vector3.Lerp(lead, velocity * motionLead, 1f-Mathf.Exp(-dt*5f));
+            impulse *= Mathf.Exp(-dt * 15f);
             transform.position = followSmoothTime <= 0f ? DesiredPosition() : Vector3.SmoothDamp(
                 transform.position, DesiredPosition(), ref followVelocity, followSmoothTime, Mathf.Infinity, dt);
         }
@@ -54,7 +66,7 @@ namespace Waffle
         private Vector3 DesiredPosition()
         {
             Vector3 center = target != null ? target.position : Vector3.zero;
-            return center - transform.rotation * Vector3.forward * distance;
+            return center + lead + impulse - transform.rotation * Vector3.forward * distance;
         }
     }
 }

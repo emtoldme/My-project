@@ -4,6 +4,8 @@ Unity 6000.4.3f1 / URP17.4 的 3D 幸存者原型。当前有 6 攻击、14 被�
 
 **主场景：`Assets/Game/Scenes/Main.unity`**。打开工程后使用菜单 **Reverb → 美术工作台**；从工作台打开主场景、角色、环境、材质与特效。
 
+当前重点已转为画面与氛围。氛围R1加入透视镜头、风化材质、冷雾暖灯、麦浪与信号布、踩水和后坐反馈；**F8切换观景**。见 [氛围版本说明](Docs/ATMOSPHERE_R1.md)。幸存者玩法保留为基底，当前不继续扩展。
+
 - 美术修改：Docs/ART_EDITING.md
 - 当前渲染方案与生成图集：Docs/TECHNICAL_ART.md
 - 当前状态：Docs/PROJECT_STATUS.md

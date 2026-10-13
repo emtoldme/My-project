@@ -35,9 +35,12 @@ Shader "Reverb/Meadow Wind"
             float3 w=TransformObjectToWorld(p);
             float t=lerp(_Time.y,_VisualTime,_UseExternalTime);
             float h=pow(saturate(p.y/max(_PlantHeight,0.1)),1.8);
-            float wave=sin(dot(w.xz,float2(0.72,0.49))+t*_WindSpeed)+0.35*sin(w.x*2.7+w.z*1.3+t*2.2);
+            float front=sin(dot(w.xz,float2(.16,.11))-t*.9);
+            float wave=sin(dot(w.xz,float2(.32,.21))-t*_WindSpeed)*(0.7+front*.4)+0.18*sin(w.x*2.7+w.z*1.3+t*2.2);
             float2 wind=lerp(_WindDirection.xz,_ReverbWind.xy,_ReverbWind.w);
             w.xz+=normalize(wind)*wave*_WindStrength*h*(1+_ReverbWind.z*2.5);
+            float2 away=w.xz-_ReverbPlayer.xz;
+            w.xz+=normalize(away+float2(.0001,.0001))*exp(-dot(away,away)*.55)*h*.42*_ReverbPlayer.w;
             return w;
         }
         void ClipLanes(float3 w)
@@ -81,10 +84,12 @@ Shader "Reverb/Meadow Wind"
                 half3 sky=max(SampleSH(half3(0,1,0)),half3(0.1,0.13,0.16));
                 half4 tex=SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,i.uv);ClipAlpha(tex.a,i.w);
                 half3 albedo=tex.rgb*_BaseColor.rgb;
-                albedo*=lerp(half3(.6,.88,.62),half3(1.13,1.08,.78),i.height);
+                albedo*=lerp(half3(.55,.7,.54),half3(1.03,.97,.72),i.height);
                 half3 diffuse=sky*0.9+light.color*(0.4+wrap*0.6)*lerp(0.38,1,light.shadowAttenuation);
                 albedo*=lerp(1,.8,_ReverbWeather.y);
                 half3 color=albedo*diffuse;
+                half back=pow(saturate(dot(-GetWorldSpaceNormalizeViewDir(i.w),light.direction)),3);
+                color+=albedo*light.color*back*.32*light.shadowAttenuation*i.height;
                 InputData inputData=(InputData)0;
                 inputData.positionWS=i.w;inputData.normalizedScreenSpaceUV=GetNormalizedScreenSpaceUV(i.p);
                 uint count=GetAdditionalLightsCount();

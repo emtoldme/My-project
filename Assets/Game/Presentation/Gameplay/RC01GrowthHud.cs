@@ -11,12 +11,13 @@ namespace Reverb.Drafts.RC01.Presentation
     {
         public GameLoop loop;
         public bool gameplayNextSettlement;
+        public bool scenicView;
         Font font;
         GUIStyle small, body, title, number, center, button, tiny;
         Texture2D buttonFill, buttonHover;
         string lastResult="";
         readonly Vector2[] choiceScroll=new Vector2[3];
-        static readonly Color Ink=new Color(.035f,.065f,.075f,.93f);
+        static readonly Color Ink=new Color(.025f,.043f,.048f,.78f);
         static readonly Color Jade=new Color(.44f,.87f,.78f);
         static readonly Color Muted=new Color(.62f,.72f,.72f);
         static readonly Color Gold=new Color(.95f,.77f,.43f);
@@ -48,6 +49,7 @@ namespace Reverb.Drafts.RC01.Presentation
         {RectFill(r,new Color(.16f,.22f,.22f));RectFill(new Rect(r.x,r.y,r.width*Mathf.Clamp01(amount),r.height),color);}
         void OnGUI()
         {
+            if(scenicView&&loop?.Sim!=null&&!loop.Sim.State.Phase.IsTerminal())return;
             Init();var oldMatrix=GUI.matrix;ImguiScale.Apply();
             var source=GetComponent<IRunContentViewSource>();var commands=GetComponent<IRunContentCommands>();
             var view=source?.ReadView();var sim=loop?.Sim;
@@ -82,7 +84,7 @@ namespace Reverb.Drafts.RC01.Presentation
             for(int i=0;i<4;i++)Slot(view.Weapons,i,new Rect(left+64+i*(panelWidth-80)/4,height-86,(panelWidth-88)/4,25),true);
             Label(new Rect(left+16,height-53,52,18),"被动",tiny);
             for(int i=0;i<6;i++)Slot(view.Passives,i,new Rect(left+64+i*(panelWidth-80)/6,height-53,(panelWidth-88)/6,21),false);
-            Label(new Rect(24,height-19,width-48,17),"WASD 移动    SPACE 闪避    ESC 暂停    F6 天气    F11 全屏",tiny);
+            Label(new Rect(24,height-19,width-48,17),"WASD 移动    SPACE 闪避    ESC 暂停    F6 天气    F8 观景    F11 全屏",tiny);
         }
         void Slot(IReadOnlyList<RunContentOwnedView> items,int i,Rect r,bool weapon)
         {
