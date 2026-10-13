@@ -38,7 +38,8 @@ namespace Waffle
         EchoHit,
         PropagationHit,
         EchoPropagationHit,
-        WeaponOrbit, WeaponZone, PickupCollected, EliteReward, Evolved, GrowthReroll, GrowthBanish, ShieldReady, ShieldBlock
+        WeaponOrbit, WeaponZone, PickupCollected, EliteReward, Evolved, GrowthReroll, GrowthBanish, ShieldReady, ShieldBlock,
+        BossSpawned, BossDefeated, ObjectiveRewardGranted
     }
 
     /// <summary>一条表现事件。纯数据，值类型。位置在 XZ 平面。</summary>

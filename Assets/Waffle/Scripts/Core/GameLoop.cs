@@ -13,11 +13,13 @@ namespace Waffle
     /// 其他玩法对象都不写 Update。
     /// </summary>
     [DefaultExecutionOrder(-100)]
-    public class GameLoop : MonoBehaviour, Waffle.RunContent.IRunContentViewSource, Waffle.RunContent.IRunContentCommands
+    public class GameLoop : MonoBehaviour, Waffle.RunContent.IRunContentViewSource, Waffle.RunContent.IRunContentCommands, Waffle.GameplayNext.IGameplayViewSource
     {
         [Tooltip("一局的参数（设计初值）")]
         public RunConfig config = new RunConfig();
         public CombatConfig combatConfig = new CombatConfig();
+        [Tooltip("可选GP00模块工厂；启用gameplayNext后才使用，工厂每局创建新的纯规则模块。")]
+        public MonoBehaviour gameplayModuleProvider;
 
         [Tooltip("Assets/InputSystem_Actions.inputactions；为空时使用项目级 Actions")]
         public InputActionAsset actions;
@@ -45,6 +47,12 @@ namespace Waffle
         {
             Time.timeScale = 1f;
             Sim = new RunSimulation(config, new UnityRunLog(), combatConfig ?? new CombatConfig());
+            if (config.gameplayNext != null && config.gameplayNext.enabled)
+            {
+                if (!(gameplayModuleProvider is Waffle.GameplayNext.IGameplayModuleProvider provider))
+                    throw new InvalidOperationException("gameplayNext is enabled but no IGameplayModuleProvider is assigned.");
+                Sim.InstallGameplayModules(provider.CreateGameplayModules());
+            }
 
             InputActionAsset asset = actions != null ? actions : InputSystem.actions;
             // Scene unload can destroy the old loop after the new loop wakes up.
@@ -127,6 +135,8 @@ namespace Waffle
         }
 
         public Waffle.RunContent.RunContentView ReadView() => Sim?.ReadContentView();
+        public Waffle.GameplayNext.RunGameplayView ReadGameplayView() => Sim?.ReadGameplayView();
+        public Waffle.GameplayNext.RunOutcome ReadRunOutcome() => Sim?.Outcome;
         public bool TryChoose(long token, string id) => ApplyGrowth(() => Sim.TryChooseContent(token, id));
         public bool TryReroll(long token) => ApplyGrowth(() => Sim.TryRerollContent(token));
         public bool TryBanish(long token, string id) => ApplyGrowth(() => Sim.TryBanishContent(token, id));

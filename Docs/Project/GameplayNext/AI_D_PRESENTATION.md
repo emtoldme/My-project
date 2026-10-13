@@ -1,6 +1,6 @@
 # GP-D：危险可读性与玩法界面
 
-给AI-D的任务卡。状态：待GP00共同提交后开工；可先做通用表现，实际联调依赖A/B/C。请先读本轮README、CONTRACTS.md和工程AGENTS.md。
+给AI-D的任务卡。GP00 v1接口已固化，从GP00_RELEASE.md指定共同基线开始；可先做通用表现，实际联调依赖A/B/C。请先读本轮README、CONTRACTS.md和工程AGENTS.md。
 
 建议分支`gameplay/gp-d-feedback`，独立目录。所有权：新增`Assets/Game/Presentation/GameplayNext/`及自己的说明；沿用现有表现程序集，不私自增加包或程序集依赖。对现有RC01GrowthHud/CombatViews的修改交适配清单，由Codex统一完成。
 

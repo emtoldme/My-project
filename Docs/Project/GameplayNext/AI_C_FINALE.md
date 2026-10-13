@@ -1,6 +1,6 @@
 # GP-C：终局首领
 
-给AI-C的任务卡。状态：待GP00共同提交后开工。请先读本轮README、CONTRACTS.md和工程AGENTS.md。你负责首领招式与终局请求，HP、伤害、掉落和胜负仍归宿主。
+给AI-C的任务卡。GP00 v1接口已固化，从GP00_RELEASE.md指定共同基线开始开发。请先读本轮README、CONTRACTS.md和工程AGENTS.md。你负责首领招式与终局请求，HP、伤害、掉落和胜负仍归宿主。
 
 建议分支`gameplay/gp-c-finale`，独立目录。所有权：新增`Assets/Waffle/Scripts/Rules/Finale/`及自己的必要测试/说明；不修改A的遭遇目录、共享CombatModule/RunSimulation、主场景或HUD。
 

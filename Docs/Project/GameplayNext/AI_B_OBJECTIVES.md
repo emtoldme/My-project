@@ -1,6 +1,6 @@
 # GP-B：可选地图目标
 
-给AI-B的任务卡。状态：待GP00共同提交后开工。请先读本轮README、CONTRACTS.md和工程AGENTS.md。你负责纯规则目标状态机，奖励由Codex在宿主兑现。
+给AI-B的任务卡。GP00 v1接口已固化，从GP00_RELEASE.md指定共同基线开始开发。请先读本轮README、CONTRACTS.md和工程AGENTS.md。你负责纯规则目标状态机，奖励由Codex在宿主兑现。
 
 建议分支`gameplay/gp-b-objectives`，独立目录。所有权：新增`Assets/Waffle/Scripts/Rules/Objectives/`及自己的必要测试/说明；不修改场景、HUD、共享规则或其他任务目录。
 

@@ -1,6 +1,6 @@
 # GP-A：敌人行为与遭遇节奏
 
-给AI-A的任务卡。状态：待GP00共同提交后开工。请先读本轮README、CONTRACTS.md和工程AGENTS.md。你负责纯规则模块，不改共享战斗核心或主场景；适配需求交Codex。
+给AI-A的任务卡。GP00 v1接口已固化，从GP00_RELEASE.md指定共同基线开始开发。请先读本轮README、CONTRACTS.md和工程AGENTS.md。你负责纯规则模块，不改共享战斗核心或主场景；适配需求交Codex。
 
 建议分支`gameplay/gp-a-encounters`，独立目录。所有权：新增`Assets/Waffle/Scripts/Rules/Encounters/`及自己的必要测试/说明；测试复用现有程序集，不修改其他任务的文件。
 
