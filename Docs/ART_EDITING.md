@@ -14,6 +14,7 @@
 | 麦田 | Acoustic Garden/Meadow · wind batches 为共享片区实例，可直接移动或移除局部片区。4个共享网格位于 Environments/AcousticGarden/Foliage，图集在 Art/VisualIdentity/Textures/Rye_Atlas_RGBA.png。材质 Meadow_Gold.mat 可调色、风动、透明裁切和 Clearing 留白中心/半径。GroundMask 从 Terrain 道路层刷新。 |
 | 声学设施 | Acoustic Garden/Acoustic stations；原型 Prefab 为 Environments/AcousticGarden/Prefabs/P_AcousticResonator.prefab。Suspended acoustic canopy 为场景内悬吊设施，可编辑子模型与材质；最低部位在玩家上方约3米，支撑柱放在可玩边界外。校准台面是可步行的薄嵌板。 |
 | 灯光、相机、环境色 | 主场景 Key Light、Main Camera、Garden · color and atmosphere；调色在 Art/VisualIdentity/Lighting/Garden_Volume.asset，反射在同目录。相机后期已开启，URP PC资产仍在 Assets/Settings。停止运行修改并保存。 |
+| 天气与动态光影 | Reverb → 天气 → 选择天气控制器，修改 Garden Weather · rain and light；Play 后 F6 切换晴天、雨天和雷雨。雨量、湿润度、阵风、云影、粒子预算和闪电均可调整。积水与雨材质在 Environments/AcousticGarden/Weather，详见 WEATHER_LIGHTING.md。 |
 | 技能特效 | Game/Art/Effects/Prefabs 与 Materials。模板 Color 在 RC02VisualTemplate，宽度/强度/尾长等在清单中；真实半径由规则事件传入。可改几何、材质与形体，保留模板/池复用所需组件，不添加伤害逻辑。 |
 | 升级图标与界面 | Game/Art/Effects/Icons，替换 PNG 或修改 art-manifest.json。当前深色半透明 HUD、生命条、装备栏和三张升级卡由 Presentation/Gameplay/RC01GrowthHud.cs 绘制，读取真实局内数据。 |
 | 声音与音乐 | Game/Audio；绑定在 Game/Content/Manifests/audio-manifest.json、music-manifest.json，仍由唯一 AudioDirector 播放。 |

@@ -6,6 +6,8 @@
     "Waffle.Runtime",
     "Waffle.Experiments.Mechanism.Presentation",
     "Unity.InputSystem",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime",
     "Reverb.Drafts.RC01.Pipeline"
   ],
   "includePlatforms": [],

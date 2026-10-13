@@ -81,7 +81,7 @@ namespace Reverb.Drafts.RC01.Presentation
             for(int i=0;i<4;i++)Slot(view.Weapons,i,new Rect(left+64+i*(panelWidth-80)/4,height-86,(panelWidth-88)/4,25),true);
             Label(new Rect(left+16,height-53,52,18),"被动",tiny);
             for(int i=0;i<6;i++)Slot(view.Passives,i,new Rect(left+64+i*(panelWidth-80)/6,height-53,(panelWidth-88)/6,21),false);
-            Label(new Rect(24,height-19,width-48,17),"WASD 移动    SPACE 闪避    ESC 暂停    F11 全屏",tiny);
+            Label(new Rect(24,height-19,width-48,17),"WASD 移动    SPACE 闪避    ESC 暂停    F6 天气    F11 全屏",tiny);
         }
         void Slot(IReadOnlyList<RunContentOwnedView> items,int i,Rect r,bool weapon)
         {
