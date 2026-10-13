@@ -4,7 +4,6 @@ using UnityEngine;
 using Waffle;
 using Waffle.Combat;
 using Waffle.GameplayNext;
-using Waffle.UI;
 
 namespace Reverb.Drafts.RC01.Presentation.GameplayNext
 {
@@ -35,7 +34,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
         static readonly Color BossHealthRed = new Color(.92f, .24f, .28f);
 
         Font font;
-        GUIStyle titleStyle, bodyStyle, smallStyle, tinyStyle, centerStyle;
+        GUIStyle titleStyle, bodyStyle, smallStyle, tinyStyle, centerStyle, buttonStyle;
         Texture2D whiteTex;
 
         // 当前只读状态（来自宿主聚合或预览）
@@ -69,8 +68,10 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             titleStyle = new GUIStyle(GUI.skin.label) { font = font, fontSize = 20, fontStyle = FontStyle.Bold, normal = { textColor = Color.white } };
             bodyStyle = new GUIStyle(GUI.skin.label) { font = font, fontSize = 15, normal = { textColor = Color.white } };
             smallStyle = new GUIStyle(GUI.skin.label) { font = font, fontSize = 13, normal = { textColor = Muted } };
+            smallStyle.wordWrap = true;
             tinyStyle = new GUIStyle(GUI.skin.label) { font = font, fontSize = 11, normal = { textColor = Muted } };
             centerStyle = new GUIStyle(GUI.skin.label) { font = font, fontSize = 16, alignment = TextAnchor.MiddleCenter, normal = { textColor = Color.white } };
+            buttonStyle = new GUIStyle(GUI.skin.button) { font = font, fontSize = 16 };
         }
 
         static void RectFill(Rect rect, Color color)
@@ -138,6 +139,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 if (phase.IsTerminal())
                 {
                     dangerPool.Clear();
+                    currentObjective = null; currentBoss = null;
                     // 终局时读取真实 Outcome
                     if (!isPreviewMode)
                     {
@@ -265,10 +267,11 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                     activeDangers.Add(new DangerAreaDescriptor
                     {
                         AttackId = (int)sw.Key.Sequence + 10000,
+                        IsSpawnWarning = true,
                         Shape = DangerShapeType.Circle,
                         State = DangerVisualState.Telegraphing,
                         Position = new Vector3(sw.Spawn.Position.X, 0, sw.Spawn.Position.Y),
-                        Radius = sw.Spawn.Spec.Radius * 1.5f,
+                        Radius = sw.Spawn.Spec.Radius,
                         Progress = progress,
                         RemainingTime = remaining,
                         SourceLabel = $"出生预警 {sw.Spawn.Spec.ArchetypeId}"
@@ -283,7 +286,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 currentObjective = new ObjectiveVisualSnapshot
                 {
                     ObjectiveId = obj.Id,
-                    Title = obj.Id,
+                    Title = obj.Id == "tune-1" ? "第一声学装置" : "第二声学装置",
                     RewardSummary = obj.RewardId == "D02" ? "恢复 20% 生命值" : obj.RewardId == "D03" ? "全场经验宝石磁吸" : "调谐完成",
                     WorldPosition = new Vector3(obj.Position.X, 0, obj.Position.Y),
                     Radius = obj.Radius,
@@ -307,11 +310,11 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 currentBoss = new BossVisualSnapshot
                 {
                     BossId = $"Boss_{finale.Boss.Serial}",
-                    BossName = "终局首领",
+                    BossName = "收割者",
                     CurrentMoveName = string.IsNullOrEmpty(finale.AttackLabel) ? "常规压迫" : finale.AttackLabel,
                     CurrentHp = Mathf.RoundToInt(finale.Hp),
                     MaxHp = Mathf.RoundToInt(finale.MaxHp),
-                    Phase = (finale.Hp < finale.MaxHp * 0.5f) ? 2 : 1,
+                    Phase = (finale.Hp <= finale.MaxHp * 0.5f) ? 2 : 1,
                     DeadlineRemainingTime = Mathf.Max(0, finale.Deadline - now),
                     IsWarning = false,
                     IsAlive = true,
@@ -321,6 +324,12 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             else
             {
                 currentBoss = null;
+                foreach (var warning in view.SpawnWarnings)
+                    if (warning.Spawn.Spec.IsBoss)
+                    {
+                        currentBoss = new BossVisualSnapshot { IsWarning = true, BossName = "收割者", DeadlineRemainingTime = Mathf.Max(0f, warning.SpawnAt - now) };
+                        break;
+                    }
             }
         }
 
@@ -333,15 +342,35 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 currentOutcome = new RunOutcomeVisualSnapshot
                 {
                     IsVictory = (outcome.Phase == RunPhase.Victory),
-                    Reason = outcome.Reason,
+                    Reason = OutcomeReason(outcome.Reason),
                     SurvivalDuration = outcome.Duration,
                     Kills = outcome.Kills,
                     Level = outcome.Level,
                     CompletedObjectives = outcome.CompletedObjectives,
                     BossDefeated = outcome.BossDefeated,
-                    BossResultText = outcome.BossDefeated ? "首领已被击破" : "未击败首领"
+                    BossResultText = outcome.BossDefeated ? "首领已被击破" : "未击败首领",
+                    WeaponsText = LoadoutText(outcome.Weapons), PassivesText = LoadoutText(outcome.Passives)
                 };
             }
+        }
+
+        static string OutcomeReason(string reason)
+        {
+            switch (reason)
+            {
+                case "boss-defeated": return "终局首领已击败";
+                case "boss-deadline": return "十分钟内未击败首领";
+                case "hp<=0": return "生命值耗尽";
+                case "timeout": return "已守住声场";
+                default: return "本局战斗结束";
+            }
+        }
+
+        static string LoadoutText(IReadOnlyList<Waffle.RunContent.RunContentOwnedView> items)
+        {
+            var parts = new List<string>(items.Count);
+            foreach (var item in items) if (!string.IsNullOrEmpty(item.Id)) parts.Add(item.DisplayName + " " + item.Rank);
+            return parts.Count > 0 ? string.Join(" · ", parts) : "无";
         }
 
         // ================= 界面绘制与安全布局 =================
@@ -399,13 +428,12 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             float left = (screenWidth - barWidth) / 2f;
             float top = 92; // 位于秋收时钟（22~86）正下方
 
-            Panel(new Rect(left, top, barWidth, 48), BossHealthRed);
+            Panel(new Rect(left, top, barWidth, 68), BossHealthRed);
 
             if (boss.IsWarning)
             {
                 GUI.Label(new Rect(left + 16, top + 6, barWidth - 32, 20), $"⚠ 警告：终局共鸣聚合体正在接近！", smallStyle);
-                float blink = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 8f);
-                RectFill(new Rect(left + 16, top + 30, (barWidth - 32) * blink, 6), DangerOrange);
+                GUI.Label(new Rect(left + 16, top + 27, barWidth - 32, 18), $"收割者将在 {boss.DeadlineRemainingTime:F1} 秒后入场", smallStyle);
                 return;
             }
 
@@ -418,6 +446,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             RectFill(new Rect(left + 16, top + 28, barWidth - 32, 10), new Color(.16f, .22f, .22f));
             RectFill(new Rect(left + 16, top + 28, (barWidth - 32) * Mathf.Clamp01(hpPct), 10), BossHealthRed);
             GUI.Label(new Rect(left + barWidth - 110, top + 26, 94, 16), $"{boss.CurrentHp} / {boss.MaxHp}", tinyStyle);
+            GUI.Label(new Rect(left + 16, top + 45, barWidth - 32, 18), $"击败收割者结束本局 · 剩余 {boss.DeadlineRemainingTime:F1} 秒", smallStyle);
         }
 
         void DrawObjectivePanel(ObjectiveVisualSnapshot obj, float left, float top)
@@ -428,7 +457,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             Panel(new Rect(left, top, panelWidth, panelHeight), Gold);
 
             GUI.Label(new Rect(left + 14, top + 8, panelWidth - 28, 20), $"声学调谐 · {obj.Title}", bodyStyle);
-            GUI.Label(new Rect(left + 14, top + 30, panelWidth - 28, 18), $"进度: {Mathf.FloorToInt(obj.Progress * 100)}%   余时: {obj.RemainingTime:F1}s", smallStyle);
+            GUI.Label(new Rect(left + 14, top + 30, panelWidth - 28, 18), $"站入光圈调谐 4 秒 · {Mathf.FloorToInt(obj.Progress * 100)}% · {obj.RemainingTime:F0}s", smallStyle);
 
             // 进度条
             RectFill(new Rect(left + 14, top + 54, panelWidth - 28, 6), new Color(.16f, .22f, .22f));
@@ -469,13 +498,13 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
         {
             RectFill(new Rect(0, 0, screenWidth, screenHeight), new Color(0, 0, 0, 0.75f));
 
-            float w = 520;
-            float h = 340;
+            float w = 600;
+            float h = 400;
             Rect r = ImguiScale.Fit(new Rect((screenWidth - w) / 2f, (screenHeight - h) / 2f, w, h));
 
             Panel(r, outcome.IsVictory ? Jade : BossHealthRed);
 
-            GUI.Label(new Rect(r.x + 30, r.y + 24, w - 60, 36), outcome.IsVictory ? "声学领域已净化 (VICTORY)" : "共鸣崩解 (DEFEAT)", titleStyle);
+            GUI.Label(new Rect(r.x + 30, r.y + 24, w - 60, 36), outcome.IsVictory ? "声场已稳定" : "本局结束", titleStyle);
             GUI.Label(new Rect(r.x + 30, r.y + 68, w - 60, 24), $"原因：{outcome.Reason}", bodyStyle);
 
             float lineY = r.y + 110;
@@ -488,8 +517,10 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
 
             lineY += 32;
             GUI.Label(new Rect(r.x + 30, lineY, w - 60, 22), $"首领决战: {outcome.BossResultText}", smallStyle);
+            GUI.Label(new Rect(r.x + 30, r.y + 208, w - 60, 42), "武器：" + outcome.WeaponsText, smallStyle);
+            GUI.Label(new Rect(r.x + 30, r.y + 254, w - 60, 54), "被动：" + outcome.PassivesText, smallStyle);
 
-            if (GUI.Button(new Rect(r.x + 30, r.y + h - 60, w - 60, 40), "确认并返回 / 重新开始"))
+            if (GUI.Button(new Rect(r.x + 30, r.y + h - 60, w - 60, 40), "重新开始", buttonStyle))
             {
                 ClearAll();
                 if (loop != null) loop.Restart();

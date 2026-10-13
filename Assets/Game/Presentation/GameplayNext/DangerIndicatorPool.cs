@@ -11,6 +11,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
     {
         [Header("预算上限")]
         public const int MaxDangerIndicators = 12;
+        public const int MaxSpawnIndicators = 8;
 
         [Header("材质引用")]
         public Material lineMaterial;
@@ -62,7 +63,8 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
         void InitMaterials()
         {
             // 默认回退使用 URP/Particles/Unlit 或内置材质，避免任何粉红材质丢失
-            var shader = Shader.Find("Universal Render Pipeline/Unlit");
+            var shader = Shader.Find("Reverb/GameplayIndicator");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
             if (shader == null) shader = Shader.Find("Particles/Standard Unlit");
             if (shader == null) shader = Shader.Find("Sprites/Default");
 
@@ -70,15 +72,13 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             runtimeFillMat = fillMaterial != null ? new Material(fillMaterial) : new Material(shader);
 
             // 确保双面半透混合
-            runtimeFillMat.SetFloat("_Surface", 1); // Transparent
-            runtimeFillMat.SetFloat("_Blend", 0);   // Alpha
-            runtimeFillMat.SetInt("_ZWrite", 0);
-            runtimeFillMat.SetInt("_Cull", 0);      // Off
+            if (runtimeFillMat.HasProperty("_Surface")) runtimeFillMat.SetFloat("_Surface", 1);
+            if (runtimeFillMat.HasProperty("_ZWrite")) runtimeFillMat.SetInt("_ZWrite", 0);
         }
 
         void BuildPool()
         {
-            for (int i = 0; i < MaxDangerIndicators; i++)
+            for (int i = 0; i < MaxDangerIndicators + MaxSpawnIndicators; i++)
             {
                 var root = new GameObject($"DangerIndicator_{i:00}");
                 root.transform.SetParent(transform, false);
@@ -148,14 +148,15 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
         /// </summary>
         public void SyncIndicators(IReadOnlyList<DangerAreaDescriptor> descriptors)
         {
-            int usedCount = 0;
+            int attackCount = 0, spawnCount = 0;
             if (descriptors != null)
             {
-                int count = Mathf.Min(descriptors.Count, MaxDangerIndicators);
+                int count = descriptors.Count;
                 for (int i = 0; i < count; i++)
                 {
                     var d = descriptors[i];
-                    var slot = slots[i];
+                    if (d.IsSpawnWarning ? spawnCount >= MaxSpawnIndicators : attackCount >= MaxDangerIndicators) continue;
+                    var slot = slots[d.IsSpawnWarning ? MaxDangerIndicators + spawnCount++ : attackCount++];
                     slot.InUse = true;
                     slot.CurrentAttackId = d.AttackId;
                     slot.Shape = d.Shape;
@@ -163,13 +164,13 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                     slot.Root.SetActive(true);
 
                     UpdateIndicatorVisual(slot, d);
-                    usedCount++;
                 }
             }
 
             // 清理并隐藏未使用的槽位
-            for (int i = usedCount; i < slots.Count; i++)
+            for (int i = 0; i < slots.Count; i++)
             {
+                if (i < MaxDangerIndicators ? i < attackCount : i < MaxDangerIndicators + spawnCount) continue;
                 if (slots[i].InUse)
                 {
                     slots[i].Reset();
@@ -236,7 +237,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 float angle = i * Mathf.PI * 2f / segs;
                 positions[i] = center + new Vector3(Mathf.Cos(angle) * d.Radius, 0, Mathf.Sin(angle) * d.Radius);
             }
-            slot.OuterLine.SetPositions(positions);
+            SetGroundPositions(slot.OuterLine, positions);
 
             // 构建圆形扇面填充网格，半径随 Progress 递增（充满视效）
             float currentFillRadius = d.State == DangerVisualState.Active ? d.Radius : Mathf.Max(0.1f, d.Radius * Mathf.Clamp01(d.Progress));
@@ -267,17 +268,17 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             for (int i = 0; i <= halfSegs; i++)
             {
                 float angle = -Mathf.PI * 0.5f + i * Mathf.PI / halfSegs;
-                Vector3 p = end + (side * Mathf.Cos(angle) + dir * Mathf.Sin(angle)) * d.Radius;
+                Vector3 p = end + (dir * Mathf.Cos(angle) + side * Mathf.Sin(angle)) * d.Radius;
                 pts.Add(p);
             }
             // 后半圆 (围绕 start)
             for (int i = 0; i <= halfSegs; i++)
             {
                 float angle = Mathf.PI * 0.5f + i * Mathf.PI / halfSegs;
-                Vector3 p = start + (side * Mathf.Cos(angle) + dir * Mathf.Sin(angle)) * d.Radius;
+                Vector3 p = start + (dir * Mathf.Cos(angle) + side * Mathf.Sin(angle)) * d.Radius;
                 pts.Add(p);
             }
-            slot.OuterLine.SetPositions(pts.ToArray());
+            SetGroundPositions(slot.OuterLine, pts.ToArray());
 
             // 冲锋方向中轴指示箭头
             slot.DirectionArrow.enabled = true;
@@ -289,7 +290,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             Vector3 arrowTip = start + dir * (d.Length * Mathf.Clamp01(d.Progress));
             Vector3 arrowLeft = arrowTip - dir * 0.6f + side * 0.35f;
             Vector3 arrowRight = arrowTip - dir * 0.6f - side * 0.35f;
-            slot.DirectionArrow.SetPositions(new[] { arrowLeft, arrowTip, arrowRight });
+            SetGroundPositions(slot.DirectionArrow, new[] { arrowLeft, arrowTip, arrowRight });
 
             // 填充胶囊体矩形 + 半圆
             BuildCapsuleMesh(slot.FillMesh, start, end, dir, side, d.Radius, d.Progress, fillColor);
@@ -313,7 +314,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 float angle = i * Mathf.PI * 2f / segs;
                 outerPts[i] = center + new Vector3(Mathf.Cos(angle) * d.Radius, 0, Mathf.Sin(angle) * d.Radius);
             }
-            slot.OuterLine.SetPositions(outerPts);
+            SetGroundPositions(slot.OuterLine, outerPts);
 
             // 内圆
             slot.InnerLine.positionCount = segs;
@@ -326,7 +327,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 float angle = i * Mathf.PI * 2f / segs;
                 innerPts[i] = center + new Vector3(Mathf.Cos(angle) * d.InnerRadius, 0, Mathf.Sin(angle) * d.InnerRadius);
             }
-            slot.InnerLine.SetPositions(innerPts);
+            SetGroundPositions(slot.InnerLine, innerPts);
 
             // 构建圆环填充网格
             BuildRingMesh(slot.FillMesh, center, d.InnerRadius, d.Radius, segs, fillColor);
@@ -353,7 +354,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 tris[i * 3 + 2] = (i + 1 >= segments) ? 1 : i + 2;
             }
 
-            mesh.vertices = verts;
+            ProjectMesh(verts); mesh.vertices = verts;
             mesh.colors = colors;
             mesh.triangles = tris;
             mesh.RecalculateBounds();
@@ -389,7 +390,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 tris[idx + 5] = next * 2 + 1;
             }
 
-            mesh.vertices = verts;
+            ProjectMesh(verts); mesh.vertices = verts;
             mesh.colors = colors;
             mesh.triangles = tris;
             mesh.RecalculateBounds();
@@ -412,7 +413,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
 
             for (int i = 0; i < 4; i++) colors[i] = color;
 
-            mesh.vertices = verts;
+            ProjectMesh(verts); mesh.vertices = verts;
             mesh.colors = colors;
             mesh.triangles = tris;
             mesh.RecalculateBounds();
@@ -429,9 +430,26 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             }
         }
 
+        static Vector3 Ground(Vector3 point)
+        {
+            var terrain = Terrain.activeTerrain;
+            point.y = (terrain != null ? terrain.SampleHeight(point) + terrain.transform.position.y : 0f) + .07f;
+            return point;
+        }
+        static void SetGroundPositions(LineRenderer line, Vector3[] points)
+        {
+            for (int i = 0; i < points.Length; i++) points[i] = Ground(points[i]);
+            line.SetPositions(points);
+        }
+        void ProjectMesh(Vector3[] points)
+        {
+            for (int i = 0; i < points.Length; i++) points[i] = transform.InverseTransformPoint(Ground(points[i]));
+        }
+
         void OnDestroy()
         {
             Clear();
+            foreach (var slot in slots) if (slot.FillMesh != null) Destroy(slot.FillMesh);
             if (runtimeLineMat != null) Destroy(runtimeLineMat);
             if (runtimeFillMat != null) Destroy(runtimeFillMat);
         }

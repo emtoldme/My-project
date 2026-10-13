@@ -8,4 +8,4 @@
 
 完成的那一拍会发布 `Completed`、进度 1，并提交对应收益。宿主在死亡判定之后确认。确认过一次，或者确认失败，都不再提交。暂停和升级时宿主不调用 `Step`，所以时间不会往前走。
 
-还没放进主场景。锚点要由场景适配在创建模块时传进来。
+已由Codex接入Main，锚点由GameplayNextInstaller构造模块时传入。两次真实收益、暂停冻结和重开已完成短时验证；最新记录见Docs/Project/GameplayNext/INTEGRATION.md。

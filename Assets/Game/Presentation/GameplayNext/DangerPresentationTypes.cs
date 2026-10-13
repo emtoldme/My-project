@@ -23,6 +23,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
     public struct DangerAreaDescriptor
     {
         public int AttackId;
+        public bool IsSpawnWarning;
         public DangerShapeType Shape;
         public DangerVisualState State;
 
@@ -92,5 +93,6 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
         public int CompletedObjectives;
         public bool BossDefeated;
         public string BossResultText;
+        public string WeaponsText, PassivesText;
     }
 }

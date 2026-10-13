@@ -2,6 +2,8 @@
 
 2026-10-13。GP00共享宿主与实际接口已完成，可供A/B/C/D分别接入。
 
+此页记录冻结的GP00 v1基线；后续A/B/C/D已接入Main，最新可玩状态见[整合说明](INTEGRATION.md)。
+
 - 共同分支：[`gameplay/gp00-ready`](https://github.com/emtoldme/My-project/tree/gameplay/gp00-ready)。冻结版本使用标签`gp00-v1`，避免后续分支推进改变开工基线。
 - Unity 6000.4.3f1 / URP17.4；主场景`Assets/Game/Scenes/Main.unity`。
 - 本基线包含此前动态光影/天气提交`20d26e6`、任务规划`b4a06fe`及GP00实现。旧任务卡发布分支`docs/gameplay-task-cards`和旧`origin/main`不包含完整接口，不作为本轮模块的开发起点。

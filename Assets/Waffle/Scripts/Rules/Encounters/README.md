@@ -1,6 +1,6 @@
 # GP-A 遭遇模块（Rules/Encounters）
 
-状态：**规则模块已验证，主场景待Codex接线**。未在 Unity 中编译或运行；正式 Main 未安装本模块。
+最新状态：已由Codex整合到真实Main并完成Unity编译与短时运行，见`Docs/Project/GameplayNext/INTEGRATION.md`。下面保留原始模块交付记录，数值尚待完整局试玩。
 
 > 本模块最初写于 GP00 之前（临时 `Encounter*` 类型，见 PR #52），现已移植到 GP00 v1（`gameplay/gp00-ready` `45467b9`）：临时类型已删除，直接实现 `Waffle.GameplayNext.IEncounterModule`。
 

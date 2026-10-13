@@ -8352,6 +8352,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 130967756}
   m_Mesh: {fileID: 4300000, guid: 1d542d758cf7b834f9e9e5f6976e91dd, type: 2}
+--- !u!1 &133259455
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 133259456}
+  m_Layer: 0
+  m_Name: TuningAnchor02
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &133259456
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133259455}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9, y: -0.025, z: -5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1268887281}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &133769087
 GameObject:
   m_ObjectHideFlags: 0
@@ -26042,6 +26073,52 @@ Transform:
   - {fileID: 373114053}
   m_Father: {fileID: 974238817}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &543812705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 543812706}
+  - component: {fileID: 543812707}
+  m_Layer: 0
+  m_Name: GameplayDangerIndicators
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &543812706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543812705}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1268887281}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &543812707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543812705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c1702e7eb0e4048b31eb5439fdbe772, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.GameplayNext.Presentation::Reverb.Drafts.RC01.Presentation.GameplayNext.DangerIndicatorPool
+  lineMaterial: {fileID: 2100000, guid: 8a82a3cf6a3f26740bb514611aaa4f97, type: 2}
+  fillMaterial: {fileID: 2100000, guid: 8a82a3cf6a3f26740bb514611aaa4f97, type: 2}
 --- !u!1 &552267933
 GameObject:
   m_ObjectHideFlags: 0
@@ -30089,6 +30166,37 @@ Transform:
   - {fileID: 1432174542}
   - {fileID: 1145152672}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &717161890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 717161891}
+  m_Layer: 0
+  m_Name: TuningAnchor01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &717161891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 717161890}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9, y: -0.025, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1268887281}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &717496674
 GameObject:
@@ -44677,6 +44785,9 @@ GameObject:
   - component: {fileID: 1268887282}
   - component: {fileID: 1268887290}
   - component: {fileID: 1268887289}
+  - component: {fileID: 1268887291}
+  - component: {fileID: 1268887293}
+  - component: {fileID: 1268887292}
   m_Layer: 0
   m_Name: GameLoop
   m_TagString: Untagged
@@ -44697,6 +44808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Reverb.Drafts.RC01.Presentation::Reverb.Drafts.RC01.Presentation.RC01GrowthHud
   loop: {fileID: 1268887280}
+  gameplayNextSettlement: 1
 --- !u!114 &1268887279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44735,6 +44847,17 @@ MonoBehaviour:
   config:
     extraXpStepAfterFour: 0.4
     useRunContent: 1
+    gameplayNext:
+      enabled: 1
+      endingMode: 1
+      maxAttacks: 12
+      maxOrdinaryAttacks: 8
+      maxPendingSpawns: 8
+      maxObjectiveRewards: 2
+      bossOrdinaryCap: 16
+      maxMovementSpeed: 30
+      maxAttackLifetime: 15
+      maxWarningTime: 5
     runContentAllowList:
     - W01
     - W02
@@ -44897,6 +45020,7 @@ MonoBehaviour:
     magnetMaxSpeed: 20
     maxGems: 200
     gemPoolSize: 220
+  gameplayModuleProvider: {fileID: 1268887291}
   actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   playerView: {fileID: 716881332}
   gameplayCamera: {fileID: 1823121422}
@@ -44912,7 +45036,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 717161891}
+  - {fileID: 133259456}
+  - {fileID: 543812706}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1268887282
@@ -45481,6 +45608,185 @@ MonoBehaviour:
   catalog: {fileID: 11400000, guid: 85d37cf3ccb3b4d4a8eb9d1771a38d56, type: 2}
   loop: {fileID: 1268887280}
   suppressed: 0
+--- !u!114 &1268887291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02a99071fb3477640904c8c95a636f19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.GameplayNext.Presentation::Reverb.Drafts.RC01.Presentation.GameplayNext.GameplayNextInstaller
+  loop: {fileID: 1268887280}
+  encounters:
+    charger:
+      approachSpeed: 3
+      triggerRange: 5
+      telegraph: 0.8
+      dashDuration: 0.35
+      dashSpeed: 16
+      recover: 1.2
+      hitHalfWidth: 0.5
+      damage: 10
+      budgetRetryDelay: 0.25
+    dropper:
+      moveSpeed: 2.6
+      keepMin: 6
+      keepMax: 9
+      interval: 4
+      firstShotMin: 1.5
+      firstShotMax: 4
+      telegraph: 1
+      active: 0.2
+      radius: 1.1
+      damage: 10
+      budgetRetryDelay: 0.25
+    normalEnemyCap: 48
+    attackCap: 12
+    normalAttackCap: 8
+    pendingSpawnCap: 8
+    spawnRingMin: 14
+    spawnRingMax: 18
+    spawnWarning: 0.6
+    maxSpawnsPerTick: 1
+    reactionAllowance: 0.25
+    eliteTimes:
+    - 240
+    - 480
+    eliteRetryDelay: 2
+    eliteRetryWindow: 30
+    chaserSpec:
+      id: chaser
+      maxHp: 25
+      speed: 3.5
+      radius: 0.5
+      contactDamage: 10
+      gemValue: 1
+      elite: 0
+    chargerSpec:
+      id: charger
+      maxHp: 30
+      speed: 3
+      radius: 0.5
+      contactDamage: 10
+      gemValue: 2
+      elite: 0
+    dropperSpec:
+      id: dropper
+      maxHp: 20
+      speed: 2.6
+      radius: 0.5
+      contactDamage: 10
+      gemValue: 2
+      elite: 0
+    eliteSpec:
+      id: elite
+      maxHp: 240
+      speed: 2.8
+      radius: 0.8
+      contactDamage: 20
+      gemValue: 10
+      elite: 1
+    stages:
+    - startTime: 0
+      spawnInterval: 1.2
+      normalCap: 24
+      wChaser: 1
+      wCharger: 0
+      wDropper: 0
+    - startTime: 60
+      spawnInterval: 1.2
+      normalCap: 24
+      wChaser: 0.92
+      wCharger: 0.08
+      wDropper: 0
+    - startTime: 120
+      spawnInterval: 1
+      normalCap: 32
+      wChaser: 0.72
+      wCharger: 0.18
+      wDropper: 0.1
+    - startTime: 240
+      spawnInterval: 0.85
+      normalCap: 38
+      wChaser: 0.6
+      wCharger: 0.22
+      wDropper: 0.18
+    - startTime: 360
+      spawnInterval: 0.72
+      normalCap: 44
+      wChaser: 0.52
+      wCharger: 0.24
+      wDropper: 0.24
+    - startTime: 480
+      spawnInterval: 0.62
+      normalCap: 48
+      wChaser: 0.46
+      wCharger: 0.26
+      wDropper: 0.28
+  finale:
+    BossArchetypeId: boss_harvester
+    BossMaxHp: 800
+    BossSpeed: 2.4
+    BossRadius: 1.6
+    BossContactDamage: 18
+    BossGemValue: 50
+    SpawnWarningStartTime: 540
+    SpawnWarningDuration: 3
+    FirstAttackDelay: 2
+    PulseRadius: 2
+    PulseDamage: 14
+    PulseWarning: 1
+    PulseWarningEnraged: 0.8
+    PulseActiveDuration: 0.3
+    PulseSubInterval: 0.7
+    PulseSubIntervalEnraged: 0.5
+    WaveCooldown: 3.5
+    WaveCooldownEnraged: 2.4
+    RingRadius: 2.5
+    RingInnerRadius: 0.5
+    RingExpansionSpeed: 6
+    RingDamage: 16
+    RingWarning: 1.4
+    RingWarningEnraged: 1.2
+    RingActiveDuration: 2
+    RingCooldown: 4
+    RingCooldownEnraged: 2.8
+  firstTuningAnchor: {fileID: 717161891}
+  secondTuningAnchor: {fileID: 133259456}
+--- !u!114 &1268887292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c45b8fb45e33814ebbabf5e8ed23a84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.GameplayNext.Presentation::Reverb.Drafts.RC01.Presentation.GameplayNext.TuningMarkerView
+  loop: {fileID: 1268887280}
+  ringMaterial: {fileID: 2100000, guid: 8a82a3cf6a3f26740bb514611aaa4f97, type: 2}
+  resonatorPrefab: {fileID: 9018592627183369393, guid: 47a0a56348609e5419de4fd8bd117c78, type: 3}
+--- !u!114 &1268887293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a4eb4be66f4f45895f8b83bf30a2a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.GameplayNext.Presentation::Reverb.Drafts.RC01.Presentation.GameplayNext.GameplayFeedbackView
+  loop: {fileID: 1268887280}
+  dangerPool: {fileID: 543812707}
+  isPreviewMode: 0
 --- !u!1 &1271036660
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@
     "Waffle.Rules",
     "Waffle.Runtime",
     "Reverb.Drafts.RC01.Presentation",
+    "Reverb.GameplayNext.Presentation",
     "Unity.InputSystem",
     "Unity.RenderPipelines.Core.Runtime",
     "Unity.RenderPipelines.Universal.Runtime"

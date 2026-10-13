@@ -140,12 +140,18 @@ namespace Waffle
                 slot.root.position = new Vector3(e.Position.X, 0f, e.Position.Y);
                 Vector3 toward = new Vector3(sim.PlayerX - e.Position.X, 0f, sim.PlayerZ - e.Position.Y);
                 if (toward.sqrMagnitude > 0.001f) slot.root.rotation = Quaternion.LookRotation(toward);
-                slot.root.localScale = Vector3.one * (e.IsElite ? 1.6f : 1f);
+                bool charger = e.ArchetypeId == "charger", dropper = e.ArchetypeId == "dropper";
+                slot.root.localScale = e.IsBoss ? new Vector3(2.8f, 2.6f, 2.8f)
+                    : charger ? new Vector3(1.15f, .85f, 1.2f) : dropper ? new Vector3(.85f, 1.35f, .85f)
+                    : Vector3.one * (e.IsElite ? 1.6f : 1f);
                 Color tint = e.IsElite ? new Color(1f, 0.58f, 0.22f) : Color.Lerp(new Color(1f, 0.65f, 0.52f), new Color(0.9f, 0.3f, 0.2f), e.Phase / 3f);
+                if (e.IsBoss) tint = new Color(.48f, .2f, .5f);
+                else if (charger) tint = new Color(1f, .68f, .2f);
+                else if (dropper) tint = new Color(.32f, .7f, .78f);
                 block.Clear(); block.SetColor(BaseColor, slot.flash > 0f ? Color.white : tint);
                 block.SetColor(Emission, slot.flash > 0f ? Color.white * 2f : Color.black);
                 foreach (var r in slot.renderers)
-                    r.SetPropertyBlock(tintEnemyMaterials || slot.flash > 0f ? block : null);
+                    r.SetPropertyBlock(tintEnemyMaterials || charger || dropper || e.IsBoss || slot.flash > 0f ? block : null);
                 VisibleEnemies++;
             }
             foreach (var p in combat.Projectiles)

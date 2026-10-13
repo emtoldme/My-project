@@ -29,6 +29,7 @@ namespace Waffle.Finale
         private BossPhase phase = BossPhase.Waiting;
         private bool spawnRequested;
         private bool bossHasExisted;
+        private float nextSpawnRetry;
         private EnemyKey bossKey;
         private bool bossAlive;
         private float bossCurrentHp;
@@ -65,20 +66,7 @@ namespace Waffle.Finale
                     {
                         phase = BossPhase.WarningSpawn;
                         currentAttackLabel = "首领逼近中...";
-                        Vec2 spawnPos = CalculateBossSpawnPosition(context);
-                        var spec = new EnemySpawnSpec(
-                            archetypeId: Config.BossArchetypeId,
-                            maxHp: Config.BossMaxHp,
-                            speed: Config.BossSpeed,
-                            radius: Config.BossRadius,
-                            contactDamage: Config.BossContactDamage,
-                            gemValue: Config.BossGemValue,
-                            isElite: true,
-                            isBoss: true
-                        );
-                        spawnSequence++;
-                        commands.TrySpawn(new SpawnIntent(spawnSequence, spawnPos, spec, Config.SpawnWarningDuration));
-                        spawnRequested = true;
+                        RequestBossSpawn(context, commands);
                     }
                     break;
 
@@ -97,6 +85,8 @@ namespace Waffle.Finale
                         commands.RequestFinaleResolution(FinaleResolution.BossDefeated);
                         return;
                     }
+                    else if (!bossHasExisted && now >= nextSpawnRetry && !HasPendingSpawn(context))
+                        RequestBossSpawn(context, commands);
                     break;
 
                 case BossPhase.Fighting:
@@ -165,13 +155,35 @@ namespace Waffle.Finale
 
         private Vec2 CalculateBossSpawnPosition(GameplayContext context)
         {
-            float angle = rng.Range(0f, (float)(Math.PI * 2));
-            float dist = rng.Range(10f, 12f);
-            Vec2 candidate = context.PlayerPosition + Vec2.FromAngle(angle) * dist;
             float maxCoord = context.ArenaHalfSize - Config.BossRadius - 1f;
+            Vec2 candidate = context.PlayerPosition;
+            for (int attempt = 0; attempt < 12; attempt++)
+            {
+                float angle = rng.Range(0f, (float)(Math.PI * 2));
+                candidate = context.PlayerPosition + Vec2.FromAngle(angle) * rng.Range(10f, 12f);
+                if (Math.Abs(candidate.X) <= maxCoord && Math.Abs(candidate.Y) <= maxCoord) return candidate;
+            }
+            Vec2 inward = (Vec2.Zero - context.PlayerPosition).Normalized;
+            if (inward.SqrLength < .5f) inward = new Vec2(1f, 0f);
+            candidate = context.PlayerPosition + inward * 11f;
             float clampedX = Math.Max(-maxCoord, Math.Min(maxCoord, candidate.X));
             float clampedY = Math.Max(-maxCoord, Math.Min(maxCoord, candidate.Y));
             return new Vec2(clampedX, clampedY);
+        }
+
+        bool HasPendingSpawn(GameplayContext context)
+        {
+            foreach (var warning in context.SpawnWarnings) if (warning.Spawn.Spec.IsBoss) return true;
+            return false;
+        }
+
+        void RequestBossSpawn(GameplayContext context, GameplayCommandBuffer commands)
+        {
+            var spec = new EnemySpawnSpec(Config.BossArchetypeId, Config.BossMaxHp, Config.BossSpeed,
+                Config.BossRadius, Config.BossContactDamage, Config.BossGemValue, true, true);
+            commands.TrySpawn(new SpawnIntent(++spawnSequence, CalculateBossSpawnPosition(context), spec, Config.SpawnWarningDuration));
+            spawnRequested = true;
+            nextSpawnRetry = context.Now + Config.SpawnWarningDuration + 2f;
         }
 
         private void UpdateAttacks(GameplayContext context, GameplayCommandBuffer commands)
@@ -202,7 +214,8 @@ namespace Waffle.Finale
                 ExecuteSonicRing(context, commands, isEnraged);
                 attackCycle = 0;
                 float cooldown = isEnraged ? Config.RingCooldownEnraged : Config.RingCooldown;
-                nextAttackTime = now + cooldown;
+                nextAttackTime = now + (isEnraged ? Config.RingWarningEnraged : Config.RingWarning)
+                    + Config.RingActiveDuration + cooldown;
             }
         }
 
@@ -274,6 +287,8 @@ namespace Waffle.Finale
         {
             phase = BossPhase.Waiting;
             spawnRequested = false;
+            bossHasExisted = false;
+            nextSpawnRetry = 0f;
             bossKey = default;
             bossAlive = false;
             bossCurrentHp = bossMaxHp;

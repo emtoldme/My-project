@@ -10,6 +10,7 @@ namespace Reverb.Drafts.RC01.Presentation
     public class RC01GrowthHud : MonoBehaviour
     {
         public GameLoop loop;
+        public bool gameplayNextSettlement;
         Font font;
         GUIStyle small, body, title, number, center, button, tiny;
         Texture2D buttonFill, buttonHover;
@@ -70,7 +71,7 @@ namespace Reverb.Drafts.RC01.Presentation
             Bar(new Rect(width-220,94,180,3),cd<=0?1:1/(1+cd),cd<=0?Jade:Muted);
             if(view!=null)Loadout(view,width,height);
             if(state.Phase==RunPhase.LevelUp)Choices(view,commands,width,height);
-            if(state.Phase==RunPhase.Paused||state.Phase.IsTerminal())Menu(width,height);
+            if(state.Phase==RunPhase.Paused||(state.Phase.IsTerminal()&&(!gameplayNextSettlement||sim.Outcome==null)))Menu(width,height);
             GUI.matrix=oldMatrix;
         }
         void Loadout(RunContentView view,float width,float height)

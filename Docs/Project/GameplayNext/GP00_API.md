@@ -2,7 +2,7 @@
 
 状态：GP00 v1已实现，模块编译与真实Main场景接线验证通过。命名空间为`Waffle.GameplayNext`，属于既有`Waffle.Rules`程序集。入口代码为`GameplayContracts.cs`、`GameplayGeometry.cs`、`CombatModule.GameplayNext.cs`、`RunSimulation.GameplayNext.cs`。
 
-新模式默认关闭，当前正式Main不安装A/B/C的占位模块。GP00只提供共用宿主，A/B/C/D内容并未因此自动完成。
+GP00 v1冻结基线中新模式默认关闭，只提供共用宿主。后续整合分支已安装A/B/C真实模块并开启Main，当前状态见[整合说明](INTEGRATION.md)；下面的接口契约继续有效。
 
 ## 开工方式
 

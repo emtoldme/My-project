@@ -6,6 +6,8 @@
 
 用户编辑工程为 `G:/图书馆/新建文件夹 (2)/My project`，新视觉基线在独立 `art/visual-editing` 分支。`My project-integration` 是 Codex 的整合与构建工作目录。旧 art/manual-editing 与 safety/pre-visual-rebuild-20261013 保留此次重构前用户改动。不要同时打开两个工程修改同一批资源；后续用户编辑期间不自动覆盖其改动。
 
+GP00及玩法第一轮整合实际使用独立目录 `Reviews/GP00-2026-10-13/workspace`，当前分支 `gameplay/gp-integration`。其余工作目录可能正被用户或外部AI使用其他分支；先确认，不自动切换、重置或覆盖。第一轮玩法已在该整合分支的Main开启，说明见Docs/Project/GameplayNext/INTEGRATION.md。
+
 四位外部 AI 的协作方式保留：用户转发需求、各自独立目录和分支上传，Codex 审查接线合并。旧 TASKS_01..08、实验和交接板已从当前树移除，不能重新执行。用户已要求继续玩法开发；本轮任务卡与共同接口见 Docs/Project/GameplayNext，Codex负责GP00共享宿主与后续整合。未经用户授权不主动联系其他AI。
 
 本轮玩法使用 gameplay/gp00-ready 的 GP00 v1共同基线，准确版本见 Docs/Project/GameplayNext/GP00_RELEASE.md；不要假定 origin/main 已包含该接口。不要直接推 main、强推或盲合旧分支。原 PR33 是废弃假 HUD，不合入实际游戏。旧工程本地改动已保存于 safety/local-editor-20261013（a9f7b60），清理前基线为 8ba5162；保留 Git 历史以便恢复。不要清理用户根目录中的 Blender、图包、SourceArt/Intake01、Assets/ReverbInTheRye、Art_ThirdParty 与授权来源。
