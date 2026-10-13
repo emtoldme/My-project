@@ -55,7 +55,7 @@ namespace Reverb.Drafts.RC01.Presentation
             foreach (var e in events)
             {
                 if (e.Type == PresentationEventType.EchoHit)
-                { EchoEvents++; derivedFx.PlayEcho(e.X, e.Z, e.Value); }
+                { EchoEvents++; if (GetComponent<IPresentationEventOwner>()?.OwnsPresentation(e) != true) derivedFx.PlayEcho(e.X, e.Z, e.Value); }
                 else if (e.Type == PresentationEventType.PropagationHit || e.Type == PresentationEventType.EchoPropagationHit)
                 { PropagationEvents++; derivedFx.PlayPropagation(e.FromX, e.FromZ, e.X, e.Z, e.Value); }
                 else if (e.Type == PresentationEventType.Evolved) EvolutionEvents++;
@@ -90,6 +90,7 @@ namespace Reverb.Drafts.RC01.Presentation
             n = 0;
             foreach (var z in combat.Zones)
             {
+                if (sim.State.Now >= z.StartsAt && GetComponent<IPresentationEventOwner>()?.OwnsPresentation(new PresentationEvent { Type=PresentationEventType.WeaponZone,SourceId="W04" }) == true) continue;
                 if (n >= zoneViews.Count) break;
                 var line = zoneViews[n++]; line.gameObject.SetActive(true);
                 Color color = sim.State.Now < z.StartsAt ? new Color(.4f,.65f,.75f,.45f) : new Color(.45f,.9f,1,.9f);

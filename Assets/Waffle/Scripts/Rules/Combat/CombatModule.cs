@@ -137,7 +137,7 @@ namespace Waffle.Combat
                 try { ruleExtension.AfterProjectiles(now); }
                 finally { resolvingRuleExtension = false; }
             }
-            if (runGrowth != null) ResolveRunPending();
+            if (runGrowth != null) { StepRunComponents(input); ResolveRunPending(); }
             DeathStep();                 // T7
             ContactStep();               // T8
             return Result;
@@ -618,15 +618,17 @@ namespace Waffle.Combat
 
         private static long Key(EnemyState e) { return ((long)e.Serial << 32) | (uint)e.Generation; }
 
-        private bool ApplyEnemyDamage(EnemyState enemy, float damage, PresentationEventType type, Vec2 from, string sourceId = null, int slot = 0, string rootSourceId = null)
+        private bool ApplyEnemyDamage(EnemyState enemy, float damage, PresentationEventType type, Vec2 from, string sourceId = null, int slot = 0, string rootSourceId = null,
+            bool allowMechanisms = true, int chainId = 0, int depth = 0, int budget = 0)
         {
             if (!enemy.IsAlive || damage <= 0 || float.IsNaN(damage) || float.IsInfinity(damage)) return false;
             enemy.Hp -= damage;
             enemy.LastSourceId = sourceId; enemy.LastSlot = slot;
             Result.Events.Add(new PresentationEvent { Type = type, Now = now, X = enemy.Position.X,
                 Z = enemy.Position.Y, Value = damage, Data = enemy.Serial, Generation = enemy.Generation,
-                FromX = from.X, FromZ = from.Y, SourceId = sourceId, RootSourceId = rootSourceId ?? sourceId, Slot = slot });
-            if (runGrowth != null && type == PresentationEventType.EnemyHit && sourceId != null && (sourceId.StartsWith("W") || sourceId.StartsWith("E")))
+                FromX = from.X, FromZ = from.Y, SourceId = sourceId, RootSourceId = rootSourceId ?? sourceId, Slot = slot,
+                ChainId = chainId, ChainDepth = depth, ChainBudget = budget });
+            if (allowMechanisms && runGrowth != null && type == PresentationEventType.EnemyHit && sourceId != null && (sourceId.StartsWith("W") || sourceId.StartsWith("E")))
                 OnRunDirectHit(enemy, damage, sourceId, slot);
             if (enemy.Hp > 0f || enemy.Life != EnemyLife.Alive) return false;
             enemy.Life = EnemyLife.Dead;
@@ -720,7 +722,8 @@ namespace Waffle.Combat
 
         private void Emit(PresentationEventType type, Vec2 pos, float value, int data)
         {
-            Result.Events.Add(new PresentationEvent { Type = type, Now = now, X = pos.X, Z = pos.Y, Value = value, Data = data });
+            Result.Events.Add(new PresentationEvent { Type = type, Now = now, X = pos.X, Z = pos.Y, Value = value, Data = data,
+                SourceId = type == PresentationEventType.GemPickup ? "D01" : null });
         }
 
         private static float Deg(float d) { return d * (float)Math.PI / 180f; }

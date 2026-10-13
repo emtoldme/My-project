@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 
 namespace Waffle
 {
+    public interface IAudioDirectorConfiguration { void Configure(AudioDirector director); }
     /// <summary>
     /// S1 音频入口（唯一）。只读取 GameLoop 分发的表现事件和当前状态，不改玩法。
     /// 实现 Docs/Audio 的事件表：音量 dB、最大并发（挤掉最早）、最短间隔、2D/3D、拾取音阶、受击压低音乐、
@@ -118,6 +119,7 @@ namespace Waffle
         private void Awake()
         {
             if (loop == null) loop = GetComponent<GameLoop>();
+            GetComponent<IAudioDirectorConfiguration>()?.Configure(this);
             BuildChannel(PresentationEventType.Shot, shoot);
             BuildChannel(PresentationEventType.EnemyHit, enemyHit);
             BuildChannel(PresentationEventType.EnemyKilled, enemyDeath);

@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 1,
+  "packageId": "rc02.art.v1",
+  "entries": [
+    {
+      "id": "rc02.art.w01.shot",
+      "kind": "art",
+      "contentId": "W01",
+      "eventType": "Shot",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "prefab",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Prefabs/TEST_ONLY_Projectile_DirectedPulse.prefab"
+        },
+        {
+          "role": "material",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Materials/M_VFX_DirectedPulse.mat"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "width",
+          "value": 0.15
+        },
+        {
+          "key": "scale",
+          "value": 0.8
+        },
+        {
+          "key": "tailSeconds",
+          "value": 0.12
+        },
+        {
+          "key": "intensity",
+          "value": 1.2
+        }
+      ],
+      "maxInstances": 16,
+      "minInterval": 0.05,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "W01 Directed Pulse projectile template; see package README"
+    },
+    {
+      "id": "rc02.art.w01.hit",
+      "kind": "art",
+      "contentId": "W01",
+      "eventType": "EnemyHit",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "prefab",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Prefabs/TEST_ONLY_Hit_EchoPulse.prefab"
+        },
+        {
+          "role": "material",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Materials/M_VFX_DirectedPulse.mat"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "width",
+          "value": 0.3
+        },
+        {
+          "key": "scale",
+          "value": 0.5
+        },
+        {
+          "key": "tailSeconds",
+          "value": 0.1
+        },
+        {
+          "key": "intensity",
+          "value": 1.0
+        }
+      ],
+      "maxInstances": 20,
+      "minInterval": 0.04,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "W01 Direct hit impact sparks; see package README"
+    },
+    {
+      "id": "rc02.art.w04.zone",
+      "kind": "art",
+      "contentId": "W04",
+      "eventType": "WeaponZone",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "prefab",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Prefabs/TEST_ONLY_Zone_ResonanceField.prefab"
+        },
+        {
+          "role": "material",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Materials/M_VFX_ResonanceZone.mat"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "width",
+          "value": 0.065
+        },
+        {
+          "key": "scale",
+          "value": 1.5
+        },
+        {
+          "key": "tailSeconds",
+          "value": 2.0
+        },
+        {
+          "key": "intensity",
+          "value": 1.1
+        }
+      ],
+      "maxInstances": 8,
+      "minInterval": 0.2,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "W04 Stationary Resonance field ground zone; see package README"
+    },
+    {
+      "id": "rc02.art.w05.hit",
+      "kind": "art",
+      "contentId": "W05",
+      "eventType": "EnemyHit",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "prefab",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Prefabs/TEST_ONLY_Arc_ChainElectric.prefab"
+        },
+        {
+          "role": "material",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Materials/M_VFX_ChainArc.mat"
+        },
+        {
+          "role": "icon",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Icons/icon_W05_chain_arc.png"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "width",
+          "value": 0.08
+        },
+        {
+          "key": "scale",
+          "value": 1.0
+        },
+        {
+          "key": "tailSeconds",
+          "value": 0.16
+        },
+        {
+          "key": "intensity",
+          "value": 1.5
+        }
+      ],
+      "maxInstances": 12,
+      "minInterval": 0.05,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "W05 Chain Arc electric jump line; mapped to PropagationHit"
+    },
+    {
+      "id": "rc02.art.w06.zone",
+      "kind": "art",
+      "contentId": "W06",
+      "eventType": "WeaponZone",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "prefab",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Prefabs/TEST_ONLY_Trail_MotionResonance.prefab"
+        },
+        {
+          "role": "material",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Materials/M_VFX_MotionEcho.mat"
+        },
+        {
+          "role": "icon",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Icons/icon_W06_motion_echo.png"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "width",
+          "value": 0.065
+        },
+        {
+          "key": "scale",
+          "value": 0.4
+        },
+        {
+          "key": "tailSeconds",
+          "value": 3.0
+        },
+        {
+          "key": "intensity",
+          "value": 0.9
+        }
+      ],
+      "maxInstances": 16,
+      "minInterval": 0.1,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "W06 Motion trail residual node; mapped to WeaponZone"
+    },
+    {
+      "id": "rc02.art.p12.hit",
+      "kind": "art",
+      "contentId": "P12",
+      "eventType": "EchoHit",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "prefab",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Prefabs/TEST_ONLY_Hit_EchoPulse.prefab"
+        },
+        {
+          "role": "material",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Materials/M_VFX_EchoHit.mat"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "width",
+          "value": 0.5
+        },
+        {
+          "key": "scale",
+          "value": 0.6
+        },
+        {
+          "key": "tailSeconds",
+          "value": 0.24
+        },
+        {
+          "key": "intensity",
+          "value": 1.4
+        }
+      ],
+      "maxInstances": 12,
+      "minInterval": 0.05,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "P12 Centripetal Magenta Echo hit ring; mapped to EchoHit"
+    },
+    {
+      "id": "rc02.art.p17.dodge",
+      "kind": "art",
+      "contentId": "P17",
+      "eventType": "WeaponZone",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "prefab",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Prefabs/TEST_ONLY_Zone_DodgeDischarge.prefab"
+        },
+        {
+          "role": "material",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Materials/M_VFX_DodgeDischarge.mat"
+        },
+        {
+          "role": "icon",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Icons/icon_P17_dodge_discharge.png"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "width",
+          "value": 0.065
+        },
+        {
+          "key": "scale",
+          "value": 2.5
+        },
+        {
+          "key": "tailSeconds",
+          "value": 0.35
+        },
+        {
+          "key": "intensity",
+          "value": 1.6
+        }
+      ],
+      "maxInstances": 4,
+      "minInterval": 0.4,
+      "pausePolicy": "freeze",
+      "status": "TEST_ONLY",
+      "source": "P17 Dodge discharge radial pulse ring; mapped to Dodge"
+    },
+    {
+      "id": "rc02.art.p03.icon",
+      "kind": "art",
+      "contentId": "P03",
+      "eventType": "LevelUpChosen",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "icon",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Icons/icon_P03_pulse_drive.png"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "scale",
+          "value": 1.0
+        }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.0,
+      "pausePolicy": "stop",
+      "status": "TEST_ONLY",
+      "source": "P03 Pulse Drive card icon"
+    },
+    {
+      "id": "rc02.art.p05.icon",
+      "kind": "art",
+      "contentId": "P05",
+      "eventType": "LevelUpChosen",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "icon",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Icons/icon_P05_resonance_sustain.png"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "scale",
+          "value": 1.0
+        }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.0,
+      "pausePolicy": "stop",
+      "status": "TEST_ONLY",
+      "source": "P05 Resonance Sustain card icon"
+    },
+    {
+      "id": "rc02.art.p08.icon",
+      "kind": "art",
+      "contentId": "P08",
+      "eventType": "LevelUpChosen",
+      "profileId": "",
+      "assets": [
+        {
+          "role": "icon",
+          "path": "Assets/Drafts/RC01/Art/ComponentsV1/Icons/icon_P08_shock_absorber.png"
+        }
+      ],
+      "parameters": [
+        {
+          "key": "scale",
+          "value": 1.0
+        }
+      ],
+      "maxInstances": 1,
+      "minInterval": 0.0,
+      "pausePolicy": "stop",
+      "status": "TEST_ONLY",
+      "source": "P08 Shock Absorber card icon"
+    }
+  ]
+}

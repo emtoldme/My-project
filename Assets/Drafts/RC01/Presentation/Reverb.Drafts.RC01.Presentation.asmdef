@@ -5,7 +5,8 @@
     "Waffle.Rules",
     "Waffle.Runtime",
     "Waffle.Experiments.Mechanism.Presentation",
-    "Unity.InputSystem"
+    "Unity.InputSystem",
+    "Reverb.Drafts.RC01.Pipeline"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

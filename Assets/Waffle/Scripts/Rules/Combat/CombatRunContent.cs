@@ -81,13 +81,15 @@ namespace Waffle.Combat
         {
             if (hasStepped) throw new InvalidOperationException("Enable growth before the first step.");
             runGrowth = growth; pickupRng = new CombatRng(seed ^ 0x4c031);
+            components = new Waffle.RunContent.Components.RunComponentRuntime(growth);
+            components.RebaseMovement(player);
             RefreshRunContent();
         }
         public void RefreshRunContent()
-        { runStats = GrowthStats.From(runGrowth); runWeapons = WeaponRuntimeParams.From(runGrowth); }
+        { runStats = GrowthStats.From(runGrowth); runWeapons = WeaponRuntimeParams.From(runGrowth); components?.Refresh(); }
         public void QueueShieldPulse() { shieldPulseQueued = true; }
         public void ClearRunContent()
-        { pendingHits.Clear(); echoCues.Clear(); zones.Clear(); pickups.Clear(); }
+        { pendingHits.Clear(); echoCues.Clear(); zones.Clear(); pickups.Clear(); components?.Clear(); }
 
         public Vec2 OrbitPosition(WeaponRuntimeParams w, int index, float time, Vec2 center)
         {
@@ -104,6 +106,7 @@ namespace Waffle.Combat
         {
             foreach (var w in runWeapons)
             {
+                if (components != null && components.Owns(w.Id)) continue;
                 var d = w.RankData;
                 if (w.Id == "W03" || w.Id == "E03")
                 {
@@ -187,7 +190,7 @@ namespace Waffle.Combat
                 if (now >= z.EndsAt)
                 { if (z.Burst > 0) DamageArea(z.Position, z.Radius, z.Burst, z.Source, z.Slot, 48); zones.RemoveAt(i); continue; }
                 if (now >= z.NextTick)
-                { if (z.NextTick == z.StartsAt) EmitRun(PresentationEventType.WeaponZone,z.Position,z.Source,z.Slot,z.Damage,z.Radius);
+                { if (z.NextTick == z.StartsAt) EmitRun(PresentationEventType.WeaponZone,z.Position,z.Source,z.Slot,z.Damage,z.Radius,z.EndsAt-z.StartsAt);
                     z.NextTick = now + Math.Max(.15f, z.Tick); DamageArea(z.Position, z.Radius, z.Damage, z.Source, z.Slot, 48); }
             }
             if (shieldPulseQueued)
@@ -198,11 +201,11 @@ namespace Waffle.Combat
             }
         }
 
-        void DamageArea(Vec2 at, float radius, float damage, string source, int slot, int budget, float eliteMul = 1)
+        void DamageArea(Vec2 at, float radius, float damage, string source, int slot, int budget, float eliteMul = 1, bool allowMechanisms = true)
         {
             foreach (var e in enemies)
                 if (e.IsAlive && Vec2.SqrDistance(at, e.Position) <= (radius + e.Radius) * (radius + e.Radius))
-                { ApplyEnemyDamage(e, damage * (e.IsElite ? eliteMul : 1), PresentationEventType.EnemyHit, at, source, slot); if (--budget <= 0) break; }
+                { ApplyEnemyDamage(e, damage * (e.IsElite ? eliteMul : 1), PresentationEventType.EnemyHit, at, source, slot, allowMechanisms: allowMechanisms); if (--budget <= 0) break; }
         }
 
         void OnRunDirectHit(EnemyState e, float damage, string source, int slot)
@@ -316,7 +319,7 @@ namespace Waffle.Combat
                 EmitRun(p.Id == "ELITE" ? PresentationEventType.EliteReward : PresentationEventType.PickupCollected, p.Position, p.Id, -1, 0, 0);
             }
         }
-        void EmitRun(PresentationEventType type, Vec2 at, string id, int slot, float value, float radius)
-        { Result.Events.Add(new PresentationEvent { Type = type, Now = now, X = at.X, Z = at.Y, SourceId = id, RootSourceId = id, Slot = slot, Value = value, Radius = radius }); }
+        void EmitRun(PresentationEventType type, Vec2 at, string id, int slot, float value, float radius, float duration = 0)
+        { Result.Events.Add(new PresentationEvent { Type = type, Now = now, X = at.X, Z = at.Y, SourceId = id, RootSourceId = id, Slot = slot, Value = value, Radius = radius, Duration = duration }); }
     }
 }

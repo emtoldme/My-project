@@ -48,11 +48,12 @@ namespace Reverb.Experiments.Mechanism.Integration
                 else if (!terminal && item.Type == PresentationEventType.Shot)
                 {
                     Shots++;
+                    if (GetComponent<IPresentationEventOwner>()?.OwnsPresentation(item) == true) continue;
                     Vector3 direction = new Vector3(item.DirectionX, 0f, item.DirectionZ);
                     sonic.PlayFire(new Vector3(item.X, .15f, item.Z), direction);
                 }
                 else if (!terminal && item.Type == PresentationEventType.EnemyHit)
-                { DirectHits++; sonic.PlayHit(new Vector3(item.X, .08f, item.Z)); }
+                { DirectHits++; if (GetComponent<IPresentationEventOwner>()?.OwnsPresentation(item) != true) sonic.PlayHit(new Vector3(item.X, .08f, item.Z)); }
                 else if (!terminal && item.Type == PresentationEventType.EnemyKilled)
                 { Deaths++; sonic.PlayDeath(new Vector3(item.X, .08f, item.Z)); }
             }

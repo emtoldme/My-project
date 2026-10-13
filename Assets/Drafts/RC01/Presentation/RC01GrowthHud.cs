@@ -107,6 +107,8 @@ namespace Reverb.Drafts.RC01.Presentation
                 {
                     RunContentChoiceView card = view.Choices[i];
                     GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(318f), GUILayout.Height(285f));
+                    var icon = GetComponent<Reverb.Drafts.RC01.Pipeline.RC02CatalogPresenter>()?.Icon(card.Id);
+                    if (icon != null) GUILayout.Label(icon, GUILayout.Width(40), GUILayout.Height(40));
                     GUILayout.Label(card.DisplayName);
                     GUILayout.Label(card.CurrentRank + " → " + card.NextRank);
                     GUILayout.Label(card.EffectText);

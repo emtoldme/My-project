@@ -1,0 +1,8 @@
+chainSixUniqueTargets=True
+chainOneBoundedMechanismRoot=True
+actualMovementPlacesBoundedTrail=True
+trailActuallyDamages=True
+actualDodgeDischargesOnce=True
+rejectedDodgeDoesNotDischarge=True
+pauseFreezesComponents=True
+newRunHasNoTrail=True
