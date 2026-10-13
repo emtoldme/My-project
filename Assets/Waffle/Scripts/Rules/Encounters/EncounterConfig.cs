@@ -66,7 +66,8 @@ namespace Waffle.Rules.Encounters
 
         public EncounterStage[] stages =
         {
-            new EncounterStage(0f,   1.20f, 24, 0.92f, 0.08f, 0.00f),
+            new EncounterStage(0f,   1.20f, 24, 1.00f, 0.00f, 0.00f),
+            new EncounterStage(60f,  1.20f, 24, 0.92f, 0.08f, 0.00f),
             new EncounterStage(120f, 1.00f, 32, 0.72f, 0.18f, 0.10f),
             new EncounterStage(240f, 0.85f, 38, 0.60f, 0.22f, 0.18f),
             new EncounterStage(360f, 0.72f, 44, 0.52f, 0.24f, 0.24f),
