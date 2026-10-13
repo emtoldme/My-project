@@ -1,125 +1,133 @@
+using System.Linq;
 using NUnit.Framework;
+using Waffle;
+using Waffle.Combat;
+using Waffle.GameplayNext;
 
 namespace Waffle.Objectives.Tests
 {
     public class TuningObjectivesTests
     {
         [Test]
-        public void ChannelPausesOutsideAndCompletesOnce()
+        public void FirstTuneHealsOnceAndIgnoresAForeignRun()
         {
-            var module = New();
-            module.Advance(At(150f, 0f, 0f, 9f));
-            Assert.That(module.TryRead(out var view), Is.True);
-            Assert.That(view.Status, Is.EqualTo(TuningStatus.Available));
-            Assert.That(view.RadiusMeters, Is.EqualTo(2f));
-
-            module.Advance(At(151f, 1f, 0f, 0f));
-            module.Advance(At(152.5f, 1.5f, 0f, 0f));
-            module.Advance(At(153f, 0.5f, 9f, 0f));
-            module.TryRead(out view);
-            Assert.That(view.Progress, Is.EqualTo(0.625f).Within(0.0001f));
-            Assert.That(module.TryPeekReward(out _), Is.False);
-
-            module.Advance(At(154.5f, 1.5f, 0f, 0f));
-            Assert.That(module.TryPeekReward(out var reward), Is.True);
-            Assert.That(module.TryPeekReward(out var again), Is.True);
-            Assert.That(again.ObjectiveId, Is.EqualTo(reward.ObjectiveId));
-            Assert.That(reward.RewardId, Is.EqualTo("D02"));
-            Assert.That(module.ConfirmReward(reward.RunId, reward.ObjectiveId), Is.True);
-            Assert.That(module.ConfirmReward(reward.RunId, reward.ObjectiveId), Is.False);
-            Assert.That(module.TryPeekReward(out _), Is.False);
+            var module = new TuningObjectives(Vec2.Zero, Vec2.Zero);
+            var sim = Make(module);
+            module.ConfirmReward(System.Guid.NewGuid(), TuningObjectives.FirstId, true);
+            sim.DebugSetTime(150f);
+            Tick(sim);
+            Tick(sim);
+            Tick(sim);
+            Tick(sim);
+            Assert.That(sim.State.Hp, Is.EqualTo(70));
+            Assert.That(sim.State.MaxHp, Is.EqualTo(100));
+            Assert.That(Count(sim, "D02"), Is.EqualTo(1));
+            int hp = sim.State.Hp;
+            Tick(sim);
+            Assert.That(sim.State.Hp, Is.EqualTo(hp));
+            Assert.That(Count(sim, "D02"), Is.EqualTo(0));
         }
 
         [Test]
-        public void BoundaryUsesPlayerCenter()
+        public void LeavingPausesAndTheEdgeCounts()
         {
-            var module = New();
-            module.Advance(At(150f, 0f, 0f, 0f));
-            module.Advance(At(154f, 4f, 2f, 0f));
-            Assert.That(module.TryPeekReward(out _), Is.True);
-            module = New();
-            module.Advance(At(150f, 0f, 0f, 0f));
-            module.Advance(At(154f, 4f, 2.01f, 0f));
-            Assert.That(module.TryPeekReward(out _), Is.False);
+            var module = new TuningObjectives(Vec2.Zero, Vec2.Zero);
+            var sim = Make(module);
+            sim.DebugSetTime(150f);
+            Tick(sim);
+            Assert.That(sim.ReadGameplayView().Objective.Progress, Is.EqualTo(0.25f).Within(0.0001f));
+            sim.PlayerX = 6f;
+            Tick(sim);
+            Assert.That(sim.ReadGameplayView().Objective.Progress, Is.EqualTo(0.25f).Within(0.0001f));
+            sim.PlayerX = 2f;
+            Tick(sim);
+            Tick(sim);
+            Tick(sim);
+            Assert.That(sim.State.Hp, Is.EqualTo(70));
         }
 
         [Test]
-        public void PauseAndExpiryDoNotPay()
+        public void StandingJustOutsideDoesNotChannel()
         {
-            var module = New();
-            module.Advance(At(150f, 0f, 0f, 0f));
-            var paused = At(151f, 4f, 0f, 0f);
-            paused.Playing = false;
-            module.Advance(paused);
-            Assert.That(module.TryPeekReward(out _), Is.False);
-            module.TryRead(out var view);
-            Assert.That(view.RemainingSeconds, Is.EqualTo(60f).Within(0.0001f));
+            var module = new TuningObjectives(Vec2.Zero, Vec2.Zero);
+            var sim = Make(module);
+            sim.PlayerX = 2.01f;
+            sim.DebugSetTime(150f);
+            Tick(sim);
+            Tick(sim);
+            Tick(sim);
+            Tick(sim);
+            Assert.That(sim.ReadGameplayView().Objective.Status, Is.EqualTo(ObjectiveStatus.Channeling).Or.EqualTo(ObjectiveStatus.Available));
+            Assert.That(sim.ReadGameplayView().Objective.Progress, Is.EqualTo(0f));
+            Assert.That(sim.State.Hp, Is.EqualTo(50));
+        }
 
-            module.Advance(At(210f, 60f, 9f, 0f));
-            Assert.That(module.TryRead(out _), Is.False);
-            Assert.That(module.TryPeekReward(out _), Is.False);
+        [Test]
+        public void MissingTheFirstDoesNotBlockTheSecond()
+        {
+            var module = new TuningObjectives(Vec2.Zero, new Vec2(0f, 4f));
+            var sim = Make(module);
+            sim.PlayerX = 8f;
+            sim.DebugSetTime(150f);
+            sim.FixedDt = 60f;
+            Tick(sim);
+            Assert.That(sim.ReadGameplayView().Objective.Status, Is.EqualTo(ObjectiveStatus.Expired));
+            sim.FixedDt = 1f;
+            sim.PlayerX = 0f;
+            sim.PlayerZ = 4f;
+            sim.DebugSetTime(390f);
+            Tick(sim);
+            Tick(sim);
+            Tick(sim);
+            Tick(sim);
+            Assert.That(Count(sim, "D03"), Is.EqualTo(1));
+            Assert.That(sim.State.Xp, Is.EqualTo(0));
+            Assert.That(sim.State.Hp, Is.EqualTo(50));
         }
 
         [Test]
         public void DeathOnTheCompletionTickPaysNothing()
         {
-            var module = New();
-            module.Advance(At(150f, 0f, 0f, 0f));
-            var dead = At(154f, 4f, 0f, 0f);
-            dead.Alive = false;
-            module.Advance(dead);
-            Assert.That(module.TryPeekReward(out _), Is.False);
-            Assert.That(module.ConfirmReward(7, TuningObjectives.FirstId), Is.False);
+            var module = new TuningObjectives(Vec2.Zero, Vec2.Zero);
+            var sim = Make(module);
+            sim.DebugSetTime(150f);
+            Tick(sim);
+            Tick(sim);
+            Tick(sim);
+            sim.DebugHurt(1000);
+            Tick(sim);
+            Assert.That(sim.State.Phase, Is.EqualTo(RunPhase.Defeat));
+            Assert.That(sim.State.Hp, Is.EqualTo(0));
+            Assert.That(Count(sim, "D02"), Is.EqualTo(0));
         }
 
-        [Test]
-        public void SecondTuneUsesExistingMagnetAndOldRunCannotConfirm()
+        static RunSimulation Make(TuningObjectives module)
         {
-            var module = FinishFirst();
-            module.Advance(At(390f, 0f, 0f, 0f));
-            module.Advance(At(394f, 4f, 0f, 0f));
-            Assert.That(module.TryPeekReward(out var reward), Is.True);
-            Assert.That(reward.RewardId, Is.EqualTo("D03"));
-            Assert.That(reward.ObjectiveId, Is.EqualTo(TuningObjectives.SecondId));
-            Assert.That(module.ConfirmReward(6, reward.ObjectiveId), Is.False);
-            Assert.That(module.ConfirmReward(7, reward.ObjectiveId), Is.True);
-        }
-
-        [Test]
-        public void RestartDropsThePreviousReward()
-        {
-            var module = New();
-            module.Advance(At(150f, 0f, 0f, 0f));
-            module.Advance(At(154f, 4f, 0f, 0f));
-            module.BeginRun(8);
-            Assert.That(module.TryPeekReward(out _), Is.False);
-            Assert.That(module.ConfirmReward(7, TuningObjectives.FirstId), Is.False);
-            Assert.That(module.TryRead(out _), Is.False);
-        }
-
-        static TuningObjectives FinishFirst()
-        {
-            var module = New();
-            module.Advance(At(150f, 0f, 0f, 0f));
-            module.Advance(At(154f, 4f, 0f, 0f));
-            Assert.That(module.ConfirmReward(7, TuningObjectives.FirstId), Is.True);
-            return module;
-        }
-
-        static TuningObjectives New()
-        {
-            var module = new TuningObjectives();
-            module.BeginRun(7);
-            return module;
-        }
-
-        static TuningTick At(float now, float dt, float x, float z)
-        {
-            return new TuningTick
+            var config = new RunConfig
             {
-                RunId = 7, Now = now, Dt = dt, Playing = true, Alive = true,
-                AnchorValid = true, PlayerX = x, PlayerZ = z, AnchorX = 0f, AnchorZ = 0f
+                runDuration = 600f, damage = 0, hitIFrame = 0.01f, maxHp = 100,
+                gameplayNext = new GameplayNextSettings { enabled = true }
             };
+            var combat = new CombatConfig
+            {
+                spawningEnabled = false, contactDamage = 0, projectileSpeed = 1000f,
+                phaseSpeed = new[] { 0f, 0f, 0f, 0f }
+            };
+            var sim = new RunSimulation(config, null, combat);
+            sim.InstallGameplayModules(new GameplayModules(null, module, null));
+            sim.FixedDt = 1f;
+            sim.State.Hp = 50;
+            return sim;
+        }
+
+        static void Tick(RunSimulation sim)
+        {
+            sim.Tick(1f, InputSnapshot.None, sim.State.Frame + 1, 0);
+        }
+
+        static int Count(RunSimulation sim, string rewardId)
+        {
+            return sim.Presentation.Events.Count(e => e.Type == PresentationEventType.ObjectiveRewardGranted && e.RootSourceId == rewardId);
         }
     }
 }
