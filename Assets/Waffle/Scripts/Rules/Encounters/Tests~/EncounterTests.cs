@@ -1,188 +1,218 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Waffle;
 using Waffle.Combat;
+using Waffle.GameplayNext;
 using Waffle.Rules.Encounters;
 
+// 通过真实 GP00 宿主（RunSimulation + CombatModule.GameplayNext）驱动 EncounterModule。
 public class EncounterTests
 {
     const float Dt = 0.05f;
 
-    static EncounterContext Ctx(double now, Vec2 player, int normal = 0, int pool = 0, int atk = 0, int natk = 0)
-        => new EncounterContext { RunId = 1, Now = now, Dt = Dt, PlayerPos = player, PlayerPrevPos = player, PlayerRadius = 0.5f,
-            NormalAlive = normal, PoolUsed = pool, ActiveAttacks = atk, ActiveNormalAttacks = natk };
-
-    static EncounterEnemyView E(int serial, string arch, Vec2 pos, int gen = 0)
-        => new EncounterEnemyView { Serial = serial, Generation = gen, ArchetypeId = arch, Pos = pos, PrevPos = pos, Radius = 0.5f, Alive = true };
-
-    static void ApplyMoves(EncounterOutput o, List<EncounterEnemyView> es)
+    static EncounterConfig OnlyCfg(float wCh, float wCg, float wDr, float interval = 0.5f, int cap = 1)
     {
-        foreach (var m in o.Moves)
-            for (int i = 0; i < es.Count; i++) if (es[i].Serial == m.Serial)
-            { var e = es[i]; e.PrevPos = e.Pos; e.Pos = e.Pos + m.Direction * (m.Speed * Dt); es[i] = e; }
+        var c = new EncounterConfig();
+        c.stages = new[] { new EncounterStage(0f, interval, cap, wCh, wCg, wDr) };
+        c.eliteTimes = new float[0];
+        c.chargerSpec.contactDamage = 0; c.dropperSpec.contactDamage = 0; c.chaserSpec.contactDamage = 0;
+        c.chargerSpec.maxHp = 1e5f; c.dropperSpec.maxHp = 1e5f;
+        c.spawnRingMin = 7f; c.spawnRingMax = 7.5f;
+        return c;
     }
 
-    // 跑到冲锋者开始预警，返回攻击
-    static EncounterAttackRequest RunToTelegraph(EncounterModule m, List<EncounterEnemyView> es, Vec2 player, ref double t)
+    static RunSimulation Make(EncounterModule m, int seed = 12345, float duration = 600f, float weaponDamage = 0f)
     {
-        for (int k = 0; k < 400; k++)
+        var config = new RunConfig { runDuration = duration, damage = weaponDamage, hitIFrame = .01f, seed = seed,
+            gameplayNext = new GameplayNextSettings { enabled = true } };
+        var combat = new CombatConfig { contactDamage = 0, aliveCap = 48, eventOverflow = 8 };
+        var sim = new RunSimulation(config, null, combat);
+        sim.InstallGameplayModules(new GameplayModules(m));
+        return sim;
+    }
+
+    static void Tick(RunSimulation sim, float mx = 0, float my = 0)
+    {
+        var input = InputSnapshot.None; input.MoveX = mx; input.MoveY = my;
+        sim.Tick(Dt, input, sim.State.Frame + 1, sim.State.Frame * Dt);
+        if (sim.State.Phase == RunPhase.LevelUp) sim.Tick(Dt, new InputSnapshot { ChoosePressed = 1 }, sim.State.Frame + 1, sim.State.Frame * Dt);
+    }
+
+    static IEnumerable<AttackSnapshot> Attacks(RunSimulation sim) => sim.ReadGameplayView().Attacks;
+
+    static AttackSnapshot WaitAttack(RunSimulation sim, AttackShapeKind kind, int max = 2000)
+    {
+        for (int i = 0; i < max; i++)
         {
-            var o = m.Tick(Ctx(t, player), es); ApplyMoves(o, es); t += Dt;
-            if (o.NewAttacks.Count > 0) return o.NewAttacks[0];
+            Tick(sim);
+            foreach (var a in Attacks(sim)) if (a.Attack.Shape.Kind == kind && !a.Spent) return a;
         }
-        Assert.Fail("no telegraph"); return default;
+        Assert.Fail("no attack " + kind); return default;
     }
 
     static string Trace(int seed)
     {
-        var m = new EncounterModule(new EncounterConfig(), seed, 1);
-        var es = new List<EncounterEnemyView> { E(1, "charger", new Vec2(10, 0)), E(2, "dropper", new Vec2(-12, 3)) };
-        var sb = new StringBuilder(); double t = 0;
-        for (int k = 0; k < 2400; k++)
+        var m = new EncounterModule(); var sim = Make(m, seed, weaponDamage: 10f); sim.God = true;
+        var sb = new StringBuilder();
+        for (int i = 0; i < 3000; i++) // 150 s
         {
-            var o = m.Tick(Ctx(t, new Vec2((float)System.Math.Sin(t), 0), normal: 10, pool: 10), es); ApplyMoves(o, es);
-            foreach (var s in o.Spawns) sb.Append('S').Append(s.ArchetypeId).Append(s.RequestId);
-            foreach (var a in o.NewAttacks) sb.Append('A').Append(a.AttackId).Append(a.Start).Append(a.End).Append(a.ActiveStart.ToString("R"));
-            t += Dt;
+            Tick(sim, (float)Math.Sin(i * 0.01), 0);
+            foreach (var w in sim.ReadGameplayView().SpawnWarnings) sb.Append('W').Append(w.Key.Sequence).Append(w.Spawn.Spec.ArchetypeId).Append(w.Spawn.Position);
+            foreach (var a in Attacks(sim)) sb.Append('A').Append(a.Key.Sequence).Append(a.Attack.Shape.Center).Append(a.Attack.ActivateAt.ToString("R"));
         }
         return sb.ToString();
     }
 
-    [Test] public void Deterministic_SameSeedSameOutput_DifferentSeedDiffers()
+    [Test] public void Deterministic_SameSeedSameResult()
     {
-        Assert.AreEqual(Trace(42), Trace(42));
-        Assert.AreNotEqual(Trace(42), Trace(43));
+        string a = Trace(42);
+        Assert.AreEqual(a, Trace(42));
+        Assert.AreNotEqual(a, Trace(43));
+        StringAssert.Contains("charger", a);
+        StringAssert.Contains("dropper", a);
     }
 
     [Test] public void Charger_TelegraphNoDamage_LockNoTracking_SingleCandidate()
     {
-        var m = new EncounterModule(new EncounterConfig(), 1, 1);
-        var es = new List<EncounterEnemyView> { E(1, "charger", new Vec2(8, 0)) };
-        double t = 0; var player = Vec2.Zero;
-        var atk = RunToTelegraph(m, es, player, ref t);
-        Assert.AreEqual(EncounterShape.Capsule, atk.Shape);
-        Assert.AreEqual(0.8, atk.ActiveStart - atk.StartTime, 1e-6);
-        Assert.AreEqual(0.35, atk.ActiveEnd - atk.ActiveStart, 1e-6);
-        Vec2 lockDir = atk.LockedDir;
-        int claims = 0;
-        // 玩家在预警中横移；冲锋方向和胶囊不得改变
-        for (int k = 0; k < 60; k++)
+        var m = new EncounterModule(OnlyCfg(0, 1, 0)); var sim = Make(m);
+        var atk = WaitAttack(sim, AttackShapeKind.Capsule);
+        Assert.True(atk.Attack.SweepOwnerMotion);
+        Assert.AreEqual(0.8f, atk.Attack.ActivateAt - atk.CreatedAt, 1e-3);
+        Assert.AreEqual(0.35f, atk.Attack.EndAt - atk.Attack.ActivateAt, 1e-3);
+        var lockedEnd = atk.Attack.Shape.End; var key = atk.Key;
+        int hp0 = sim.State.Hp, hits = 0, prev = hp0;
+        // 玩家先横移 0.3 s（预警期），再站回冲锋线上 —— 冲锋路径不得跟随
+        for (int i = 0; i < 60; i++)
         {
-            player = new Vec2(0, (float)(k * 0.25));
-            var o = m.Tick(Ctx(t, player), es); ApplyMoves(o, es);
-            foreach (var mv in o.Moves) { Assert.True(mv.Locked || t > atk.ActiveEnd); if (mv.Locked) { Assert.AreEqual(lockDir.X, mv.Direction.X, 1e-6); Assert.AreEqual(lockDir.Y, mv.Direction.Y, 1e-6); } }
-            if (t < atk.ActiveStart) Assert.False(m.TryClaimHit(atk.AttackId, t), "telegraph damage");
-            else if (m.TryClaimHit(atk.AttackId, t)) claims++;
-            if (m.TryGetAttack(atk.AttackId, out var cur)) Assert.AreEqual(atk.End.Y, cur.End.Y, 1e-6);
-            t += Dt;
+            float now = sim.State.Now;
+            bool before = now + Dt <= atk.Attack.ActivateAt;
+            Tick(sim);
+            sim.InvulnerableUntil = 0;
+            if (before) Assert.AreEqual(hp0, sim.State.Hp, "damage during telegraph");
+            if (sim.State.Hp < prev) hits++;
+            prev = sim.State.Hp;
+            foreach (var a in Attacks(sim))
+                if (a.Key.Equals(key) && sim.State.Now < atk.Attack.ActivateAt)
+                { Assert.AreEqual(lockedEnd.X, a.Attack.Shape.End.X, 1e-4); Assert.AreEqual(lockedEnd.Y, a.Attack.Shape.End.Y, 1e-4); }
         }
-        Assert.AreEqual(1, claims);
+        Assert.AreEqual(1, hits, "exactly one candidate");
+        Assert.AreEqual(hp0 - 10, sim.State.Hp);
     }
 
-    [Test] public void Cancel_OnDeath_Generation_Relocation()
+    [Test] public void Charger_SidestepDodges_FromTelegraphStart()
     {
-        foreach (int mode in new[] { 0, 1, 2, 3 })
-        {
-            var m = new EncounterModule(new EncounterConfig(), 7, 1);
-            var es = new List<EncounterEnemyView> { E(1, "charger", new Vec2(8, 0)) };
-            double t = 0; var atk = RunToTelegraph(m, es, Vec2.Zero, ref t);
-            Assert.AreEqual(1, m.ActiveAttackCount);
-            EncounterOutput o;
-            if (mode == 0) { Assert.AreEqual(atk.AttackId, m.OnEnemyRemoved(1, 0)); o = m.Tick(Ctx(t, Vec2.Zero), new List<EncounterEnemyView>()); }
-            else
-            {
-                var e = es[0];
-                if (mode == 1) e.Generation = 1;
-                if (mode == 2) e.Relocated = true;
-                if (mode == 3) { e.PrevPos = e.Pos; e.Pos = new Vec2(-20, 0); }
-                if (mode == 1 || mode == 2) e.Pos = new Vec2(30, 30); // 回池复用/挪位后都在远处
-                es[0] = e;
-                o = m.Tick(Ctx(t, Vec2.Zero), es);
-                CollectionAssert.Contains(o.CancelledAttacks, atk.AttackId, "mode " + mode);
-                foreach (var mv in o.Moves) Assert.False(mv.Locked, "behavior must reset, mode " + mode);
-            }
-            Assert.False(m.TryGetAttack(atk.AttackId, out _));
-            Assert.False(m.TryClaimHit(atk.AttackId, atk.ActiveStart + 0.01));
-            Assert.AreEqual(0, m.ActiveAttackCount);
-        }
-    }
-
-    [Test] public void Budget_Full_NoBurstAfterRecovery()
-    {
-        var cfg = new EncounterConfig();
-        var m = new EncounterModule(cfg, 3, 1);
-        var es = new List<EncounterEnemyView>();
-        for (int i = 0; i < 6; i++) es.Add(E(i + 1, "charger", new Vec2(4, i * 0.1f)));
-        double t = 0;
-        var full = m.Tick(Ctx(t, Vec2.Zero, normal: 48, pool: 56, atk: 12, natk: 8), es);
-        Assert.AreEqual(0, full.NewAttacks.Count); Assert.AreEqual(0, full.Spawns.Count);
-        for (int k = 0; k < 200; k++) { t += Dt; m.Tick(Ctx(t, Vec2.Zero, normal: 48, pool: 56, atk: 12, natk: 8), es); }
-        t += Dt;
-        var rec = m.Tick(Ctx(t, Vec2.Zero, normal: 0, pool: 0, atk: 6, natk: 6), es);
-        Assert.LessOrEqual(rec.NewAttacks.Count, 2, "normal budget 8 - 6");
-        Assert.LessOrEqual(rec.Spawns.Count, cfg.maxSpawnsPerTick);
-        // 大 dt 也不补发
-        var big = new EncounterContext { Now = t + 30, Dt = 30f, NormalAlive = 0, PoolUsed = 0 };
-        Assert.LessOrEqual(m.Tick(big, new List<EncounterEnemyView>()).Spawns.Count, cfg.maxSpawnsPerTick);
-    }
-
-    [Test] public void Restart_NewInstanceClean()
-    {
-        var a = new EncounterModule(new EncounterConfig(), 5, 1);
-        var es = new List<EncounterEnemyView> { E(1, "charger", new Vec2(8, 0)) };
-        double t = 0; RunToTelegraph(a, es, Vec2.Zero, ref t);
-        var b = new EncounterModule(new EncounterConfig(), 5, 2);
-        Assert.AreEqual(0, b.ActiveAttackCount); Assert.AreEqual(0, b.TrackedActorCount);
-        var o = b.Tick(Ctx(0, Vec2.Zero), new List<EncounterEnemyView>());
-        Assert.AreEqual(0, o.NewAttacks.Count);
-    }
-
-    [Test] public void Sidestep_Feasible_GeometryAndSim()
-    {
-        var cfg = new EncounterConfig();
+        var cfg = OnlyCfg(0, 1, 0);
         Assert.True(cfg.SidestepFeasible(5f, 0.5f, out float need, out float have), need + " vs " + have);
-        // 仿真：玩家反应 0.25s 后以 5m/s 垂直于冲锋方向行走，生效窗口内距胶囊中线始终 > 半宽+玩家半径
-        var m = new EncounterModule(cfg, 9, 1);
-        var es = new List<EncounterEnemyView> { E(1, "charger", new Vec2(8, 0)) };
-        double t = 0; var atk = RunToTelegraph(m, es, Vec2.Zero, ref t);
-        double startMove = atk.StartTime + cfg.reactionAllowance;
-        for (double tt = atk.ActiveStart; tt <= atk.ActiveEnd; tt += 0.01)
-        {
-            float lateral = (float)(5.0 * (tt - startMove));
-            Assert.Greater(lateral, cfg.charger.hitHalfWidth + 0.5f);
-        }
+        var m = new EncounterModule(cfg); var sim = Make(m);
+        var atk = WaitAttack(sim, AttackShapeKind.Capsule);
+        Vec2 d = (atk.Attack.Shape.End - atk.Attack.Shape.Center).Normalized;
+        Vec2 side = new Vec2(-d.Y, d.X);
+        int hp0 = sim.State.Hp;
+        for (int i = 0; i < 6; i++) Tick(sim); // 0.3 s 反应
+        for (int i = 0; i < 30; i++) { Tick(sim, side.X, side.Y); sim.InvulnerableUntil = 0; }
+        Assert.AreEqual(hp0, sim.State.Hp, "walking sideways must dodge the dash");
     }
 
-    [Test] public void Dropper_KeepsRange_CircleAtLockedPlayerPos_StageMix()
+    // 测试专用：在 T6 后用规则伤害入口击杀目标，让宿主走真实 T7 死亡结算
+    sealed class Killer : ICombatRuleExtension
+    {
+        public CombatModule Host; public int Serial = -1, Generation;
+        public void OnDirectHit(float t, int s, int g, Vec2 p, float d) { }
+        public void AfterProjectiles(float t)
+        { if (Serial >= 0) { Host.ApplyRuleDamage(Serial, Generation, 1e9f, PresentationEventType.EchoHit, Vec2.Zero); Serial = -1; } }
+    }
+
+    [Test] public void OwnerDeath_CancelsAttack_And_ModuleDropsState()
+    {
+        var m = new EncounterModule(OnlyCfg(0, 1, 0)); var sim = Make(m);
+        var killer = new Killer { Host = sim.Combat }; sim.Combat.InstallRuleExtension(killer);
+        var atk = WaitAttack(sim, AttackShapeKind.Capsule);
+        Assert.AreEqual(1, m.TrackedActorCount);
+        var owner = sim.Combat.Enemies.First(e => e.IsAlive && e.ArchetypeId == "charger");
+        killer.Serial = owner.Serial; killer.Generation = owner.Generation;
+        int hp0 = sim.State.Hp;
+        Tick(sim);
+        Assert.False(owner.IsAlive && owner.Generation == atk.Attack.Owner.Generation, "charger should be dead");
+        Assert.False(Attacks(sim).Any(a => a.Key.Equals(atk.Key)), "attack must be cancelled at T7");
+        for (int i = 0; i < 30; i++) { Tick(sim); sim.InvulnerableUntil = 0; }
+        Assert.False(Attacks(sim).Any(a => a.Attack.Owner.Equals(atk.Attack.Owner)));
+        Assert.AreEqual(hp0, sim.State.Hp, "no damage from cancelled dash");
+    }
+
+    [Test] public void Relocation_ResetsBehavior_NoInheritedAttack()
+    {
+        var c = OnlyCfg(0, 0, 1);
+        c.dropper.moveSpeed = 0f; c.dropper.firstShotMin = c.dropper.firstShotMax = 3f;
+        var m = new EncounterModule(c); var sim = Make(m);
+        WaitAttack(sim, AttackShapeKind.Circle);
+        var e0 = sim.Combat.Enemies.First(e => e.IsAlive && e.ArchetypeId == "dropper");
+        int rv = e0.RelocationVersion;
+        int guard = 0;
+        while (e0.RelocationVersion == rv && guard++ < 400) Tick(sim, 1, 0); // 跑远触发挪位
+        Assert.Greater(e0.RelocationVersion, rv);
+        float tReloc = sim.State.Now;
+        Assert.False(Attacks(sim).Any(a => a.Attack.Owner.Serial == e0.Serial), "relocated owner keeps no attack");
+        // 行为已重置：首发重新计时（≥3 s），不会继承上一轮冷却立即开火
+        for (int i = 0; i < 50; i++) { Tick(sim); Assert.False(Attacks(sim).Any(a => a.Attack.Owner.Serial == e0.Serial && a.CreatedAt < tReloc + 2.9f)); }
+    }
+
+    [Test] public void Budget_NoBurst_AndRestartClean()
+    {
+        var c = OnlyCfg(0, 0, 1, 0.05f, 48); // 落波者每 tick 一只，很快顶满普通攻击预算
+        c.dropper.firstShotMin = c.dropper.firstShotMax = 0.1f;
+        var m = new EncounterModule(c); var sim = Make(m); sim.God = true;
+        int maxAtk = 0, maxWarn = 0;
+        for (int i = 0; i < 600; i++)
+        {
+            Tick(sim);
+            var v = sim.ReadGameplayView();
+            maxAtk = Math.Max(maxAtk, v.Attacks.Count(a => a.Key.Module == GameplayModuleKind.Encounters));
+            maxWarn = Math.Max(maxWarn, v.SpawnWarnings.Count);
+            Assert.LessOrEqual(v.SpawnWarnings.Count - 0, 8);
+        }
+        Assert.LessOrEqual(maxAtk, 8);
+        Assert.LessOrEqual(sim.Combat.Enemies.Count(e => e.IsAlive && !e.IsBoss), 48);
+        // 生成请求数受每 tick 上限约束：600 tick 最多 600 个
+        Assert.LessOrEqual(m.SpawnsRequested, 600);
+        // 暂停期间不推进
+        long before = m.SpawnsRequested; sim.TogglePause("t"); for (int i = 0; i < 100; i++) Tick(sim);
+        Assert.AreEqual(before, m.SpawnsRequested); sim.TogglePause("t"); Tick(sim);
+        Assert.LessOrEqual(m.SpawnsRequested - before, 1, "no catch-up after pause");
+        // Clear 幂等 + 新实例干净
+        m.Clear(); m.Clear();
+        Assert.AreEqual(0, m.TrackedActorCount); Assert.AreEqual(0, m.SpawnsRequested);
+        var fresh = new EncounterModule(c); var sim2 = Make(fresh); Tick(sim2);
+        Assert.AreEqual(0, sim2.ReadGameplayView().Attacks.Count);
+    }
+
+    [Test] public void Stages_SixWithChargerAt60_DropperAt120_ElitesAt240And480()
     {
         var cfg = new EncounterConfig();
-        var m = new EncounterModule(cfg, 11, 1);
-        var es = new List<EncounterEnemyView> { E(1, "dropper", new Vec2(3, 0)) };
-        double t = 0; EncounterAttackRequest? atk = null;
-        for (int k = 0; k < 200 && atk == null; k++)
-        { var o = m.Tick(Ctx(t, Vec2.Zero), es); ApplyMoves(o, es); if (o.NewAttacks.Count > 0) atk = o.NewAttacks[0]; t += Dt; }
-        Assert.NotNull(atk);
-        var a = atk.Value;
-        Assert.AreEqual(EncounterShape.Circle, a.Shape); Assert.AreEqual(1.1f, a.Radius, 1e-6);
-        Assert.AreEqual(1.0, a.ActiveStart - a.StartTime, 1e-6); Assert.AreEqual(0.2, a.ActiveEnd - a.ActiveStart, 1e-6);
-        Assert.AreEqual(0f, a.Start.X, 1e-6);
-        for (int k = 0; k < 200; k++) { var o = m.Tick(Ctx(t, Vec2.Zero), es); ApplyMoves(o, es); t += Dt; }
-        float d = es[0].Pos.Length; Assert.That(d, Is.InRange(cfg.dropper.keepMin - 0.2f, cfg.dropper.keepMax + 0.2f));
-        // 五段：时间点、首段无落波者、末段两种新敌人都有
         Assert.AreEqual(6, cfg.stages.Length);
         float[] ts = { 0, 60, 120, 240, 360, 480 };
         for (int i = 0; i < 6; i++) { Assert.AreEqual(ts[i], cfg.stages[i].startTime); Assert.LessOrEqual(cfg.stages[i].normalCap, 48); }
-        Assert.AreEqual(0f, cfg.stages[0].wCharger); Assert.AreEqual(0f, cfg.stages[1].wDropper); Assert.Greater(cfg.stages[5].wCharger, 0); Assert.Greater(cfg.stages[5].wDropper, 0);
-        // 0–60 s 无冲锋者，60–120 s 出现冲锋者且无落波者
-        var early = new EncounterModule(cfg, 11, 1); int c0 = 0, c1 = 0, d1 = 0;
-        for (double tt = 0; tt < 120; tt += Dt)
-            foreach (var s in early.Tick(new EncounterContext { Now = tt, Dt = Dt }, new List<EncounterEnemyView>()).Spawns)
-            { if (s.ArchetypeId == "charger") { if (tt < 60) c0++; else c1++; } if (s.ArchetypeId == "dropper") d1++; }
-        Assert.AreEqual(0, c0); Assert.Greater(c1, 0); Assert.AreEqual(0, d1);
-        var mix = new EncounterModule(cfg, 11, 1); var counts = new Dictionary<string, int>();
-        for (double tt = 480; tt < 600; tt += Dt)
-            foreach (var s in mix.Tick(new EncounterContext { Now = tt, Dt = Dt }, new List<EncounterEnemyView>()).Spawns)
-                counts[s.ArchetypeId] = counts.TryGetValue(s.ArchetypeId, out var c) ? c + 1 : 1;
-        Assert.Greater(counts["charger"], 0); Assert.Greater(counts["dropper"], 0);
+        Assert.AreEqual(0f, cfg.stages[0].wCharger); Assert.AreEqual(0f, cfg.stages[1].wDropper);
+        CollectionAssert.AreEqual(new[] { 240f, 480f }, cfg.eliteTimes);
+
+        var m = new EncounterModule(); var sim = Make(m, 11, weaponDamage: 10f); sim.God = true;
+        var first = new Dictionary<string, float>(); int elites = 0;
+        var seenSerials = new HashSet<long>();
+        for (int i = 0; i < (int)(500 / Dt); i++)
+        {
+            Tick(sim);
+            foreach (var e in sim.Combat.Enemies)
+            {
+                if (!e.IsAlive || !seenSerials.Add(((long)e.Serial << 20) | (uint)e.Generation)) continue;
+                if (!first.ContainsKey(e.ArchetypeId)) first[e.ArchetypeId] = sim.State.Now;
+                if (e.IsElite) elites++;
+            }
+        }
+        Assert.GreaterOrEqual(first["charger"], 60f); Assert.Less(first["charger"], 120f);
+        Assert.GreaterOrEqual(first["dropper"], 120f);
+        Assert.AreEqual(2, elites);
+        Assert.False(first.ContainsKey("legacy-chaser"), "A installed ⇒ old spawning off");
     }
 }

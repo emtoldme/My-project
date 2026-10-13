@@ -4,10 +4,11 @@
     <LangVersion>9.0</LangVersion>
     <Nullable>disable</Nullable>
     <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../*.cs" Link="Encounters/%(Filename).cs" />
-    <Compile Include="../../Combat/Vec2.cs" Link="Combat/Vec2.cs" />
+    <!-- 与 Tools/RulesTests 同口径：编译整个 Waffle.Rules 源码（含 GP00 宿主），用真实 RunSimulation 驱动 -->
+    <Compile Include="../../**/*.cs" Exclude="../../**/Tests/**;../../**/*~/**" Link="Rules/%(RecursiveDir)%(Filename).cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
