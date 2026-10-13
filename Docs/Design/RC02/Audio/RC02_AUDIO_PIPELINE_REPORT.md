@@ -1,5 +1,7 @@
 # RC02 音频与音乐管线设计与实装交付报告 (RC02 Audio Pipeline Specification)
 
+> Codex 整合更新（2026-10-13）：以下保留作者交付时记录。现已由 RC02AudioConfiguration 接入唯一 AudioDirector，W05/W06/P17 可消费真实规则事件；P17 的实际事件改为 WeaponZone + P17。19 音效条目与 4 音乐档案均生成序列化目录，当前仅 harvest_road 在首图使用。复用既有 R1 音色，不新增正式配乐。清单更改需要重新装配、打包，不是运行中热替换。BPM/分轨仍未实现，未来正式 stems 也需要调度实现，不能只填路径便宣称支持动态分轨。
+
 **任务标识**：Task RC02-Audio-Pipeline（`feature/rc02-audio-pipeline`）  
 **维护岗位**：音效总监（Sound Director）  
 **基线分支**：`origin/main` (`6447af8a96496b2c606de4e586b4ea7eaae8aaf9`)  

@@ -1,5 +1,7 @@
 # RC02 美术表现组件管线设计规范与形态语言说明 (RC02 Visual Pipeline Spec)
 
+> Codex 整合更新（2026-10-13）：下文为主美原始设计目标，不能作为已达到品质的证明。现有六模板由 Unity 工具生成并保留原 GUID，根缩放统一为 1，使用真实 _BaseColor 参数；线宽与伤害半径分别传递。W05 实际事件为 EnemyHit + W05，P17 为 WeaponZone + P17，不能使用表内历史 PropagationHit/Dodge。W06 真实残留与连线已接入；当前环形/折线为 TEST_ONLY 基础表现，尚未实现文中全部呼吸、坍缩、尘埃等动效，也未认证遮挡率或“高质量”。目录与迁移事实见 ../Pipeline/README.md 和 MIGRATION.md。
+
 **任务标识**：feature/rc02-art-components (Docs/Integration/REVERB_TASKS_08.md)  
 **维护岗位**：主美 (Lead Artist)  
 **基线分支**：`origin/main` (`6447af8a96496b2c606de4e586b4ea7eaae8aaf9`)  

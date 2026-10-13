@@ -1,5 +1,7 @@
 # RC02 规则组件 API（08A，1号）
 
+> Codex 整合更新（2026-10-13）：下文保留作者交付时的 API 与请求记录，末尾“未接线”是历史状态。现已在 CombatComponents.cs 接入 T6 后/T7 前；成功闪避通知、合法移动步长、重开清理、成长刷新与白名单均已接入。六项状态为 Wired，当前 6/14/3/4。TargetDamage 通过 ApplyEnemyDamage 的 allowMechanisms 参数只调用一次派生入口；AreaDamage 明确关闭派生。W05 画面使用 EnemyHit 并透传链元数据，W06/P17 使用 WeaponZone。W01 迁移样板保持关闭；08B 内容仍 planned。完整状态以 Docs/Integration/RC02_ACCEPTANCE.md 为准。
+
 代码：`Assets/Waffle/Scripts/Rules/RunContent/Components/`（命名空间 `Waffle.RunContent.Components`）。目录在 `Rules/` 下，**无 asmdef，随 Waffle.Rules 编译**（noEngineReferences，无 UnityEngine）；复用同程序集的 `Waffle.Combat.Vec2`。`Tools/RulesTests` 的通配会一并编译它。无 Unity，本批**未在 Unity 中编译/运行**。
 
 ## 1. 组件一览（触发→目标→载体→修饰）
