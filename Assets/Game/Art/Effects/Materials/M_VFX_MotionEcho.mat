@@ -27,6 +27,7 @@ Material:
     m_Floats:
     - _CoreMix: 0.1
     - _Distortion: 0.02
+    - _Etching: 0.55
     - _Opacity: 0.9
     - _RingRadius: 0.4
     - _RingWidth: 0.08
