@@ -56,11 +56,11 @@ MonoBehaviour:
       asset: {fileID: 2100000, guid: b9c16d08799144debf788c314408da49, type: 2}
     parameters:
     - key: width
-      value: 0.3
+      value: 0.09
     - key: scale
       value: 0.5
     - key: tailSeconds
-      value: 0.1
+      value: 0.32
     - key: intensity
       value: 1
     maxInstances: 20
@@ -113,11 +113,11 @@ MonoBehaviour:
       asset: {fileID: 2800000, guid: 030fc7637cea48f89ccbab30eb452b02, type: 3}
     parameters:
     - key: width
-      value: 0.08
+      value: 0.09
     - key: scale
       value: 1
     - key: tailSeconds
-      value: 0.16
+      value: 0.32
     - key: intensity
       value: 1.5
     maxInstances: 12

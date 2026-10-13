@@ -33,6 +33,7 @@ Shader "Reverb/Weathered Surface"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
             #pragma multi_compile_fog
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -61,7 +62,11 @@ Shader "Reverb/Weathered Surface"
                 n=normalize(n-sign(det)*(ddx(height)*r1+ddy(height)*r2)/max(abs(det),.00001));
                 half dirt=smoothstep(.37,.73,macro)*_Weathering;
                 SurfaceData s=(SurfaceData)0;
-                s.albedo=SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,i.uv).rgb*lerp(_BaseColor.rgb,_PatinaColor.rgb,dirt);
+                half4 albedo=SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,i.uv);
+                #if defined(_ALPHATEST_ON)
+                clip(albedo.a*_BaseColor.a-_Cutoff);
+                #endif
+                s.albedo=albedo.rgb*lerp(_BaseColor.rgb,_PatinaColor.rgb,dirt);
                 s.albedo*=.88+macro*.23;
                 s.metallic=_Metallic*(1-dirt*.8);
                 float wet=_ReverbWeather.y*saturate(n.y*.6+.35)*(1-dirt*.55);

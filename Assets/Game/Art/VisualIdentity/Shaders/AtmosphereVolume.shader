@@ -6,6 +6,8 @@ Shader "Reverb/Atmosphere Volume"
         _Density("Density",Range(0,.5))=.06
         _Mode("0 mist / 1 light volume",Float)=0
         _Cull("Cull",Float)=0
+        _BeamCookie("Projected sound pattern",2D)="white"{}
+        _PatternedLight("Use projected pattern",Float)=0
     }
     SubShader
     {
@@ -22,8 +24,9 @@ Shader "Reverb/Atmosphere Volume"
             #pragma fragment Frag
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+            TEXTURE2D(_BeamCookie);SAMPLER(sampler_BeamCookie);
             CBUFFER_START(UnityPerMaterial)
-            half4 _BaseColor;float _Density,_Mode,_Cull;
+            half4 _BaseColor;float _Density,_Mode,_Cull,_PatternedLight;
             CBUFFER_END
             float4 _ReverbWeather;
             float Hash(float3 p) {p=frac(p*.1031);p+=dot(p,p.yzx+33.33);return frac((p.x+p.y)*p.z);}
@@ -65,6 +68,9 @@ Shader "Reverb/Atmosphere Volume"
                         float density=saturate((1-radial)*3)*smoothstep(0,.08,p.z)*(1-p.z*.65);
                         float3 world=TransformObjectToWorld(p);
                         density*=.4+Noise(world*.65+float3(_ReverbWeather.z*.07,0,0))*.6;
+                        float2 cookieUV=p.xy/max(p.z,.0001)*.5+.5;
+                        float pattern=SAMPLE_TEXTURE2D_LOD(_BeamCookie,sampler_BeamCookie,cookieUV,1).r;
+                        density*=lerp(1,pattern,_PatternedLight);
                         integral+=density*step;
                     }
                     alpha=(1-exp(-integral*length(i.w-_WorldSpaceCameraPos)*_Density))*_BaseColor.a;

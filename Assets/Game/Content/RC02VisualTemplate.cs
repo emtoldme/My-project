@@ -15,6 +15,7 @@ namespace Reverb.Drafts.RC01.Pipeline
         MaterialPropertyBlock block;
         float intensity;
         float preparedRadius;
+        float arcLength;
         static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
         public void Prepare(RC02CatalogEntry entry, PresentationEvent item)
         {
@@ -29,8 +30,8 @@ namespace Reverb.Drafts.RC01.Pipeline
                 Vector3 from = new Vector3(item.FromX, .65f, item.FromZ), to = new Vector3(item.X, .65f, item.Z);
                 Vector3 delta = to - from; transform.position = from;
                 if (delta.sqrMagnitude > .00001f) transform.rotation = Quaternion.LookRotation(delta);
-                line.positionCount = 7;
-                for (int i = 0; i < 7; i++) line.SetPosition(i, new Vector3(i == 0 || i == 6 ? 0 : (i % 2 == 0 ? -.09f : .09f), 0, delta.magnitude * i / 6));
+                arcLength = delta.magnitude;
+                DrawCarrier(0);
             }
             else if (shape == RC02VisualShape.Projectile)
             {
@@ -53,28 +54,58 @@ namespace Reverb.Drafts.RC01.Pipeline
         public void SetRadius(float radius)
         {
             if (line == null || (shape != RC02VisualShape.Ring && shape != RC02VisualShape.Hit)) return;
-            line.positionCount = 48;
-            for (int i = 0; i < 48; i++) { float a = i * Mathf.PI * 2 / 48; line.SetPosition(i, new Vector3(Mathf.Cos(a)*radius, 0, Mathf.Sin(a)*radius)); }
-            SyncHalo();
+            if (shape == RC02VisualShape.Hit)
+            {
+                // Open, unequal contours echo the architecture. Hits are decorative, never damage bounds.
+                DrawArc(line,radius,25,262);
+                if(halo!=null) DrawArc(halo,radius*.73f,202,205);
+            }
+            else
+            {
+                line.loop=true;line.positionCount=64;
+                for(int i=0;i<64;i++){float a=i*Mathf.PI*2/64;line.SetPosition(i,new Vector3(Mathf.Cos(a)*radius,0,Mathf.Sin(a)*radius));}
+                SyncHalo(); // The authoritative zone perimeter stays closed and at its real radius.
+            }
+        }
+        static void DrawArc(LineRenderer target,float radius,float start,float sweep)
+        {
+            target.loop=false;target.positionCount=40;
+            for(int i=0;i<40;i++){float a=(start+sweep*i/39f)*Mathf.Deg2Rad;target.SetPosition(i,new Vector3(Mathf.Cos(a)*radius,0,Mathf.Sin(a)*radius));}
+        }
+        void DrawCarrier(float progress)
+        {
+            line.positionCount=25;
+            for(int i=0;i<25;i++)
+            {
+                float t=i/24f,envelope=Mathf.Sin(t*Mathf.PI);
+                float wave=(Mathf.Sin(t*22-progress*9)*.12f+Mathf.Sin(t*43+progress*6)*.035f)*envelope;
+                line.SetPosition(i,new Vector3(wave,0,arcLength*t));
+            }
         }
         void SyncHalo()
         {
             if (line == null || halo == null) return;
             halo.sharedMaterial = line.sharedMaterial; halo.useWorldSpace = line.useWorldSpace;
-            halo.loop = line.loop; halo.positionCount = line.positionCount; halo.widthMultiplier = line.widthMultiplier * 3.5f;
+            halo.widthMultiplier = line.widthMultiplier * .65f;
+            if(shape==RC02VisualShape.Hit)return;
+            halo.loop = line.loop; halo.positionCount = line.positionCount;
             for (int i = 0; i < line.positionCount; i++) halo.SetPosition(i, line.GetPosition(i));
         }
         public void Animate(float progress)
         {
-            if (shape == RC02VisualShape.Hit) SetRadius(preparedRadius * Mathf.Lerp(.35f,1f,Mathf.SmoothStep(0,1,progress)));
-            Tint(1-progress);
+            if (shape == RC02VisualShape.Hit) SetRadius(preparedRadius * Mathf.Lerp(.22f,1f,1-Mathf.Pow(1-progress,3)));
+            if (shape == RC02VisualShape.Arc){DrawCarrier(progress);SyncHalo();}
+            Tint((1-progress)*(1-progress));
         }
         public void Tint(float alpha)
         {
             if (renderers == null) return;
             block.Clear(); Color tint = color * intensity; tint.a = color.a * alpha;
-            block.SetColor(BaseColor, tint);
-            foreach (var r in renderers) r.SetPropertyBlock(block);
+            foreach (var r in renderers)
+            {
+                Color layer=tint;if(r==halo)layer.a*=.38f;
+                block.SetColor(BaseColor,layer);r.SetPropertyBlock(block);
+            }
         }
     }
 }

@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Reverb.Drafts.RC01.Pipeline::Reverb.Drafts.RC01.Pipeline.RC02VisualTemplate
   shape: 0
-  color: {r: 0.37, g: 1, b: 0.88, a: 1}
+  color: {r: 0.57, g: 1.35, b: 1.22, a: 0.95}
   line: {fileID: 0}
   halo: {fileID: 0}
 --- !u!1 &5517560213256610334

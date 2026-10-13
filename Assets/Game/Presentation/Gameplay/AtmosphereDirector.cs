@@ -139,7 +139,9 @@ namespace Reverb.Drafts.RC01.Presentation
                 cone.root.SetPositionAndRotation(cone.light.transform.position, cone.light.transform.rotation);
                 cone.root.localScale = new Vector3(radius,radius,length);
                 cone.material.SetColor("_BaseColor",new Color(cone.light.color.r,cone.light.color.g,cone.light.color.b,.8f));
-                cone.material.SetFloat("_Density",.065f * Mathf.Clamp01(cone.light.intensity / 20f));
+                cone.material.SetFloat("_Density",.055f * Mathf.Clamp01(cone.light.intensity / 20f));
+                cone.material.SetFloat("_PatternedLight",cone.light.cookie!=null?1:0);
+                if(cone.light.cookie!=null)cone.material.SetTexture("_BeamCookie",cone.light.cookie);
             }
             if (loop.Sim.State.Phase.IsTerminal()) { ClearParticles(); foreach(var light in flashes) light.intensity=0; return; }
             if (!playing) return;
