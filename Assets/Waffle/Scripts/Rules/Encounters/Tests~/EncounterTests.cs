@@ -169,10 +169,16 @@ public class EncounterTests
         for (int k = 0; k < 200; k++) { var o = m.Tick(Ctx(t, Vec2.Zero), es); ApplyMoves(o, es); t += Dt; }
         float d = es[0].Pos.Length; Assert.That(d, Is.InRange(cfg.dropper.keepMin - 0.2f, cfg.dropper.keepMax + 0.2f));
         // 五段：时间点、首段无落波者、末段两种新敌人都有
-        Assert.AreEqual(5, cfg.stages.Length);
-        float[] ts = { 0, 120, 240, 360, 480 };
-        for (int i = 0; i < 5; i++) { Assert.AreEqual(ts[i], cfg.stages[i].startTime); Assert.LessOrEqual(cfg.stages[i].normalCap, 48); }
-        Assert.AreEqual(0f, cfg.stages[0].wDropper); Assert.Greater(cfg.stages[4].wCharger, 0); Assert.Greater(cfg.stages[4].wDropper, 0);
+        Assert.AreEqual(6, cfg.stages.Length);
+        float[] ts = { 0, 60, 120, 240, 360, 480 };
+        for (int i = 0; i < 6; i++) { Assert.AreEqual(ts[i], cfg.stages[i].startTime); Assert.LessOrEqual(cfg.stages[i].normalCap, 48); }
+        Assert.AreEqual(0f, cfg.stages[0].wCharger); Assert.AreEqual(0f, cfg.stages[1].wDropper); Assert.Greater(cfg.stages[5].wCharger, 0); Assert.Greater(cfg.stages[5].wDropper, 0);
+        // 0–60 s 无冲锋者，60–120 s 出现冲锋者且无落波者
+        var early = new EncounterModule(cfg, 11, 1); int c0 = 0, c1 = 0, d1 = 0;
+        for (double tt = 0; tt < 120; tt += Dt)
+            foreach (var s in early.Tick(new EncounterContext { Now = tt, Dt = Dt }, new List<EncounterEnemyView>()).Spawns)
+            { if (s.ArchetypeId == "charger") { if (tt < 60) c0++; else c1++; } if (s.ArchetypeId == "dropper") d1++; }
+        Assert.AreEqual(0, c0); Assert.Greater(c1, 0); Assert.AreEqual(0, d1);
         var mix = new EncounterModule(cfg, 11, 1); var counts = new Dictionary<string, int>();
         for (double tt = 480; tt < 600; tt += Dt)
             foreach (var s in mix.Tick(new EncounterContext { Now = tt, Dt = Dt }, new List<EncounterEnemyView>()).Spawns)
