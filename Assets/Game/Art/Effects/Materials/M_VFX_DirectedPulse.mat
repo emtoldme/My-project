@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_VFX_DirectedPulse
-  m_Shader: {fileID: 4800000, guid: ddd38b88a0946af47a7f44222f95d75c, type: 3}
+  m_Shader: {fileID: 4800000, guid: 97cd7b3a48c3f8b44801c9a2da92636b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -30,6 +30,7 @@ Material:
     - _Opacity: 1.2
     - _RingRadius: 0.5
     - _RingWidth: 0.05
+    - _Softness: 0.3
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 0.95, b: 0.8, a: 1}

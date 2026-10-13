@@ -103,7 +103,7 @@ namespace Reverb.Drafts.RC01.Pipeline
             for(int i=live.Count-1;i>=0;i--)
             {
                 var slot=live[i]; slot.age+=loop.Sim.LastDt;
-                if(slot.age>=slot.duration) { Return(slot); live.RemoveAt(i); } else slot.template?.Tint(1-slot.age/Mathf.Max(.05f,slot.duration));
+                if(slot.age>=slot.duration) { Return(slot); live.RemoveAt(i); } else slot.template?.Animate(slot.age/Mathf.Max(.05f,slot.duration));
             }
         }
         void SyncTrails()

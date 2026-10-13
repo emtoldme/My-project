@@ -89,6 +89,7 @@ namespace Reverb.Drafts.RC01.Presentation
                     {
                         Vec2 p = combat.OrbitPosition(w,i,sim.State.Now,new Vec2(sim.PlayerX,sim.PlayerZ));
                         var t = orbs[n++]; t.gameObject.SetActive(true); t.position = new Vector3(p.X,.65f,p.Y);
+                        t.rotation = Quaternion.Euler(0,sim.State.Now*75+i*90,18);
                     }
                 }
             for (;n < orbs.Count;n++) orbs[n].gameObject.SetActive(false);
