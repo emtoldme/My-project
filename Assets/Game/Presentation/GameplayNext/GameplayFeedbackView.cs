@@ -1,17 +1,21 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Waffle;
+using Waffle.Combat;
+using Waffle.GameplayNext;
 using Waffle.UI;
 
 namespace Reverb.Drafts.RC01.Presentation.GameplayNext
 {
     /// <summary>
     /// AI-D 核心反馈与危险可读性呈现组件。
-    /// 遵循严格要求：
+    /// 遵循 GP00 契约与严格规范：
     /// 1. 不扣血、不产生伤害、不发奖、不修改 GameLoop。
-    /// 2. 所有数据来自只读快照或隔离预览器。
-    /// 3. 升级与暂停时冻结动画与倒计时。
-    /// 4. 适配 1280x720 与 1600x900 布局，绝不遮挡三选一卡片（中心大面板）与武器栏（底部）。
+    /// 2. 所有正式显示严格来自宿主 IGameplayViewSource (RunGameplayView & RunOutcome)。
+    /// 3. 支持 isPreviewMode 在隔离测试场景中接收外部预览快照。
+    /// 4. 升级与暂停时冻结动画与倒计时。
+    /// 5. 适配 1280x720 与 1600x900 布局，绝不遮挡三选一卡片（中心大面板）与武器栏（底部）。
     /// </summary>
     public sealed class GameplayFeedbackView : MonoBehaviour
     {
@@ -84,7 +88,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             RectFill(new Rect(r.x, r.y, r.width, 2), accent);
         }
 
-        // ================= 外部只读快照推送接口 =================
+        // ================= 外部只读快照推送接口（供预览器使用） =================
 
         public void SetDangerDescriptors(IReadOnlyList<DangerAreaDescriptor> descriptors)
         {
@@ -119,7 +123,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             if (dangerPool != null) dangerPool.Clear();
         }
 
-        // ================= 帧更新与冻结控制 =================
+        // ================= 帧更新与宿主只读快照接入 =================
 
         void LateUpdate()
         {
@@ -134,12 +138,210 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
                 if (phase.IsTerminal())
                 {
                     dangerPool.Clear();
+                    // 终局时读取真实 Outcome
+                    if (!isPreviewMode)
+                    {
+                        ReadHostOutcome();
+                    }
                     return;
                 }
             }
 
+            // 正式运行时：从宿主 IGameplayViewSource 同步真实快照
+            if (!isPreviewMode && loop != null)
+            {
+                SyncFromHost();
+            }
+
             // 同步物理/世界空间中的危险区域网格
             dangerPool.SyncIndicators(activeDangers);
+        }
+
+        /// <summary>
+        /// 从 GP00 的 IGameplayViewSource 提取真实只读快照
+        /// </summary>
+        void SyncFromHost()
+        {
+            var viewSource = loop as IGameplayViewSource;
+            var view = viewSource?.ReadGameplayView();
+            if (view == null) return;
+
+            // 1. 同步危险区域（来自宿主 view.Attacks 与 view.SpawnWarnings）
+            activeDangers.Clear();
+            float now = view.Now;
+
+            // 1.1 正在生效或充能的攻击危险区
+            if (view.Attacks != null)
+            {
+                for (int i = 0; i < view.Attacks.Count; i++)
+                {
+                    var a = view.Attacks[i];
+                    var intent = a.Attack;
+                    var shape = intent.Shape;
+
+                    DangerShapeType shapeType;
+                    switch (shape.Kind)
+                    {
+                        case AttackShapeKind.Capsule:
+                            shapeType = DangerShapeType.Capsule;
+                            break;
+                        case AttackShapeKind.Annulus:
+                            shapeType = DangerShapeType.Annulus;
+                            break;
+                        case AttackShapeKind.Circle:
+                        default:
+                            shapeType = DangerShapeType.Circle;
+                            break;
+                    }
+
+                    DangerVisualState state;
+                    float progress;
+                    float remaining;
+
+                    if (now < intent.ActivateAt)
+                    {
+                        state = DangerVisualState.Telegraphing;
+                        float totalWarn = Mathf.Max(0.001f, intent.ActivateAt - a.CreatedAt);
+                        progress = Mathf.Clamp01((now - a.CreatedAt) / totalWarn);
+                        remaining = intent.ActivateAt - now;
+                    }
+                    else if (now <= intent.EndAt)
+                    {
+                        state = a.Spent ? DangerVisualState.Resolved : DangerVisualState.Active;
+                        progress = 1.0f;
+                        remaining = intent.EndAt - now;
+                    }
+                    else
+                    {
+                        state = DangerVisualState.Resolved;
+                        progress = 1.0f;
+                        remaining = 0;
+                    }
+
+                    Vector3 center = new Vector3(shape.Center.X, 0, shape.Center.Y);
+                    Vector3 end = new Vector3(shape.End.X, 0, shape.End.Y);
+                    Vector3 dir = (end - center);
+                    float length = dir.magnitude;
+                    if (length > 0.001f) dir /= length;
+                    else dir = Vector3.forward;
+
+                    // 计算扩散环在当前的实际外径与内径
+                    float currentRadius = shape.Radius;
+                    float currentInnerRadius = shape.InnerRadius;
+                    if (shape.Kind == AttackShapeKind.Annulus && shape.ExpansionSpeed > 0 && now > intent.ActivateAt)
+                    {
+                        float age = now - intent.ActivateAt;
+                        currentRadius += shape.ExpansionSpeed * age;
+                        currentInnerRadius += shape.ExpansionSpeed * age;
+                    }
+
+                    activeDangers.Add(new DangerAreaDescriptor
+                    {
+                        AttackId = (int)intent.Sequence,
+                        Shape = shapeType,
+                        State = state,
+                        Position = center,
+                        Direction = dir,
+                        Radius = currentRadius,
+                        InnerRadius = currentInnerRadius,
+                        Length = length,
+                        Progress = progress,
+                        RemainingTime = remaining,
+                        SourceLabel = $"Seq#{intent.Sequence}"
+                    });
+                }
+            }
+
+            // 1.2 出生预警（如冲锋者、落波者等生成预警）
+            if (view.SpawnWarnings != null)
+            {
+                for (int i = 0; i < view.SpawnWarnings.Count; i++)
+                {
+                    var sw = view.SpawnWarnings[i];
+                    float totalWarn = Mathf.Max(0.001f, sw.Spawn.WarningSeconds);
+                    float progress = Mathf.Clamp01(1.0f - (sw.SpawnAt - now) / totalWarn);
+                    float remaining = Mathf.Max(0, sw.SpawnAt - now);
+
+                    activeDangers.Add(new DangerAreaDescriptor
+                    {
+                        AttackId = (int)sw.Key.Sequence + 10000,
+                        Shape = DangerShapeType.Circle,
+                        State = DangerVisualState.Telegraphing,
+                        Position = new Vector3(sw.Spawn.Position.X, 0, sw.Spawn.Position.Y),
+                        Radius = sw.Spawn.Spec.Radius * 1.5f,
+                        Progress = progress,
+                        RemainingTime = remaining,
+                        SourceLabel = $"出生预警 {sw.Spawn.Spec.ArchetypeId}"
+                    });
+                }
+            }
+
+            // 2. 同步地图调谐目标（来自宿主 view.Objective）
+            var obj = view.Objective;
+            if (obj.Status != ObjectiveStatus.None)
+            {
+                currentObjective = new ObjectiveVisualSnapshot
+                {
+                    ObjectiveId = obj.Id,
+                    Title = obj.Id,
+                    RewardSummary = obj.RewardId == "D02" ? "恢复 20% 生命值" : obj.RewardId == "D03" ? "全场经验宝石磁吸" : "调谐完成",
+                    WorldPosition = new Vector3(obj.Position.X, 0, obj.Position.Y),
+                    Radius = obj.Radius,
+                    Progress = obj.Progress,
+                    RemainingTime = Mathf.Max(0, obj.ExpiresAt - now),
+                    IsAvailable = (obj.Status == ObjectiveStatus.Available || obj.Status == ObjectiveStatus.Channeling),
+                    IsChanneling = (obj.Status == ObjectiveStatus.Channeling),
+                    IsCompleted = (obj.Status == ObjectiveStatus.Completed),
+                    IsExpired = (obj.Status == ObjectiveStatus.Expired)
+                };
+            }
+            else
+            {
+                currentObjective = null;
+            }
+
+            // 3. 同步首领状态（来自宿主 view.Finale）
+            var finale = view.Finale;
+            if (finale.Spawned && !finale.Defeated)
+            {
+                currentBoss = new BossVisualSnapshot
+                {
+                    BossId = $"Boss_{finale.Boss.Serial}",
+                    BossName = "终局首领",
+                    CurrentMoveName = string.IsNullOrEmpty(finale.AttackLabel) ? "常规压迫" : finale.AttackLabel,
+                    CurrentHp = Mathf.RoundToInt(finale.Hp),
+                    MaxHp = Mathf.RoundToInt(finale.MaxHp),
+                    Phase = (finale.Hp < finale.MaxHp * 0.5f) ? 2 : 1,
+                    DeadlineRemainingTime = Mathf.Max(0, finale.Deadline - now),
+                    IsWarning = false,
+                    IsAlive = true,
+                    IsDefeated = false
+                };
+            }
+            else
+            {
+                currentBoss = null;
+            }
+        }
+
+        void ReadHostOutcome()
+        {
+            var viewSource = loop as IGameplayViewSource;
+            var outcome = viewSource?.ReadRunOutcome();
+            if (outcome != null)
+            {
+                currentOutcome = new RunOutcomeVisualSnapshot
+                {
+                    IsVictory = (outcome.Phase == RunPhase.Victory),
+                    Reason = outcome.Reason,
+                    SurvivalDuration = outcome.Duration,
+                    Kills = outcome.Kills,
+                    Level = outcome.Level,
+                    CompletedObjectives = outcome.CompletedObjectives,
+                    BossDefeated = outcome.BossDefeated,
+                    BossResultText = outcome.BossDefeated ? "首领已被击破" : "未击败首领"
+                };
+            }
         }
 
         // ================= 界面绘制与安全布局 =================
