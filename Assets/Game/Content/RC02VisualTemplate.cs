@@ -10,9 +10,11 @@ namespace Reverb.Drafts.RC01.Pipeline
         public RC02VisualShape shape;
         public Color color = Color.white;
         public LineRenderer line;
+        public LineRenderer halo;
         Renderer[] renderers;
         MaterialPropertyBlock block;
         float intensity;
+        float preparedRadius;
         static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
         public void Prepare(RC02CatalogEntry entry, PresentationEvent item)
         {
@@ -42,8 +44,10 @@ namespace Reverb.Drafts.RC01.Pipeline
                 float radius = item.Radius > 0 ? item.Radius : entry.Parameter("scale", .5f);
                 if (shape == RC02VisualShape.Hit) transform.position += Vector3.up * .3f;
                 SetRadius(radius);
+                preparedRadius = radius;
             }
             if (line != null) line.widthMultiplier = Mathf.Clamp(entry.Parameter("width", .065f), .025f, .2f);
+            SyncHalo();
             Tint(1);
         }
         public void SetRadius(float radius)
@@ -51,6 +55,19 @@ namespace Reverb.Drafts.RC01.Pipeline
             if (line == null || (shape != RC02VisualShape.Ring && shape != RC02VisualShape.Hit)) return;
             line.positionCount = 48;
             for (int i = 0; i < 48; i++) { float a = i * Mathf.PI * 2 / 48; line.SetPosition(i, new Vector3(Mathf.Cos(a)*radius, 0, Mathf.Sin(a)*radius)); }
+            SyncHalo();
+        }
+        void SyncHalo()
+        {
+            if (line == null || halo == null) return;
+            halo.sharedMaterial = line.sharedMaterial; halo.useWorldSpace = line.useWorldSpace;
+            halo.loop = line.loop; halo.positionCount = line.positionCount; halo.widthMultiplier = line.widthMultiplier * 3.5f;
+            for (int i = 0; i < line.positionCount; i++) halo.SetPosition(i, line.GetPosition(i));
+        }
+        public void Animate(float progress)
+        {
+            if (shape == RC02VisualShape.Hit) SetRadius(preparedRadius * Mathf.Lerp(.35f,1f,Mathf.SmoothStep(0,1,progress)));
+            Tint(1-progress);
         }
         public void Tint(float alpha)
         {

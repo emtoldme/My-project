@@ -56,7 +56,7 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
                     if(loop.config.runContentAllowList.Length!=27) issues.Add("Playable allowlist changed");
                 }
             }
-            string report=Path.GetFullPath(Path.Combine(Application.dataPath,"../../Reviews/ArtWorkspace-Cleanup-2026-10-13/references-after.txt"));
+            string report=Path.GetFullPath(Path.Combine(Application.dataPath,"../../Reviews/ArtWorkspace/references-current.txt"));
             Directory.CreateDirectory(Path.GetDirectoryName(report));
             File.WriteAllLines(report,issues.Count==0?new[]{"passed=true","catalogEntries=33","playableContent=6/14/3/4","missingAssetReferences=0"}:issues);
             if(issues.Count>0) throw new Exception(string.Join("\n",issues));
@@ -67,6 +67,8 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
         public static void Build()
         {
             if(!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            if(Application.isBatchMode) EditorSceneManager.OpenScene(Main);
+            Validate();
             string output=Path.GetFullPath(Path.Combine(Application.dataPath,"../../Builds/ArtWorkspace/Reverb.exe"));
             Directory.CreateDirectory(Path.GetDirectoryName(output));
             var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes=new[]{Main}, locationPathName=output,
@@ -98,9 +100,12 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
                 var loop=UnityEngine.Object.FindAnyObjectByType<GameLoop>();
                 if(loop!=null) { Selection.activeGameObject=loop.gameObject; EditorGUIUtility.PingObject(loop); }
             }
-            Folder("角色 Prefab","Assets/Game/Art/Actors");
-            Folder("场景环境与地形","Assets/Game/Environments");
-            Folder("场景材质","Assets/Game/Art/Materials");
+            Folder("角色、子弹、晶体与环绕物 Prefab","Assets/Game/Art/VisualIdentity/Prefabs");
+            Folder("声学花园地形与设施","Assets/Game/Environments/AcousticGarden");
+            Folder("当前 PBR 材质","Assets/Game/Art/VisualIdentity/Materials");
+            Folder("灯光调色与反射","Assets/Game/Art/VisualIdentity/Lighting");
+            Folder("麦穗图集与网格","Assets/Game/Art/VisualIdentity/Textures");
+            if(GUILayout.Button("画完道路后更新植被遮罩")) GardenFoliageTools.RefreshMask();
             Folder("技能特效与图标","Assets/Game/Art/Effects");
             Folder("原始地面、植被和武器","Assets/ReverbInTheRye");
             Folder("声音与音乐","Assets/Game/Audio");

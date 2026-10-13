@@ -21,6 +21,7 @@ namespace Waffle
         {
             public Transform root;
             public Renderer[] renderers;
+            public TrailRenderer[] trails;
             public int serial;
             public float flash;
             public bool seen;
@@ -96,7 +97,7 @@ namespace Waffle
                 }
                 if (material != null && prefab == null) foreach (var r in renderers) r.sharedMaterial = material;
                 root.gameObject.SetActive(false);
-                slots[i] = new Slot { root = root, renderers = renderers };
+                slots[i] = new Slot { root = root, renderers = renderers, trails = body.GetComponentsInChildren<TrailRenderer>() };
             }
             return slots;
         }
@@ -156,6 +157,11 @@ namespace Waffle
                 root.position = new Vector3(p.Position.X, 0.8f, p.Position.Y);
                 root.rotation = Quaternion.LookRotation(new Vector3(p.Direction.X, 0f, p.Direction.Y));
                 root.localScale = projectileVisualScale;
+                if (projectiles[p.PoolIndex].serial != p.Serial)
+                {
+                    projectiles[p.PoolIndex].serial = p.Serial;
+                    foreach (var trail in projectiles[p.PoolIndex].trails) trail.Clear();
+                }
                 VisibleProjectiles++;
             }
             foreach (var g in combat.Gems)
