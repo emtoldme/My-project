@@ -32,6 +32,10 @@ namespace Reverb.Drafts.RC01.Presentation
         public Light[] pathLights;
         public ReflectionProbe reflection;
         public Material[] wettableMaterials;
+        [Header("Atmosphere lighting")]
+        public float wetSearchlightIntensity = 26f;
+        public float wetPathIntensity = 2.4f;
+        public float overcastFogStart = 18f, overcastFogEnd = 62f;
 
         public float VisualTime { get; private set; }
         public float CurrentRain { get; private set; }
@@ -108,7 +112,7 @@ namespace Reverb.Drafts.RC01.Presentation
                 replacements.Add(source, clone);
                 materials.Add(new WetMaterial { runtime = clone, color = source.GetColor("_BaseColor"), smoothness = source.GetFloat("_Smoothness") });
             }
-            foreach (var renderer in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+            foreach (var renderer in FindObjectsByType<Renderer>())
             {
                 var original = renderer.sharedMaterials;
                 var changed = (Material[])original.Clone();
@@ -167,21 +171,21 @@ namespace Reverb.Drafts.RC01.Presentation
             }
             foreach (var entry in materials)
             {
-                entry.runtime.SetColor("_BaseColor", entry.color * Mathf.Lerp(1, .78f, CurrentWetness));
-                entry.runtime.SetFloat("_Smoothness", Mathf.Lerp(entry.smoothness, Mathf.Max(entry.smoothness, .68f), CurrentWetness));
+                entry.runtime.SetColor("_BaseColor", entry.color * Mathf.Lerp(1, .88f, CurrentWetness));
+                entry.runtime.SetFloat("_Smoothness", Mathf.Lerp(entry.smoothness, Mathf.Min(.58f, entry.smoothness + .14f), CurrentWetness));
             }
         }
 
         void UpdateLighting(float now)
         {
             float overcast = Mathf.Clamp01(CurrentRain * .85f);
-            RenderSettings.ambientSkyColor = Color.Lerp(skyColor, new Color(.21f, .29f, .39f), overcast) + Color.white * LightningFlash * .3f;
+            RenderSettings.ambientSkyColor = Color.Lerp(skyColor, new Color(.18f, .235f, .28f), overcast) + Color.white * LightningFlash * .3f;
             RenderSettings.ambientEquatorColor = Color.Lerp(equatorColor, new Color(.13f, .17f, .21f), overcast);
             RenderSettings.ambientGroundColor = Color.Lerp(groundColor, new Color(.075f, .1f, .105f), overcast);
             RenderSettings.fog = true;
             RenderSettings.fogColor = Color.Lerp(fogColor, new Color(.27f, .34f, .4f), overcast);
-            RenderSettings.fogStartDistance = Mathf.Lerp(fogStart, 25, overcast);
-            RenderSettings.fogEndDistance = Mathf.Lerp(fogEnd, 78, overcast);
+            RenderSettings.fogStartDistance = Mathf.Lerp(fogStart, overcastFogStart, overcast);
+            RenderSettings.fogEndDistance = Mathf.Lerp(fogEnd, overcastFogEnd, overcast);
             if (sun != null)
             {
                 sun.color = Color.Lerp(sunColor, new Color(.7f, .82f, 1), overcast);
@@ -203,10 +207,11 @@ namespace Reverb.Drafts.RC01.Presentation
             if (searchlights != null) for (int i = 0; i < searchlights.Length; i++)
             {
                 var light = searchlights[i]; if (light == null) continue;
-                light.intensity = Mathf.Lerp(8f, 65f, CurrentRain);
-                if (animateSearchlights) light.transform.rotation = Quaternion.Euler(58 + Mathf.Sin(now * .17f + i) * 8, i * 90 + now * 7 + Mathf.Sin(now * .3f) * 12, 0);
+                light.intensity = Mathf.Lerp(5f, wetSearchlightIntensity, CurrentRain);
+                if (animateSearchlights && i < localLights.Count)
+                    light.transform.rotation = localLights[i].rotation * Quaternion.Euler(Mathf.Sin(now*.11f+i)*4, Mathf.Sin(now*.075f+i*2)*17, 0);
             }
-            if (pathLights != null) foreach (var light in pathLights) if (light != null) light.intensity = Mathf.Lerp(1f, 8f, CurrentRain);
+            if (pathLights != null) foreach (var light in pathLights) if (light != null) light.intensity = Mathf.Lerp(.5f, wetPathIntensity, CurrentRain);
         }
 
         void EmitSplashes(Vector3 center, float dt)

@@ -53,8 +53,14 @@ Shader "Reverb/Ceramic Armor"
                 surface.albedo=lerp(half3(.055,.075,.08),panel,painted);
                 surface.alpha=1;surface.normalTS=half3(0,0,1);surface.occlusion=1;
                 half wet=_ReverbWeather.y*saturate(normalize(i.n).y*.7+.3);
-                surface.albedo*=lerp(1,.83,wet);
-                surface.metallic=lerp(.7,_Metallic,painted);surface.smoothness=lerp(_Smoothness,.72,wet);
+                float grain=frac(sin(dot(floor(i.w*85),float3(12.9898,78.233,37.719)))*43758.5453);
+                float patina=.5+.5*sin(i.w.x*3.7+sin(i.w.z*4.3)+i.w.y*6.1);
+                half grime=saturate((1-luminance)*.28+patina*.12);
+                surface.albedo*=lerp(.8,1,patina)*lerp(1,.9,wet);
+                surface.metallic=lerp(.78,min(_Metallic,.08),painted);
+                surface.metallic=lerp(surface.metallic,.78,isGold);
+                surface.smoothness=clamp(_Smoothness+grain*.09-patina*.15+wet*.18,.12,.53);
+                surface.occlusion=lerp(.65,1,painted)*(1-grime*.2);
                 surface.emission=_EmissionColor.rgb;
                 InputData data=(InputData)0;
                 data.positionWS=i.w;data.normalWS=normalize(i.n);data.viewDirectionWS=GetWorldSpaceNormalizeViewDir(i.w);

@@ -148,8 +148,8 @@ namespace Waffle
                 if (e.IsBoss) tint = new Color(.48f, .2f, .5f);
                 else if (charger) tint = new Color(1f, .68f, .2f);
                 else if (dropper) tint = new Color(.32f, .7f, .78f);
-                block.Clear(); block.SetColor(BaseColor, slot.flash > 0f ? Color.white : tint);
-                block.SetColor(Emission, slot.flash > 0f ? Color.white * 2f : Color.black);
+                block.Clear(); block.SetColor(BaseColor, slot.flash > 0f ? Color.Lerp(tint,new Color(.95f,.82f,.58f),.35f) : tint);
+                block.SetColor(Emission, slot.flash > 0f ? new Color(.45f,.33f,.19f) : Color.black);
                 foreach (var r in slot.renderers)
                     r.SetPropertyBlock(tintEnemyMaterials || charger || dropper || e.IsBoss || slot.flash > 0f ? block : null);
                 VisibleEnemies++;

@@ -8,8 +8,8 @@ half4 ReverbWetTerrainPBR(InputData inputData, half3 albedo, half metallic, half
     float2 p=inputData.positionWS.xz;
     float patch=.5+.25*sin(p.x*.83+sin(p.y*.51))+.25*sin(p.y*1.17-p.x*.37);
     half wet=_ReverbWeather.y*smoothstep(.12,.8,patch)*saturate(inputData.normalWS.y);
-    albedo*=lerp(1,.68,wet);
-    smoothness=lerp(smoothness,.78,wet);
+    albedo*=lerp(1,.77,wet);
+    smoothness=lerp(smoothness,.46,wet);
     float t=_ReverbWeather.z;
     float2 ripple=float2(sin(p.x*27+t*3.1)*cos(p.y*19-t*2.5),cos(p.x*21-t*2.1)*sin(p.y*24+t*2.8));
     inputData.normalWS=normalize(inputData.normalWS+float3(ripple.x,0,ripple.y)*wet*_ReverbWeather.x*.022);

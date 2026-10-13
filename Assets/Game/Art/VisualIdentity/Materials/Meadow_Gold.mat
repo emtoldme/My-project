@@ -37,10 +37,10 @@ Material:
     - _PlantHeight: 1.5
     - _UseExternalTime: 1
     - _VisualTime: 0
-    - _WindSpeed: 1.15
-    - _WindStrength: 0.12
+    - _WindSpeed: 1.05
+    - _WindStrength: 0.21
     m_Colors:
-    - _BaseColor: {r: 0.9, g: 0.98, b: 0.9, a: 1}
+    - _BaseColor: {r: 0.88, g: 0.88, b: 0.72, a: 1}
     - _Clearing: {r: 0, g: 0, b: 3.2, a: 0}
     - _FieldBounds: {r: -48, g: -48, b: 96, a: 96}
     - _WindDirection: {r: 0.85, g: 0, b: 0.5, a: 0}

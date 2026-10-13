@@ -31,10 +31,10 @@ Material:
     m_Floats:
     - _Cull: 2
     - _Cutoff: 0.5
-    - _Metallic: 0.2
-    - _Smoothness: 0.27
+    - _Metallic: 0.04
+    - _Smoothness: 0.29
     m_Colors:
-    - _BaseColor: {r: 0.8, g: 0.24, b: 0.16, a: 1}
+    - _BaseColor: {r: 0.52, g: 0.36, b: 0.26, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
