@@ -1,5 +1,0 @@
-goals=W05:5,W06:5,P17:3,P03:3,P05:3,P08:3
-actualDamageSources=W05,W01,W06,P17
-pooledVisualSpawns=33
-passed=True
-debugXP=2000 god=true spawning=false; wiring capture, not natural balance evidence

@@ -1,8 +1,0 @@
-{
-  "name": "Reverb.M01.PlayTests",
-  "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Waffle.Rules", "Waffle.Runtime", "Reverb.Experiments.Mechanism.Contracts", "Reverb.Experiments.Mechanism.Rules", "Reverb.Experiments.Mechanism.Integration", "Waffle.Experiments.Mechanism.Presentation", "Unity.InputSystem", "Reverb.UserArt.VFX"],
-  "overrideReferences": true,
-  "precompiledReferences": ["nunit.framework.dll"],
-  "autoReferenced": false,
-  "defineConstraints": ["UNITY_INCLUDE_TESTS"]
-}

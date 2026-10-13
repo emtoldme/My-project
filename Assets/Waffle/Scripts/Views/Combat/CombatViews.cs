@@ -9,6 +9,10 @@ namespace Waffle
     {
         public GameLoop loop;
         public GameObject enemyVisualPrefab;
+        [Header("美术替换（单位尺寸 Prefab；不添加伤害脚本）")]
+        public GameObject projectileVisualPrefab, gemVisualPrefab;
+        public Vector3 projectileVisualScale = new Vector3(.14f,.14f,.55f);
+        public float smallGemScale = .25f, bigGemScale = .55f;
         public Material projectileMaterial, gemMaterial;
         [Tooltip("S1 tint remains the default; S2 keeps the sculpture's authored materials.")]
         public bool tintEnemyMaterials = true;
@@ -77,7 +81,8 @@ namespace Waffle
             {
                 var root = new GameObject(label + "_" + i).transform;
                 root.SetParent(transform, false);
-                var body = enemy && enemyVisualPrefab != null ? Instantiate(enemyVisualPrefab, root) : GameObject.CreatePrimitive(PrimitiveType.Cube);
+                var prefab = enemy ? enemyVisualPrefab : label == "Gem" ? gemVisualPrefab : projectileVisualPrefab;
+                var body = prefab != null ? Instantiate(prefab, root) : GameObject.CreatePrimitive(PrimitiveType.Cube);
                 body.transform.SetParent(root, false);
                 foreach (var collider in body.GetComponentsInChildren<Collider>()) Destroy(collider);
                 var renderers = body.GetComponentsInChildren<Renderer>();
@@ -89,7 +94,7 @@ namespace Waffle
                     body.transform.localScale *= scale;
                     body.transform.localPosition = new Vector3(-bounds.center.x * scale, -bounds.min.y * scale, -bounds.center.z * scale);
                 }
-                if (material != null) foreach (var r in renderers) r.sharedMaterial = material;
+                if (material != null && prefab == null) foreach (var r in renderers) r.sharedMaterial = material;
                 root.gameObject.SetActive(false);
                 slots[i] = new Slot { root = root, renderers = renderers };
             }
@@ -150,7 +155,7 @@ namespace Waffle
                 root.gameObject.SetActive(true);
                 root.position = new Vector3(p.Position.X, 0.8f, p.Position.Y);
                 root.rotation = Quaternion.LookRotation(new Vector3(p.Direction.X, 0f, p.Direction.Y));
-                root.localScale = new Vector3(0.14f, 0.14f, 0.55f);
+                root.localScale = projectileVisualScale;
                 VisibleProjectiles++;
             }
             foreach (var g in combat.Gems)
@@ -162,7 +167,7 @@ namespace Waffle
                 root.gameObject.SetActive(true);
                 root.position = new Vector3(g.Position.X, 0.32f + Mathf.Sin(sim.State.Now * 3f + g.Serial) * 0.06f, g.Position.Y);
                 root.rotation = Quaternion.Euler(35f, sim.State.Now * 45f, 45f);
-                root.localScale = Vector3.one * (g.IsBig ? 0.55f : 0.25f);
+                root.localScale = Vector3.one * (g.IsBig ? bigGemScale : smallGemScale);
                 VisibleGems++;
             }
             HideUnused(enemies); HideUnused(projectiles); HideUnused(gems);

@@ -1,4 +1,0 @@
-rank=0 radius=3.00 gemInsideCollected=True gemOutsideStayed=True ordinaryCollected=True eliteStayed=True
-rank=1 radius=3.75 gemInsideCollected=True gemOutsideStayed=True ordinaryCollected=True eliteStayed=True
-rank=2 radius=4.50 gemInsideCollected=True gemOutsideStayed=True ordinaryCollected=True eliteStayed=True
-rank=3 radius=5.25 gemInsideCollected=True gemOutsideStayed=True ordinaryCollected=True eliteStayed=True

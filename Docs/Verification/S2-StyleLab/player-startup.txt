@@ -1,5 +1,0 @@
-Source: d44a402d7467d81059afec548859e0f5ad43083c; final package, 5.1s automated startup observation.
-Forcing GfxDevice: Direct3D 11
-    Version:  Direct3D 11.0 [level 11.1]
-    Renderer: NVIDIA GeForce RTX 4070 Laptop GPU (ID=0x2860)
-[Waffle] 开局 seed=12345 frame=0
