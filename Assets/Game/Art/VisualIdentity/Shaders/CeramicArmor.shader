@@ -9,6 +9,8 @@ Shader "Reverb/Ceramic Armor"
         [HDR] _EmissionColor("Hit light",Color)=(0,0,0,1)
         _Cull("Cull",Float)=2
         _Cutoff("Cutoff",Float)=0.5
+        _Identification("Identification paint on upper plates",Range(0,1))=0
+        _ReadabilityFill("Diffuse visibility floor",Range(0,.4))=.12
     }
     SubShader
     {
@@ -34,7 +36,7 @@ Shader "Reverb/Ceramic Armor"
             TEXTURE2D(_BaseMap);SAMPLER(sampler_BaseMap);
             float4 _ReverbWeather;
             CBUFFER_START(UnityPerMaterial)
-            float4 _BaseMap_ST;half4 _BaseColor,_EmissionColor;half _Metallic,_Smoothness,_Cutoff,_Cull;
+            float4 _BaseMap_ST;half4 _BaseColor,_EmissionColor;half _Metallic,_Smoothness,_Cutoff,_Cull,_Identification,_ReadabilityFill;
             CBUFFER_END
             struct A{float4 p:POSITION;float3 n:NORMAL;float2 uv:TEXCOORD0;};
             struct V{float4 p:SV_POSITION;float3 w:TEXCOORD0;float3 n:TEXCOORD1;float2 uv:TEXCOORD2;half fog:TEXCOORD3;};
@@ -46,7 +48,8 @@ Shader "Reverb/Ceramic Armor"
                 half painted=smoothstep(.025,.18,luminance);
                 half isGold=smoothstep(1.05,1.7,atlas.r/max(atlas.b,.015))*smoothstep(.08,.2,atlas.r);
                 half isGreen=saturate((atlas.g-atlas.r*.85)*5);
-                half3 panel=lerp(half3(.7,.75,.72),_BaseColor.rgb,isGreen);
+                half identification=saturate(isGreen+_Identification*smoothstep(.3,.72,normalize(i.n).y));
+                half3 panel=lerp(half3(.86,.89,.87),_BaseColor.rgb,identification);
                 panel=lerp(panel,half3(.5,.29,.09),isGold*.65);
                 panel*=lerp(.76,1,saturate(luminance*2.4));
                 SurfaceData surface=(SurfaceData)0;
@@ -64,7 +67,7 @@ Shader "Reverb/Ceramic Armor"
                 surface.emission=_EmissionColor.rgb;
                 InputData data=(InputData)0;
                 data.positionWS=i.w;data.normalWS=normalize(i.n);data.viewDirectionWS=GetWorldSpaceNormalizeViewDir(i.w);
-                data.shadowCoord=TransformWorldToShadowCoord(i.w);data.bakedGI=SampleSH(data.normalWS);
+                data.shadowCoord=TransformWorldToShadowCoord(i.w);data.bakedGI=max(SampleSH(data.normalWS),half3(.9,.97,1)*_ReadabilityFill*painted);
                 data.normalizedScreenSpaceUV=GetNormalizedScreenSpaceUV(i.p);data.shadowMask=half4(1,1,1,1);
                 data.vertexLighting=VertexLighting(i.w,data.normalWS);
                 half4 color=UniversalFragmentPBR(data,surface);color.rgb=MixFog(color.rgb,i.fog);return color;

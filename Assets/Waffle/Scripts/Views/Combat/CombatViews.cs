@@ -17,6 +17,7 @@ namespace Waffle
         [Tooltip("S1 tint remains the default; S2 keeps the sculpture's authored materials.")]
         public bool tintEnemyMaterials = true;
         public bool normalizeEnemyVisuals = true;
+        [Min(.5f)] public float enemyVisualHeight = 1.5f;
         private sealed class Slot
         {
             public Transform root;
@@ -91,7 +92,7 @@ namespace Waffle
                 {
                     var bounds = renderers[0].bounds;
                     for (int r = 1; r < renderers.Length; r++) bounds.Encapsulate(renderers[r].bounds);
-                    float scale = 1.5f / Mathf.Max(0.01f, bounds.size.y);
+                    float scale = enemyVisualHeight / Mathf.Max(0.01f, bounds.size.y);
                     body.transform.localScale *= scale;
                     body.transform.localPosition = new Vector3(-bounds.center.x * scale, -bounds.min.y * scale, -bounds.center.z * scale);
                 }

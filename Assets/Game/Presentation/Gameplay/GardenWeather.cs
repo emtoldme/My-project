@@ -14,7 +14,7 @@ namespace Reverb.Drafts.RC01.Presentation
     public sealed class GardenWeather : MonoBehaviour
     {
         [Header("Weather · F6 cycles presets during play")]
-        public GardenWeatherKind weather = GardenWeatherKind.Rain;
+        public GardenWeatherKind weather = GardenWeatherKind.Clear;
         [Range(0, 1)] public float rainAmount = .72f;
         [Range(0, 1)] public float wetness = .82f;
         [Range(.1f, 2)] public float windStrength = .65f;
@@ -207,7 +207,7 @@ namespace Reverb.Drafts.RC01.Presentation
             if (searchlights != null) for (int i = 0; i < searchlights.Length; i++)
             {
                 var light = searchlights[i]; if (light == null) continue;
-                light.intensity = Mathf.Lerp(5f, wetSearchlightIntensity, CurrentRain);
+                light.intensity = Mathf.Lerp(.35f, wetSearchlightIntensity, CurrentRain);
                 if (animateSearchlights && i < localLights.Count)
                     light.transform.rotation = localLights[i].rotation * Quaternion.Euler(Mathf.Sin(now*.11f+i)*4, Mathf.Sin(now*.075f+i*2)*17, 0);
             }
