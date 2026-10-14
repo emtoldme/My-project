@@ -1,5 +1,7 @@
 # HC01：归乡探索整合
 
+此页记录HC01交付；后续HC02的组合/返灯循环及存档版本2见[最新说明](RESONANCE_LOOPS_HC02.md)。
+
 2026-10-14。A/B/C/D四包已合入独立`gameplay/homecoming-integrated`分支，由Codex修正交接问题并接入真实Main。没有修改用户其他工作目录，也没有合入main。HC00任务基线仍保留在`hc00-v1`。
 
 | 包 | 实际接收提交 | 整合内容 |

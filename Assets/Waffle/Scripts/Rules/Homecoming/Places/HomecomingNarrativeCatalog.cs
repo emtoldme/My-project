@@ -32,6 +32,15 @@ namespace Waffle.Homecoming.Places
         HomecomingNarrativeCatalog()
         {
             const NarrativeKind P = NarrativeKind.Place, I = NarrativeKind.Item, G = NarrativeKind.Goal, U = NarrativeKind.Upgrade;
+            Add("combo.backstitch", "回针 · 把来路缝进歌里", "母亲收针时总要回一针。把琴弦系在针线盒上，你也能把离开的地方留住：首次共鸣闪避留针，下一次花1碎音返回旧位置并发出残响。线长24米，24秒后散开；回来之前，先想清楚那边还有谁。", NarrativeKind.Combination);
+            Add("combo.thread-lure", "牵弦 · 顺着声音收拢", "父亲的手套认得麦秆，琴弦认得风。花1碎音，让闪避留下的旧声源牵走附近普通追击者2.5秒。把声音留在残留区域边上，自己从另一侧绕开；特殊敌人和首领仍认得你的脚步。", NarrativeKind.Combination);
+            Add("combo.hearth-gather", "归巢 · 将散落的带回家", "手套兜住田间散落的声，针线盒让它们不再漏出去。花1碎音随闪避牵回8米内至多12份已有经验；真正收进手里才算所得。是继续用掉碎音赶路，还是留满三份回旧地返灯，由你决定。", NarrativeKind.Combination);
+            Add("poi.old-home.rekindled", "又一次亮起的门廊", "你把田里带回的碎音倒在窗台上。铁盒轻轻一响，门廊的灯亮了。这次离开时，衣襟里多了一针，能替你挡一次冷风。", G);
+            Add("poi.old-silo.rekindled", "粮高线以下的回声", "空仓里没有粮食，你却还是把手放在那道粉笔线上。三份碎音滚向仓底，回来的声音终于与你的呼吸合上了。", G);
+            Add("poi.old-guitar.rekindled", "为断弦添一小节", "你没有换掉第三根弦，只把结重新系紧。带回来的碎音接上了那一小节；弹完以后，路还在麦田里等着。", G);
+            Add("poi.field-swing.rekindled", "替陌生人收起座板", "你扶正了被风翻过来的秋千，留下一点田间碎音。这里不是你家，也能歇一会儿再走。", G);
+            Add("poi.field-tractor.rekindled", "借一盏地头的灯", "散热格栅里的麦秆轻轻一抖，旧灯在碎音里亮了一瞬。你理好衣襟，把路重新认了一遍。", G);
+            Add("poi.field-radio.rekindled", "天气预报之后", "你将收来的碎音调进广播箱。天气预报的尾声里，忽然有人说：回去的时候，记得带上外套。", G);
             // ---- 三处故事地点 ----
             Add("poi.old-home", "主角家的老房子", "门框上最后一道身高线旁，用铅笔写着“等秋收”。门锁换过了，钥匙早不知去了哪里，可厨房窗台上的针线盒还在，盖子上落着一层跟八八年夏天一样细的土。", P);
             Add("poi.old-silo", "老筒仓", "父亲用粉笔在内壁记粮高，最矮的那道是你踮脚够得着的位置。如今仓是空的，风从缝里穿过去，喊一声，回声总要迟一拍才回来。", P);

@@ -150,6 +150,10 @@ namespace Waffle.Homecoming.Relics
             return echo.TryConsumeSuccessfulDodge(ReadModifiers().DodgeEcho, playing, alive, now, out pulse);
         }
 
+        public bool TryConsumeResonanceDodge(bool enabled, bool playing, bool alive, float now, out DodgeEchoPulse pulse)
+            => echo.TryConsumeSuccessfulDodge(enabled, playing, alive, now, out pulse);
+        public bool IsEquipped(string itemId) => itemId != null && EquippedIndex(itemId) >= 0;
+
         public float DodgeEchoRemaining(float now) { return echo.Remaining(now); }
 
         public bool TryReadAbility(string itemId, float now, out RelicAbilityView view)

@@ -8,7 +8,7 @@ namespace Waffle.Homecoming.Profile
     /// </summary>
     public static class ProfileConfig
     {
-        public const int CurrentSchemaVersion = 1;
+        public const int CurrentSchemaVersion = 2;
         public const int MaxFileSizeBytes = 512 * 1024; // 512 KB sanity limit
 
         // Upgrade identifiers

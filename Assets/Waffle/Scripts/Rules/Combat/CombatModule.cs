@@ -478,6 +478,8 @@ namespace Waffle.Combat
                     allowRelocation = movement.AllowRelocation && !e.IsBoss;
                 }
                 float lim = Config.arenaHalfSize - e.Radius;
+                if (TryHomecomingLure(e, out var luredVelocity))
+                { vel = luredVelocity + sepBuffer[i]; allowRelocation = false; }
                 e.Position = Config.unboundedWorld ? e.Position + vel * dt : ClampSquare(e.Position + vel * dt, lim);
 
                 if (allowRelocation && Vec2.Distance(e.Position, player) > relocateDist)

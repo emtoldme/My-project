@@ -2,6 +2,8 @@
 
 Unity 6000.4.3f1 / URP17.4 的 3D 幸存者原型。当前有 6 攻击、14 被动、3 进化、4 类拾取。
 
+**HC02旧物共鸣**：针线盒/手套/吉他组成互斥的“回针、牵弦、归巢”；真实拾取产生碎音，可用于战术行动或带回旧地返灯。J日志新增共鸣页。见[组合与循环](Docs/Project/HomecomingNext/RESONANCE_LOOPS_HC02.md)。
+
 **归乡探索HC01已接入Main**：老房子、老筒仓、旧吉他可探索并收取，额外遗物槽2→4，实际能力、叙事日志、局外经验/修补升级与本地档案可用。出发前先整理行囊，**J打开日志**，靠近自动拾取。见[整合与试玩说明](Docs/Project/HomecomingNext/INTEGRATION.md)。原始任务与`hc00-v1`基线见[分包记录](Docs/Project/HomecomingNext/README.md)。
 
 **主场景：`Assets/Game/Scenes/Main.unity`**。打开工程后使用菜单 **Reverb → 美术工作台**；从工作台打开主场景、角色、环境、材质与特效。

@@ -103,6 +103,9 @@ namespace Waffle
         public bool TryInteract(Guid runId, string siteId) => !BeforeDeparture && Sim != null && Sim.TryClaimHomecoming(runId, siteId);
         public bool TryEquip(Guid runId, string itemId, int slot) => !BeforeDeparture && Sim != null && Sim.EquipHomecoming(runId, itemId, slot, journalResume);
         public bool TryUnequip(Guid runId, int slot) => !BeforeDeparture && Sim != null && Sim.UnequipHomecoming(runId, slot, journalResume);
+        public bool CanRetuneHomecoming => !BeforeDeparture && Sim != null && Sim.CanUseHomecomingCamp(Sim.RunId, journalResume);
+        public bool TryRetuneHomecoming(ResonancePattern pattern) => CanRetuneHomecoming && Sim.TryRetuneHomecoming(Sim.RunId, pattern, journalResume);
+        public bool TryRekindleHomecoming() => CanRetuneHomecoming && Sim.TryRekindleHomecoming(Sim.RunId, journalResume);
         public bool TryPurchaseUpgrade(string upgradeId)
         {
             if (!CanPurchaseHomecoming || HomecomingProfile.IsReadOnly) return false;
