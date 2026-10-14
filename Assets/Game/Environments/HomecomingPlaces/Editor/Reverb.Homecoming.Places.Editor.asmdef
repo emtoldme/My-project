@@ -1,0 +1,7 @@
+{
+  "name": "Reverb.Homecoming.Places.Editor",
+  "rootNamespace": "Reverb.Homecoming.Places.EditorTools",
+  "references": ["Waffle.Rules", "Reverb.Homecoming.Places.Presentation"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": false
+}

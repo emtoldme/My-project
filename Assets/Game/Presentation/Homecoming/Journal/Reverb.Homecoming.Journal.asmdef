@@ -1,0 +1,5 @@
+{
+  "name": "Reverb.Homecoming.Journal",
+  "references": ["Waffle.Rules", "Waffle.Runtime", "Unity.InputSystem"],
+  "autoReferenced": true
+}

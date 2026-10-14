@@ -73873,6 +73873,8 @@ GameObject:
   - component: {fileID: 1268887292}
   - component: {fileID: 1268887294}
   - component: {fileID: 1268887295}
+  - component: {fileID: 1268887297}
+  - component: {fileID: 1268887296}
   m_Layer: 0
   m_Name: GameLoop
   m_TagString: Untagged
@@ -73931,6 +73933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffce1ea6528d7df48b4bab989bcfc9f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Waffle.Runtime::Waffle.GameLoop
+  homecomingEnabled: 1
   config:
     extraXpStepAfterFour: 0.4
     useRunContent: 1
@@ -74926,6 +74929,50 @@ MonoBehaviour:
   loadRadius: 3
   worldSeed: 14104
   randomizeSeed: 1
+--- !u!114 &1268887296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823c079fbb0d411d8fe1d3c4f9c0aa15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.Homecoming.Places.Presentation::Reverb.Homecoming.Places.HomecomingPlacesPresenter
+  prefabs:
+  - templateId: poi.old-home
+    prefab: {fileID: 4472927306427576693, guid: d51eba203b78b8d4aa1f5c62877fc04f, type: 3}
+  - templateId: poi.old-silo
+    prefab: {fileID: 384136645968955439, guid: 411002b13147f4944806d835003a103e, type: 3}
+  - templateId: poi.old-guitar
+    prefab: {fileID: 9004377221449955939, guid: 343a639017143ed48ba4d7008f1fa758, type: 3}
+  - templateId: poi.field-tractor
+    prefab: {fileID: 3577325372620329557, guid: 61602ec202eb32b46bbf6687085f6ba8, type: 3}
+  - templateId: poi.field-swing
+    prefab: {fileID: 7946279588536267414, guid: 2d580ee2e34d3f64489d3afa1124b008, type: 3}
+  - templateId: poi.field-radio
+    prefab: {fileID: 3673888454904426806, guid: 9fc3119290a488744a52b202a2e3e232, type: 3}
+  root: {fileID: 0}
+  maxInstances: 8
+--- !u!114 &1268887297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccc94e96c1f344ab8bf2a2634f4c9ae3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.Homecoming.Journal::Reverb.Drafts.RC01.Presentation.Homecoming.Journal.HomecomingJournalView
+  viewSourceComponent: {fileID: 1268887280}
+  commandsComponent: {fileID: 1268887280}
+  isPreviewMode: 0
+  scenicView: 0
+  showPoiPrompt: 1
 --- !u!1 &1271036660
 GameObject:
   m_ObjectHideFlags: 0

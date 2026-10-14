@@ -13,7 +13,7 @@ namespace Waffle
     /// 其他玩法对象都不写 Update。
     /// </summary>
     [DefaultExecutionOrder(-100)]
-    public class GameLoop : MonoBehaviour, Waffle.RunContent.IRunContentViewSource, Waffle.RunContent.IRunContentCommands, Waffle.GameplayNext.IGameplayViewSource
+    public partial class GameLoop : MonoBehaviour, Waffle.RunContent.IRunContentViewSource, Waffle.RunContent.IRunContentCommands, Waffle.GameplayNext.IGameplayViewSource
     {
         [Tooltip("一局的参数（设计初值）")]
         public RunConfig config = new RunConfig();
@@ -46,7 +46,9 @@ namespace Waffle
         private void Awake()
         {
             Time.timeScale = 1f;
+            PrepareHomecomingProfile();
             Sim = new RunSimulation(config, new UnityRunLog(), combatConfig ?? new CombatConfig());
+            PrepareHomecomingRun();
             if (config.gameplayNext != null && config.gameplayNext.enabled)
             {
                 if (!(gameplayModuleProvider is Waffle.GameplayNext.IGameplayModuleProvider provider))
@@ -83,9 +85,12 @@ namespace Waffle
             if (restarting) return;
             RunPhase phase = Sim.State.Phase;
             InputSnapshot snapshot = Controls.Read(phase);
+            if (HomecomingJournalOpen || BeforeDeparture) snapshot = InputSnapshot.None;
             Sim.ViewRadius = CalculateViewRadius();
             // 用 unscaled 帧时间：逻辑是否推进只看 GameLoop 的门控，不依赖 timeScale（§0.1 规则 4）
             Sim.Tick(Time.unscaledDeltaTime, snapshot, Time.frameCount, Time.unscaledTimeAsDouble);
+            Sim.StepHomecoming();
+            UpdateHomecomingPersistence();
             SyncAfterStateChange();
             if (playerView != null)
                 playerView.position = new Vector3(Sim.PlayerX, playerView.position.y, Sim.PlayerZ);
@@ -150,6 +155,7 @@ namespace Waffle
 
         private void OnApplicationFocus(bool hasFocus)
         {
+            if (!hasFocus) journalResume = false;
             if (!hasFocus && Sim != null && !restarting)
             {
                 Sim.BeginFrame(Time.frameCount, Time.unscaledTimeAsDouble);
@@ -171,6 +177,7 @@ namespace Waffle
         /// <summary>UI 的"继续"按钮。</summary>
         public void TogglePause()
         {
+            if (HomecomingJournalOpen || BeforeDeparture) return;
             Sim.BeginFrame(Time.frameCount, Time.unscaledTimeAsDouble);
             Sim.TogglePause("按钮");
             SyncAfterStateChange();
@@ -181,6 +188,7 @@ namespace Waffle
         public void Restart()
         {
             if (restarting) return;
+            if (homecomingEnabled && !FlushHomecoming()) return;
             restarting = true;
             Debug.Log(string.Format("[Waffle] 重开：从 {0} now={1:F3} frame={2}", Sim.State.Phase, Sim.State.Now, Time.frameCount));
             Sim.NotifyRestart();

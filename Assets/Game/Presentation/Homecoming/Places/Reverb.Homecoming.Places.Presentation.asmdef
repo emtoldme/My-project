@@ -1,0 +1,6 @@
+{
+  "name": "Reverb.Homecoming.Places.Presentation",
+  "rootNamespace": "Reverb.Homecoming.Places",
+  "references": ["Waffle.Rules", "Waffle.Runtime"],
+  "autoReferenced": true
+}

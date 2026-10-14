@@ -49,6 +49,7 @@ namespace Reverb.Drafts.RC01.Presentation
         {RectFill(r,new Color(.16f,.22f,.22f));RectFill(new Rect(r.x,r.y,r.width*Mathf.Clamp01(amount),r.height),color);}
         void OnGUI()
         {
+            if (loop != null && (loop.BeforeDeparture || loop.HomecomingJournalOpen)) return;
             if(scenicView&&loop?.Sim!=null&&!loop.Sim.State.Phase.IsTerminal())return;
             Init();var oldMatrix=GUI.matrix;ImguiScale.Apply();
             var source=GetComponent<IRunContentViewSource>();var commands=GetComponent<IRunContentCommands>();

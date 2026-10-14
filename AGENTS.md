@@ -4,13 +4,15 @@
 
 用户最新要求解除空气墙并程序生成可探索麦田；此明确授权覆盖上述“不扩展玩法”在地图边界与探索接入方面的旧限制。探索R4开启Main的unboundedWorld，修复玩家/敌人/弹丸/遭遇/首领的绝对边界，按种子流式生成24米地块、默认驻留49块，复用R3乡村美术。地图默认每次进场新种子，可固定种子复现。原10分钟流程及两处出生区调谐仍保留。入口Docs/EXPLORATION_R4.md。
 
-2026-10-14最新授权：新增有叙事文本的兴趣点（主角旧家/老筒仓/老吉他）、独立遗物栏与能力、局外经验/升级、存档及有风味的目标。这一明确请求覆盖上述暂停玩法扩展在这些系统上的旧限制，视觉方向仍沿用R3/R2。用户选择“外部AI任务卡，供我转发”，本轮入口为Docs/Project/HomecomingNext/README.md，HC00 v1共同标签hc00-v1，当前工作分支gameplay/homecoming-next-ready。四包分别在独立目录/分支开发；Codex负责共享契约/核心接线/Main/阶段整合。当前只发布任务包和纯契约，四包业务尚未实装，不执行旧GameplayNext任务卡或声称系统已完成。
+2026-10-14最新授权：新增有叙事文本的兴趣点（主角旧家/老筒仓/老吉他）、独立遗物栏与能力、局外经验/升级、存档及有风味的目标。这一明确请求覆盖上述暂停玩法扩展在这些系统上的旧限制，视觉方向仍沿用R3/R2。用户选择“外部AI任务卡，供我转发”，本轮入口为Docs/Project/HomecomingNext/README.md，HC00 v1共同标签hc00-v1，共同基线分支gameplay/homecoming-next-ready，当前整合分支gameplay/homecoming-integrated。四包分别在独立目录/分支开发；Codex负责共享契约/核心接线/Main/阶段整合。HC01四包现已接入Main，见下方整合约定，不执行旧GameplayNext任务卡，不把接口或独立预览等同完整玩法验收。
 
 ## 工作区与协作
 
+HC01四包已在gameplay/homecoming-integrated整合，当前仍使用Reviews/GP00-2026-10-13/workspace。入口Docs/Project/HomecomingNext/INTEGRATION.md。GameLoop.Homecoming持有唯一档案桥与出发/日志门控，RunSimulation.Homecoming持有地点/遗物/目标，CombatHomecoming走原伤害链。正式Main开启homecomingEnabled；不重复安装旧任务或执行一次性构建脚本。存档在persistentDataPath/Homecoming，验证需独立路径，不覆盖用户真实档案。保留R4地图、R3视觉与原10分钟结局。
+
 用户编辑工程为 `G:/图书馆/新建文件夹 (2)/My project`，新视觉基线在独立 `art/visual-editing` 分支。`My project-integration` 是 Codex 的整合与构建工作目录。旧 art/manual-editing 与 safety/pre-visual-rebuild-20261013 保留此次重构前用户改动。不要同时打开两个工程修改同一批资源；后续用户编辑期间不自动覆盖其改动。
 
-GP00、玩法整合、探索R4及HC00使用独立目录 `Reviews/GP00-2026-10-13/workspace`，当前分支 `gameplay/homecoming-next-ready`，从world/procedural-fields-r4继续，玩法基础为已完成的gameplay/gp-integration。其余工作目录可能正被用户或外部AI使用其他分支；先确认，不自动切换、重置或覆盖。玩法基底说明见Docs/Project/GameplayNext/INTEGRATION.md。
+GP00、玩法整合、探索R4及HC00使用独立目录 `Reviews/GP00-2026-10-13/workspace`，当前分支 `gameplay/homecoming-integrated`，从world/procedural-fields-r4继续，玩法基础为已完成的gameplay/gp-integration。其余工作目录可能正被用户或外部AI使用其他分支；先确认，不自动切换、重置或覆盖。玩法基底说明见Docs/Project/GameplayNext/INTEGRATION.md。
 
 四位外部 AI 的历史协作方式保留：用户转发需求、各自独立目录和分支上传，Codex审查接线合并。旧TASKS_01..08、实验和交接板已移除，不能重新执行。玩法第一轮已整合，用户现阶段要求把它作为基底，暂停继续打磨和扩展玩法，不自动执行旧任务卡里的后续派工。未经用户授权不主动联系其他AI。
 

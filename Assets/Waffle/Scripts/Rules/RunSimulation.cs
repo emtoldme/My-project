@@ -108,12 +108,12 @@ namespace Waffle
         {
             if (Growth != null)
             {
-                if (kind == UpgradeKind.MoveSpeed) return Config.moveSpeed * ContentStats.MoveSpeedMul;
-                if (kind == UpgradeKind.PickupRange) return Config.magnetRadius * ContentStats.PickupMul;
-                if (kind == UpgradeKind.MaxHp) return Config.maxHp * ContentStats.MaxHpMul;
+                if (kind == UpgradeKind.MoveSpeed) return Config.moveSpeed * ContentStats.MoveSpeedMul * HomecomingFactor(kind);
+                if (kind == UpgradeKind.PickupRange) return Config.magnetRadius * ContentStats.PickupMul * HomecomingFactor(kind);
+                if (kind == UpgradeKind.MaxHp) return Config.maxHp * ContentStats.MaxHpMul * HomecomingFactor(kind);
             }
             int level = kind >= 0 && (int)kind < UpgradeRules.RealKindCount ? State.UpgradeLevels[(int)kind] : 0;
-            return UpgradeRules.Value(kind, level, Config);
+            return UpgradeRules.Value(kind, level, Config) * HomecomingFactor(kind);
         }
 
         public bool IsInvulnerable { get { return God || State.Now < InvulnerableUntil; } }
@@ -171,6 +171,7 @@ namespace Waffle
                 InvulnerableUntil = Math.Max(InvulnerableUntil, now + dodgeLeft);
                 DodgeBufferUntil = -1f;
                 Combat?.NotifyRunDodge(new Vec2(PlayerX, PlayerZ));
+                QueueHomecomingDodge();
                 Emit(PresentationEventType.Dodge, PlayerX, PlayerZ, dodgeLeft, 0);
             }
 
