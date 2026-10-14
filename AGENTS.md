@@ -1,12 +1,12 @@
 # 《麦田里的混响》当前协作约定
 
-更新 2026-10-13。用户最新反馈：视觉语言仍不明确，特效和光影平淡、艺术感不足。现阶段幸存者只作为基底，不再继续打磨或扩展玩法；工作重点为画面、氛围与动效。Codex直接修改主场景与表现，视觉R2以“风雨中的失谐声场”为方向，统一断裂共鸣弧、调谐柱、频率刻线和旧信号旗，使用墨蓝/旧黄铜/粉白，环境琥珀、玩家冷青、危险朱红。不能自行宣称达到主流独立游戏画质。入口 README.md、Docs/RESONANCE_R2.md、Docs/ATMOSPHERE_R1.md、Docs/ART_EDITING.md。
+更新 2026-10-14。用户最新六项反馈要求：优先角色/敌人/攻击的无Bloom可读性，第一关保留金色乡村余温，灯光有实际来源，广播奇观退居次要并随真实玩法状态激活，麦田有空地/收割/倒伏变化，先加废弃农机与童年遗物。当前视觉R3为“尚有余温的故乡”，默认晴朗黄昏，雨夜保留为F6天气状态；白青玩家、暖橙敌人、暖色农机/路灯、冷色广播异常。幸存者只作为基底，不继续扩展玩法。不能自行宣称达到主流独立游戏画质。入口 README.md、Docs/HOMECOMING_R3.md、Docs/RESONANCE_R2.md、Docs/ART_EDITING.md。
 
 ## 工作区与协作
 
 用户编辑工程为 `G:/图书馆/新建文件夹 (2)/My project`，新视觉基线在独立 `art/visual-editing` 分支。`My project-integration` 是 Codex 的整合与构建工作目录。旧 art/manual-editing 与 safety/pre-visual-rebuild-20261013 保留此次重构前用户改动。不要同时打开两个工程修改同一批资源；后续用户编辑期间不自动覆盖其改动。
 
-GP00、玩法整合及视觉R2使用独立目录 `Reviews/GP00-2026-10-13/workspace`，当前视觉分支 `art/resonance-language-r2`，从art/atmosphere-r1继续，玩法基础为已完成的gameplay/gp-integration。其余工作目录可能正被用户或外部AI使用其他分支；先确认，不自动切换、重置或覆盖。玩法基底说明见Docs/Project/GameplayNext/INTEGRATION.md。
+GP00、玩法整合及视觉R3使用独立目录 `Reviews/GP00-2026-10-13/workspace`，当前视觉分支 `art/harvest-homecoming-r3`，从art/resonance-language-r2继续，玩法基础为已完成的gameplay/gp-integration。其余工作目录可能正被用户或外部AI使用其他分支；先确认，不自动切换、重置或覆盖。玩法基底说明见Docs/Project/GameplayNext/INTEGRATION.md。
 
 四位外部 AI 的历史协作方式保留：用户转发需求、各自独立目录和分支上传，Codex审查接线合并。旧TASKS_01..08、实验和交接板已移除，不能重新执行。玩法第一轮已整合，用户现阶段要求把它作为基底，暂停继续打磨和扩展玩法，不自动执行旧任务卡里的后续派工。未经用户授权不主动联系其他AI。
 

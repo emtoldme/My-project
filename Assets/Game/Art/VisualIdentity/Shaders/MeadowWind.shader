@@ -14,6 +14,7 @@ Shader "Reverb/Meadow Wind"
         _GroundMask("Painted terrain / foliage mask",2D)="white"{}
         _FieldBounds("Terrain X Z width depth",Vector)=(-48,-48,96,96)
         _Clearing("Clearing X Z radius",Vector)=(0,0,3.2,0)
+        _DressingMap("R height / G density / B ripeness",2D)="white"{}
     }
     SubShader
     {
@@ -24,7 +25,9 @@ Shader "Reverb/Meadow Wind"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
         TEXTURE2D(_BaseMap);SAMPLER(sampler_BaseMap);
         TEXTURE2D(_GroundMask);SAMPLER(sampler_GroundMask);
+        TEXTURE2D(_DressingMap);SAMPLER(sampler_DressingMap);
         float4 _ReverbPlayer;
+        float4 _ReverbPickupReveal[8];int _ReverbPickupCount;
         float4 _ReverbWeather,_ReverbWind;
         CBUFFER_START(UnityPerMaterial)
         float4 _BaseMap_ST;half4 _BaseColor;float4 _WindDirection,_FieldBounds,_Clearing;
@@ -33,6 +36,8 @@ Shader "Reverb/Meadow Wind"
         float3 Bend(float3 p)
         {
             float3 w=TransformObjectToWorld(p);
+            float2 fieldUV=(w.xz-_FieldBounds.xy)/max(_FieldBounds.zw,float2(1,1));
+            float dressing=SAMPLE_TEXTURE2D_LOD(_DressingMap,sampler_DressingMap,fieldUV,0).r;
             float t=lerp(_Time.y,_VisualTime,_UseExternalTime);
             float h=pow(saturate(p.y/max(_PlantHeight,0.1)),1.8);
             float front=sin(dot(w.xz,float2(.16,.11))-t*.9);
@@ -41,6 +46,13 @@ Shader "Reverb/Meadow Wind"
             w.xz+=normalize(wind)*wave*_WindStrength*h*(1+_ReverbWind.z*2.5);
             float2 away=w.xz-_ReverbPlayer.xz;
             w.xz+=normalize(away+float2(.0001,.0001))*exp(-dot(away,away)*.55)*h*.42*_ReverbPlayer.w;
+            float reveal=(1-smoothstep(1.2,3.8,length(away)))*_ReverbPlayer.w;
+            [loop] for(int j=0;j<_ReverbPickupCount;j++)
+                reveal=max(reveal,(1-smoothstep(.35,1.1,distance(w.xz,_ReverbPickupReveal[j].xz)))*.9);
+            float stalk=min(max(p.y,0),_PlantHeight);
+            w.y-=stalk*(1-dressing);
+            w.y-=stalk*dressing*reveal*.72;
+            w.xz+=normalize(float2(.85,.5))*(1-dressing)*h*.5;
             return w;
         }
         void ClipLanes(float3 w)
@@ -48,6 +60,9 @@ Shader "Reverb/Meadow Wind"
             float2 uv=(w.xz-_FieldBounds.xy)/max(_FieldBounds.zw,float2(1,1));
             clip(SAMPLE_TEXTURE2D_LOD(_GroundMask,sampler_GroundMask,uv,0).r-.35);
             clip(length(w.xz-_Clearing.xy)-_Clearing.z);
+            float density=SAMPLE_TEXTURE2D_LOD(_DressingMap,sampler_DressingMap,uv,0).g;
+            float patch=frac(sin(dot(floor(w.xz*1.6),float2(34.2,17.7)))*4137.31);
+            clip(density-patch*.85);
         }
         void ClipAlpha(half alpha,float3 w)
         {
@@ -84,7 +99,9 @@ Shader "Reverb/Meadow Wind"
                 half3 sky=max(SampleSH(half3(0,1,0)),half3(0.1,0.13,0.16));
                 half4 tex=SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,i.uv);ClipAlpha(tex.a,i.w);
                 half3 albedo=tex.rgb*_BaseColor.rgb;
-                albedo*=lerp(half3(.55,.7,.54),half3(1.03,.97,.72),i.height);
+                float ripe=SAMPLE_TEXTURE2D(_DressingMap,sampler_DressingMap,(i.w.xz-_FieldBounds.xy)/_FieldBounds.zw).b;
+                albedo*=lerp(half3(.65,.74,.58),half3(1.03,1,.89),i.height);
+                albedo*=lerp(half3(.83,.94,.81),half3(1.04,.99,.88),ripe);
                 half3 diffuse=sky*0.9+light.color*(0.4+wrap*0.6)*lerp(0.38,1,light.shadowAttenuation);
                 albedo*=lerp(1,.8,_ReverbWeather.y);
                 half3 color=albedo*diffuse;
