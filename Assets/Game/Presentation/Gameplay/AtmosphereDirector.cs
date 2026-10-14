@@ -14,6 +14,7 @@ namespace Reverb.Drafts.RC01.Presentation
         public CameraFollow cameraRig;
         public Material volumeMaterial, splashMaterial, sparkMaterial;
         public bool scenicView;
+        public bool humanAndGhosts;
         public int FootstepsEmitted { get; private set; }
         public int ImpactsEmitted { get; private set; }
         public int LightVolumeCount => cones.Count;
@@ -60,7 +61,7 @@ namespace Reverb.Drafts.RC01.Presentation
             {
                 var go = new GameObject("Brief impact light " + i); go.transform.SetParent(transform, false);
                 var light = go.AddComponent<Light>(); light.type = LightType.Point; light.range = 2.2f;
-                light.color = new Color(1f,.72f,.38f); light.intensity = 0; light.shadows = LightShadows.None; flashes[i] = light;
+                light.color = humanAndGhosts?new Color(1,.13f,.09f):new Color(1f,.72f,.38f); light.intensity = 0; light.shadows = LightShadows.None; flashes[i] = light;
             }
             visual = loop.playerView != null ? loop.playerView.Find("Visual") : null;
             if (visual != null) visualOrigin = visual.localPosition;
@@ -115,7 +116,7 @@ namespace Reverb.Drafts.RC01.Presentation
                 int count = item.Type == PresentationEventType.EnemyKilled ? 7 : 3;
                 for (int i = 0; i < count && sparkBudget < 24; i++,sparkBudget++)
                     sparks.Emit(new ParticleSystem.EmitParams { position = position, velocity = new Vector3(RandomSigned()*2,1.2f+Next()*2,RandomSigned()*2),
-                        startSize = .03f+Next()*.025f, startLifetime = .18f+Next()*.2f, startColor = new Color(1f,.63f,.26f,.8f) },1);
+                        startSize = .03f+Next()*.025f, startLifetime = .18f+Next()*.2f, startColor = humanAndGhosts?new Color(.85f,.065f,.075f,.7f):new Color(1f,.63f,.26f,.8f) },1);
                 ImpactsEmitted++;
                 int index = ImpactsEmitted % 2; flashes[index].transform.position = position;
                 flashUntil[index] = loop.Sim.State.Now + .07f;
@@ -164,7 +165,7 @@ namespace Reverb.Drafts.RC01.Presentation
             recoil*=Mathf.Exp(-dt*17);
             if(visual!=null)
             {
-                visual.localPosition=visualOrigin+recoil+Vector3.up*(delta.sqrMagnitude>.0001f?Mathf.Sin(now*16)*.018f:0);
+                visual.localPosition=visualOrigin+recoil+Vector3.up*(!humanAndGhosts&&delta.sqrMagnitude>.0001f?Mathf.Sin(now*16)*.018f:0);
                 var angle=visual.localEulerAngles;
                 Vector3 velocity=delta/Mathf.Max(dt,.001f);
                 angle.x=Mathf.Clamp(-velocity.z*.35f,-3,3);angle.z=Mathf.Clamp(velocity.x*.35f,-3,3);visual.localEulerAngles=angle;
