@@ -73427,7 +73427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1263192049
 Transform:
   m_ObjectHideFlags: 0
@@ -74914,15 +74914,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Reverb.Drafts.RC01.Presentation::Reverb.Drafts.RC01.Presentation.ProceduralFieldStreamer
   loop: {fileID: 1268887280}
   authoredTerrain: {fileID: 1780799376}
-  authoredWheat: {fileID: 1263192049}
+  authoredWheat: {fileID: 1870196098}
   authoredDressing: {fileID: 2800000, guid: 237bf3d000c89e24681ea3efcc9e96da, type: 2}
   groundMaterial: {fileID: 2100000, guid: 730768f2a0db06e4dba47beb4229975d, type: 2}
-  wheatMaterial: {fileID: 2100000, guid: 6ab0d969f642058499dd5a460f936c9d, type: 2}
+  wheatMaterial: {fileID: 2100000, guid: d31fbc38e5c42294fb5591c339c4ffda, type: 2}
   stalkMeshes:
-  - {fileID: 4300000, guid: 1089f3b957393814793e64dd9dac6cbe, type: 2}
-  - {fileID: 4300000, guid: 81aebc8a78ebad842954c4dce96ef04a, type: 2}
-  - {fileID: 4300000, guid: 89ec0adf3fd25694bbafb03d90ae6ba8, type: 2}
-  - {fileID: 4300000, guid: fb68f4e5ff233954a8d3921ab6a334cd, type: 2}
+  - {fileID: 4300000, guid: 4de7ff066239bf049a2bffc7b587b5c9, type: 2}
+  - {fileID: 4300000, guid: 2d2d242eefd21c44f8bfecb1387d27e2, type: 2}
+  - {fileID: 4300000, guid: fb83ed76e3c17214f8739646f166209a, type: 2}
+  - {fileID: 4300000, guid: 29aa7615b1716dc4699e1ebfd8ca66da, type: 2}
+  mediumStalkMeshes:
+  - {fileID: 4300000, guid: fd3d2cc12edfd63409905d541f14945c, type: 2}
+  - {fileID: 4300000, guid: 304d77cf6defdee498ff6826795a0d10, type: 2}
+  - {fileID: 4300000, guid: f010b6e7be4fc4a41b9bb42428e14ae3, type: 2}
+  - {fileID: 4300000, guid: d7efd3c9d4ae56b49b286d137ecebd66, type: 2}
+  distantStalkMeshes:
+  - {fileID: 4300000, guid: c2e444cad347a29479cd572114c7d8fa, type: 2}
+  - {fileID: 4300000, guid: 6cafe0a65f8a05a42afa7a1d51f4eeec, type: 2}
+  - {fileID: 4300000, guid: f7433a010265f7c4197cf214ddb5099d, type: 2}
+  - {fileID: 4300000, guid: 3013fc5d229d7374d99d130472a488c6, type: 2}
   landmarkPrefabs:
   - {fileID: 822037102227843457, guid: 2df746ea889b2684fadd5e79489ff757, type: 3}
   - {fileID: 1223234953108352110, guid: 239ff63f70b22444e855602152074786, type: 3}
@@ -106330,6 +106340,7 @@ Transform:
   - {fileID: 1263192049}
   - {fileID: 1846672621}
   - {fileID: 1213099796}
+  - {fileID: 1870196098}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1742821816
@@ -112482,6 +112493,59 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1868441026}
   m_Mesh: {fileID: 4300000, guid: 724c67bbc8f46d94192971bb85a47b49, type: 2}
+--- !u!1 &1870196097
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1870196098}
+  - component: {fileID: 1870196099}
+  m_Layer: 0
+  m_Name: "Wheat R5 \xB7 solid field preview"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1870196098
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870196097}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1742821815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1870196099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870196097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9b1481bf1e426c4ba9d5f8fecc494c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.Drafts.RC01.Presentation::Reverb.Drafts.RC01.Presentation.WheatFieldPreview
+  terrain: {fileID: 1780799376}
+  dressing: {fileID: 2800000, guid: 237bf3d000c89e24681ea3efcc9e96da, type: 2}
+  material: {fileID: 2100000, guid: d31fbc38e5c42294fb5591c339c4ffda, type: 2}
+  meshes:
+  - {fileID: 4300000, guid: 4de7ff066239bf049a2bffc7b587b5c9, type: 2}
+  - {fileID: 4300000, guid: 2d2d242eefd21c44f8bfecb1387d27e2, type: 2}
+  - {fileID: 4300000, guid: fb83ed76e3c17214f8739646f166209a, type: 2}
+  - {fileID: 4300000, guid: 29aa7615b1716dc4699e1ebfd8ca66da, type: 2}
+  streamer: {fileID: 1268887295}
 --- !u!1 &1872185210
 GameObject:
   m_ObjectHideFlags: 0
