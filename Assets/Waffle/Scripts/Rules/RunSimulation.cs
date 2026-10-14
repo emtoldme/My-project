@@ -77,6 +77,7 @@ namespace Waffle
             if (combatConfig != null)
             {
                 combatConfig.runDuration = Config.runDuration;
+                combatConfig.unboundedWorld = Config.unboundedWorld;
                 combatConfig.arenaHalfSize = Config.arenaHalfExtent + combatConfig.playerRadius;
                 combatConfig.spawnLegalHalf = Math.Max(0f, combatConfig.arenaHalfSize - 1f);
                 combatConfig.gemLifetime = Config.gemLifetime;
@@ -296,8 +297,8 @@ namespace Waffle
             float dz = dodgeZ * Config.dodgeSpeed * dodgeDt + mz * speed * (dt - dodgeDt);
             dodgeLeft = Math.Max(0f, dodgeLeft - dt);
             float limit = Config.arenaHalfExtent;
-            PlayerX = Math.Max(-limit, Math.Min(limit, PlayerX + dx));
-            PlayerZ = Math.Max(-limit, Math.Min(limit, PlayerZ + dz));
+            PlayerX = Config.unboundedWorld ? PlayerX + dx : Math.Max(-limit, Math.Min(limit, PlayerX + dx));
+            PlayerZ = Config.unboundedWorld ? PlayerZ + dz : Math.Max(-limit, Math.Min(limit, PlayerZ + dz));
         }
 
         private void ApplyDamage(int amount, float now)
@@ -348,7 +349,7 @@ namespace Waffle
             {
                 double a = i * Math.PI * 2 / count;
                 var p = new Vec2(PlayerX + (float)Math.Cos(a) * (gems ? 2f : 6f), PlayerZ + (float)Math.Sin(a) * (gems ? 2f : 6f));
-                p = new Vec2(Math.Max(-Config.arenaHalfExtent, Math.Min(Config.arenaHalfExtent, p.X)),
+                if(!Config.unboundedWorld)p = new Vec2(Math.Max(-Config.arenaHalfExtent, Math.Min(Config.arenaHalfExtent, p.X)),
                     Math.Max(-Config.arenaHalfExtent, Math.Min(Config.arenaHalfExtent, p.Y)));
                 if (gems) Combat.DebugSpawnGem(p, 1); else Combat.DebugSpawnEnemy(p);
             }

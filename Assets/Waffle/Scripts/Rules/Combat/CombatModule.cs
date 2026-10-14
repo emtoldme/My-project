@@ -419,7 +419,7 @@ namespace Waffle.Combat
             return ClampSquare(p, Config.spawnLegalHalf); // 防御：R_view 过大时仍保证在场地内
         }
 
-        private bool IsLegal(Vec2 p) { return Math.Abs(p.X) <= Config.spawnLegalHalf && Math.Abs(p.Y) <= Config.spawnLegalHalf; }
+        private bool IsLegal(Vec2 p) { return Config.unboundedWorld || Math.Abs(p.X) <= Config.spawnLegalHalf && Math.Abs(p.Y) <= Config.spawnLegalHalf; }
 
         private Vec2 MoveDirOrRandom()
         {
@@ -477,7 +477,7 @@ namespace Waffle.Combat
                     allowRelocation = movement.AllowRelocation && !e.IsBoss;
                 }
                 float lim = Config.arenaHalfSize - e.Radius;
-                e.Position = ClampSquare(e.Position + vel * dt, lim);
+                e.Position = Config.unboundedWorld ? e.Position + vel * dt : ClampSquare(e.Position + vel * dt, lim);
 
                 if (allowRelocation && Vec2.Distance(e.Position, player) > relocateDist)
                 {
@@ -600,7 +600,7 @@ namespace Waffle.Combat
                 { p.Returning = true; p.Travelled = 0; p.HitKeys.Clear(); p.PierceLeft = 1; }
                 if ((p.PierceLeft <= 0 && (!p.ReturnAllowed || p.Returning)) || p.Age >= p.Lifetime || (!p.ReturnAllowed && p.Travelled >= p.MaxDistance)
                     || (p.Returning && Vec2.SqrDistance(p.Position, player) < .25f)
-                    || Math.Abs(b1.X) > lim || Math.Abs(b1.Y) > lim)
+                    || !Config.unboundedWorld && (Math.Abs(b1.X) > lim || Math.Abs(b1.Y) > lim))
                 {
                     p.Finished = true;
                     projectileRecycle.Add(p);

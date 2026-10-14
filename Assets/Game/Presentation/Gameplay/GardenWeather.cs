@@ -222,7 +222,7 @@ namespace Reverb.Drafts.RC01.Presentation
             for (int i = 0; i < count; i++)
             {
                 Vector3 p = center + new Vector3(((float)random.NextDouble() - .5f) * 29, 0, ((float)random.NextDouble() - .5f) * 29);
-                p.y = ground != null ? ground.SampleHeight(p) + ground.transform.position.y + .035f : .035f;
+                p.y = ground != null && ground.isActiveAndEnabled ? ground.SampleHeight(p) + ground.transform.position.y + .035f : .035f;
                 var emit = new ParticleSystem.EmitParams { position = p, startSize = .18f + (float)random.NextDouble() * .25f, startLifetime = .35f + (float)random.NextDouble() * .2f };
                 splashes.Emit(emit, 1);
             }

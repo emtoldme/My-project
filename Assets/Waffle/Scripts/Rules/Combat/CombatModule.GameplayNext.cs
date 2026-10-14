@@ -115,8 +115,8 @@ namespace Waffle.Combat
                 || !GameplayGeometry.Finite(spec.Radius) || spec.Radius <= 0 || spec.Radius > 5
                 || spec.ContactDamage < 0 || spec.ContactDamage > 10000 || spec.GemValue < 0 || spec.GemValue > 10000
                 || spec.IsBoss != (slot == 2) || spec.IsBoss && (bossSpawned || HasPendingBoss())
-                || Math.Abs(request.Position.X) > Config.arenaHalfSize - spec.Radius
-                || Math.Abs(request.Position.Y) > Config.arenaHalfSize - spec.Radius) return;
+                || !Config.unboundedWorld && (Math.Abs(request.Position.X) > Config.arenaHalfSize - spec.Radius
+                || Math.Abs(request.Position.Y) > Config.arenaHalfSize - spec.Radius)) return;
             lastSpawnSequence[slot] = request.Sequence;
             pendingSpawns.Add(new SpawnWarningSnapshot(new GameplayRequestKey((GameplayModuleKind)slot, request.Sequence), request, now + request.WarningSeconds));
         }

@@ -217,7 +217,8 @@ namespace Waffle.Combat
             {
                 knockReady[Key(e)] = now + .5f;
                 Vec2 dir = (e.Position - player).Normalized;
-                e.Position = ClampSquare(e.Position + dir * (amount * (e.IsElite ? .35f : 1)), Config.spawnLegalHalf);
+                Vec2 pushed=e.Position + dir * (amount * (e.IsElite ? .35f : 1));
+                e.Position = Config.unboundedWorld ? pushed : ClampSquare(pushed, Config.spawnLegalHalf);
             }
             float echo = runStats.EchoCoef + (source == "E01" ? .8f : 0);
             if (echo > 0 && e.Hp > 0) ScheduleRunHit(e, damage * echo, .5f, PresentationEventType.EchoHit, "P12", source, slot, e.Position, runStats.PropCoef, runStats.PropRadius);

@@ -13,6 +13,7 @@ namespace Waffle.Combat
         // ---- 场地 / 玩家（§1.1） ----
         /// <summary>场地半边长（m），60×60。</summary>
         public float arenaHalfSize = 30f;
+        public bool unboundedWorld;
         /// <summary>玩家碰撞半径（m），接触判定用。</summary>
         public float playerRadius = 0.5f;
         /// <summary>一局时长（s）；now ≥ 该值后不再刷怪。</summary>

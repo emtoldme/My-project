@@ -44,6 +44,8 @@ namespace Waffle
 
         /// <summary>玩家可活动范围半边长（m）：场地 60×60，减去半径 0.5。</summary>
         public float arenaHalfExtent = 29.5f;
+        /// <summary>Exploration maps have no square movement boundary; legacy arenas keep their bounds.</summary>
+        public bool unboundedWorld;
         /// <summary>闪避输入缓冲（s），§1.1。</summary>
         public float dodgeBuffer = 0.1f;
         /// <summary>升级面板防误触（s，unscaled），§1.6。</summary>
