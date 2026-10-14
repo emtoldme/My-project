@@ -181,7 +181,14 @@ namespace Reverb.Drafts.RC01.Presentation
             }
         }
         static Transform Surface(string name,Transform parent,Mesh mesh,Material material)
-        {var t=new GameObject(name).transform;t.SetParent(parent,false);t.gameObject.AddComponent<MeshFilter>().sharedMesh=mesh;t.gameObject.AddComponent<MeshRenderer>().sharedMaterial=material;return t;}
+        {
+            var t=new GameObject(name).transform;t.SetParent(parent,false);t.gameObject.AddComponent<MeshFilter>().sharedMesh=mesh;
+            var renderer=t.gameObject.AddComponent<MeshRenderer>();renderer.sharedMaterial=material;
+            // Flat floors receive the wheat/scenery shadows, but must not cast onto
+            // the almost coplanar streaming underlay (large unstable dark patches).
+            if(name!="Wind rye and stubble")renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
+            return t;
+        }
         void HideAuthored(){authoredTerrain.gameObject.SetActive(false);authoredWheat.gameObject.SetActive(false);}
         void OnEnable(){if(initialized){HideAuthored();generated.gameObject.SetActive(true);}}
         void OnDisable(){if(initialized){if(generated!=null)generated.gameObject.SetActive(false);if(authoredTerrain!=null)authoredTerrain.gameObject.SetActive(terrainActive);if(authoredWheat!=null)authoredWheat.gameObject.SetActive(wheatActive);}}

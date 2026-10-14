@@ -1,13 +1,13 @@
 # 自己修改美术
 
-使用 `G:/图书馆/新建文件夹 (2)/My project` 工程，Unity 版本 6000.4.3f1。打开 **Reverb → 美术工作台 → 打开主场景**，或双击 `Assets/Game/Scenes/Main.unity`。按 Play 可直接体验当前完整玩法。
+当前R7工程为 `G:/图书馆/新建文件夹 (2)/Reviews/GP00-2026-10-13/workspace`，分支 `art/human-echoes-r7`，Unity 版本6000.4.3f1；其他旧工程不会自动同步。打开 **Reverb → 美术工作台 → 打开主场景**，或双击 `Assets/Game/Scenes/Main.unity`。按Play，从出发界面开始。
 
 停止 Play 后再改并保存。运行中生成的敌人、子弹和特效是临时实例；要长期保存效果，请改它们的 Prefab、材质或场景上的绑定。当前新视觉分支为 `art/visual-editing`；旧 `art/manual-editing` 和 safety/pre-visual-rebuild-20261013 保留重构前的本地改动。
 
 | 想改什么 | 入口与方法 |
 |---|---|
-| 主角 | 工作台“选择玩家外观”，修改 Player/Visual；外观源为 Art/VisualIdentity/Prefabs/P_Player_Ceramic.prefab，材质 Player_Ceramic.mat。保留 Player 移动根与 Visual，替换模型脚底对齐地面，当前身高1.85米。 |
-| 敌人 | Art/VisualIdentity/Prefabs/P_Enemy_Ceramic.prefab；GameLoop/CombatViews.enemyVisualPrefab 为实际绑定。当前米制身高1.5米，normalizeEnemyVisuals 与 tintEnemyMaterials 关闭。材质 Enemy_Coral.mat。 |
+| 主角 | 工作台“选择玩家外观”或“人类主角与红色幽灵（当前）”；源为 Art/VisualIdentity/HumanEchoesR7/Fieldwalker.prefab、Human_Fieldwalker.fbx。材质在同目录，Blender副本在SourceArt/HumanEchoesR7。保留Player移动根与Visual；源身高1.75米、Main缩放1.12，HumanMotion只改骨骼姿态。旧机甲停用保留。 |
+| 敌人 | Art/VisualIdentity/HumanEchoesR7/RedGhost.prefab；GameLoop/CombatViews.enemyVisualPrefab实际绑定，redGhostPalette与tintEnemyMaterials开启，normalizeEnemyVisuals关闭。材质RedGhost/GhostFace，RedGhostView只读快照控制漂浮/衣摆；死亡残影池固定12。不同种类仍由原规则及体型区分。 |
 | 子弹与经验宝石 | GameLoop → CombatViews 的 projectileVisualPrefab/gemVisualPrefab 与尺寸字段。未绑定时沿用现有简单形体；绑定 Prefab 后保留其自身材质。模型不需要碰撞或伤害组件。 |
 | 环绕物与道具 | GameLoop → RC01BattleView 的 orbitVisualPrefab/pickupVisualPrefab、orbitSurface/pickupSurface。关闭 tintPickups 可保留自定义道具材质；开启时按功能上色。 |
 | 地面与道路 | 主场景 Acoustic Garden/Garden Terrain，地形数据 Environments/AcousticGarden/Terrain/AcousticGarden.asset。用 Terrain/Paint Texture 画三层：TrampledPath道路、DrySoil底土、DenseStraw秸秆。道路层是第0层，画完点击工作台“更新植被遮罩”。旧主场景的延伸平面已移除。 |

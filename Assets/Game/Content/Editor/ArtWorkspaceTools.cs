@@ -100,7 +100,8 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
                 var loop=UnityEngine.Object.FindAnyObjectByType<GameLoop>();
                 if(loop!=null) { Selection.activeGameObject=loop.gameObject; EditorGUIUtility.PingObject(loop); }
             }
-            Folder("角色、子弹、晶体与环绕物 Prefab","Assets/Game/Art/VisualIdentity/Prefabs");
+            Folder("人类主角与红色幽灵（当前）","Assets/Game/Art/VisualIdentity/HumanEchoesR7");
+            Folder("子弹、晶体、环绕物与旧角色 Prefab","Assets/Game/Art/VisualIdentity/Prefabs");
             Folder("声学花园地形与设施","Assets/Game/Environments/AcousticGarden");
             Folder("当前 PBR 材质","Assets/Game/Art/VisualIdentity/Materials");
             Folder("灯光调色与反射","Assets/Game/Art/VisualIdentity/Lighting");

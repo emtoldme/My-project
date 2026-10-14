@@ -24,6 +24,7 @@ namespace Reverb.Drafts.RC01.Presentation
         public GameLoop loop;
         public Light sun;
         public Texture2D cloudShadow;
+        public Material cloudBlendMaterial;
         [Min(10)] public float cloudShadowScale = 38;
         [Range(0, 2)] public float cloudSpeed = .35f;
         public Terrain ground;
@@ -57,6 +58,10 @@ namespace Reverb.Drafts.RC01.Presentation
         Vector2 originalCookieSize, originalCookieOffset;
         float nextLightning = 9, flashStart = -100, splashCarry;
         bool initialized;
+        RenderTexture continuousCookie;
+        Material cookieBlend;
+        public float CloudCover {get;private set;}
+        public Texture ActiveCloudCookie => continuousCookie;
 
         sealed class RendererBinding { public Renderer renderer; public Material[] original; }
         sealed class WetMaterial { public Material runtime; public Color color; public float smoothness; }
@@ -78,6 +83,14 @@ namespace Reverb.Drafts.RC01.Presentation
                 sunColor = sun.color; sunIntensity = sun.intensity; sunRotation = sun.transform.rotation;
                 originalCookie = sun.cookie; sunData = sun.GetComponent<UniversalAdditionalLightData>();
                 if (sunData != null) { originalCookieSize = sunData.lightCookieSize; originalCookieOffset = sunData.lightCookieOffset; }
+                if(cloudShadow!=null&&cloudBlendMaterial!=null)
+                {
+                    cookieBlend=new Material(cloudBlendMaterial);
+                    cookieBlend.SetTexture("_ClearTex",originalCookie!=null?originalCookie:Texture2D.whiteTexture);
+                    continuousCookie=new RenderTexture(256,256,0,RenderTextureFormat.ARGB32,RenderTextureReadWrite.Linear)
+                    {name="Continuous weather cloud cookie",wrapMode=TextureWrapMode.Repeat,filterMode=FilterMode.Bilinear,useMipMap=true,autoGenerateMips=true};
+                    continuousCookie.Create();sun.cookie=continuousCookie;
+                }
             }
             if (reflection != null) reflectionIntensity = reflection.intensity;
             originalSky = RenderSettings.skybox;
@@ -190,8 +203,17 @@ namespace Reverb.Drafts.RC01.Presentation
             {
                 sun.color = Color.Lerp(sunColor, new Color(.7f, .82f, 1), overcast);
                 sun.intensity = Mathf.Lerp(sunIntensity, .72f, overcast) + LightningFlash * 3.4f;
-                sun.transform.rotation = sunRotation * Quaternion.Euler(0, Mathf.Sin(now * .025f) * 5 * CurrentRain, 0);
-                sun.cookie = CurrentRain > .03f && LightningFlash < .1f && cloudShadow != null ? cloudShadow : originalCookie;
+                // Stable celestial direction prevents cascades crawling across a static road.
+                // Cookie identity stays fixed even during lightning; only its pixels blend.
+                sun.transform.rotation = sunRotation;
+                CloudCover=CurrentRain*.7f;
+                if(continuousCookie!=null)
+                {
+                    cookieBlend.SetFloat("_Cover",CloudCover);
+                    var active=RenderTexture.active;
+                    Graphics.Blit(cloudShadow,continuousCookie,cookieBlend);
+                    RenderTexture.active=active;
+                }
                 if (sunData != null)
                 {
                     sunData.lightCookieSize = Vector2.one * cloudShadowScale;
@@ -241,6 +263,8 @@ namespace Reverb.Drafts.RC01.Presentation
             RenderSettings.fog = fogEnabled; RenderSettings.fogStartDistance = fogStart; RenderSettings.fogEndDistance = fogEnd;
             if (sun != null) { sun.color = sunColor; sun.intensity = sunIntensity; sun.transform.rotation = sunRotation; sun.cookie = originalCookie; }
             if (sunData != null) { sunData.lightCookieSize = originalCookieSize; sunData.lightCookieOffset = originalCookieOffset; }
+            if(continuousCookie!=null){continuousCookie.Release();Destroy(continuousCookie);continuousCookie=null;}
+            if(cookieBlend!=null){Destroy(cookieBlend);cookieBlend=null;}
             if (reflection != null) reflection.intensity = reflectionIntensity;
             foreach (var binding in localLights) if (binding.light != null)
             { binding.light.intensity = binding.intensity; binding.light.transform.rotation = binding.rotation; }

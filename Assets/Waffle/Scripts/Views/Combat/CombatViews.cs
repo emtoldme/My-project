@@ -18,6 +18,8 @@ namespace Waffle
         public bool tintEnemyMaterials = true;
         public bool normalizeEnemyVisuals = true;
         [Min(.5f)] public float enemyVisualHeight = 1.5f;
+        public bool redGhostPalette;
+        public bool animatePlayerRoot = true;
         private sealed class Slot
         {
             public Transform root;
@@ -26,6 +28,9 @@ namespace Waffle
             public int serial;
             public float flash;
             public bool seen;
+            public IEnemyVisualPose[] poses;
+            public Vector3 previous;
+            public float previousTime;
         }
         private Slot[] enemies, projectiles, gems;
         private MaterialPropertyBlock block;
@@ -98,7 +103,10 @@ namespace Waffle
                 }
                 if (material != null && prefab == null) foreach (var r in renderers) r.sharedMaterial = material;
                 root.gameObject.SetActive(false);
-                slots[i] = new Slot { root = root, renderers = renderers, trails = body.GetComponentsInChildren<TrailRenderer>() };
+                var poses = new List<IEnemyVisualPose>();
+                foreach (var component in body.GetComponentsInChildren<MonoBehaviour>(true))
+                    if (component is IEnemyVisualPose pose) poses.Add(pose);
+                slots[i] = new Slot { root = root, renderers = renderers, trails = body.GetComponentsInChildren<TrailRenderer>(), poses = poses.ToArray() };
             }
             return slots;
         }
@@ -135,8 +143,13 @@ namespace Waffle
                 if (!e.IsAlive) continue;
                 Slot slot = enemies[e.PoolIndex];
                 slot.seen = true;
-                if (slot.serial != e.Serial) { slot.serial = e.Serial; slot.flash = 0f; }
-                slot.flash = Mathf.Max(0f, slot.flash - dt);
+                bool recycled = slot.serial != e.Serial;
+                if (recycled) { slot.serial = e.Serial; slot.flash = 0f; }
+                float elapsed = Mathf.Max(0, sim.State.Now - slot.previousTime);
+                slot.flash = Mathf.Max(0f, slot.flash - elapsed);
+                var position = new Vector3(e.Position.X, 0f, e.Position.Y);
+                Vector3 velocity = !recycled && elapsed > .00001f && elapsed < .5f ? (position-slot.previous)/elapsed : Vector3.zero;
+                slot.previous=position; slot.previousTime=sim.State.Now;
                 slot.root.gameObject.SetActive(true);
                 slot.root.position = new Vector3(e.Position.X, 0f, e.Position.Y);
                 Vector3 toward = new Vector3(sim.PlayerX - e.Position.X, 0f, sim.PlayerZ - e.Position.Y);
@@ -149,10 +162,15 @@ namespace Waffle
                 if (e.IsBoss) tint = new Color(.48f, .2f, .5f);
                 else if (charger) tint = new Color(1f, .68f, .2f);
                 else if (dropper) tint = new Color(.32f, .7f, .78f);
+                if (redGhostPalette) tint = e.IsBoss ? new Color(.46f,.035f,.055f)
+                    : charger ? new Color(.85f,.095f,.045f) : dropper ? new Color(.54f,.035f,.09f)
+                    : e.IsElite ? new Color(.78f,.055f,.075f) : new Color(.66f,.055f,.055f);
                 block.Clear(); block.SetColor(BaseColor, slot.flash > 0f ? Color.Lerp(tint,new Color(.95f,.82f,.58f),.35f) : tint);
                 block.SetColor(Emission, slot.flash > 0f ? new Color(.45f,.33f,.19f) : Color.black);
                 foreach (var r in slot.renderers)
                     r.SetPropertyBlock(tintEnemyMaterials || charger || dropper || e.IsBoss || slot.flash > 0f ? block : null);
+                var pose = new EnemyVisualPose(e.Serial,sim.State.Now,slot.flash/.06f,velocity,recycled,e.IsElite,e.IsBoss,e.ArchetypeId);
+                foreach (var animation in slot.poses) animation.Present(in pose);
                 VisibleEnemies++;
             }
             foreach (var p in combat.Projectiles)
@@ -191,12 +209,19 @@ namespace Waffle
                 var target = combat.FindNearestTarget();
                 Vector3 aim = target != null ? new Vector3(target.Position.X - sim.PlayerX, 0f, target.Position.Y - sim.PlayerZ) : movement;
                 if (aim.sqrMagnitude > 0.0001f) playerVisual.rotation = Quaternion.Slerp(playerVisual.rotation, Quaternion.LookRotation(aim), Mathf.Min(1f, dt * 18f));
-                float bob = movement.sqrMagnitude > 0.00001f ? Mathf.Sin(sim.State.Now * 16f) * 0.035f : 0f;
+                float bob = animatePlayerRoot && movement.sqrMagnitude > 0.00001f ? Mathf.Sin(sim.State.Now * 16f) * 0.035f : 0f;
                 playerVisual.localPosition = playerBasePosition + Vector3.up * bob;
                 // Rigid mech: movement and a trail communicate dodge, without deforming its skeleton.
                 playerVisual.localScale = playerBaseScale;
             }
             if (loop.playerView != null) previousPlayer = loop.playerView.position;
+        }
+
+        public bool TryGetEnemyVisual(int serial, out Vector3 scale, out Quaternion rotation)
+        {
+            if (enemies != null) foreach (var slot in enemies)
+                if (slot.serial == serial) { scale=slot.root.localScale; rotation=slot.root.rotation; return true; }
+            scale=Vector3.one; rotation=Quaternion.identity; return false;
         }
 
         private static void Hide(Slot[] slots)
