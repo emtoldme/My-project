@@ -8,6 +8,8 @@
 
 2026-10-14最新美术授权：将麦子从贴片换成模型，支持麦浪和透光。立体麦田R5在独立 `art/volumetric-wheat-r5` 分支，从HC02继续；同一Reviews/GP00-2026-10-13/workspace。入口Docs/WHEAT_VOLUME_R5.md。Main序列化使用WheatR5模型/材质，远景仍为模型；旧RyeCard组停用保留。WheatFieldPreview只做编辑/流式禁用后的预览，不再引入第二套运行地图。风读取规则时钟，沿用玩家/掉落压草、天气、阴影和49块回收；只验证本次模块。
 
+2026-10-14最新反馈：角色/麦子互动突兀，光照与麦子着色简单、塑料感强。本轮 `art/wheat-contact-lighting-r6` 从R5继续，仍在同一独立workspace；入口Docs/WHEAT_CONTACT_R6.md。移除玩家周围整株裁切和瞬时缩短，使用GardenPresentation持有的64×64局部弹簧接触纹理；规则时钟冻结恢复、瞬移重置。麦材质使用纤维图、厚度/遮蔽数据与URP物理光照，保留旧模型/材质GUID，远景仍是模型。仅验证本次模块，不改Gameplay/存档，不用画面截图自称完成美术品质验收。
+
 ## 工作区与协作
 
 2026-10-14 HC02最新授权为在HC01上打磨非线性组合与玩法循环，覆盖旧暂停玩法扩展在此范围的限制。当前分支gameplay/homecoming-resonance-loops，仍在同一独立workspace。入口Docs/Project/HomecomingNext/RESONANCE_LOOPS_HC02.md。共鸣三选一：回针/牵弦/归巢；碎音只来自实际拾取，返灯使用已熟悉的兴趣点，不能凭空发XP/强行改特殊敌人预警或复制一套伤害。存档版本2兼容读入1，新状态属于单局；保留R3/R4视觉世界和10分钟结局。用户没有要求新派工，本轮不主动联系外部AI或启动子代理。
