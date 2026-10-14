@@ -6,6 +6,8 @@
 
 2026-10-14最新授权：新增有叙事文本的兴趣点（主角旧家/老筒仓/老吉他）、独立遗物栏与能力、局外经验/升级、存档及有风味的目标。这一明确请求覆盖上述暂停玩法扩展在这些系统上的旧限制，视觉方向仍沿用R3/R2。用户选择“外部AI任务卡，供我转发”，本轮入口为Docs/Project/HomecomingNext/README.md，HC00 v1共同标签hc00-v1，共同基线分支gameplay/homecoming-next-ready，当前整合分支gameplay/homecoming-integrated。四包分别在独立目录/分支开发；Codex负责共享契约/核心接线/Main/阶段整合。HC01四包现已接入Main，见下方整合约定，不执行旧GameplayNext任务卡，不把接口或独立预览等同完整玩法验收。
 
+2026-10-14最新美术授权：将麦子从贴片换成模型，支持麦浪和透光。立体麦田R5在独立 `art/volumetric-wheat-r5` 分支，从HC02继续；同一Reviews/GP00-2026-10-13/workspace。入口Docs/WHEAT_VOLUME_R5.md。Main序列化使用WheatR5模型/材质，远景仍为模型；旧RyeCard组停用保留。WheatFieldPreview只做编辑/流式禁用后的预览，不再引入第二套运行地图。风读取规则时钟，沿用玩家/掉落压草、天气、阴影和49块回收；只验证本次模块。
+
 ## 工作区与协作
 
 2026-10-14 HC02最新授权为在HC01上打磨非线性组合与玩法循环，覆盖旧暂停玩法扩展在此范围的限制。当前分支gameplay/homecoming-resonance-loops，仍在同一独立workspace。入口Docs/Project/HomecomingNext/RESONANCE_LOOPS_HC02.md。共鸣三选一：回针/牵弦/归巢；碎音只来自实际拾取，返灯使用已熟悉的兴趣点，不能凭空发XP/强行改特殊敌人预警或复制一套伤害。存档版本2兼容读入1，新状态属于单局；保留R3/R4视觉世界和10分钟结局。用户没有要求新派工，本轮不主动联系外部AI或启动子代理。

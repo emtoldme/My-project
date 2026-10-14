@@ -1,6 +1,7 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Reverb.Drafts.RC01.Presentation;
 
 namespace Reverb.Drafts.RC01.Pipeline.EditorTools
 {
@@ -25,6 +26,7 @@ namespace Reverb.Drafts.RC01.Pipeline.EditorTools
             var material=AssetDatabase.LoadAssetAtPath<Material>("Assets/Game/Art/VisualIdentity/Materials/Meadow_Gold.mat");
             material.SetTexture("_GroundMask",AssetDatabase.LoadAssetAtPath<Texture2D>(path));
             material.SetVector("_FieldBounds",new Vector4(terrain.transform.position.x,terrain.transform.position.z,data.size.x,data.size.z));
+            foreach(var preview in Object.FindObjectsByType<WheatFieldPreview>(FindObjectsSortMode.None))preview.RefreshPreview();
             EditorUtility.SetDirty(material);AssetDatabase.SaveAssets();Debug.Log("GARDEN_MASK_UPDATED");
         }
     }

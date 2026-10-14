@@ -17,6 +17,11 @@ namespace Reverb.Drafts.RC01.Presentation
         public Texture2D authoredDressing;
         public Material groundMaterial,wheatMaterial;
         public Mesh[] stalkMeshes;
+        public Mesh[] mediumStalkMeshes, distantStalkMeshes;
+        public int ResidentWheatVertices { get { int n=0; foreach(var c in live.Values)n+=c.wheat.vertexCount;return n; } }
+        public int ResidentWheatTriangles { get { int n=0; foreach(var c in live.Values)n+=(int)c.wheat.GetIndexCount(0)/3;return n; } }
+        public int[] ActiveWheatLods { get { var n=new int[3];foreach(var c in live.Values)n[c.lod]++;return n; } }
+        public float WheatVisualTime=>wind!=null?wind.GetFloat("_VisualTime"):0;
         public GameObject[] landmarkPrefabs;
         [Range(2,4)] public int loadRadius=3;
         public int worldSeed=14104;
@@ -35,12 +40,13 @@ namespace Reverb.Drafts.RC01.Presentation
         readonly List<Vector2Int> pending=new List<Vector2Int>(),removed=new List<Vector2Int>();
         readonly List<Vector3> vertices=new List<Vector3>(40000),normals=new List<Vector3>(40000);
         readonly List<Vector2> uv=new List<Vector2>(40000);
+        readonly List<Vector4> roots=new List<Vector4>(40000);
         readonly List<Color> colors=new List<Color>(40000);
         readonly List<int> indices=new List<int>(150000);
-        Source[] sources;Material wind;Transform generated,fallback;Mesh fallbackMesh;
+        Source[][] levels;Material wind;Transform generated,fallback;Mesh fallbackMesh;
         bool initialized,terrainActive,wheatActive;
         sealed class Source{public Vector3[] vertices,normals;public Vector2[] uv;public int[] indices;}
-        sealed class Chunk{public Vector2Int key;public Transform root;public Mesh ground,wheat;public GameObject landmark;public Light[] lights;}
+        sealed class Chunk{public Vector2Int key;public Transform root;public Mesh ground,wheat;public int lod;public GameObject landmark;public Light[] lights;}
 
         void Start()
         {
@@ -50,7 +56,8 @@ namespace Reverb.Drafts.RC01.Presentation
             Seed=randomizeSeed?unchecked(Environment.TickCount*397^Guid.NewGuid().GetHashCode()):worldSeed;
             Layout=new ProceduralFieldLayout(Seed,authoredTerrain.terrainData,authoredDressing);
             loop.InstallHomecomingWorld(Seed);
-            sources=new Source[stalkMeshes.Length];for(int i=0;i<sources.Length;i++){var m=stalkMeshes[i];sources[i]=new Source{vertices=m.vertices,normals=m.normals,uv=m.uv,indices=m.triangles};}
+            levels=new[]{ReadSources(stalkMeshes),ReadSources(mediumStalkMeshes),ReadSources(distantStalkMeshes)};
+            if(levels[1].Length==0)levels[1]=levels[0];if(levels[2].Length==0)levels[2]=levels[1];
             wind=new Material(wheatMaterial){name="Exploration wheat · run instance"};wind.SetFloat("_ProceduralField",1);wind.SetFloat("_UseExternalTime",1);
             generated=new GameObject("Exploration · resident field chunks").transform;generated.SetParent(transform,false);
             terrainActive=authoredTerrain.gameObject.activeSelf;wheatActive=authoredWheat.gameObject.activeSelf;HideAuthored();
@@ -69,7 +76,7 @@ namespace Reverb.Drafts.RC01.Presentation
             float rain=Shader.GetGlobalVector("_ReverbWeather").x;
             foreach(var chunk in live.Values)if(chunk.lights!=null)foreach(var light in chunk.lights)if(light!=null&&light.color.r>.5f)light.intensity=Mathf.Lerp(.5f,3.2f,rain);
             if(loop.Sim.State.Phase!=RunPhase.Playing)return;
-            Refresh(false);if(pending.Count>0)BuildNext();
+            Refresh(false);if(pending.Count>0)BuildNext();else RefreshDetail();
         }
         public static Vector2Int Coordinate(float x,float z)=>new Vector2Int(Mathf.FloorToInt(x/ChunkSize),Mathf.FloorToInt(z/ChunkSize));
         void Refresh(bool force)
@@ -97,7 +104,31 @@ namespace Reverb.Drafts.RC01.Presentation
             chunk.key=key;chunk.root.name="Field "+key.x+","+key.y;chunk.root.position=new Vector3(key.x*ChunkSize,0,key.y*ChunkSize);
             BuildGround(chunk);BuildWheat(chunk);AddLandmark(chunk);chunk.root.gameObject.SetActive(true);live.Add(key,chunk);GeneratedChunks++;
         }
-        void ClearBuffers(){vertices.Clear();normals.Clear();uv.Clear();colors.Clear();indices.Clear();}
+        static Source[] ReadSources(Mesh[] meshes)
+        {
+            if(meshes==null)return Array.Empty<Source>();
+            var result=new Source[meshes.Length];
+            for(int i=0;i<result.Length;i++){var m=meshes[i];result[i]=new Source{vertices=m.vertices,normals=m.normals,uv=m.uv,indices=m.triangles};}
+            return result;
+        }
+        int Detail(Vector2Int key)
+        {
+            int distance=Mathf.Max(Mathf.Abs(key.x-Center.x),Mathf.Abs(key.y-Center.y));
+            return distance<=1?0:distance<=2?1:2;
+        }
+        void RefreshDetail()
+        {
+            // One existing patch per frame. Nearest detail upgrades precede distant simplification.
+            Chunk next=null;int priority=int.MaxValue;
+            foreach(var chunk in live.Values)
+            {
+                int lod=Detail(chunk.key);if(lod==chunk.lod)continue;
+                int rank=lod*100+(chunk.key-Center).sqrMagnitude;
+                if(rank<priority){next=chunk;priority=rank;}
+            }
+            if(next!=null)BuildWheat(next);
+        }
+        void ClearBuffers(){vertices.Clear();normals.Clear();uv.Clear();roots.Clear();colors.Clear();indices.Clear();}
         void BuildGround(Chunk chunk)
         {
             ClearBuffers();const int grid=12;
@@ -111,7 +142,7 @@ namespace Reverb.Drafts.RC01.Presentation
         }
         void BuildWheat(Chunk chunk)
         {
-            ClearBuffers();const int grid=30;const float spacing=ChunkSize/(float)grid;
+            ClearBuffers();chunk.lod=Detail(chunk.key);var sources=levels[chunk.lod];const int grid=26;const float spacing=ChunkSize/(float)grid;
             for(int z=0;z<grid;z++)for(int x=0;x<grid;x++)
             {
                 int gx=chunk.key.x*grid+x,gz=chunk.key.y*grid+z;
@@ -119,18 +150,21 @@ namespace Reverb.Drafts.RC01.Presentation
                 var sample=Layout.Sample(chunk.key.x*ChunkSize+px,chunk.key.y*ChunkSize+pz);
                 if(sample.Density<.02f||Layout.Random(gx,gz,103)>sample.Density)continue;
                 var source=sources[Mathf.Min(sources.Length-1,(int)(Layout.Random(gx,gz,104)*sources.Length))];
-                float a=Layout.Random(gx,gz,105)*Mathf.PI*2,c=Mathf.Cos(a),s=Mathf.Sin(a),width=.65f+Layout.Random(gx,gz,106)*.35f,height=.68f+Layout.Random(gx,gz,107)*.19f;
+                float a=Layout.Random(gx,gz,105)*Mathf.PI*2,c=Mathf.Cos(a),s=Mathf.Sin(a),width=.86f+Layout.Random(gx,gz,106)*.28f,height=.78f+Layout.Random(gx,gz,107)*.24f;
                 int start=vertices.Count;
                 for(int k=0;k<source.vertices.Length;k++)
                 {
                     var p=source.vertices[k];p=new Vector3(p.x*width,p.y*height,p.z*width);vertices.Add(new Vector3(p.x*c+p.z*s+px,p.y,-p.x*s+p.z*c+pz));
-                    var n=source.normals[k];normals.Add(new Vector3(n.x*c+n.z*s,n.y,-n.x*s+n.z*c));uv.Add(source.uv[k]);colors.Add(new Color(sample.Height,sample.Ripeness,1,1));
+                    var n=source.normals[k];n=new Vector3(n.x/width,n.y/height,n.z/width).normalized;
+                    normals.Add(new Vector3(n.x*c+n.z*s,n.y,-n.x*s+n.z*c));uv.Add(source.uv[k]);
+                    roots.Add(new Vector4(px,pz,WheatGeometry.Height*height,Layout.Random(gx,gz,108)));
+                    colors.Add(new Color(sample.Height,sample.Ripeness,Layout.Random(gx,gz,109),1));
                 }
                 foreach(int index in source.indices)indices.Add(start+index);
             }
             Upload(chunk.wheat);chunk.wheat.bounds=new Bounds(new Vector3(12,1,12),new Vector3(27,5,27));
         }
-        void Upload(Mesh mesh){mesh.Clear();mesh.SetVertices(vertices);mesh.SetNormals(normals);mesh.SetUVs(0,uv);mesh.SetColors(colors);mesh.SetTriangles(indices,0);mesh.RecalculateBounds();}
+        void Upload(Mesh mesh){mesh.Clear();mesh.SetVertices(vertices);mesh.SetNormals(normals);mesh.SetUVs(0,uv);mesh.SetColors(colors);if(roots.Count==vertices.Count)mesh.SetUVs(1,roots);mesh.SetTriangles(indices,0);mesh.RecalculateBounds();}
         void AddLandmark(Chunk chunk)
         {
             int minX=Mathf.FloorToInt(chunk.root.position.x/72)-1,minZ=Mathf.FloorToInt(chunk.root.position.z/72)-1;
