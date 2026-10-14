@@ -20,9 +20,9 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 32
   m_LinearFogEnd: 95
-  m_AmbientSkyColor: {r: 0.46, g: 0.5, b: 0.53, a: 1}
-  m_AmbientEquatorColor: {r: 0.29, g: 0.3, b: 0.25, a: 1}
-  m_AmbientGroundColor: {r: 0.13, g: 0.15, b: 0.13, a: 1}
+  m_AmbientSkyColor: {r: 0.46, g: 0.5, b: 0.54, a: 1}
+  m_AmbientEquatorColor: {r: 0.37, g: 0.36, b: 0.3, a: 1}
+  m_AmbientGroundColor: {r: 0.2, g: 0.18, b: 0.13, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
@@ -66250,8 +66250,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 13
   m_Type: 1
-  m_Color: {r: 1, g: 0.89, b: 0.73, a: 1}
-  m_Intensity: 1.5
+  m_Color: {r: 1, g: 0.91, b: 0.75, a: 1}
+  m_Intensity: 1.6
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -66298,7 +66298,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
+  m_UseViewFrustumForShadowCasterCull: 0
   m_ForceVisible: 0
   m_ShapeRadius: 0.025
   m_ShadowAngle: 0
@@ -73987,7 +73987,6 @@ GameObject:
   - component: {fileID: 1268887296}
   - component: {fileID: 1268887298}
   - component: {fileID: 1268887299}
-  - component: {fileID: 1268887300}
   m_Layer: 0
   m_Name: GameLoop
   m_TagString: Untagged
@@ -75127,22 +75126,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Reverb.Drafts.RC01.Presentation::Reverb.Drafts.RC01.Presentation.GhostDepartureView
   loop: {fileID: 1268887280}
   ghostPrefab: {fileID: 901457879355832731, guid: a0d5cdc89690afa40bc8251a9801ccc2, type: 3}
---- !u!114 &1268887300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1268887277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c789de4f9bf3d334a8837c59eaa47048, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Reverb.Drafts.RC01.Presentation::Reverb.Drafts.RC01.Presentation.SceneLightBudget
-  loop: {fileID: 1268887280}
-  weather: {fileID: 1253426105}
-  maxLocalLights: 8
-  radius: 32
 --- !u!1 &1271036660
 GameObject:
   m_ObjectHideFlags: 0

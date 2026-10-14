@@ -21,6 +21,8 @@ namespace Reverb.Drafts.RC01.Presentation
         public bool useInstancedWheat=true;
         public int SubmittedWheatTriangles {get;private set;}
         public int SubmittedWheatBatches {get;private set;}
+        public int SubmittedShadowPatches {get;private set;}
+        public int OffscreenShadowPatches {get;private set;}
         public bool InstancingActive {get;private set;}
         public int ResidentWheatVertices { get { int n=0;if(InstancingActive&&sharedLevels!=null){foreach(var level in sharedLevels)foreach(var mesh in level)n+=mesh.vertexCount;}else foreach(var c in live.Values)n+=c.wheat.vertexCount;return n; } }
         public int ResidentWheatTriangles { get { int n=0;if(InstancingActive&&sharedLevels!=null){foreach(var level in sharedLevels)foreach(var mesh in level)n+=(int)mesh.GetIndexCount(0)/3;}else foreach(var c in live.Values)n+=(int)c.wheat.GetIndexCount(0)/3;return n; } }
@@ -50,7 +52,7 @@ namespace Reverb.Drafts.RC01.Presentation
         readonly List<Color> colors=new List<Color>(40000);
         readonly List<int> indices=new List<int>(150000);
         Source[][] levels;Material wind;Transform generated,fallback;Mesh fallbackMesh;
-        Mesh[][] sharedLevels;Material[] instanceMaterials;Camera fieldCamera;
+        Mesh[][] sharedLevels;Material[] instanceMaterials;Camera fieldCamera;Light fieldSun;
         readonly Plane[] frustum=new Plane[6];
         bool initialized,terrainActive,wheatActive;
         sealed class Source{public Vector3[] vertices,normals;public Vector2[] uv;public Vector4[] surface;public int[] indices;}
@@ -74,6 +76,7 @@ namespace Reverb.Drafts.RC01.Presentation
                 if(sharedLevels[1]==null||sharedLevels[1].Length==0)sharedLevels[1]=sharedLevels[0];if(sharedLevels[2]==null||sharedLevels[2].Length==0)sharedLevels[2]=sharedLevels[1];
                 instanceMaterials=new Material[3];for(int i=0;i<3;i++){instanceMaterials[i]=new Material(wind){name="Wheat shared detail "+i,enableInstancing=true};instanceMaterials[i].SetFloat("_InstancedField",1);instanceMaterials[i].SetFloat("_DetailQuality",i);}
                 fieldCamera=loop.gameplayCamera!=null?loop.gameplayCamera:Camera.main;
+                fieldSun=FindAnyObjectByType<GardenWeather>()?.sun;
             }
             Shader.SetGlobalFloat("_ReverbFieldPhase",Layout.Random(0,0,19)*6.28f);
             generated=new GameObject("Exploration · resident field chunks").transform;generated.SetParent(transform,false);
@@ -208,16 +211,28 @@ namespace Reverb.Drafts.RC01.Presentation
         }
         void DrawInstanced()
         {
-            SubmittedWheatTriangles=SubmittedWheatBatches=0;if(fieldCamera==null)return;
+            SubmittedWheatTriangles=SubmittedWheatBatches=SubmittedShadowPatches=OffscreenShadowPatches=0;if(fieldCamera==null)return;
             GeometryUtility.CalculateFrustumPlanes(fieldCamera,frustum);
             foreach(var material in instanceMaterials)material.SetFloat("_VisualTime",loop.Sim.State.Now);
             var player=new Vector3(loop.Sim.PlayerX,0,loop.Sim.PlayerZ);
             foreach(var chunk in live.Values)if(chunk.patches!=null)foreach(var patch in chunk.patches)
             {
-                // Retain an offscreen caster margin for low afternoon sunlight.
+                // A stalk outside the camera can still cast into the visible road.
+                // Include its ground projection along the actual sun direction.
                 var bounds=patch.Bounds;bounds.Expand(6);
-                if(!GeometryUtility.TestPlanesAABB(frustum,bounds))continue;
-                SubmittedWheatBatches+=patch.Draw(fieldCamera,player,sharedLevels,instanceMaterials,gameObject.layer,out int triangles);
+                bool visible=GeometryUtility.TestPlanesAABB(frustum,bounds);
+                var projected=bounds;
+                if(fieldSun!=null)
+                {
+                    var ray=fieldSun.transform.forward;
+                    float reach=5/Mathf.Max(.08f,-ray.y);
+                    var end=bounds;end.center+=new Vector3(ray.x*reach,-5,ray.z*reach);
+                    projected.Encapsulate(end.min);projected.Encapsulate(end.max);
+                }
+                bool shadow=(fieldSun==null||(fieldSun.enabled&&fieldSun.shadows!=LightShadows.None))&&GeometryUtility.TestPlanesAABB(frustum,projected);
+                if(!visible&&!shadow)continue;
+                if(shadow){SubmittedShadowPatches++;if(!visible)OffscreenShadowPatches++;}
+                SubmittedWheatBatches+=patch.Draw(fieldCamera,player,sharedLevels,instanceMaterials,gameObject.layer,visible,shadow,out int triangles);
                 SubmittedWheatTriangles+=triangles;
             }
         }

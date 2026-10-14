@@ -42,23 +42,34 @@ namespace Reverb.Drafts.RC01.Presentation
         }
         public void Reset(Vector3 center)
         {Bounds=new Bounds(center+Vector3.up,new Vector3(10,5,10));System.Array.Clear(counts,0,counts.Length);Count=0;uploaded=false;Lod=1;}
-        public int Draw(Camera camera,Vector3 player,Mesh[][] meshes,Material[] materials,int layer,out int triangles)
+        public int Draw(Camera camera,Vector3 player,Mesh[][] meshes,Material[] materials,int layer,bool visible,bool castsShadow,out int triangles)
         {
             triangles=0;if(!uploaded)return 0;
             float distance=Vector2.Distance(new Vector2(Bounds.center.x,Bounds.center.z),new Vector2(player.x,player.z));
             // Hysteresis prevents repeated swaps when standing at a detail boundary.
-            if(Lod==0&&distance>11.5f)Lod=1;
-            else if(Lod==1&&distance<8.5f)Lod=0;
-            else if(Lod==1&&distance>27.5f)Lod=2;
-            else if(Lod==2&&distance<24.5f)Lod=1;
-            int calls=0;var shadow=distance<25?ShadowCastingMode.On:ShadowCastingMode.Off;
+            if(Lod==0&&distance>36)Lod=1;
+            else if(Lod==1&&distance<32)Lod=0;
+            else if(Lod==1&&distance>56)Lod=2;
+            else if(Lod==2&&distance<52)Lod=1;
+            int calls=0;
             for(int i=0;i<counts.Length;i++)if(counts[i]>0)
             {
-                var mesh=meshes[Lod][i%meshes[Lod].Length];int count=counts[i];
-                // Far density is deterministically reduced without allocations or rule changes.
-                if(Lod==2)count=Mathf.Max(1,(count*2)/3);
-                Graphics.DrawMeshInstanced(mesh,0,materials[Lod],matrices[i],count,blocks[i],shadow,true,layer,camera,LightProbeUsage.Off,null);
-                triangles+=(int)mesh.GetIndexCount(0)/3*count;calls++;
+                if(visible)
+                {
+                    var mesh=meshes[Lod][i%meshes[Lod].Length];int count=counts[i];
+                    // Visual thinning never changes the shadow silhouette or density.
+                    if(Lod==2)count=Mathf.Max(1,(count*2)/3);
+                    Graphics.DrawMeshInstanced(mesh,0,materials[Lod],matrices[i],count,blocks[i],ShadowCastingMode.Off,true,layer,camera,LightProbeUsage.Off,null);
+                    triangles+=(int)mesh.GetIndexCount(0)/3*count;calls++;
+                }
+                if(castsShadow)
+                {
+                    // Keep the original solid stalks for shadows at every visual LOD.
+                    // URP handles shadow distance fading; no hard player-distance cutoff.
+                    var caster=meshes[0][i%meshes[0].Length];
+                    Graphics.DrawMeshInstanced(caster,0,materials[0],matrices[i],counts[i],blocks[i],ShadowCastingMode.ShadowsOnly,false,layer,camera,LightProbeUsage.Off,null);
+                    triangles+=(int)caster.GetIndexCount(0)/3*counts[i];calls++;
+                }
             }
             return calls;
         }

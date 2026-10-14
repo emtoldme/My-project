@@ -146,13 +146,8 @@ Shader "Reverb/Volumetric Wheat"
                 albedo*=lerp(.88,1.06,i.paint.b)*lerp(.82,1.08,fiber.r)*lerp(1,.84,_ReverbWeather.y);
                 half roughness=clamp(_Roughness+(fiber.g-.5)*.12-leaf*.045-_ReverbWeather.y*.14,.6,.97);
                 half thickness=max(.025,i.surface.z*lerp(.85,1.15,fiber.b));
-                if(_DetailQuality>1.5)
-                {
-                    Light sun=GetMainLight(TransformWorldToShadowCoord(i.w));
-                    half3 lit=albedo*(SampleSH(n)+sun.color*saturate(dot(n,sun.direction))*sun.shadowAttenuation);
-                    lit+=Transmitted(albedo,n,GetWorldSpaceNormalizeViewDir(i.w),thickness,sun);
-                    return half4(MixFog(lit,i.fog),1);
-                }
+                // Every detail level responds to farm lamps, broadcast lights and
+                // the same physical sun. Only surface microdetail is reduced.
                 SurfaceData surface=(SurfaceData)0;surface.albedo=albedo;surface.specular=half3(.025,.025,.025);
                 surface.metallic=0;surface.smoothness=1-roughness;surface.occlusion=saturate(i.surface.w*lerp(.92,1,fiber.a));surface.alpha=1;
                 InputData inputData=(InputData)0;inputData.positionWS=i.w;inputData.normalWS=n;
