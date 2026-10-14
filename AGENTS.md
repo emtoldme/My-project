@@ -8,11 +8,13 @@
 
 ## 工作区与协作
 
+2026-10-14 HC02最新授权为在HC01上打磨非线性组合与玩法循环，覆盖旧暂停玩法扩展在此范围的限制。当前分支gameplay/homecoming-resonance-loops，仍在同一独立workspace。入口Docs/Project/HomecomingNext/RESONANCE_LOOPS_HC02.md。共鸣三选一：回针/牵弦/归巢；碎音只来自实际拾取，返灯使用已熟悉的兴趣点，不能凭空发XP/强行改特殊敌人预警或复制一套伤害。存档版本2兼容读入1，新状态属于单局；保留R3/R4视觉世界和10分钟结局。用户没有要求新派工，本轮不主动联系外部AI或启动子代理。
+
 HC01四包已在gameplay/homecoming-integrated整合，当前仍使用Reviews/GP00-2026-10-13/workspace。入口Docs/Project/HomecomingNext/INTEGRATION.md。GameLoop.Homecoming持有唯一档案桥与出发/日志门控，RunSimulation.Homecoming持有地点/遗物/目标，CombatHomecoming走原伤害链。正式Main开启homecomingEnabled；不重复安装旧任务或执行一次性构建脚本。存档在persistentDataPath/Homecoming，验证需独立路径，不覆盖用户真实档案。保留R4地图、R3视觉与原10分钟结局。
 
 用户编辑工程为 `G:/图书馆/新建文件夹 (2)/My project`，新视觉基线在独立 `art/visual-editing` 分支。`My project-integration` 是 Codex 的整合与构建工作目录。旧 art/manual-editing 与 safety/pre-visual-rebuild-20261013 保留此次重构前用户改动。不要同时打开两个工程修改同一批资源；后续用户编辑期间不自动覆盖其改动。
 
-GP00、玩法整合、探索R4及HC00使用独立目录 `Reviews/GP00-2026-10-13/workspace`，当前分支 `gameplay/homecoming-integrated`，从world/procedural-fields-r4继续，玩法基础为已完成的gameplay/gp-integration。其余工作目录可能正被用户或外部AI使用其他分支；先确认，不自动切换、重置或覆盖。玩法基底说明见Docs/Project/GameplayNext/INTEGRATION.md。
+GP00、玩法整合、探索R4及HC00使用独立目录 `Reviews/GP00-2026-10-13/workspace`，当前分支 `gameplay/homecoming-resonance-loops`，从world/procedural-fields-r4继续，玩法基础为已完成的gameplay/gp-integration。其余工作目录可能正被用户或外部AI使用其他分支；先确认，不自动切换、重置或覆盖。玩法基底说明见Docs/Project/GameplayNext/INTEGRATION.md。
 
 四位外部 AI 的历史协作方式保留：用户转发需求、各自独立目录和分支上传，Codex审查接线合并。旧TASKS_01..08、实验和交接板已移除，不能重新执行。玩法第一轮已整合，用户现阶段要求把它作为基底，暂停继续打磨和扩展玩法，不自动执行旧任务卡里的后续派工。未经用户授权不主动联系其他AI。
 

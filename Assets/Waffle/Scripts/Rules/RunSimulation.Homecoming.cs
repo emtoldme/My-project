@@ -67,10 +67,12 @@ namespace Waffle
             if (Places == null) return;
             if (State.Phase.IsTerminal())
             {
-                if (!homecomingEnded) { homecomingEnded = true; HomecomingFact(HomecomingEventKind.RunEnded, State.EndReason); }
+                if (!homecomingEnded) { homecomingEnded = true; ClearResonanceForEnding(); HomecomingFact(HomecomingEventKind.RunEnded, State.EndReason); }
                 return;
             }
             if (!HomecomingContext.CanInteract) return;
+            DispatchCampCue();
+            RefreshResonance();
             if (Vec2.SqrDistance(lastHomecomingRegistration, new Vec2(PlayerX, PlayerZ)) > 144) RegisterHomecomingPlaces();
             Places.Step(HomecomingContext);
             foreach (var id in Places.DiscoveredNarrativeIds())
@@ -99,12 +101,12 @@ namespace Waffle
         public bool EquipHomecoming(Guid runId, string id, int slot, bool journalOwnsPause)
         {
             if (!CanChangeHomecomingEquipment(runId, journalOwnsPause) || !Relics.TryEquip(runId, id, slot)) return false;
-            RefreshHomecomingHealth(); HomecomingFact(HomecomingEventKind.ItemEquipped, id); return true;
+            RefreshHomecomingHealth(); RefreshResonance(); HomecomingFact(HomecomingEventKind.ItemEquipped, id); return true;
         }
         public bool UnequipHomecoming(Guid runId, int slot, bool journalOwnsPause)
         {
             if (!CanChangeHomecomingEquipment(runId, journalOwnsPause) || !Relics.TryUnequip(runId, slot)) return false;
-            RefreshHomecomingHealth(); return true;
+            RefreshHomecomingHealth(); RefreshResonance(); return true;
         }
         bool CanChangeHomecomingEquipment(Guid id, bool ownsPause) => Relics != null && id == RunId && State.Hp > 0
             && (State.Phase == RunPhase.Playing || (ownsPause && State.Phase == RunPhase.Paused));
@@ -125,10 +127,7 @@ namespace Waffle
         static float ClampBonus(float value, float max) => float.IsNaN(value) || float.IsInfinity(value) ? 0 : Math.Max(0, Math.Min(max, value));
         void QueueHomecomingDodge()
         {
-            if (Combat == null || Relics == null || !Relics.TryConsumeDodgeEcho(State.Phase == RunPhase.Playing, State.Hp > 0, State.Now, out var pulse)) return;
-            Combat.QueueHomecomingEcho(new Vec2(PlayerX, PlayerZ), pulse.RadiusMeters, Config.damage * pulse.DamageFactor, pulse.MaxTargets);
-            HomecomingEchoes++;
-            HomecomingFact(HomecomingEventKind.SpecialEffectTriggered, RelicInventory.OldGuitar);
+            if (Combat != null && Relics != null) QueueResonanceDodge();
         }
         public ExplorationSettlement ReadHomecomingSettlement()
         {

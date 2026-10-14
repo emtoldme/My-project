@@ -219,7 +219,7 @@ namespace Waffle
             {
                 CombatStepResult gems = Combat.StepGems(combatInput);
                 ForwardCombatEvents(gems);
-                if (gems.XpCollected > 0) AddXp(gems.XpCollected);
+                if (gems.XpCollected > 0) { AddXp(gems.XpCollected); CollectFieldFragments(gems.XpCollected); }
                 if (Growth != null)
                 {
                     State.Kills += gems.Kills;
@@ -311,10 +311,12 @@ namespace Waffle
             }
             if (Growth != null && ShieldCharges > 0)
             { ShieldCharges--; Emit(PresentationEventType.ShieldBlock, PlayerX, PlayerZ, amount, State.Hp); return; }
+            if (BlockWithHearth(now, amount)) return;
             if (Growth != null) amount = (int)Math.Ceiling(ContentStats.FinalIncoming(amount));
             State.Hp = Math.Max(0, State.Hp - amount);
             InvulnerableUntil = Math.Max(InvulnerableUntil, now + Config.hitIFrame);
             Emit(PresentationEventType.PlayerHurt, PlayerX, PlayerZ, amount, State.Hp);
+            LoseFieldFragment();
             log.Info(string.Format("[Waffle] 受击 now={0:F3} 伤害={1} 剩余HP={2}", now, amount, State.Hp));
         }
 
@@ -377,6 +379,7 @@ namespace Waffle
 
         private void EnterTerminal(RunPhase phase, string reason)
         {
+            ClearResonanceForEnding();
             if (State.PendingLevelUps > 0)
                 log.Info("[Waffle] 终局，丢弃待升级 " + State.PendingLevelUps);
             State.PendingLevelUps = 0;

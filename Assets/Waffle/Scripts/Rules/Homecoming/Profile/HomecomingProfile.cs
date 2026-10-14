@@ -43,6 +43,9 @@ namespace Waffle.Homecoming.Profile
             if (loadRes.JsonPayload != null)
             {
                 currentData = ProfileData.FromJson(loadRes.JsonPayload);
+                // Same data shape; publish the new version with the next successful transaction.
+                // HC01 then recognizes the profile as newer instead of rejecting newly learned narrative IDs.
+                currentData.SchemaVersion = ProfileConfig.CurrentSchemaVersion;
             }
             else
             {

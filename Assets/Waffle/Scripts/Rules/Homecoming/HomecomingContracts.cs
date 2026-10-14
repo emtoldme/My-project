@@ -31,7 +31,7 @@ namespace Waffle.Homecoming
             => new List<T>(values ?? Array.Empty<T>()).AsReadOnly();
     }
 
-    public enum NarrativeKind { Place, Item, Goal, Upgrade }
+    public enum NarrativeKind { Place, Item, Goal, Upgrade, Combination }
     public enum PoiStatus { Unseen, Discovered, Available, Claimed }
     public enum RelicEffectKind { MaxHealth, MoveSpeed, PickupRadius, DodgeCooldown, DodgeEcho }
     public enum HomecomingEventKind { SiteDiscovered, SiteClaimed, ItemEquipped, SpecialEffectTriggered, RunEnded, NarrativeViewed }

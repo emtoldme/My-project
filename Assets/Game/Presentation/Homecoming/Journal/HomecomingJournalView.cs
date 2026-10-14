@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Waffle;
 using Waffle.Homecoming;
+using Waffle.Homecoming.Relics;
 
 namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
 {
@@ -12,7 +13,8 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
         Goals,      // 风味目标
         Relics,     // 遗物行囊（2~4槽）
         Archive,    // 记忆图鉴与叙事详情
-        Profile     // 局外成长与修补升级
+        Profile,
+        Resonance   // 局外成长与修补升级
     }
 
     /// <summary>
@@ -253,6 +255,7 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                 DrawPoiPromptOverlay();
                 DrawJournalShortcutHint();
                 DrawFieldDirections();
+                DrawResonanceOverlay();
             }
 
             // 2. Draw Full Journal Dialog when open
@@ -281,6 +284,50 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                 string name = _viewSource.ReadNarrative(site.NarrativeId)?.Title ?? "田间旧地";
                 GUI.Label(new Rect(24, y, 270, 24), arrows[index] + "  " + name + " · " + Mathf.RoundToInt(distance) + " 米", _styleSmall); y += 24;
             }
+        }
+
+        private void DrawResonanceOverlay()
+        {
+            if (Host?.Sim?.Relics == null || Host.BeforeDeparture || Host.Sim.State.Phase.IsTerminal()) return;
+            var sim = Host.Sim;
+            Rect panel = new Rect(ImguiScale.Width - 240, 154, 220, 62);
+            DrawSolidRect(panel, ColorInk);
+            GUI.Label(new Rect(panel.x + 8, panel.y + 4, 204, 22), "碎音 " + sim.FieldFragments + "/3  ·  " + ResonancePatterns.Name(sim.Resonance), _styleBody);
+            string hint = sim.ReturnNeedleActive ? "留针" + Mathf.CeilToInt(sim.ReturnNeedleUntil - sim.State.Now) + "秒 · 共鸣" + sim.Relics.DodgeEchoRemaining(sim.State.Now).ToString("F1") + "秒"
+                : sim.HearthGuard ? "灯下的一针 · 可挡一次伤害" : "拾取6经验得1碎音 · 受伤散落1份";
+            GUI.Label(new Rect(panel.x + 8, panel.y + 30, 204, 24), hint, _styleTiny);
+        }
+
+        private void DrawTabResonance(Rect area)
+        {
+            if (Host?.Sim?.Relics == null) { GUI.Label(new Rect(area.x + 16, area.y + 16, area.width - 32, 40), "出发后在旧地调弦", _styleBody); return; }
+            var sim = Host.Sim;
+            GUI.Label(new Rect(area.x + 16, area.y + 10, area.width - 140, 24), "共鸣架 · 三选一，共鸣共享8秒冷却", _styleSubtitle);
+            bool previousEnabled = GUI.enabled;
+            GUI.enabled = previousEnabled && Host.CanRetuneHomecoming;
+            if (GUI.Button(new Rect(area.xMax - 112, area.y + 10, 96, 26), "回到独奏", _styleActionButton)) Host.TryRetuneHomecoming(ResonancePattern.Unlinked);
+            GUI.enabled = previousEnabled;
+            var patterns = new[] { ResonancePattern.Backstitch, ResonancePattern.ThreadLure, ResonancePattern.HearthGather };
+            for (int i = 0; i < patterns.Length; i++)
+            {
+                var pattern = patterns[i]; bool available = ResonancePatterns.Available(sim.Relics, pattern);
+                Rect card = new Rect(area.x + 12, area.y + 44 + i * 88, area.width - 24, 80);
+                DrawSolidRect(card, new Color(.04f, .08f, .10f, .9f)); DrawBorder(card, sim.Resonance == pattern ? ColorJade : ColorMuted, 1);
+                GUI.Label(new Rect(card.x + 12, card.y + 7, card.width - 130, 22), ResonancePatterns.Name(pattern) + " · " + ResonancePatterns.Recipe(pattern), _styleSubtitle);
+                GUI.Label(new Rect(card.x + 12, card.y + 31, card.width - 142, 44), ResonancePatterns.Description(pattern), _styleBody);
+                GUI.enabled = previousEnabled && available && Host.CanRetuneHomecoming;
+                if (GUI.Button(new Rect(card.xMax - 116, card.y + 24, 100, 30), sim.Resonance == pattern ? "重系此调" : available ? "调弦" : "需装备两件", _styleActionButton))
+                    SetFeedback(Host.TryRetuneHomecoming(pattern) ? "已调为" + ResonancePatterns.Name(pattern) + "，共鸣冷却保持" : "请靠近已熟悉的旧地再调弦");
+                GUI.enabled = previousEnabled;
+            }
+            float y = area.y + 316;
+            GUI.Label(new Rect(area.x + 16, y, area.width - 32, 22), "田间碎音 " + sim.FieldFragments + "/3 · 已拾取经验不消耗 · 受伤散落1份", _styleBody);
+            GUI.Label(new Rect(area.x + 16, y + 26, area.width - 174, 48), Host.CanRetuneHomecoming
+                ? "返灯：交回3碎音，补回15%生命并缝一针护衣。30秒后可再来，护衣最多一针。" : "靠近已收取的老屋/筒仓/吉他，或已发现的田间旧地6米内，可以换调与返灯。", _styleSmall);
+            GUI.enabled = previousEnabled && Host.CanRetuneHomecoming && sim.FieldFragments >= 3 && sim.State.Now >= sim.CampReadyAt && (!sim.HearthGuard || sim.State.Hp < sim.State.MaxHp);
+            string campLabel = sim.State.Now < sim.CampReadyAt ? "返灯 · " + Mathf.CeilToInt(sim.CampReadyAt - sim.State.Now) + "秒" : "返灯 · 3碎音";
+            if (GUI.Button(new Rect(area.xMax - 154, y + 26, 138, 32), campLabel, _styleActionButton)) SetFeedback(Host.TryRekindleHomecoming() ? "旧地亮起了灯，衣襟里留下一针" : "此刻无法返灯");
+            GUI.enabled = previousEnabled;
         }
 
         private void DrawJournalShortcutHint()
@@ -316,7 +363,8 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                 title = ne.Title;
 
             GUI.Label(new Rect(x + 14, y + 8, width - 28, 22), title, _styleSubtitle);
-            GUI.Label(new Rect(x + 14, y + 30, width - 28, 20), poi.RewardDescription ?? "靠近即可自动收取并认出旧地", _styleSmall);
+            string service = Host != null && Host.CanRetuneHomecoming ? "J → 旧物共鸣：调弦或携3碎音返灯" : null;
+            GUI.Label(new Rect(x + 14, y + 30, width - 28, 20), service ?? poi.RewardDescription ?? "靠近即可自动收取并认出旧地", _styleSmall);
 
             if (poi.Status == PoiStatus.Available)
             {
@@ -360,10 +408,10 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
 
             // Tab Buttons
             float tabY = modalY + 54;
-            float tabW = (modalW - 48) / 4.0f;
-            string[] tabNames = { "风味目标", "遗物行囊 (2~4槽)", "记忆图鉴与叙事", "局外成长与修补" };
+            float tabW = (modalW - 48) / 5.0f;
+            string[] tabNames = { "风味目标", "遗物行囊 (2~4槽)", "记忆图鉴与叙事", "局外成长与修补", "旧物共鸣" };
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < tabNames.Length; i++)
             {
                 Rect tabRect = new Rect(modalX + 24 + i * tabW, tabY, tabW - 4, 32);
                 bool isActive = ((int)_currentTab == i);
@@ -388,6 +436,9 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                     break;
                 case JournalTab.Archive:
                     DrawTabArchive(contentRect);
+                    break;
+                case JournalTab.Resonance:
+                    DrawTabResonance(contentRect);
                     break;
                 case JournalTab.Profile:
                     DrawTabProfile(contentRect);
@@ -635,7 +686,7 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                 {
                     if (Event.current.type == EventType.Repaint && viewedNarrative != entry.Id) { Host?.TryViewHomecomingNarrative(entry.Id); viewedNarrative = entry.Id; }
                     GUI.Label(new Rect(detailRect.x + 16, detailRect.y + 14, detailRect.width - 32, 28), entry.Title, _styleTitle);
-                    GUI.Label(new Rect(detailRect.x + 16, detailRect.y + 44, 200, 20), "类别：" + (entry.Kind == NarrativeKind.Place ? "旧地" : entry.Kind == NarrativeKind.Item ? "随身旧物" : entry.Kind == NarrativeKind.Goal ? "故乡心愿" : "行前修补"), _styleSmall);
+                    GUI.Label(new Rect(detailRect.x + 16, detailRect.y + 44, 200, 20), "类别：" + (entry.Kind == NarrativeKind.Place ? "旧地" : entry.Kind == NarrativeKind.Item ? "随身旧物" : entry.Kind == NarrativeKind.Goal ? "故乡心愿" : entry.Kind == NarrativeKind.Combination ? "旧物共鸣" : "行前修补"), _styleSmall);
 
                     _scrollNarrativeDetail = GUI.BeginScrollView(
                         new Rect(detailRect.x + 12, detailRect.y + 70, detailRect.width - 24, detailRect.height - 82),
