@@ -1,0 +1,9 @@
+{
+  "name":"Reverb.Wheat.Tests",
+  "references":["UnityEngine.TestRunner","UnityEditor.TestRunner","Reverb.Drafts.RC01.Presentation"],
+  "includePlatforms":["Editor"],
+  "overrideReferences":true,
+  "precompiledReferences":["nunit.framework.dll"],
+  "autoReferenced":false,
+  "defineConstraints":["UNITY_INCLUDE_TESTS"]
+}
