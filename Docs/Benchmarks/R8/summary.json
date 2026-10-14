@@ -1,0 +1,144 @@
+{
+  "BaselineSync": {
+    "0": {
+      "wall_ms": {
+        "median": 10.1595,
+        "p95": 11.8747,
+        "max": 15.3899
+      },
+      "memory_bytes": {
+        "median": 468956820.0,
+        "p95": 468959836.0,
+        "max": 468960900.0
+      },
+      "resident_vertices": {
+        "median": 3389284.0,
+        "p95": 3389284.0,
+        "max": 3389284.0
+      },
+      "enemies": {
+        "median": 3.0,
+        "p95": 4.0,
+        "max": 4.0
+      },
+      "samples": 353
+    },
+    "1": {
+      "wall_ms": {
+        "median": 10.273,
+        "p95": 11.4307,
+        "max": 14.3147
+      },
+      "memory_bytes": {
+        "median": 468968604.0,
+        "p95": 468975612.0,
+        "max": 468977116.0
+      },
+      "resident_vertices": {
+        "median": 3389284.0,
+        "p95": 3389284.0,
+        "max": 3389284.0
+      },
+      "enemies": {
+        "median": 5.0,
+        "p95": 6.0,
+        "max": 6.0
+      },
+      "samples": 353
+    },
+    "2": {
+      "wall_ms": {
+        "median": 9.9926,
+        "p95": 18.1313,
+        "max": 94.2421
+      },
+      "memory_bytes": {
+        "median": 467609356.0,
+        "p95": 480825812.0,
+        "max": 542028756.0
+      },
+      "resident_vertices": {
+        "median": 3376247.0,
+        "p95": 3514284.0,
+        "max": 4157083.0
+      },
+      "enemies": {
+        "median": 5.0,
+        "p95": 6.0,
+        "max": 6.0
+      },
+      "samples": 353
+    }
+  },
+  "OptimizedSync": {
+    "0": {
+      "wall_ms": {
+        "median": 6.3949,
+        "p95": 7.3071,
+        "max": 12.3961
+      },
+      "memory_bytes": {
+        "median": 145508852.0,
+        "p95": 145533324.0,
+        "max": 145534484.0
+      },
+      "resident_vertices": {
+        "median": 2764.0,
+        "p95": 2764.0,
+        "max": 2764.0
+      },
+      "enemies": {
+        "median": 3.0,
+        "p95": 4.0,
+        "max": 4.0
+      },
+      "samples": 353
+    },
+    "1": {
+      "wall_ms": {
+        "median": 7.2556,
+        "p95": 10.5095,
+        "max": 17.1232
+      },
+      "memory_bytes": {
+        "median": 145570292.0,
+        "p95": 145595484.0,
+        "max": 145600012.0
+      },
+      "resident_vertices": {
+        "median": 2764.0,
+        "p95": 2764.0,
+        "max": 2764.0
+      },
+      "enemies": {
+        "median": 5.0,
+        "p95": 6.0,
+        "max": 6.0
+      },
+      "samples": 353
+    },
+    "2": {
+      "wall_ms": {
+        "median": 6.5537,
+        "p95": 10.1538,
+        "max": 12.8231
+      },
+      "memory_bytes": {
+        "median": 145633627.0,
+        "p95": 145638660.0,
+        "max": 145639988.0
+      },
+      "resident_vertices": {
+        "median": 2764.0,
+        "p95": 2764.0,
+        "max": 2764.0
+      },
+      "enemies": {
+        "median": 5.0,
+        "p95": 7.0,
+        "max": 7.0
+      },
+      "samples": 353
+    }
+  }
+}

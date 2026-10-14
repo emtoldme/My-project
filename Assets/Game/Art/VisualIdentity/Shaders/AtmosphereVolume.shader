@@ -59,8 +59,8 @@ Shader "Reverb/Atmosphere Volume"
                     float a=max(0,max(nearT.x,max(nearT.y,nearT.z)));
                     float b=min(1,min(farT.x,min(farT.y,farT.z)));
                     b=min(b,depth/max(i.eye,.001));
-                    float step=max(0,b-a)/16,integral=0;
-                    [unroll] for(int k=0;k<16;k++)
+                    float step=max(0,b-a)/8,integral=0;
+                    [unroll] for(int k=0;k<8;k++)
                     {
                         float t=a+(k+.5)*step;
                         float3 p=origin+dir*t;

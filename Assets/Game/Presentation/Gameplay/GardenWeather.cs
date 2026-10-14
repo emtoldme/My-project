@@ -60,6 +60,7 @@ namespace Reverb.Drafts.RC01.Presentation
         bool initialized;
         RenderTexture continuousCookie;
         Material cookieBlend;
+        float renderedCloudCover=-1;
         public float CloudCover {get;private set;}
         public Texture ActiveCloudCookie => continuousCookie;
 
@@ -192,9 +193,10 @@ namespace Reverb.Drafts.RC01.Presentation
         void UpdateLighting(float now)
         {
             float overcast = Mathf.Clamp01(CurrentRain * .85f);
-            RenderSettings.ambientSkyColor = Color.Lerp(skyColor, new Color(.18f, .235f, .28f), overcast) + Color.white * LightningFlash * .3f;
-            RenderSettings.ambientEquatorColor = Color.Lerp(equatorColor, new Color(.13f, .17f, .21f), overcast);
-            RenderSettings.ambientGroundColor = Color.Lerp(groundColor, new Color(.075f, .1f, .105f), overcast);
+            float storm=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.78f,1,CurrentRain));
+            RenderSettings.ambientSkyColor = Color.Lerp(skyColor, Color.Lerp(new Color(.28f,.32f,.34f),new Color(.18f,.235f,.28f),storm), overcast) + Color.white * LightningFlash * .3f;
+            RenderSettings.ambientEquatorColor = Color.Lerp(equatorColor, Color.Lerp(new Color(.205f,.225f,.22f),new Color(.13f,.17f,.21f),storm), overcast);
+            RenderSettings.ambientGroundColor = Color.Lerp(groundColor, Color.Lerp(new Color(.095f,.12f,.11f),new Color(.075f,.1f,.105f),storm), overcast);
             RenderSettings.fog = true;
             RenderSettings.fogColor = Color.Lerp(fogColor, new Color(.27f, .34f, .4f), overcast);
             RenderSettings.fogStartDistance = Mathf.Lerp(fogStart, overcastFogStart, overcast);
@@ -202,17 +204,18 @@ namespace Reverb.Drafts.RC01.Presentation
             if (sun != null)
             {
                 sun.color = Color.Lerp(sunColor, new Color(.7f, .82f, 1), overcast);
-                sun.intensity = Mathf.Lerp(sunIntensity, .72f, overcast) + LightningFlash * 3.4f;
+                sun.intensity = Mathf.Lerp(sunIntensity, Mathf.Lerp(1,.72f,storm), overcast) + LightningFlash * 3.4f;
                 // Stable celestial direction prevents cascades crawling across a static road.
                 // Cookie identity stays fixed even during lightning; only its pixels blend.
                 sun.transform.rotation = sunRotation;
                 CloudCover=CurrentRain*.7f;
-                if(continuousCookie!=null)
+                if(continuousCookie!=null&&Mathf.Abs(CloudCover-renderedCloudCover)>.002f)
                 {
                     cookieBlend.SetFloat("_Cover",CloudCover);
                     var active=RenderTexture.active;
                     Graphics.Blit(cloudShadow,continuousCookie,cookieBlend);
                     RenderTexture.active=active;
+                    renderedCloudCover=CloudCover;
                 }
                 if (sunData != null)
                 {
@@ -263,7 +266,7 @@ namespace Reverb.Drafts.RC01.Presentation
             RenderSettings.fog = fogEnabled; RenderSettings.fogStartDistance = fogStart; RenderSettings.fogEndDistance = fogEnd;
             if (sun != null) { sun.color = sunColor; sun.intensity = sunIntensity; sun.transform.rotation = sunRotation; sun.cookie = originalCookie; }
             if (sunData != null) { sunData.lightCookieSize = originalCookieSize; sunData.lightCookieOffset = originalCookieOffset; }
-            if(continuousCookie!=null){continuousCookie.Release();Destroy(continuousCookie);continuousCookie=null;}
+            if(continuousCookie!=null){continuousCookie.Release();Destroy(continuousCookie);continuousCookie=null;}renderedCloudCover=-1;
             if(cookieBlend!=null){Destroy(cookieBlend);cookieBlend=null;}
             if (reflection != null) reflection.intensity = reflectionIntensity;
             foreach (var binding in localLights) if (binding.light != null)

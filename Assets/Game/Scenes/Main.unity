@@ -20,9 +20,9 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 32
   m_LinearFogEnd: 95
-  m_AmbientSkyColor: {r: 0.46, g: 0.5, b: 0.54, a: 1}
-  m_AmbientEquatorColor: {r: 0.37, g: 0.36, b: 0.3, a: 1}
-  m_AmbientGroundColor: {r: 0.2, g: 0.18, b: 0.13, a: 1}
+  m_AmbientSkyColor: {r: 0.46, g: 0.5, b: 0.53, a: 1}
+  m_AmbientEquatorColor: {r: 0.29, g: 0.3, b: 0.25, a: 1}
+  m_AmbientGroundColor: {r: 0.13, g: 0.15, b: 0.13, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
@@ -66250,8 +66250,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 13
   m_Type: 1
-  m_Color: {r: 1, g: 0.91, b: 0.75, a: 1}
-  m_Intensity: 1.6
+  m_Color: {r: 1, g: 0.89, b: 0.73, a: 1}
+  m_Intensity: 1.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -73987,6 +73987,7 @@ GameObject:
   - component: {fileID: 1268887296}
   - component: {fileID: 1268887298}
   - component: {fileID: 1268887299}
+  - component: {fileID: 1268887300}
   m_Layer: 0
   m_Name: GameLoop
   m_TagString: Untagged
@@ -74741,7 +74742,7 @@ MonoBehaviour:
   derivedFx: {fileID: 0}
   lineMaterial: {fileID: 2100000, guid: be7a1f958b3b92a4c96fe8bb6f5c4bd0, type: 2}
   orbitVisualPrefab: {fileID: 9018592627183369393, guid: 47a0a56348609e5419de4fd8bd117c78, type: 3}
-  pickupVisualPrefab: {fileID: 5777570965332061125, guid: fa8bc9bf13a9e84449d638b8165610ac, type: 3}
+  pickupVisualPrefab: {fileID: 6403440013887084618, guid: 4708fa8a866dd264fa9eafd168d8e23c, type: 3}
   orbitSurface: {fileID: 0}
   pickupSurface: {fileID: 0}
   tintPickups: 1
@@ -75047,6 +75048,7 @@ MonoBehaviour:
   - {fileID: 4300000, guid: 6cafe0a65f8a05a42afa7a1d51f4eeec, type: 2}
   - {fileID: 4300000, guid: f7433a010265f7c4197cf214ddb5099d, type: 2}
   - {fileID: 4300000, guid: 3013fc5d229d7374d99d130472a488c6, type: 2}
+  useInstancedWheat: 1
   landmarkPrefabs:
   - {fileID: 822037102227843457, guid: 2df746ea889b2684fadd5e79489ff757, type: 3}
   - {fileID: 1223234953108352110, guid: 239ff63f70b22444e855602152074786, type: 3}
@@ -75125,6 +75127,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Reverb.Drafts.RC01.Presentation::Reverb.Drafts.RC01.Presentation.GhostDepartureView
   loop: {fileID: 1268887280}
   ghostPrefab: {fileID: 901457879355832731, guid: a0d5cdc89690afa40bc8251a9801ccc2, type: 3}
+--- !u!114 &1268887300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c789de4f9bf3d334a8837c59eaa47048, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Reverb.Drafts.RC01.Presentation::Reverb.Drafts.RC01.Presentation.SceneLightBudget
+  loop: {fileID: 1268887280}
+  weather: {fileID: 1253426105}
+  maxLocalLights: 8
+  radius: 32
 --- !u!1 &1271036660
 GameObject:
   m_ObjectHideFlags: 0

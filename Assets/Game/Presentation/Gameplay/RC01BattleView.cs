@@ -19,6 +19,8 @@ namespace Reverb.Drafts.RC01.Presentation
         readonly List<M01EchoCue> cues = new List<M01EchoCue>(32);
         readonly List<Transform> orbs = new List<Transform>();
         readonly List<Transform> pickupViews = new List<Transform>();
+        readonly List<Renderer[]> pickupRenderers=new List<Renderer[]>();
+        readonly List<string> pickupIds=new List<string>();
         readonly List<LineRenderer> zoneViews = new List<LineRenderer>();
         Material orbMaterial, pickupMaterial;
         MaterialPropertyBlock block;
@@ -50,6 +52,7 @@ namespace Reverb.Drafts.RC01.Presentation
                 foreach(var c in p.GetComponentsInChildren<Collider>()) Destroy(c);
                 if(pickupVisualPrefab == null || pickupSurface != null) foreach(var r in p.GetComponentsInChildren<Renderer>()) r.sharedMaterial = pickupMaterial;
                 p.name = "Pickup"; p.transform.SetParent(transform); p.SetActive(false); pickupViews.Add(p.transform);
+                pickupRenderers.Add(p.GetComponentsInChildren<Renderer>());pickupIds.Add(null);
             }
         }
         void OnEnable() { if (loop != null) loop.PresentationDispatched += OnEvents; }
@@ -109,13 +112,13 @@ namespace Reverb.Drafts.RC01.Presentation
             foreach (var p in combat.Pickups)
             {
                 if (n >= pickupViews.Count) break;
-                var t = pickupViews[n++]; t.gameObject.SetActive(true);
+                int slot=n++;var t = pickupViews[slot]; t.gameObject.SetActive(true);
                 t.position = new Vector3(p.Position.X,.55f+Mathf.Sin(sim.State.Now*3)*.08f,p.Position.Y);
                 t.rotation = Quaternion.Euler(0,sim.State.Now*30, p.Id == "ELITE" ? 0 : 45);
                 t.localScale = p.Id == "ELITE" ? new Vector3(.8f,.5f,.6f) : Vector3.one*.45f;
                 Color c = p.Id == "D02" ? new Color(.9f,.35f,.4f) : p.Id == "D03" ? new Color(.35f,.65f,1) : p.Id == "D04" ? new Color(1,.65f,.2f) : new Color(.9f,.8f,.4f);
-                block.Clear(); block.SetColor("_BaseColor",c);
-                foreach(var r in t.GetComponentsInChildren<Renderer>()) r.SetPropertyBlock(tintPickups ? block : null);
+                if(pickupIds[slot]!=p.Id)
+                {pickupIds[slot]=p.Id;block.Clear();block.SetColor("_BaseColor",c);foreach(var r in pickupRenderers[slot])r.SetPropertyBlock(tintPickups?block:null);}
             }
             for (;n < pickupViews.Count;n++) pickupViews[n].gameObject.SetActive(false);
         }

@@ -20,6 +20,9 @@ Shader "Reverb/Volumetric Wheat"
         _UseExternalTime("Rule clock",Float)=1
         _VisualTime("Time",Float)=0
         _ProceduralField("Generated dressing",Float)=1
+        _InstancedField("Shared mesh instances",Float)=0
+        _DetailQuality("0 near / 1 middle / 2 far",Float)=0
+        _PatchPaint("Patch ripeness",Vector)=(1,.6,.5,1)
     }
     SubShader
     {
@@ -35,9 +38,9 @@ Shader "Reverb/Volumetric Wheat"
         float4 _ReverbWheatContactRect,_ReverbWeather,_ReverbWind;
         CBUFFER_START(UnityPerMaterial)
         half4 _StemColor,_LeafColor,_EarColor,_TransmissionColor;
-        float4 _WindDirection;
+        float4 _WindDirection,_PatchPaint;
         float _Transmission,_Absorption,_NormalStrength,_Roughness,_Sheen,_ContactStrength;
-        float _WindStrength,_WindSpeed,_UseExternalTime,_VisualTime,_ProceduralField;
+        float _WindStrength,_WindSpeed,_UseExternalTime,_VisualTime,_ProceduralField,_InstancedField,_DetailQuality;
         CBUFFER_END
         struct A {float4 p:POSITION;float3 n:NORMAL;float2 uv:TEXCOORD0;float4 root:TEXCOORD1;float4 surface:TEXCOORD2;half4 color:COLOR;UNITY_VERTEX_INPUT_INSTANCE_ID};
         struct V {float4 p:SV_POSITION;float3 w:TEXCOORD0;half3 n:TEXCOORD1;float2 uv:TEXCOORD2;half3 paint:TEXCOORD3;float fog:TEXCOORD4;float4 surface:TEXCOORD5;float3 rest:TEXCOORD6;};
@@ -50,7 +53,9 @@ Shader "Reverb/Volumetric Wheat"
         {
             float3 root=TransformObjectToWorld(float3(a.root.x,0,a.root.y));
             float3 relative=TransformObjectToWorld(a.p.xyz)-root;
-            float t=lerp(_Time.y,_VisualTime,_UseExternalTime),h=saturate(relative.y/max(a.root.z,.1));
+            float rootHeight=a.root.z;
+            if(_InstancedField>.5)rootHeight=length(mul((float3x3)GetObjectToWorldMatrix(),float3(0,a.root.z,0)));
+            float t=lerp(_Time.y,_VisualTime,_UseExternalTime),h=saturate(relative.y/max(rootHeight,.1));
             float2 direction=normalize(lerp(_WindDirection.xz,_ReverbWind.xy,_ReverbWind.w)+float2(.0001,0));
             float phase=dot(root.xz,direction)*.43-t*_WindSpeed;
             float front=.5+.5*sin(dot(root.xz,direction)*.12-t*.63);
@@ -73,7 +78,14 @@ Shader "Reverb/Volumetric Wheat"
         }
         V Vertex(A a)
         {
-            UNITY_SETUP_INSTANCE_ID(a);V o;float3 n;Deform(a,o.w,n);o.n=n;o.p=TransformWorldToHClip(o.w);
+            UNITY_SETUP_INSTANCE_ID(a);
+            if(_InstancedField>.5)
+            {
+                float2 root=TransformObjectToWorld(float3(0,0,0)).xz;
+                float variation=frac(sin(dot(root,float2(12.9898,78.233)))*43758.5453);
+                a.color=half4(1,_PatchPaint.y,variation,1);
+            }
+            V o;float3 n;Deform(a,o.w,n);o.n=n;o.p=TransformWorldToHClip(o.w);
             o.uv=a.uv;o.paint=a.color.rgb;o.fog=ComputeFogFactor(o.p.z);o.surface=a.surface;o.rest=a.p.xyz;return o;
         }
         half3 FiberNormal(V i,half3 n)
@@ -118,9 +130,11 @@ Shader "Reverb/Volumetric Wheat"
             #pragma multi_compile_fog
             half4 Fragment(V i,FRONT_FACE_TYPE face:FRONT_FACE_SEMANTIC):SV_Target
             {
-                half3 geometric=normalize(i.n)*IS_FRONT_VFACE(face,1,-1),n=FiberNormal(i,geometric);
+                half3 geometric=normalize(i.n)*IS_FRONT_VFACE(face,1,-1),n=geometric;
+                if(_DetailQuality<.5)n=FiberNormal(i,geometric);
                 half leaf=step(.2,i.uv.x)*(1-step(.65,i.uv.x)),ear=step(.65,i.uv.x),awn=step(.95,i.uv.x);
-                half4 fiber=SAMPLE_TEXTURE2D(_FiberMap,sampler_FiberMap,i.surface.xy);
+                half4 fiber=half4(.5,.6,.5,1);
+                if(_DetailQuality<1.5)fiber=SAMPLE_TEXTURE2D(_FiberMap,sampler_FiberMap,i.surface.xy);
                 half3 albedo=lerp(_StemColor.rgb,_LeafColor.rgb,leaf);albedo=lerp(albedo,_EarColor.rgb,ear);
                 half dryTip=leaf*smoothstep(.48,1,i.surface.y)*(.35+.65*i.paint.g);
                 albedo=lerp(albedo,_EarColor.rgb*.88,dryTip*.55);
@@ -132,6 +146,13 @@ Shader "Reverb/Volumetric Wheat"
                 albedo*=lerp(.88,1.06,i.paint.b)*lerp(.82,1.08,fiber.r)*lerp(1,.84,_ReverbWeather.y);
                 half roughness=clamp(_Roughness+(fiber.g-.5)*.12-leaf*.045-_ReverbWeather.y*.14,.6,.97);
                 half thickness=max(.025,i.surface.z*lerp(.85,1.15,fiber.b));
+                if(_DetailQuality>1.5)
+                {
+                    Light sun=GetMainLight(TransformWorldToShadowCoord(i.w));
+                    half3 lit=albedo*(SampleSH(n)+sun.color*saturate(dot(n,sun.direction))*sun.shadowAttenuation);
+                    lit+=Transmitted(albedo,n,GetWorldSpaceNormalizeViewDir(i.w),thickness,sun);
+                    return half4(MixFog(lit,i.fog),1);
+                }
                 SurfaceData surface=(SurfaceData)0;surface.albedo=albedo;surface.specular=half3(.025,.025,.025);
                 surface.metallic=0;surface.smoothness=1-roughness;surface.occlusion=saturate(i.surface.w*lerp(.92,1,fiber.a));surface.alpha=1;
                 InputData inputData=(InputData)0;inputData.positionWS=i.w;inputData.normalWS=n;
