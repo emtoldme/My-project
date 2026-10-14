@@ -134,85 +134,37 @@ namespace Waffle.Homecoming.Profile
 
         public static ProfileData FromJson(string json)
         {
-            if (string.IsNullOrWhiteSpace(json))
-                throw new ArgumentException("Empty json string");
-
-            var data = new ProfileData();
+            var root = ProfileJson.Read(json);
+            long Number(string key) => root.TryGetValue(key, out var value) && value is long n ? n : throw new FormatException("Missing integer: " + key);
+            var data = new ProfileData {
+                SchemaVersion = checked((int)Number("schemaVersion")), Revision = Number("revision"), TotalExperience = Number("totalExperience"),
+                AvailablePoints = checked((int)Number("availablePoints")), TotalPointsSpent = checked((int)Number("totalPointsSpent")) };
+            Dictionary<string, object> Map(string key) => root.TryGetValue(key, out var value) && value is Dictionary<string, object> map ? map : throw new FormatException("Missing map: " + key);
             data.Upgrades.Clear();
-
-            // Simple token-based parser for our deterministic JSON schema
-            int p = 0;
-            SkipWhitespace(json, ref p);
-            if (p >= json.Length || json[p] != '{') throw new FormatException("Invalid JSON root");
-            p++;
-
-            while (p < json.Length)
-            {
-                SkipWhitespace(json, ref p);
-                if (p >= json.Length || json[p] == '}') break;
-
-                string key = ReadString(json, ref p);
-                SkipWhitespace(json, ref p);
-                if (p >= json.Length || json[p] != ':') throw new FormatException("Expected ':' after key " + key);
-                p++; // skip ':'
-                SkipWhitespace(json, ref p);
-
-                switch (key)
-                {
-                    case "schemaVersion":
-                        data.SchemaVersion = (int)ReadLong(json, ref p);
-                        break;
-                    case "revision":
-                        data.Revision = ReadLong(json, ref p);
-                        break;
-                    case "totalExperience":
-                        data.TotalExperience = ReadLong(json, ref p);
-                        break;
-                    case "availablePoints":
-                        data.AvailablePoints = (int)ReadLong(json, ref p);
-                        break;
-                    case "totalPointsSpent":
-                        data.TotalPointsSpent = (int)ReadLong(json, ref p);
-                        break;
-                    case "upgrades":
-                        ReadUpgradesMap(json, ref p, data.Upgrades);
-                        break;
-                    case "discoveredNarratives":
-                        ReadStringSet(json, ref p, data.DiscoveredNarratives);
-                        break;
-                    case "claimedTemplates":
-                        ReadStringSet(json, ref p, data.ClaimedTemplates);
-                        break;
-                    case "completedGoals":
-                        ReadStringSet(json, ref p, data.CompletedGoals);
-                        break;
-                    case "settledRuns":
-                        ReadSettledRunsMap(json, ref p, data.SettledRuns);
-                        break;
-                    default:
-                        SkipValue(json, ref p);
-                        break;
-                }
-
-                SkipWhitespace(json, ref p);
-                if (p < json.Length && json[p] == ',') p++;
+            foreach (var kv in Map("upgrades")) data.Upgrades.Add(kv.Key, kv.Value is long n ? checked((int)n) : throw new FormatException("Invalid rank"));
+            void ReadSet(string key, HashSet<string> set) {
+                if (!root.TryGetValue(key, out var value) || !(value is List<object> list)) throw new FormatException("Missing list: " + key);
+                foreach (var entry in list) if (!(entry is string id) || !set.Add(id)) throw new FormatException("Invalid or duplicate ID");
             }
-
-            data.InitializeDefaults();
-            data.ValidateOrThrow();
-            return data;
+            ReadSet("discoveredNarratives", data.DiscoveredNarratives); ReadSet("claimedTemplates", data.ClaimedTemplates); ReadSet("completedGoals", data.CompletedGoals);
+            foreach (var kv in Map("settledRuns")) {
+                if (!(kv.Value is Dictionary<string, object> receipt) || !receipt.TryGetValue("xp", out var x) || !(x is long xp)
+                    || !receipt.TryGetValue("points", out var pt) || !(pt is long points)) throw new FormatException("Incomplete receipt");
+                data.SettledRuns.Add(kv.Key, new SettlementReceiptRecord(checked((int)xp), checked((int)points)));
+            }
+            data.ValidateOrThrow(); return data;
         }
 
         public void ValidateOrThrow()
         {
             if (SchemaVersion <= 0) throw new InvalidOperationException("Invalid schema version: " + SchemaVersion);
             if (Revision < 0) throw new InvalidOperationException("Negative revision: " + Revision);
-            if (TotalExperience < 0) throw new InvalidOperationException("Negative total experience");
+            if (TotalExperience < 0 || TotalExperience > 1000000000) throw new InvalidOperationException("Negative total experience");
             if (AvailablePoints < 0) throw new InvalidOperationException("Negative available points");
             if (TotalPointsSpent < 0) throw new InvalidOperationException("Negative points spent");
 
             ProfileConfig.CalculateLevelProgression(TotalExperience, out _, out int totalEarned, out _, out _);
-            if (AvailablePoints + TotalPointsSpent > totalEarned)
+            if ((long)AvailablePoints + TotalPointsSpent > totalEarned)
             {
                 // Inconsistency check: spent + available cannot exceed total earned from levels
                 throw new InvalidOperationException("Total points exceed earned points");
@@ -220,157 +172,19 @@ namespace Waffle.Homecoming.Profile
 
             foreach (var kvp in Upgrades)
             {
+                if (!ProfileConfig.IsKnownUpgradeId(kvp.Key)) throw new FormatException("Unknown upgrade");
                 if (kvp.Value < 0 || kvp.Value > ProfileConfig.MaxUpgradeRank)
                     throw new InvalidOperationException("Upgrade rank out of range for " + kvp.Key);
             }
+            if (Upgrades.Count != 3) throw new FormatException("Missing upgrade state");
+            foreach (var id in DiscoveredNarratives) if (Places.HomecomingNarrativeCatalog.Default.Resolve(id) == null) throw new FormatException("Unknown memory");
+            foreach (var id in ClaimedTemplates) if (!Places.HomecomingPlaceCatalog.IsUnique(id)) throw new FormatException("Unknown story place");
+            foreach (var id in CompletedGoals) if (id != "goal.homeward" && id != "goal.harvest-memory" && id != "goal.unfinished-song") throw new FormatException("Unknown goal");
+            foreach (var kv in SettledRuns) if (!Guid.TryParse(kv.Key, out var run) || run == Guid.Empty || kv.Value.ExperienceGained < 0
+                || kv.Value.ExperienceGained > 250 || kv.Value.PointsGained < 0 || kv.Value.PointsGained > 10) throw new FormatException("Invalid receipt");
+
         }
 
-        private static void SkipWhitespace(string s, ref int p)
-        {
-            while (p < s.Length && (char.IsWhiteSpace(s[p]) || s[p] == '\r' || s[p] == '\n')) p++;
-        }
-
-        private static string ReadString(string s, ref int p)
-        {
-            if (p >= s.Length || s[p] != '"') throw new FormatException("Expected '\"'");
-            p++;
-            var sb = new StringBuilder();
-            while (p < s.Length)
-            {
-                char c = s[p++];
-                if (c == '\\')
-                {
-                    if (p >= s.Length) throw new FormatException("Unexpected EOF after '\\'");
-                    char esc = s[p++];
-                    if (esc == '"') sb.Append('"');
-                    else if (esc == '\\') sb.Append('\\');
-                    else sb.Append(esc);
-                }
-                else if (c == '"')
-                {
-                    return sb.ToString();
-                }
-                else
-                {
-                    sb.Append(c);
-                }
-            }
-            throw new FormatException("Unterminated string");
-        }
-
-        private static long ReadLong(string s, ref int p)
-        {
-            int start = p;
-            if (p < s.Length && (s[p] == '-' || s[p] == '+')) p++;
-            while (p < s.Length && char.IsDigit(s[p])) p++;
-            string num = s.Substring(start, p - start);
-            return long.Parse(num, CultureInfo.InvariantCulture);
-        }
-
-        private static void ReadStringSet(string s, ref int p, HashSet<string> set)
-        {
-            set.Clear();
-            if (p >= s.Length || s[p] != '[') throw new FormatException("Expected '['");
-            p++;
-            while (p < s.Length)
-            {
-                SkipWhitespace(s, ref p);
-                if (p >= s.Length || s[p] == ']') { p++; break; }
-                string item = ReadString(s, ref p);
-                set.Add(item);
-                SkipWhitespace(s, ref p);
-                if (p < s.Length && s[p] == ',') p++;
-            }
-        }
-
-        private static void ReadUpgradesMap(string s, ref int p, Dictionary<string, int> dict)
-        {
-            dict.Clear();
-            if (p >= s.Length || s[p] != '{') throw new FormatException("Expected '{'");
-            p++;
-            while (p < s.Length)
-            {
-                SkipWhitespace(s, ref p);
-                if (p >= s.Length || s[p] == '}') { p++; break; }
-                string key = ReadString(s, ref p);
-                SkipWhitespace(s, ref p);
-                if (p >= s.Length || s[p] != ':') throw new FormatException("Expected ':'");
-                p++;
-                SkipWhitespace(s, ref p);
-                int val = (int)ReadLong(s, ref p);
-                dict[key] = val;
-                SkipWhitespace(s, ref p);
-                if (p < s.Length && s[p] == ',') p++;
-            }
-        }
-
-        private static void ReadSettledRunsMap(string s, ref int p, Dictionary<string, SettlementReceiptRecord> map)
-        {
-            map.Clear();
-            if (p >= s.Length || s[p] != '{') throw new FormatException("Expected '{'");
-            p++;
-            while (p < s.Length)
-            {
-                SkipWhitespace(s, ref p);
-                if (p >= s.Length || s[p] == '}') { p++; break; }
-                string runId = ReadString(s, ref p);
-                SkipWhitespace(s, ref p);
-                if (p >= s.Length || s[p] != ':') throw new FormatException("Expected ':'");
-                p++;
-                SkipWhitespace(s, ref p);
-                if (p >= s.Length || s[p] != '{') throw new FormatException("Expected '{' for record");
-                p++;
-                int xp = 0, pts = 0;
-                while (p < s.Length)
-                {
-                    SkipWhitespace(s, ref p);
-                    if (p >= s.Length || s[p] == '}') { p++; break; }
-                    string prop = ReadString(s, ref p);
-                    SkipWhitespace(s, ref p);
-                    if (p >= s.Length || s[p] != ':') throw new FormatException("Expected ':'");
-                    p++;
-                    SkipWhitespace(s, ref p);
-                    if (prop == "xp") xp = (int)ReadLong(s, ref p);
-                    else if (prop == "points") pts = (int)ReadLong(s, ref p);
-                    else SkipValue(s, ref p);
-                    SkipWhitespace(s, ref p);
-                    if (p < s.Length && s[p] == ',') p++;
-                }
-                map[runId] = new SettlementReceiptRecord(xp, pts);
-                SkipWhitespace(s, ref p);
-                if (p < s.Length && s[p] == ',') p++;
-            }
-        }
-
-        private static void SkipValue(string s, ref int p)
-        {
-            SkipWhitespace(s, ref p);
-            if (p >= s.Length) return;
-            if (s[p] == '"') { ReadString(s, ref p); return; }
-            if (s[p] == '{')
-            {
-                p++; int depth = 1;
-                while (p < s.Length && depth > 0)
-                {
-                    if (s[p] == '{') depth++;
-                    else if (s[p] == '}') depth--;
-                    p++;
-                }
-                return;
-            }
-            if (s[p] == '[')
-            {
-                p++; int depth = 1;
-                while (p < s.Length && depth > 0)
-                {
-                    if (s[p] == '[') depth++;
-                    else if (s[p] == ']') depth--;
-                    p++;
-                }
-                return;
-            }
-            while (p < s.Length && s[p] != ',' && s[p] != '}' && s[p] != ']') p++;
-        }
     }
 
     public sealed class SettlementReceiptRecord

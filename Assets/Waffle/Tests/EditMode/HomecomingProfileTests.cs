@@ -174,7 +174,7 @@ namespace Waffle.Tests
             Assert.That(shortReceipt.ExperienceGained, Is.EqualTo(0));
 
             // Valid exploration failure (20 seconds) -> +10 XP
-            var longRun = new ExplorationSettlement(Guid.NewGuid(), RunPhase.Defeat, 20f, false, null, null, null);
+            var longRun = new ExplorationSettlement(Guid.NewGuid(), RunPhase.Defeat, 20f, false, new[] { "poi.old-home" }, null, null);
             profile.TrySettle(longRun, out var longReceipt);
             Assert.That(longReceipt.ExperienceGained, Is.EqualTo(10));
         }

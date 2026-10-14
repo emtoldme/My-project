@@ -51,7 +51,7 @@ namespace Waffle.Homecoming.Relics
         public bool TryConsumeSuccessfulDodge(bool echoEnabled, bool playing, bool alive, float now, out DodgeEchoPulse pulse)
         {
             pulse = default;
-            if (!echoEnabled || !playing || !alive || now < readyAt) return false;
+            if (!echoEnabled || !playing || !alive || float.IsNaN(now) || float.IsInfinity(now) || now < 0 || now < readyAt) return false;
             readyAt = now + CooldownSeconds;
             pulse = new DodgeEchoPulse(RadiusMeters, DamageFactor, MaxTargets, readyAt);
             return true;
@@ -87,7 +87,7 @@ namespace Waffle.Homecoming.Relics
 
         public bool TryGrant(PoiReward reward)
         {
-            if (!ready || reward.RunId != runId || !Id(reward.ClaimId) || !Id(reward.ItemId)) return false;
+            if (!ready || reward.RunId != runId || !ValidClaim(reward) || !Id(reward.ItemId)) return false;
             string signature = reward.ItemId + "#" + reward.AdditionalSlots.ToString(System.Globalization.CultureInfo.InvariantCulture);
             if (claims.TryGetValue(reward.ClaimId, out string prior)) return prior == signature;
             if (!Legal(reward.ItemId, reward.AdditionalSlots)) return false;
@@ -176,6 +176,16 @@ namespace Waffle.Homecoming.Relics
             if (itemId == SewingTin || itemId == WorkGloves) return additionalSlots == 1;
             if (itemId == OldGuitar) return additionalSlots == 0;
             return false;
+        }
+
+        static bool ValidClaim(PoiReward reward)
+        {
+            if (string.IsNullOrEmpty(reward.ClaimId)) return false;
+            var p = reward.ClaimId.Split(':');
+            if (p.Length != 5 || p[0] != "hc1" || !int.TryParse(p[1], out int seed)
+                || !int.TryParse(p[2], out int x) || !int.TryParse(p[3], out int z)) return false;
+            string template = reward.ItemId == SewingTin ? "poi.old-home" : reward.ItemId == WorkGloves ? "poi.old-silo" : "poi.old-guitar";
+            return p[4] == template && reward.ClaimId == HomecomingContract.SiteId(seed, x, z, template);
         }
 
         int EquippedIndex(string itemId)

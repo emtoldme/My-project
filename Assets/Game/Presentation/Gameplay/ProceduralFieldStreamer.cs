@@ -49,6 +49,7 @@ namespace Reverb.Drafts.RC01.Presentation
             loadRadius=Mathf.Clamp(loadRadius,2,4);
             Seed=randomizeSeed?unchecked(Environment.TickCount*397^Guid.NewGuid().GetHashCode()):worldSeed;
             Layout=new ProceduralFieldLayout(Seed,authoredTerrain.terrainData,authoredDressing);
+            loop.InstallHomecomingWorld(Seed);
             sources=new Source[stalkMeshes.Length];for(int i=0;i<sources.Length;i++){var m=stalkMeshes[i];sources[i]=new Source{vertices=m.vertices,normals=m.normals,uv=m.uv,indices=m.triangles};}
             wind=new Material(wheatMaterial){name="Exploration wheat · run instance"};wind.SetFloat("_ProceduralField",1);wind.SetFloat("_UseExternalTime",1);
             generated=new GameObject("Exploration · resident field chunks").transform;generated.SetParent(transform,false);

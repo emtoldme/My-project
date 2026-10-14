@@ -106,7 +106,10 @@ namespace Waffle.Homecoming.Profile
                 // Restore main file from valid backup
                 try
                 {
-                    File.Copy(backupFilePath, mainFilePath, true);
+                    string recoveryPath = tempFilePath + ".recover";
+                    File.Copy(backupFilePath, recoveryPath, true);
+                    if (File.Exists(mainFilePath)) File.Replace(recoveryPath, mainFilePath, null);
+                    else File.Move(recoveryPath, mainFilePath);
                 }
                 catch { /* Ignore non-fatal copy failure */ }
 
@@ -134,54 +137,14 @@ namespace Waffle.Homecoming.Profile
                     Directory.CreateDirectory(dir);
                 }
 
-                // Step 1: Write completely to temporary file
+                if (Encoding.UTF8.GetByteCount(jsonPayload) > ProfileConfig.MaxFileSizeBytes) return ProfileSaveResult.Fail("Profile exceeds size limit");
+                ProfileData.FromJson(jsonPayload);
                 CleanUpLeftoverTempFile();
-                File.WriteAllText(tempFilePath, jsonPayload, Encoding.UTF8);
-
-                // Step 2: Flush and verify temporary file exists and is not empty
-                var tempFi = new FileInfo(tempFilePath);
-                if (!tempFi.Exists || tempFi.Length == 0)
-                {
-                    return ProfileSaveResult.Fail("Temporary file write failed or file is empty.");
+                using (var stream = new FileStream(tempFilePath, FileMode.CreateNew, FileAccess.Write, FileShare.None)) {
+                    var bytes = Encoding.UTF8.GetBytes(jsonPayload); stream.Write(bytes, 0, bytes.Length); stream.Flush(true);
                 }
-
-                // Step 3: Backup existing main file if present
-                if (File.Exists(mainFilePath))
-                {
-                    try
-                    {
-                        File.Copy(mainFilePath, backupFilePath, true);
-                    }
-                    catch (Exception)
-                    {
-                        // Backup warning, proceed with caution or log
-                    }
-                }
-
-                // Step 4: Atomic file replacement
-                // On Windows, File.Replace handles atomic swap; if destination doesn't exist, File.Move.
-                if (File.Exists(mainFilePath))
-                {
-                    try
-                    {
-                        File.Replace(tempFilePath, mainFilePath, null);
-                    }
-                    catch (PlatformNotSupportedException)
-                    {
-                        File.Delete(mainFilePath);
-                        File.Move(tempFilePath, mainFilePath);
-                    }
-                    catch (IOException)
-                    {
-                        // Fallback for Windows file lock / replace quirks
-                        File.Delete(mainFilePath);
-                        File.Move(tempFilePath, mainFilePath);
-                    }
-                }
-                else
-                {
-                    File.Move(tempFilePath, mainFilePath);
-                }
+                if (File.Exists(mainFilePath)) File.Replace(tempFilePath, mainFilePath, backupFilePath);
+                else File.Move(tempFilePath, mainFilePath);
 
                 CleanUpLeftoverTempFile();
                 return ProfileSaveResult.Ok();
@@ -211,8 +174,9 @@ namespace Waffle.Homecoming.Profile
             {
                 if (File.Exists(sourcePath))
                 {
-                    string target = corruptedFilePath + "." + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
-                    File.Copy(sourcePath, target, true);
+                    string target = corruptedFilePath + "." + Path.GetFileName(sourcePath) + "."
+                        + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "." + Guid.NewGuid().ToString("N");
+                    File.Copy(sourcePath, target, false);
                 }
             }
             catch { /* Best effort */ }

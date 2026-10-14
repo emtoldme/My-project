@@ -70,7 +70,7 @@ namespace Waffle.Homecoming
                 return;
 
             // 2. EventId guard: deduplicate strictly by EventId
-            if (string.IsNullOrWhiteSpace(fact.EventId) || !_observedEventIds.Add(fact.EventId))
+            if (string.IsNullOrWhiteSpace(fact.EventId) || fact.EventId.Length > 128 || _observedEventIds.Count >= 512 || !_observedEventIds.Add(fact.EventId))
                 return;
 
             string subject = fact.SubjectId ?? string.Empty;
@@ -78,26 +78,23 @@ namespace Waffle.Homecoming
             // Process based on fact kind
             switch (fact.Kind)
             {
-                case HomecomingEventKind.SiteDiscovered:
                 case HomecomingEventKind.NarrativeViewed:
-                    if (subject.Contains("poi.old-home") || subject == "poi.old-home")
+                    if (subject == "poi.old-home")
                         _homewardHomeViewed = true;
-                    if (subject.Contains("poi.old-silo") || subject == "poi.old-silo")
+                    if (subject == "poi.old-silo")
                         _harvestSiloViewed = true;
                     break;
 
                 case HomecomingEventKind.SiteClaimed:
-                    if (subject.Contains("poi.old-home") || subject == "item.sewing-tin")
+                    if (subject == "poi.old-home" || subject == "item.sewing-tin")
                     {
-                        _homewardHomeViewed = true; // Claiming implicitly fulfills discovery
                         _homewardTinClaimed = true;
                     }
-                    if (subject.Contains("poi.old-silo") || subject == "item.work-gloves")
+                    if (subject == "poi.old-silo" || subject == "item.work-gloves")
                     {
-                        _harvestSiloViewed = true;
                         _harvestGlovesClaimed = true;
                     }
-                    if (subject.Contains("poi.old-guitar") || subject == "item.old-guitar")
+                    if (subject == "poi.old-guitar" || subject == "item.old-guitar")
                     {
                         _songGuitarClaimed = true;
                     }

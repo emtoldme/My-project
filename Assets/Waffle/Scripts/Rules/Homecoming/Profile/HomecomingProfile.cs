@@ -36,7 +36,7 @@ namespace Waffle.Homecoming.Profile
             if (loadStatus == ProfileLoadStatus.VersionTooNewReadOnly)
             {
                 isReadOnly = true;
-                currentData = ProfileData.FromJson(loadRes.JsonPayload);
+                currentData = new ProfileData(); // Unknown future schema is never interpreted or overwritten.
                 return;
             }
 
@@ -154,6 +154,12 @@ namespace Waffle.Homecoming.Profile
                 return false;
             }
 
+            foreach (var id in settlement.ClaimedTemplateIds) if (!Places.HomecomingPlaceCatalog.IsUnique(id)) { receipt = default; return false; }
+            foreach (var id in settlement.CompletedGoalIds) if (id != "goal.homeward" && id != "goal.harvest-memory" && id != "goal.unfinished-song") { receipt = default; return false; }
+            foreach (var id in settlement.DiscoveredNarrativeIds) if (Places.HomecomingNarrativeCatalog.Default.Resolve(id) == null) { receipt = default; return false; }
+            if (settlement.BossDefeated && settlement.Phase != RunPhase.Victory) { receipt = default; return false; }
+            bool explored = settlement.ClaimedTemplateIds.Count > 0;
+            foreach (var id in settlement.DiscoveredNarrativeIds) if (Places.HomecomingPlaceCatalog.IsKnownTemplate(id)) explored = true;
             // Work on a tentative candidate copy
             var candidate = currentData.Clone();
             int xpEarned = 0;
@@ -192,7 +198,7 @@ namespace Waffle.Homecoming.Profile
             else if (settlement.Phase == RunPhase.Defeat)
             {
                 // Effective failure guarantee: only if duration >= threshold (not immediate instant retry)
-                if (settlement.Duration >= ProfileConfig.MinimumDurationForFailureGuaranteeSeconds)
+                if (explored && settlement.Duration >= ProfileConfig.MinimumDurationForFailureGuaranteeSeconds)
                 {
                     xpEarned += ProfileConfig.XpFailureGuarantee;
                 }
@@ -216,7 +222,7 @@ namespace Waffle.Homecoming.Profile
 
             // Calculate level up and mending points gained
             long previousXp = candidate.TotalExperience;
-            long newXp = previousXp + xpEarned;
+            long newXp = Math.Min(1000000000, previousXp + xpEarned);
 
             ProfileConfig.CalculateLevelProgression(previousXp, out _, out int prevTotalEarned, out _, out _);
             ProfileConfig.CalculateLevelProgression(newXp, out _, out int newTotalEarned, out _, out _);
@@ -297,7 +303,7 @@ namespace Waffle.Homecoming.Profile
             bool anyNew = false;
             foreach (var nid in narrativeIds)
             {
-                if (string.IsNullOrWhiteSpace(nid)) continue;
+                if (string.IsNullOrWhiteSpace(nid) || Places.HomecomingNarrativeCatalog.Default.Resolve(nid) == null) return false;
                 if (candidate.DiscoveredNarratives.Add(nid))
                 {
                     anyNew = true;

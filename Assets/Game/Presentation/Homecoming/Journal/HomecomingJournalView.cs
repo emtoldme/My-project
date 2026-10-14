@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Waffle;
 using Waffle.Homecoming;
 
 namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
@@ -68,6 +70,14 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
 
         private Texture2D _texWhite;
 
+        GameLoop Host => viewSourceComponent as GameLoop;
+        public bool IsOpen => _isOpen;
+        string viewedNarrative;
+
+        private void Start()
+        {
+            if (Host != null && Host.BeforeDeparture) { _isOpen = true; _currentTab = JournalTab.Profile; }
+        }
         private void Awake()
         {
             InitializeDataSources();
@@ -80,7 +90,7 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
             if (commandsComponent is IHomecomingCommands cmd)
                 _commands = cmd;
 
-            if (_viewSource == null || _commands == null)
+            if ((_viewSource == null || _commands == null) && isPreviewMode)
             {
                 _mockHost = new MockHomecomingHost();
                 _viewSource = _mockHost;
@@ -91,20 +101,21 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
 
         private void Update()
         {
+            if (Host != null) _isOpen = Host.HomecomingJournalOpen;
             // Toggle Journal with 'J' key
-            if (Input.GetKeyDown(KeyCode.J))
+            if ((Keyboard.current != null && Keyboard.current.jKey.wasPressedThisFrame))
             {
                 ToggleJournal();
             }
 
             // Close on Escape if open
-            if (_isOpen && Input.GetKeyDown(KeyCode.Escape))
+            if (_isOpen && (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame))
             {
                 CloseJournal();
             }
 
             // F8 Scenic View toggle
-            if (Input.GetKeyDown(KeyCode.F8))
+            if ((Keyboard.current != null && Keyboard.current.f8Key.wasPressedThisFrame))
             {
                 scenicView = !scenicView;
             }
@@ -133,13 +144,13 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
             }
             else
             {
-                // Fallback for mock preview
-                _isOpen = true;
+                SetFeedback("现在无法打开日志，请先完成成长选择");
             }
         }
 
         public void CloseJournal()
         {
+            if (Host != null && Host.BeforeDeparture) return;
             _isOpen = false;
             if (_commands != null)
                 _commands.CloseJournal();
@@ -184,7 +195,6 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                 font = _font,
                 fontSize = 14,
                 wordWrap = true,
-                lineSpacing = 1.3f,
                 normal = { textColor = new Color(0.85f, 0.88f, 0.90f) }
             };
 
@@ -232,14 +242,17 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
 
         private void OnGUI()
         {
-            if (scenicView) return;
+            if (scenicView && Host != null && !Host.BeforeDeparture && !Host.Sim.State.Phase.IsTerminal()) return;
+            if (_viewSource == null || _commands == null) return;
             EnsureStyles();
+            var oldMatrix = GUI.matrix; ImguiScale.Apply();
 
             // 1. Draw In-Game Nearby POI Prompt if active and not in journal
             if (!_isOpen && showPoiPrompt)
             {
                 DrawPoiPromptOverlay();
                 DrawJournalShortcutHint();
+                DrawFieldDirections();
             }
 
             // 2. Draw Full Journal Dialog when open
@@ -247,12 +260,33 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
             {
                 DrawJournalModal();
             }
+            GUI.matrix = oldMatrix;
+        }
+
+        private void DrawFieldDirections()
+        {
+            if (Host?.Sim?.Places == null || Host.Sim.State.Phase != RunPhase.Playing) return;
+            float y = ImguiScale.Height - 300;
+            bool hasGuideBackground = false;
+            foreach (var site in Waffle.Homecoming.Places.HomecomingPlacesLayout.UniqueSites(Host.Sim.HomecomingWorldSeed))
+            {
+                if (Host.Sim.Places.StatusOf(site.SiteId) == PoiStatus.Claimed) continue;
+                var position = new Vector3(site.Position.X, 0, site.Position.Y);
+                float distance = Vector2.Distance(new Vector2(Host.Sim.PlayerX, Host.Sim.PlayerZ), new Vector2(site.Position.X, site.Position.Y));
+                if (!hasGuideBackground) { DrawSolidRect(new Rect(16, y - 4, 290, 80), ColorInk); hasGuideBackground = true; }
+                Vector3 delta = position - new Vector3(Host.Sim.PlayerX, 0, Host.Sim.PlayerZ);
+                Vector2 direction = Camera.main != null ? new Vector2(Vector3.Dot(delta, Camera.main.transform.right), Vector3.Dot(delta, Camera.main.transform.up)) : new Vector2(delta.x, delta.z);
+                string[] arrows = { "→", "↗", "↑", "↖", "←", "↙", "↓", "↘" };
+                int index = ((Mathf.RoundToInt(Mathf.Atan2(direction.y, direction.x) * 4 / Mathf.PI) % 8) + 8) % 8;
+                string name = _viewSource.ReadNarrative(site.NarrativeId)?.Title ?? "田间旧地";
+                GUI.Label(new Rect(24, y, 270, 24), arrows[index] + "  " + name + " · " + Mathf.RoundToInt(distance) + " 米", _styleSmall); y += 24;
+            }
         }
 
         private void DrawJournalShortcutHint()
         {
             // Discreet prompt at top right
-            Rect rect = new Rect(Screen.width - 240, 16, 220, 28);
+            Rect rect = new Rect(ImguiScale.Width - 240, 122, 220, 28);
             DrawSolidRect(rect, ColorInk);
             DrawBorder(rect, ColorBrass, 1);
             GUI.Label(new Rect(rect.x + 8, rect.y + 4, rect.width - 16, 20), "按 [J] 键翻开故乡回忆日志", _styleSmall);
@@ -270,8 +304,8 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
 
             float width = 380f;
             float height = 76f;
-            float x = (Screen.width - width) * 0.5f;
-            float y = Screen.height - 180f; // Above weapon bar, avoids center card
+            float x = (ImguiScale.Width - width) * 0.5f;
+            float y = ImguiScale.Height - 180f; // Above weapon bar, avoids center card
             Rect panel = new Rect(x, y, width, height);
 
             DrawSolidRect(panel, ColorInkDark);
@@ -289,7 +323,7 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                 Rect btn = new Rect(x + width - 110, y + 42, 96, 24);
                 if (GUI.Button(btn, "收取 [E]", _styleActionButton))
                 {
-                    _commands?.TryInteract(Guid.Empty, poi.Site.SiteId);
+                    _commands?.TryInteract((Host?.Sim?.RunId ?? Guid.Empty), poi.Site.SiteId);
                 }
             }
             else if (poi.Status == PoiStatus.Claimed)
@@ -301,13 +335,13 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
         private void DrawJournalModal()
         {
             // Dim background
-            DrawSolidRect(new Rect(0, 0, Screen.width, Screen.height), new Color(0, 0, 0, 0.65f));
+            DrawSolidRect(new Rect(0, 0, ImguiScale.Width, ImguiScale.Height), new Color(0, 0, 0, 0.65f));
 
             // Dialog panel
-            float modalW = Mathf.Clamp(Screen.width * 0.78f, 860f, 1180f);
-            float modalH = Mathf.Clamp(Screen.height * 0.82f, 540f, 760f);
-            float modalX = (Screen.width - modalW) * 0.5f;
-            float modalY = (Screen.height - modalH) * 0.5f;
+            float modalW = Mathf.Clamp(ImguiScale.Width * 0.78f, 860f, 1180f);
+            float modalH = Mathf.Clamp(ImguiScale.Height * 0.82f, 540f, 760f);
+            float modalX = (ImguiScale.Width - modalW) * 0.5f;
+            float modalY = (ImguiScale.Height - modalH) * 0.5f;
             Rect modalRect = new Rect(modalX, modalY, modalW, modalH);
 
             DrawSolidRect(modalRect, ColorInk);
@@ -317,10 +351,12 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
             GUI.Label(new Rect(modalX + 24, modalY + 16, 400, 32), "故乡记忆与行囊日志", _styleTitle);
 
             // Close Button
-            if (GUI.Button(new Rect(modalX + modalW - 90, modalY + 16, 68, 28), "关闭 [Esc]", _styleActionButton))
+            if (GUI.Button(new Rect(modalX + modalW - 90, modalY + 16, 68, 28), (Host != null && Host.BeforeDeparture) ? "出发" : "关闭 [Esc]", _styleActionButton))
             {
-                CloseJournal();
+                if (Host != null && Host.BeforeDeparture) { if (Host.StartHomecomingJourney()) _isOpen = false; }
+                else CloseJournal();
             }
+            if (Host != null && Host.Sim.State.Phase.IsTerminal() && GUI.Button(new Rect(modalX + modalW - 230, modalY + 16, 128, 28), "再沿田间路出发", _styleActionButton)) Host.Restart();
 
             // Tab Buttons
             float tabY = modalY + 54;
@@ -360,14 +396,21 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
 
             // Footer Feedback bar
             Rect footerRect = new Rect(modalX + 24, modalY + modalH - 40, modalW - 48, 28);
-            if (!string.IsNullOrEmpty(_statusFeedback))
+            if (Host != null)
+            {
+                string saved = Host.HomecomingSaveMessage;
+                if (Host.HomecomingReceipt.HasValue) { var receipt = Host.HomecomingReceipt.Value; saved = "此行带回 " + receipt.ExperienceGained + " 余响经验，" + receipt.PointsGained + " 修补点 · " + saved; }
+                GUI.Label(new Rect(footerRect.x + 4, footerRect.y + 4, footerRect.width - 100, 22), string.IsNullOrEmpty(_statusFeedback) ? saved : _statusFeedback, _styleSmall);
+                if (Host.HomecomingSaveFailed && GUI.Button(new Rect(footerRect.xMax - 88, footerRect.y, 84, 26), "重试保存", _styleActionButton)) Host.FlushHomecoming();
+            }
+            else if (!string.IsNullOrEmpty(_statusFeedback))
             {
                 DrawSolidRect(footerRect, new Color(0.12f, 0.22f, 0.24f, 0.9f));
                 GUI.Label(new Rect(footerRect.x + 12, footerRect.y + 4, footerRect.width - 24, 20), _statusFeedback, _styleSmall);
             }
             else
             {
-                GUI.Label(new Rect(footerRect.x + 4, footerRect.y + 6, footerRect.width - 8, 20), "提示：使用鼠标点击或键盘操作，探索所得均来自真实确认快照", _styleTiny);
+                GUI.Label(new Rect(footerRect.x + 4, footerRect.y + 6, footerRect.width - 8, 20), "提示：使用鼠标点击或键盘操作，旧物的故事会留在日志里", _styleTiny);
             }
         }
 
@@ -437,7 +480,7 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
 
                 if (!isUnlocked)
                 {
-                    GUI.Label(new Rect(slotRect.x + 8, slotRect.y + 45, slotRect.width - 16, 30), "🔒 待探索解锁\n(发现老屋/老筒仓)", _styleTiny);
+                    GUI.Label(new Rect(slotRect.x + 8, slotRect.y + 45, slotRect.width - 16, 30), "待探索解锁\n(发现老屋/老筒仓)", _styleTiny);
                     continue;
                 }
 
@@ -465,11 +508,13 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                     string name = ne != null ? ne.Title : equipped.ItemId;
                     GUI.Label(new Rect(slotRect.x + 8, slotRect.y + 32, slotRect.width - 16, 40), name, _styleSubtitle);
 
+                    if (Host?.Sim?.Relics != null && Host.Sim.Relics.TryReadAbility(equipped.ItemId, Host.Sim.State.Now, out var ability))
+                        GUI.Label(new Rect(slotRect.x + 8, slotRect.y + 62, slotRect.width - 16, 32), equipped.ItemId == "item.old-guitar" ? "闪避残响 · 冷却 " + ability.EchoCooldownRemaining.ToString("F1") + " 秒" : equipped.ItemId == "item.sewing-tin" ? "最大生命 +8%" : "拾取范围 +15%", _styleSmall);
                     if (GUI.Button(new Rect(slotRect.x + 8, slotRect.y + slotH - 32, slotRect.width - 16, 24), "卸装入库", _styleActionButton))
                     {
                         if (_commands != null)
                         {
-                            bool success = _commands.TryUnequip(Guid.Empty, i);
+                            bool success = _commands.TryUnequip((Host?.Sim?.RunId ?? Guid.Empty), i);
                             SetFeedback(success ? "卸装成功" : "卸装失败：请在安全或暂停时换装");
                         }
                     }
@@ -527,7 +572,7 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
 
                         if (emptySlot >= 0 && _commands != null)
                         {
-                            bool success = _commands.TryEquip(Guid.Empty, itemId, emptySlot);
+                            bool success = _commands.TryEquip((Host?.Sim?.RunId ?? Guid.Empty), itemId, emptySlot);
                             SetFeedback(success ? $"已装备 {name} 至槽位 {emptySlot + 1}" : "装备失败：非安全探索状态");
                         }
                         else
@@ -588,16 +633,17 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                 NarrativeEntry entry = _viewSource.ReadNarrative(_selectedNarrativeId);
                 if (entry != null)
                 {
+                    if (Event.current.type == EventType.Repaint && viewedNarrative != entry.Id) { Host?.TryViewHomecomingNarrative(entry.Id); viewedNarrative = entry.Id; }
                     GUI.Label(new Rect(detailRect.x + 16, detailRect.y + 14, detailRect.width - 32, 28), entry.Title, _styleTitle);
-                    GUI.Label(new Rect(detailRect.x + 16, detailRect.y + 44, 200, 20), $"类别：{entry.Kind}", _styleSmall);
+                    GUI.Label(new Rect(detailRect.x + 16, detailRect.y + 44, 200, 20), "类别：" + (entry.Kind == NarrativeKind.Place ? "旧地" : entry.Kind == NarrativeKind.Item ? "随身旧物" : entry.Kind == NarrativeKind.Goal ? "故乡心愿" : "行前修补"), _styleSmall);
 
                     _scrollNarrativeDetail = GUI.BeginScrollView(
                         new Rect(detailRect.x + 12, detailRect.y + 70, detailRect.width - 24, detailRect.height - 82),
                         _scrollNarrativeDetail,
-                        new Rect(0, 0, detailRect.width - 50, 260)
+                        new Rect(0, 0, detailRect.width - 50, Mathf.Max(260, _styleBodyLong.CalcHeight(new GUIContent(entry.Body), detailRect.width - 66) + 20))
                     );
 
-                    GUI.Label(new Rect(8, 8, detailRect.width - 66, 240), entry.Body, _styleBodyLong);
+                    GUI.Label(new Rect(8, 8, detailRect.width - 66, Mathf.Max(240, _styleBodyLong.CalcHeight(new GUIContent(entry.Body), detailRect.width - 66))), entry.Body, _styleBodyLong);
 
                     GUI.EndScrollView();
                 }
@@ -646,9 +692,12 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                     string name = ne != null ? ne.Title : up.Id;
                     GUI.Label(new Rect(card.x + 14, card.y + 10, 300, 22), $"{name} (等级: {up.Rank}/{up.MaxRank})", _styleSubtitle);
 
-                    string desc = ne != null ? ne.Body : "暂无说明";
+                    string benefit = up.Id == "meta.mended-coat" ? "每级最大生命 +2%" : up.Id == "meta.travel-light" ? "每级移动速度 +1%" : "每级拾取范围 +3%";
+                    string desc = benefit + " · 下次出发生效\n" + (ne != null ? ne.Body : "条目内容缺失");
                     GUI.Label(new Rect(card.x + 14, card.y + 34, card.width - 150, 48), desc, _styleBody);
 
+                    bool oldEnabled = GUI.enabled;
+                    GUI.enabled = oldEnabled && (Host == null || Host.CanPurchaseHomecoming) && profile.AvailablePoints >= up.NextCost && up.NextCost > 0;
                     // Upgrade action button
                     if (up.Rank < up.MaxRank)
                     {
@@ -667,6 +716,7 @@ namespace Reverb.Drafts.RC01.Presentation.Homecoming.Journal
                     {
                         GUI.Label(new Rect(card.x + card.width - 130, card.y + 30, 116, 24), "【已达上限】", _styleMutedText());
                     }
+                    GUI.enabled = oldEnabled;
                 }
             }
 

@@ -378,6 +378,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
 
         void OnGUI()
         {
+            if (loop != null && (loop.BeforeDeparture || loop.HomecomingJournalOpen)) return;
             if(scenicView&&loop?.Sim!=null&&!loop.Sim.State.Phase.IsTerminal())return;
             InitStyles();
             var oldMatrix = GUI.matrix;

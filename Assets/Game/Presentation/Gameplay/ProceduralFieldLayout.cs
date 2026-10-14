@@ -25,6 +25,7 @@ namespace Reverb.Drafts.RC01.Presentation
         readonly Color[] homeDress;
         readonly int paintSize,dressSize;
         readonly Vector2 homeOrigin,homeSize;
+        readonly System.Collections.Generic.Dictionary<Vector2Int,System.Collections.Generic.IReadOnlyList<Waffle.Homecoming.PoiSite>> clearingCache = new System.Collections.Generic.Dictionary<Vector2Int,System.Collections.Generic.IReadOnlyList<Waffle.Homecoming.PoiSite>>();
         readonly float phase;
         public ProceduralFieldLayout(int seed,TerrainData authoredHome=null,Texture2D dressing=null)
         {
@@ -90,7 +91,21 @@ namespace Reverb.Drafts.RC01.Presentation
                 {Color dress=Dress(u,v);height=Mathf.Lerp(height,dress.r,blend);density=Mathf.Lerp(density,dress.g*(1-soil),blend);ripe=Mathf.Lerp(ripe,dress.b,blend);}
                 else density*=1-soil;
             }
+            foreach(var site in ClearingSites(x,z))
+            {
+                float distance=Vector2.Distance(new Vector2(x,z),new Vector2(site.Position.X,site.Position.Y));
+                float clear=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(7,11,distance));
+                soil=Mathf.Max(soil,clear*.82f);density*=1-clear;height=Mathf.Lerp(height,.12f,clear);straw=Mathf.Lerp(straw,.15f,clear);
+            }
             return new FieldSample(soil,straw,height,Mathf.Clamp01(density),ripe);
+        }
+        System.Collections.Generic.IReadOnlyList<Waffle.Homecoming.PoiSite> ClearingSites(float x,float z)
+        {
+            var key=new Vector2Int(Waffle.Homecoming.Places.HomecomingPlacesLayout.MacroOf(x),Waffle.Homecoming.Places.HomecomingPlacesLayout.MacroOf(z));
+            if(clearingCache.TryGetValue(key,out var sites))return sites;
+            if(clearingCache.Count>=128)clearingCache.Clear();
+            sites=Waffle.Homecoming.Places.HomecomingPlacesLayout.SitesNear(Seed,new Waffle.Combat.Vec2(key.x*72,key.y*72),100);
+            clearingCache.Add(key,sites);return sites;
         }
         float Paint(float u,float v,int layer)
         {

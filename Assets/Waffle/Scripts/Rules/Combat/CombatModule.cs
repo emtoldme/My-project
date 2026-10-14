@@ -130,6 +130,7 @@ namespace Waffle.Combat
             StepGameplayModules(input);
             if (GameplayView == null || gameplayModules.Encounters == null) SpawnStep(); // T3
             EnemyMoveStep(dt);           // T4
+            ResolveHomecomingEcho();
             WeaponStep(dt, input.Stats); // T5
             ProjectileStep(dt);          // T6
             if (ruleExtension != null)

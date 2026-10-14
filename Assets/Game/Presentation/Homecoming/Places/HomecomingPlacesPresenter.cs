@@ -28,6 +28,11 @@ namespace Reverb.Homecoming.Places
 
         public static Vector3 ToWorld(Vec2 p, float y = 0f) => new Vector3(p.X, y, p.Y);
 
+        void Start()
+        {
+            var loop = GetComponent<Waffle.GameLoop>();
+            if (Source == null && loop != null) Source = loop.ReadHomecomingPlaceVisuals;
+        }
         void LateUpdate()
         {
             var views = Source?.Invoke();

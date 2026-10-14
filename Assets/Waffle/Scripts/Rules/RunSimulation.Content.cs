@@ -78,7 +78,7 @@ namespace Waffle
             }
             int oldMax = State.MaxHp;
             ContentStats = GrowthStats.From(Growth);
-            State.MaxHp = (int)Math.Round(Config.maxHp * ContentStats.MaxHpMul);
+            State.MaxHp = (int)Math.Round(CurrentValue(UpgradeKind.MaxHp));
             State.Hp = Math.Min(State.MaxHp, State.Hp + Math.Max(0, State.MaxHp - oldMax));
             int shieldRank = Growth.RankOf("P18");
             if (shieldRank > 0 && float.IsPositiveInfinity(nextShieldAt))

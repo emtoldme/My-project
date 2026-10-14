@@ -16,6 +16,8 @@ namespace Reverb.Homecoming.Places
         public float lampEase = 3f;
         public PoiStatus Status { get; private set; }
         float target;
+        Waffle.GameLoop loop;
+        void Awake() { loop = GetComponentInParent<Waffle.GameLoop>(); }
 
         public void Apply(PoiStatus status)
         {
@@ -28,8 +30,8 @@ namespace Reverb.Homecoming.Places
         void Update()
         {
             if (warmLamps == null) return;
-            // 用unscaled时间只做灯光渐变（纯表现）；暂停/升级时快照不变，灯也就停在原状态。
-            float k = 1f - Mathf.Exp(-lampEase * Time.unscaledDeltaTime);
+            float dt = loop?.Sim != null ? (loop.Sim.State.Phase == Waffle.RunPhase.Playing ? loop.Sim.LastDt : 0) : Time.deltaTime;
+            float k = 1f - Mathf.Exp(-lampEase * dt);
             foreach (var l in warmLamps) if (l != null) l.intensity = Mathf.Lerp(l.intensity, target, k);
         }
     }

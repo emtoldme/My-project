@@ -50,7 +50,7 @@ namespace Waffle.Tests
         [Test]
         public void DeduplicatesByEventId()
         {
-            var fact1 = new HomecomingFact(_runId, "evt-same", HomecomingEventKind.SiteDiscovered, "poi.old-home");
+            var fact1 = new HomecomingFact(_runId, "evt-same", HomecomingEventKind.NarrativeViewed, "poi.old-home");
             _module.Observe(fact1);
 
             // Same eventId with different content should be discarded
@@ -66,7 +66,7 @@ namespace Waffle.Tests
         public void Goal1_Homeward_CompletesWhenDiscoveredAndClaimed()
         {
             // Step 1: Discover home
-            _module.Observe(new HomecomingFact(_runId, "evt-10", HomecomingEventKind.SiteDiscovered, "poi.old-home"));
+            _module.Observe(new HomecomingFact(_runId, "evt-10", HomecomingEventKind.NarrativeViewed, "poi.old-home"));
             var goals = _module.Read();
             Assert.That(goals[0].Completed, Is.False);
             Assert.That(goals[0].ProgressText, Does.Contain("寻觅窗台针线盒"));
@@ -82,7 +82,7 @@ namespace Waffle.Tests
         public void Goal2_HarvestMemory_CompletesWhenSiloViewed_GlovesClaimed_AndEquipped()
         {
             // 1. View silo
-            _module.Observe(new HomecomingFact(_runId, "evt-20", HomecomingEventKind.SiteDiscovered, "poi.old-silo"));
+            _module.Observe(new HomecomingFact(_runId, "evt-20", HomecomingEventKind.NarrativeViewed, "poi.old-silo"));
             Assert.That(_module.Read()[1].Completed, Is.False);
 
             // 2. Claim gloves
@@ -120,6 +120,7 @@ namespace Waffle.Tests
         public void Reset_ClearsAllProgressAndGeneratesFreshGoalViews()
         {
             // Complete goal 1
+            _module.Observe(new HomecomingFact(_runId, "e0", HomecomingEventKind.NarrativeViewed, "poi.old-home"));
             _module.Observe(new HomecomingFact(_runId, "e1", HomecomingEventKind.SiteClaimed, "poi.old-home"));
             Assert.That(_module.Read()[0].Completed, Is.True);
 

@@ -104,7 +104,9 @@ namespace Waffle.Tests
 
         static PoiReward Reward(Guid run, string claim, string item, int slots)
         {
-            return new PoiReward(run, claim, item, slots);
+            int cell = 0; foreach (char c in claim) cell = unchecked(cell * 31 + c);
+            string template = item == RelicInventory.SewingTin ? "poi.old-home" : item == RelicInventory.WorkGloves ? "poi.old-silo" : "poi.old-guitar";
+            return new PoiReward(run, HomecomingContract.SiteId(14104, cell, 0, template), item, slots);
         }
 
         static int Count(RelicInventory bag, string item)
