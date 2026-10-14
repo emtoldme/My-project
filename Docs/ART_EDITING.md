@@ -1,5 +1,7 @@
 # 自己修改美术
 
+最新R8分支为 `perf/ground-light-props-r8`，同一独立workspace；地面材质 `Environments/ProceduralFields/FieldGround.mat` 使用 `Art/VisualIdentity/FieldR8` 的新底色/法线。运行麦田使用共享模型实例，临时地块中不再有完整合并麦网格；编辑源仍为WheatR5的12个模型。性能预算、灯光与道具效果入口见[本轮说明](FIELD_PERFORMANCE_R8.md)。不要用旧安装器重建当前场景。
+
 当前R7工程为 `G:/图书馆/新建文件夹 (2)/Reviews/GP00-2026-10-13/workspace`，分支 `art/human-echoes-r7`，Unity 版本6000.4.3f1；其他旧工程不会自动同步。打开 **Reverb → 美术工作台 → 打开主场景**，或双击 `Assets/Game/Scenes/Main.unity`。按Play，从出发界面开始。
 
 停止 Play 后再改并保存。运行中生成的敌人、子弹和特效是临时实例；要长期保存效果，请改它们的 Prefab、材质或场景上的绑定。当前新视觉分支为 `art/visual-editing`；旧 `art/manual-editing` 和 safety/pre-visual-rebuild-20261013 保留重构前的本地改动。

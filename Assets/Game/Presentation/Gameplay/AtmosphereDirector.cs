@@ -31,6 +31,7 @@ namespace Reverb.Drafts.RC01.Presentation
         float distanceCarry;
         int footSide, sparkBudget;
         bool initialized;
+        RC01GrowthHud growthHud;GameplayFeedbackView feedbackView;
 
         void Start()
         {
@@ -38,6 +39,7 @@ namespace Reverb.Drafts.RC01.Presentation
             if (weather == null) weather = FindAnyObjectByType<GardenWeather>();
             if (cameraRig == null) cameraRig = FindAnyObjectByType<CameraFollow>();
             if (loop == null || volumeMaterial == null) { enabled = false; return; }
+            growthHud=loop.GetComponent<RC01GrowthHud>();feedbackView=loop.GetComponent<GameplayFeedbackView>();
             coneMesh = ConeMesh();
             if (weather?.searchlights != null) foreach (var light in weather.searchlights)
             {
@@ -127,13 +129,12 @@ namespace Reverb.Drafts.RC01.Presentation
         {
             if (!initialized || loop?.Sim == null) return;
             if (Keyboard.current != null && Keyboard.current.f8Key.wasPressedThisFrame) scenicView = !scenicView;
-            var hud = loop.GetComponent<RC01GrowthHud>(); if (hud != null) hud.scenicView = scenicView;
-            var feedback = loop.GetComponent<GameplayFeedbackView>(); if (feedback != null) feedback.scenicView = scenicView;
+            if(growthHud!=null)growthHud.scenicView=scenicView;if(feedbackView!=null)feedbackView.scenicView=scenicView;
             bool playing = loop.Sim.State.Phase == RunPhase.Playing;
             float now = loop.Sim.State.Now;
             foreach (var cone in cones)
             {
-                bool visible = cone.light != null && cone.light.enabled && !loop.Sim.State.Phase.IsTerminal();
+                bool visible = cone.light != null && cone.light.enabled && cone.light.intensity>.18f && !loop.Sim.State.Phase.IsTerminal();
                 cone.root.gameObject.SetActive(visible); if (!visible) continue;
                 float length = Mathf.Min(20f,cone.light.range);
                 float radius = Mathf.Tan(cone.light.spotAngle * Mathf.Deg2Rad * .5f) * length;

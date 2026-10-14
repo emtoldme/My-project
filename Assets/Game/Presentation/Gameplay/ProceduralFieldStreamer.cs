@@ -18,9 +18,14 @@ namespace Reverb.Drafts.RC01.Presentation
         public Material groundMaterial,wheatMaterial;
         public Mesh[] stalkMeshes;
         public Mesh[] mediumStalkMeshes, distantStalkMeshes;
-        public int ResidentWheatVertices { get { int n=0; foreach(var c in live.Values)n+=c.wheat.vertexCount;return n; } }
-        public int ResidentWheatTriangles { get { int n=0; foreach(var c in live.Values)n+=(int)c.wheat.GetIndexCount(0)/3;return n; } }
-        public int[] ActiveWheatLods { get { var n=new int[3];foreach(var c in live.Values)n[c.lod]++;return n; } }
+        public bool useInstancedWheat=true;
+        public int SubmittedWheatTriangles {get;private set;}
+        public int SubmittedWheatBatches {get;private set;}
+        public bool InstancingActive {get;private set;}
+        public int ResidentWheatVertices { get { int n=0;if(InstancingActive&&sharedLevels!=null){foreach(var level in sharedLevels)foreach(var mesh in level)n+=mesh.vertexCount;}else foreach(var c in live.Values)n+=c.wheat.vertexCount;return n; } }
+        public int ResidentWheatTriangles { get { int n=0;if(InstancingActive&&sharedLevels!=null){foreach(var level in sharedLevels)foreach(var mesh in level)n+=(int)mesh.GetIndexCount(0)/3;}else foreach(var c in live.Values)n+=(int)c.wheat.GetIndexCount(0)/3;return n; } }
+        public int ResidentWheatInstances {get{int n=0;foreach(var c in live.Values)if(c.patches!=null)foreach(var patch in c.patches)n+=patch.Count;return n;}}
+        public int[] ActiveWheatLods { get { var n=new int[3];foreach(var c in live.Values)if(InstancingActive&&c.patches!=null){foreach(var patch in c.patches)n[patch.Lod]++;}else n[c.lod]++;return n; } }
         public float WheatVisualTime=>wind!=null?wind.GetFloat("_VisualTime"):0;
         public GameObject[] landmarkPrefabs;
         [Range(2,4)] public int loadRadius=3;
@@ -45,9 +50,11 @@ namespace Reverb.Drafts.RC01.Presentation
         readonly List<Color> colors=new List<Color>(40000);
         readonly List<int> indices=new List<int>(150000);
         Source[][] levels;Material wind;Transform generated,fallback;Mesh fallbackMesh;
+        Mesh[][] sharedLevels;Material[] instanceMaterials;Camera fieldCamera;
+        readonly Plane[] frustum=new Plane[6];
         bool initialized,terrainActive,wheatActive;
         sealed class Source{public Vector3[] vertices,normals;public Vector2[] uv;public Vector4[] surface;public int[] indices;}
-        sealed class Chunk{public Vector2Int key;public Transform root;public Mesh ground,wheat;public int lod;public GameObject landmark;public Light[] lights;}
+        sealed class Chunk{public Vector2Int key;public Transform root;public Mesh ground,wheat;public int lod;public GameObject landmark;public Light[] lights;public InstancedWheatPatch[] patches;}
 
         void Start()
         {
@@ -60,6 +67,15 @@ namespace Reverb.Drafts.RC01.Presentation
             levels=new[]{ReadSources(stalkMeshes),ReadSources(mediumStalkMeshes),ReadSources(distantStalkMeshes)};
             if(levels[1].Length==0)levels[1]=levels[0];if(levels[2].Length==0)levels[2]=levels[1];
             wind=new Material(wheatMaterial){name="Exploration wheat · run instance"};wind.SetFloat("_ProceduralField",1);wind.SetFloat("_UseExternalTime",1);
+            InstancingActive=useInstancedWheat&&SystemInfo.supportsInstancing;
+            if(InstancingActive)
+            {
+                sharedLevels=new[]{stalkMeshes,mediumStalkMeshes,distantStalkMeshes};
+                if(sharedLevels[1]==null||sharedLevels[1].Length==0)sharedLevels[1]=sharedLevels[0];if(sharedLevels[2]==null||sharedLevels[2].Length==0)sharedLevels[2]=sharedLevels[1];
+                instanceMaterials=new Material[3];for(int i=0;i<3;i++){instanceMaterials[i]=new Material(wind){name="Wheat shared detail "+i,enableInstancing=true};instanceMaterials[i].SetFloat("_InstancedField",1);instanceMaterials[i].SetFloat("_DetailQuality",i);}
+                fieldCamera=loop.gameplayCamera!=null?loop.gameplayCamera:Camera.main;
+            }
+            Shader.SetGlobalFloat("_ReverbFieldPhase",Layout.Random(0,0,19)*6.28f);
             generated=new GameObject("Exploration · resident field chunks").transform;generated.SetParent(transform,false);
             terrainActive=authoredTerrain.gameObject.activeSelf;wheatActive=authoredWheat.gameObject.activeSelf;HideAuthored();
             fallbackMesh=new Mesh{name="Streaming ground underlay",vertices=new[]{new Vector3(-1,0,-1),new Vector3(-1,0,1),new Vector3(1,0,1),new Vector3(1,0,-1)},normals=new[]{Vector3.up,Vector3.up,Vector3.up,Vector3.up},colors=new[]{new Color(.18f,.68f,.14f),new Color(.18f,.68f,.14f),new Color(.18f,.68f,.14f),new Color(.18f,.68f,.14f)},triangles=new[]{0,1,2,0,2,3}};
@@ -77,8 +93,10 @@ namespace Reverb.Drafts.RC01.Presentation
             float rain=Shader.GetGlobalVector("_ReverbWeather").x;
             foreach(var chunk in live.Values)if(chunk.lights!=null)foreach(var light in chunk.lights)if(light!=null&&light.color.r>.5f)light.intensity=Mathf.Lerp(.5f,3.2f,rain);
             if(loop.Sim.State.Phase!=RunPhase.Playing)return;
-            Refresh(false);if(pending.Count>0)BuildNext();else RefreshDetail();
+            Refresh(false);if(pending.Count>0)BuildNext();else if(!InstancingActive)RefreshDetail();
         }
+        void LateUpdate(){if(initialized&&InstancingActive)DrawInstanced();}
+        public void PrepareCapture(){if(initialized&&InstancingActive)DrawInstanced();}
         public static Vector2Int Coordinate(float x,float z)=>new Vector2Int(Mathf.FloorToInt(x/ChunkSize),Mathf.FloorToInt(z/ChunkSize));
         void Refresh(bool force)
         {
@@ -145,6 +163,7 @@ namespace Reverb.Drafts.RC01.Presentation
         }
         void BuildWheat(Chunk chunk)
         {
+            if(InstancingActive){BuildInstances(chunk);return;}
             ClearBuffers();chunk.lod=Detail(chunk.key);var sources=levels[chunk.lod];const int grid=26;const float spacing=ChunkSize/(float)grid;
             for(int z=0;z<grid;z++)for(int x=0;x<grid;x++)
             {
@@ -167,6 +186,40 @@ namespace Reverb.Drafts.RC01.Presentation
                 foreach(int index in source.indices)indices.Add(start+index);
             }
             Upload(chunk.wheat);chunk.wheat.bounds=new Bounds(new Vector3(12,1,12),new Vector3(27,5,27));
+        }
+        void BuildInstances(Chunk chunk)
+        {
+            chunk.wheat.Clear();if(chunk.patches==null)chunk.patches=new InstancedWheatPatch[9];
+            for(int z=0;z<3;z++)for(int x=0;x<3;x++)
+            {int i=z*3+x;var center=chunk.root.position+new Vector3(x*8+4,0,z*8+4);if(chunk.patches[i]==null)chunk.patches[i]=new InstancedWheatPatch(center,stalkMeshes.Length);else chunk.patches[i].Reset(center);}
+            const int grid=26;const float spacing=ChunkSize/(float)grid;
+            for(int z=0;z<grid;z++)for(int x=0;x<grid;x++)
+            {
+                int gx=chunk.key.x*grid+x,gz=chunk.key.y*grid+z;
+                float px=(x+.5f)*spacing+(Layout.Random(gx,gz,101)-.5f)*.34f,pz=(z+.5f)*spacing+(Layout.Random(gx,gz,102)-.5f)*.34f;
+                var sample=Layout.Sample(chunk.key.x*ChunkSize+px,chunk.key.y*ChunkSize+pz);
+                if(sample.Density<.02f||Layout.Random(gx,gz,103)>sample.Density)continue;
+                int variant=Mathf.Min(stalkMeshes.Length-1,(int)(Layout.Random(gx,gz,104)*stalkMeshes.Length));
+                float width=.86f+Layout.Random(gx,gz,106)*.28f,height=.78f+Layout.Random(gx,gz,107)*.24f;
+                var matrix=Matrix4x4.TRS(chunk.root.position+new Vector3(px,0,pz),Quaternion.Euler(0,Layout.Random(gx,gz,105)*360,0),new Vector3(width,height*Mathf.Max(.08f,sample.Height),width));
+                chunk.patches[Mathf.Clamp((int)(pz/8),0,2)*3+Mathf.Clamp((int)(px/8),0,2)].Add(variant,matrix,new Vector4(sample.Height,sample.Ripeness,Layout.Random(gx,gz,109),1));
+            }
+            foreach(var patch in chunk.patches)patch.Upload();
+        }
+        void DrawInstanced()
+        {
+            SubmittedWheatTriangles=SubmittedWheatBatches=0;if(fieldCamera==null)return;
+            GeometryUtility.CalculateFrustumPlanes(fieldCamera,frustum);
+            foreach(var material in instanceMaterials)material.SetFloat("_VisualTime",loop.Sim.State.Now);
+            var player=new Vector3(loop.Sim.PlayerX,0,loop.Sim.PlayerZ);
+            foreach(var chunk in live.Values)if(chunk.patches!=null)foreach(var patch in chunk.patches)
+            {
+                // Retain an offscreen caster margin for low afternoon sunlight.
+                var bounds=patch.Bounds;bounds.Expand(6);
+                if(!GeometryUtility.TestPlanesAABB(frustum,bounds))continue;
+                SubmittedWheatBatches+=patch.Draw(fieldCamera,player,sharedLevels,instanceMaterials,gameObject.layer,out int triangles);
+                SubmittedWheatTriangles+=triangles;
+            }
         }
         void Upload(Mesh mesh){mesh.Clear();mesh.SetVertices(vertices);mesh.SetNormals(normals);mesh.SetUVs(0,uv);mesh.SetColors(colors);if(roots.Count==vertices.Count)mesh.SetUVs(1,roots);if(surfaceData.Count==vertices.Count)mesh.SetUVs(2,surfaceData);mesh.SetTriangles(indices,0);mesh.RecalculateBounds();}
         void AddLandmark(Chunk chunk)
@@ -192,6 +245,6 @@ namespace Reverb.Drafts.RC01.Presentation
         void HideAuthored(){authoredTerrain.gameObject.SetActive(false);authoredWheat.gameObject.SetActive(false);}
         void OnEnable(){if(initialized){HideAuthored();generated.gameObject.SetActive(true);}}
         void OnDisable(){if(initialized){if(generated!=null)generated.gameObject.SetActive(false);if(authoredTerrain!=null)authoredTerrain.gameObject.SetActive(terrainActive);if(authoredWheat!=null)authoredWheat.gameObject.SetActive(wheatActive);}}
-        void OnDestroy(){foreach(var chunk in all){if(chunk.ground!=null)Destroy(chunk.ground);if(chunk.wheat!=null)Destroy(chunk.wheat);}if(fallbackMesh!=null)Destroy(fallbackMesh);if(wind!=null)Destroy(wind);if(generated!=null)Destroy(generated.gameObject);}
+        void OnDestroy(){foreach(var chunk in all){if(chunk.ground!=null)Destroy(chunk.ground);if(chunk.wheat!=null)Destroy(chunk.wheat);}if(instanceMaterials!=null)foreach(var m in instanceMaterials)Destroy(m);if(fallbackMesh!=null)Destroy(fallbackMesh);if(wind!=null)Destroy(wind);if(generated!=null)Destroy(generated.gameObject);}
     }
 }

@@ -28,19 +28,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Meadow:
-        m_Texture: {fileID: 2800000, guid: 0fb88dba9d533d843828da26afa3a3fe, type: 3}
+        m_Texture: {fileID: 2800000, guid: 621282ac092a01d458aa7284bbf90eb4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MeadowNormal:
-        m_Texture: {fileID: 2800000, guid: 1a60614c96a316a489c5e06c032c2c7f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8560bd81fc018a541be47e1d473080db, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Soil:
-        m_Texture: {fileID: 2800000, guid: be77bb3937757e74691e4cb5b4f26130, type: 3}
+        m_Texture: {fileID: 2800000, guid: 621282ac092a01d458aa7284bbf90eb4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SoilNormal:
-        m_Texture: {fileID: 2800000, guid: 830f230416f989b439793da301e70366, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8560bd81fc018a541be47e1d473080db, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Straw:
@@ -55,8 +55,11 @@ Material:
     m_Floats:
     - _Cull: 2
     - _Cutoff: 0.5
+    - _NormalStrength: 0.45
+    - _Roughness: 0.86
+    - _TrackStrength: 0.65
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _LayerScale: {r: 3.5, g: 4.8, b: 4.8, a: 1}
+    - _BaseColor: {r: 0.96, g: 0.98, b: 0.94, a: 1}
+    - _LayerScale: {r: 5, g: 6.2, b: 7.4, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
