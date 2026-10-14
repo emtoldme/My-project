@@ -65,6 +65,7 @@ namespace Waffle.GameplayNext
         public readonly Guid RunId;
         public readonly int Seed, ModuleSeed;
         public readonly float Now, Dt, RunDuration, ArenaHalfSize, PlayerRadius, ViewRadius;
+        public readonly bool UnboundedWorld;
         public readonly Vec2 PlayerPreviousPosition, PlayerPosition;
         public readonly IReadOnlyList<GameplayEnemySnapshot> Enemies;
         public readonly IReadOnlyList<AttackSnapshot> ActiveAttacks;
@@ -75,6 +76,7 @@ namespace Waffle.GameplayNext
             RunId = runId; Seed = seed; ModuleSeed = unchecked(seed ^ ((int)kind + 1) * 0x2c9277b5);
             Now = input.RunTime; Dt = input.Dt; RunDuration = config.runDuration;
             ArenaHalfSize = config.arenaHalfSize; PlayerRadius = config.playerRadius; ViewRadius = input.ViewRadius;
+            UnboundedWorld = config.unboundedWorld;
             PlayerPreviousPosition = input.PlayerPreviousPos; PlayerPosition = input.PlayerPos; Enemies = enemies;
             ActiveAttacks = view.Attacks; SpawnWarnings = view.SpawnWarnings;
         }

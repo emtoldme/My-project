@@ -224,9 +224,9 @@ namespace Waffle.Rules.Encounters
             for (int tries = 0; tries < 6; tries++)
             {
                 p = ctx.PlayerPosition + Vec2.FromAngle(rng.Range(0f, (float)(Math.PI * 2))) * rng.Range(Config.spawnRingMin, Config.spawnRingMax);
-                if (Math.Abs(p.X) <= lim && Math.Abs(p.Y) <= lim) break;
+                if (ctx.UnboundedWorld || Math.Abs(p.X) <= lim && Math.Abs(p.Y) <= lim) break;
             }
-            p = new Vec2(Math.Max(-lim, Math.Min(lim, p.X)), Math.Max(-lim, Math.Min(lim, p.Y)));
+            if(!ctx.UnboundedWorld)p = new Vec2(Math.Max(-lim, Math.Min(lim, p.X)), Math.Max(-lim, Math.Min(lim, p.Y)));
             var spec = new EnemySpawnSpec(s.id, s.maxHp, s.speed, s.radius, s.contactDamage, s.gemValue, s.elite, false);
             var intent = new SpawnIntent(spawnSeq + 1, p, spec, Config.spawnWarning);
             if (!cmd.TrySpawn(intent)) return false;

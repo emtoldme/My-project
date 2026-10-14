@@ -15,6 +15,7 @@ Shader "Reverb/Meadow Wind"
         _FieldBounds("Terrain X Z width depth",Vector)=(-48,-48,96,96)
         _Clearing("Clearing X Z radius",Vector)=(0,0,3.2,0)
         _DressingMap("R height / G density / B ripeness",2D)="white"{}
+        _ProceduralField("Use generated per-stalk dressing",Float)=0
     }
     SubShader
     {
@@ -31,13 +32,13 @@ Shader "Reverb/Meadow Wind"
         float4 _ReverbWeather,_ReverbWind;
         CBUFFER_START(UnityPerMaterial)
         float4 _BaseMap_ST;half4 _BaseColor;float4 _WindDirection,_FieldBounds,_Clearing;
-        float _WindStrength,_WindSpeed,_PlantHeight,_UseExternalTime,_VisualTime,_Cutoff;
+        float _WindStrength,_WindSpeed,_PlantHeight,_UseExternalTime,_VisualTime,_Cutoff,_ProceduralField;
         CBUFFER_END
-        float3 Bend(float3 p)
+        float3 Bend(float3 p,half4 paint)
         {
             float3 w=TransformObjectToWorld(p);
             float2 fieldUV=(w.xz-_FieldBounds.xy)/max(_FieldBounds.zw,float2(1,1));
-            float dressing=SAMPLE_TEXTURE2D_LOD(_DressingMap,sampler_DressingMap,fieldUV,0).r;
+            float dressing=lerp(SAMPLE_TEXTURE2D_LOD(_DressingMap,sampler_DressingMap,fieldUV,0).r,paint.r,_ProceduralField);
             float t=lerp(_Time.y,_VisualTime,_UseExternalTime);
             float h=pow(saturate(p.y/max(_PlantHeight,0.1)),1.8);
             float front=sin(dot(w.xz,float2(.16,.11))-t*.9);
@@ -57,6 +58,7 @@ Shader "Reverb/Meadow Wind"
         }
         void ClipLanes(float3 w)
         {
+            if(_ProceduralField>.5)return;
             float2 uv=(w.xz-_FieldBounds.xy)/max(_FieldBounds.zw,float2(1,1));
             clip(SAMPLE_TEXTURE2D_LOD(_GroundMask,sampler_GroundMask,uv,0).r-.35);
             clip(length(w.xz-_Clearing.xy)-_Clearing.z);
@@ -88,9 +90,9 @@ Shader "Reverb/Meadow Wind"
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma multi_compile_fog
-            struct A{float4 p:POSITION;float3 n:NORMAL;float2 uv:TEXCOORD0;UNITY_VERTEX_INPUT_INSTANCE_ID};
-            struct V{float4 p:SV_POSITION;float3 n:TEXCOORD0;float2 uv:TEXCOORD1;float3 w:TEXCOORD2;float fog:TEXCOORD3;float height:TEXCOORD4;};
-            V vert(A a){UNITY_SETUP_INSTANCE_ID(a);V o;o.w=Bend(a.p.xyz);o.p=TransformWorldToHClip(o.w);o.n=TransformObjectToWorldNormal(a.n);o.uv=a.uv;o.fog=ComputeFogFactor(o.p.z);o.height=saturate(a.p.y/1.7);return o;}
+            struct A{float4 p:POSITION;float3 n:NORMAL;float2 uv:TEXCOORD0;half4 color:COLOR;UNITY_VERTEX_INPUT_INSTANCE_ID};
+            struct V{float4 p:SV_POSITION;float3 n:TEXCOORD0;float2 uv:TEXCOORD1;float3 w:TEXCOORD2;float fog:TEXCOORD3;float height:TEXCOORD4;half ripe:TEXCOORD5;};
+            V vert(A a){UNITY_SETUP_INSTANCE_ID(a);V o;o.w=Bend(a.p.xyz,a.color);o.p=TransformWorldToHClip(o.w);o.n=TransformObjectToWorldNormal(a.n);o.uv=a.uv;o.fog=ComputeFogFactor(o.p.z);o.height=saturate(a.p.y/1.7);o.ripe=a.color.g;return o;}
             half4 frag(V i):SV_Target
             {
                 ClipLanes(i.w);Light light=GetMainLight(TransformWorldToShadowCoord(i.w),i.w,half4(1,1,1,1));
@@ -99,7 +101,7 @@ Shader "Reverb/Meadow Wind"
                 half3 sky=max(SampleSH(half3(0,1,0)),half3(0.1,0.13,0.16));
                 half4 tex=SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,i.uv);ClipAlpha(tex.a,i.w);
                 half3 albedo=tex.rgb*_BaseColor.rgb;
-                float ripe=SAMPLE_TEXTURE2D(_DressingMap,sampler_DressingMap,(i.w.xz-_FieldBounds.xy)/_FieldBounds.zw).b;
+                float ripe=lerp(SAMPLE_TEXTURE2D(_DressingMap,sampler_DressingMap,(i.w.xz-_FieldBounds.xy)/_FieldBounds.zw).b,i.ripe,_ProceduralField);
                 albedo*=lerp(half3(.65,.74,.58),half3(1.03,1,.89),i.height);
                 albedo*=lerp(half3(.83,.94,.81),half3(1.04,.99,.88),ripe);
                 half3 diffuse=sky*0.9+light.color*(0.4+wrap*0.6)*lerp(0.38,1,light.shadowAttenuation);
@@ -131,12 +133,12 @@ Shader "Reverb/Meadow Wind"
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
             float3 _LightDirection;
             float3 _LightPosition;
-            struct A{float4 p:POSITION;float3 n:NORMAL;float2 uv:TEXCOORD0;UNITY_VERTEX_INPUT_INSTANCE_ID};
+            struct A{float4 p:POSITION;float3 n:NORMAL;float2 uv:TEXCOORD0;half4 color:COLOR;UNITY_VERTEX_INPUT_INSTANCE_ID};
             struct V{float4 p:SV_POSITION;float3 w:TEXCOORD0;float2 uv:TEXCOORD1;};
             V vert(A a)
             {
                 UNITY_SETUP_INSTANCE_ID(a);V o;
-                float3 w=Bend(a.p.xyz);
+                float3 w=Bend(a.p.xyz,a.color);
                 float3 lightDirection=_LightDirection;
                 #if defined(_CASTING_PUNCTUAL_LIGHT_SHADOW)
                 lightDirection=normalize(_LightPosition-w);
@@ -162,9 +164,9 @@ Shader "Reverb/Meadow Wind"
             #pragma fragment frag
             #pragma editor_sync_compilation
             #pragma multi_compile_instancing
-            struct A{float4 p:POSITION;float2 uv:TEXCOORD0;UNITY_VERTEX_INPUT_INSTANCE_ID};
+            struct A{float4 p:POSITION;float2 uv:TEXCOORD0;half4 color:COLOR;UNITY_VERTEX_INPUT_INSTANCE_ID};
             struct V{float4 p:SV_POSITION;float3 w:TEXCOORD0;float2 uv:TEXCOORD1;};
-            V vert(A a){UNITY_SETUP_INSTANCE_ID(a);V o;o.w=Bend(a.p.xyz);o.p=TransformWorldToHClip(o.w);o.uv=a.uv;return o;}
+            V vert(A a){UNITY_SETUP_INSTANCE_ID(a);V o;o.w=Bend(a.p.xyz,a.color);o.p=TransformWorldToHClip(o.w);o.uv=a.uv;return o;}
             half4 frag(V i):SV_Target{ClipLanes(i.w);ClipAlpha(SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,i.uv).a,i.w);return 0;}
             ENDHLSL
         }

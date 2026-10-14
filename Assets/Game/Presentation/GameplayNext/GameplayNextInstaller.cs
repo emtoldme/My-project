@@ -35,7 +35,7 @@ namespace Reverb.Drafts.RC01.Presentation.GameplayNext
             var p = Point(anchor);
             float limit = loop.combatConfig.arenaHalfSize - TuningObjectives.RadiusMeters;
             if (float.IsNaN(p.X) || float.IsNaN(p.Y) || float.IsInfinity(p.X) || float.IsInfinity(p.Y)
-                || Math.Abs(p.X) > limit || Math.Abs(p.Y) > limit)
+                || !loop.config.unboundedWorld && (Math.Abs(p.X) > limit || Math.Abs(p.Y) > limit))
                 throw new InvalidOperationException("Tuning anchor is outside the playable arena.");
         }
     }

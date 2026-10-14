@@ -161,7 +161,7 @@ namespace Waffle.Finale
             {
                 float angle = rng.Range(0f, (float)(Math.PI * 2));
                 candidate = context.PlayerPosition + Vec2.FromAngle(angle) * rng.Range(10f, 12f);
-                if (Math.Abs(candidate.X) <= maxCoord && Math.Abs(candidate.Y) <= maxCoord) return candidate;
+                if (context.UnboundedWorld || Math.Abs(candidate.X) <= maxCoord && Math.Abs(candidate.Y) <= maxCoord) return candidate;
             }
             Vec2 inward = (Vec2.Zero - context.PlayerPosition).Normalized;
             if (inward.SqrLength < .5f) inward = new Vec2(1f, 0f);

@@ -153,7 +153,7 @@ namespace Reverb.Drafts.RC01.Presentation
             {
                 distanceCarry-=.65f;footSide=1-footSide;FootstepsEmitted++;
                 Vector3 p=current+side*(footSide==0?-.16f:.16f);
-                var terrain=weather?.ground;p.y=(terrain!=null?terrain.SampleHeight(p)+terrain.transform.position.y:0)+.045f;
+                var terrain=weather?.ground;p.y=(terrain!=null&&terrain.isActiveAndEnabled?terrain.SampleHeight(p)+terrain.transform.position.y:0)+.045f;
                 bool wet=weather!=null&&weather.CurrentWetness>.2f;
                 var target=wet?feet:dust;
                 target.Emit(new ParticleSystem.EmitParams {position=p,velocity=wet?Vector3.zero:new Vector3(.15f,.13f,.08f),
