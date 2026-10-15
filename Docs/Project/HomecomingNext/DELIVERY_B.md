@@ -1,32 +1,31 @@
 # HC-B 交付
 
-基线 `9516b914ca57be950aafdb30f82824b5a8237900`（`hc00-v1`）。分支 `gameplay/hc-b-relics`。
+基线 `9516b914ca57be950aafdb30f82824b5a8237900`。分支 `gameplay/hc-b-relics`。
 
-`RelicInventory` 实现 `IRelicInventory`。开局固定 2 格，不接受别的起始值。老房子的针线盒和筒仓的手套各加 1 格，到 4 格为止。同一件东西换一个地点再交，不会加格，也不会进第二份。伪造的物品和槽位组合直接拒绝，背包保持原样。
+六个遗物，四个格子。针线盒和手套仍是仅有的两次加格，加满就是 4。多出来的两件只能收着，或者换上去。数值都停在种子给出的上限里面：生命 8%，移速最高 10%，拾取 15%，闪避冷却缩短 8%。
 
-旧吉他的残响在 `TryConsumeDodgeEcho`。宿主只能在一次真实成功闪避的边上调用它。它返回半径 3 米、伤害系数 0.5、最多 12 个目标，然后进入 8 秒冷却。冷却用局内时间，暂停时不要调用。卸下吉他、死亡、终局或重开都不会打出。这个调用本身不搜敌、不扣血，也不会再发出闪避事件。
+| 遗物 | 常驻 | 要玩家做的事 | 图 |
+| --- | --- | --- | --- |
+| 针线盒 | 最大生命 +8% | 这一局挡一次致命伤，留下四分之一生命。拿到时不补血 | `Art/sewing-tin.jpg` |
+| 工作手套 | 拾取 +15% | 每 12 秒，在真正捡到经验时，揽来 2.5 米内最多 6 颗 | `Art/work-gloves.jpg` |
+| 旧吉他 | 弦响 | 成功闪避后 8 秒一次，半径 3 米，一半基础伤害，最多 12 个目标 | `Art/old-guitar.jpg` |
+| 裂罩灯 | 移速 +6% | 连续走 4 秒，再旺 3 秒，这 3 秒再 +4%。停下会凉 | `Art/lantern-glass.jpg` |
+| 钟钥匙 | 闪避冷却 -8% | 和吉他一起戴时，弦响冷却变成 6.5 秒。自己不伤人 | `Art/clock-key.jpg` |
+| 搪瓷杯 | 无 | 每 16 秒，没满血才回复 6% 最大生命 | `Art/rain-cup.jpg` |
 
-## 宿主还要接的地方
+故事正文仍然归 A。这里只写能力、材料和声音事件名。图是按秋收黄昏画的原图，不是外部参考图。
 
-不要改共享契约。下面这些由 Codex 接到现有的 `GameLoop → RunSimulation → CombatModule`。
+## 宿主调用
 
-- 地图种子就绪后 `Reset(runId, 2)`。重开再调一次。
-- A 准备好领取后调用 `TryGrant`。返回 true 才 `ConfirmClaim(accepted: true)`。返回 false 就不要封账。
-- 同一拍如果玩家已经死亡，不要调用 `TryGrant`。
-- 装备加成和普通升级、局外加成加在一起。针线盒是最大生命 +8%。第一次装备只提高上限，不把当前生命补满。卸下后把当前生命裁到新上限，再装备不回血。
-- 手套是拾取半径 +15%，只在装备时计入。
-- 成功闪避仍走现在的 `NotifyRunDodge`。P17 和 W06 继续听那个入口。吉他不要走它。在闪避真正开始之后单独调用 `TryConsumeDodgeEcho`，再用战斗模块打一次圆，不要把这次伤害记成新的闪避。
-- 换装沿用宿主的阶段检查：Playing，或者日志暂停且玩家还活着。
+共享契约没有改。具体类上的这几个方法要由 Codex 接到现有战斗，不要另做一套扣血。
 
-```csharp
-relics.Reset(sim.RunId, HomecomingContract.StartingRelicSlots);
-if (relics.TryGrant(reward)) places.ConfirmClaim(sim.RunId, siteId, true);
+- `Advance(dt, playing, alive, moving)`：只在 Playing 里调。`moving` 表示这一拍玩家真的动了。
+- `TryConsumeMend`：结算致命伤之前。成功就把这次伤害取消，当前生命设为最大生命的 25%，且不超过上限。失败就照常死亡。
+- `TryConsumeTug`：只在这一拍确实捡到一颗经验之后。半径内只吸已经存在的经验，最多 6 颗。不要走 D03 的全图磁吸。
+- `TryConsumeSip`：没满血才调。回复 6% 最大生命，裁到上限。
+- `TryConsumeDodgeEcho`：只挂在一次真实成功闪避上。伤害仍由 CombatModule 打一个圆。不要再调用 `NotifyRunDodge`，这样不会套进 P17 或 W06。
+- 加格只接受针线盒和手套的 `AdditionalSlots == 1`。另外四件必须是 0。第二件同样的东西直接拒绝。
 
-if (relics.TryConsumeDodgeEcho(playing, alive, now, out var pulse))
-{
-    // radius = pulse.RadiusMeters, damage = baseDamage * pulse.DamageFactor,
-    // targets <= pulse.MaxTargets. Do not call NotifyRunDodge again.
-}
-```
+裂罩灯、钟钥匙和搪瓷杯还没有地点。建议的领取是 `AdditionalSlots = 0`，物品编号用上表。放在哪一圈由 A 定，不要做成第二座老房子。
 
-纯规则已经能处理格子、入袋、换装和残响冷却。主场景还没接。这里没有跑 Unity。
+主场景还没接。这里没有跑 Unity。

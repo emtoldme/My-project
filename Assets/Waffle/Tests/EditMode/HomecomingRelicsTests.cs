@@ -93,6 +93,71 @@ namespace Waffle.Tests
             Assert.That(view.Owned, Is.True);
             Assert.That(view.Modifier.DodgeEcho, Is.True);
             Assert.That(view.EchoCooldownRemaining, Is.EqualTo(0f));
+            Assert.That(view.ArtPath, Does.EndWith("old-guitar.jpg"));
+        }
+
+        [Test]
+        public void FourSlotsCannotHoldEveryRelic()
+        {
+            var bag = Open();
+            Assert.That(bag.TryGrant(Reward(run, "home", RelicInventory.SewingTin, 1)), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "silo", RelicInventory.WorkGloves, 1)), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "guitar", RelicInventory.OldGuitar, 0)), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "lamp", RelicInventory.LanternGlass, 0)), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "key", RelicInventory.ClockKey, 0)), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "cup", RelicInventory.RainCup, 0)), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "lamp-fake", RelicInventory.LanternGlass, 1)), Is.False);
+            var view = bag.Read();
+            Assert.That(view.Capacity, Is.EqualTo(4));
+            Assert.That(view.StoredItems.Count, Is.EqualTo(2));
+            Assert.That(bag.ReadModifiers().MoveSpeed, Is.EqualTo(0.06f).Within(0.0001f));
+            bag.TryUnequip(run, 3);
+            Assert.That(bag.TryEquip(run, RelicInventory.ClockKey, 3), Is.True);
+            Assert.That(bag.ReadModifiers().MoveSpeed, Is.EqualTo(0f));
+            Assert.That(bag.ReadModifiers().DodgeCooldownReduction, Is.EqualTo(0.08f).Within(0.0001f));
+        }
+
+        [Test]
+        public void MendTugSipAndLanternStayOnThePlayingClock()
+        {
+            var bag = Open();
+            bag.TryGrant(Reward(run, "home", RelicInventory.SewingTin, 1));
+            bag.TryGrant(Reward(run, "silo", RelicInventory.WorkGloves, 1));
+            bag.TryGrant(Reward(run, "cup", RelicInventory.RainCup, 0));
+            bag.TryGrant(Reward(run, "lamp", RelicInventory.LanternGlass, 0));
+            Assert.That(bag.TryConsumeMend(true, true, false, out _), Is.False);
+            Assert.That(bag.TryConsumeMend(true, true, true, out float mend), Is.True);
+            Assert.That(mend, Is.EqualTo(0.25f));
+            Assert.That(bag.TryConsumeMend(true, true, true, out _), Is.False);
+            Assert.That(bag.TryConsumeTug(true, true, 0f, out float radius, out int gems), Is.True);
+            Assert.That(radius, Is.EqualTo(2.5f));
+            Assert.That(gems, Is.EqualTo(6));
+            Assert.That(bag.TryConsumeTug(false, true, 20f, out _, out _), Is.False);
+            Assert.That(bag.TryConsumeTug(true, true, 12f, out _, out _), Is.True);
+            Assert.That(bag.TryConsumeSip(true, true, false, 0f, out _), Is.False);
+            Assert.That(bag.TryConsumeSip(true, true, true, 0f, out float sip), Is.True);
+            Assert.That(sip, Is.EqualTo(0.06f));
+            Assert.That(bag.TryConsumeSip(true, true, true, 16f, out _), Is.True);
+            bag.Advance(3f, false, true, true);
+            Assert.That(bag.ReadModifiers().MoveSpeed, Is.EqualTo(0.06f).Within(0.0001f));
+            bag.Advance(4f, true, true, true);
+            Assert.That(bag.ReadModifiers().MoveSpeed, Is.EqualTo(0.10f).Within(0.0001f));
+            bag.TryUnequip(run, 3);
+            Assert.That(bag.ReadModifiers().MoveSpeed, Is.EqualTo(0f));
+        }
+
+        [Test]
+        public void ClockKeyShortensOnlyTheGuitarEcho()
+        {
+            var bag = Open();
+            bag.TryGrant(Reward(run, "guitar", RelicInventory.OldGuitar, 0));
+            bag.TryGrant(Reward(run, "home", RelicInventory.SewingTin, 1));
+            bag.TryGrant(Reward(run, "key", RelicInventory.ClockKey, 0));
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 0f, out var pulse), Is.True);
+            Assert.That(pulse.ReadyAgainAt, Is.EqualTo(6.5f).Within(0.0001f));
+            Assert.That(pulse.DamageFactor, Is.EqualTo(0.5f));
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 6.4f, out _), Is.False);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 6.5f, out _), Is.True);
         }
 
         RelicInventory Open()
