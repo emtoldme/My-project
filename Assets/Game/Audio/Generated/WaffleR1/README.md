@@ -2,15 +2,15 @@
 
 全部由 `Tools/AudioGen/gen_waffle_r1.py` 用 numpy/scipy 纯合成生成（Karplus-Strong 拨弦吉他、减法合成 pad/贝斯、合成鼓、卷积混响、乒乓回声）。
 **无采样、无第三方音色库 → 许可：项目原创 / procedural，可自由用于本项目。**
-格式：48 kHz / 16-bit / 立体声 WAV。音乐约 -16 LUFS（战斗 -17.6），SFX 峰值 -1.5 dBFS（ffmpeg ebur128 实测）。
+格式：48 kHz / 16-bit / 立体声 WAV。音乐 -16 LUFS（ffmpeg 实测后自动校准），峰值 ≤ -1.3 dBFS，SFX 峰值 -1.5 dBFS（ffmpeg ebur128 实测）。
 重新生成：`python Tools/AudioGen/gen_waffle_r1.py Assets/Game/Audio/Generated/WaffleR1`（需 numpy scipy；随机种子固定 1988，可复现）。
 本目录只新增资源，**未改动 AudioDirector / Main / 现有音频**，接线由整合方决定。
 
 ## 音乐（导入设置：Streaming，Vorbis 0.7，Normalize 关）
 | 文件 | 时长 | 建议用途 |
 |---|---|---|
-| bgm_golden_field_explore_loop.wav | 53.33 s（72 BPM，16 小节，无缝循环） | 金色麦田探索 / 故乡 R3 主循环；D–G–Bm–G 指弹+pad+风 |
-| bgm_old_home_unfinished_song_loop.wav | 64.0 s（60 BPM，无缝循环） | 老房子 / 老吉他“未完成的歌”回忆主题，带磁带底噪，旋律在后半段故意断开 |
+| bgm_golden_field_explore_loop.wav | 106.67 s（72 BPM，32 小节，无缝循环） | 金色麦田探索；A 0:00–0:40 D–G–Bm–G 指弹 → B 间奏 0:40–1:07 转 Em–C–G–A、吉他退场、口琴式旋律+高位 pad → 回升 1:07–1:20 十六分琶音渐强 → A′ 1:20–1:47 |
+| bgm_old_home_unfinished_song_loop.wav | 112.0 s（60 BPM，28 小节，无缝循环） | 老房子 / 老吉他“未完成的歌”；A 0:00–0:48 → B 间奏 0:48–1:20 Bm–G–D–A 稀疏独奏吉他+八音盒新动机 → A′ 1:20–1:52 残缺旋律回归且更早断开；带磁带底噪 |
 | bgm_broadcast_anomaly_combat_loop.wav | 30.0 s（128 BPM，16 小节，无缝循环） | 冷广播异常战斗循环（可替换 `combatLoop` 试听）；锯齿贝斯+鼓+摩斯/静电 |
 | sting_settlement_homecoming.wav | 6.0 s（一次性） | 胜利 / 结算 / 归乡短乐句 |
 

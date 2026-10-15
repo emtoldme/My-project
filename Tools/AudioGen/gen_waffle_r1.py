@@ -187,10 +187,125 @@ def sfx_all():
     S['sfx_silo_wind_echo']=reverb(w,0.55,dur=4,decay=0.6,bright=2500)
     return S
 
+
+# ================= R1.1：为三首循环加入间奏（A-B-A' 结构） =================
+import subprocess, re
+def _add(out,x,st,p=0.0):
+    n=len(out)
+    if st>=n or st<0: return
+    x=pan(x,p) if x.ndim==1 else x; e=min(n,st+len(x)); out[st:e]+=x[:e-st]
+def harmonica(f,d,amp=0.12):
+    tt=t_(d); vib=1+0.006*np.sin(2*np.pi*5.2*tt)*np.minimum(1,tt*2)
+    ph=2*np.pi*np.cumsum(f*vib)/SR; x=sum(np.sin(h*ph)/h**0.8 for h in range(1,9))
+    x=bp(x,500,3500)+0.02*bp(rng.standard_normal(len(tt)),1000,4000)
+    return x*adsr(len(tt),0.06,0.1,0.8,0.15)*amp
+def musicbox(f,d=2.5,amp=0.18):
+    tt=t_(d); return sum(np.sin(2*np.pi*f*r*tt)*np.exp(-tt*k)*a for r,k,a in ((1,2.5,1),(3.01,6,.3),(5.4,10,.12),(8.9,16,.05)))*amp
+GF_A=[(50,[50,57,62,66,69]),(55,[55,59,62,67,71]),(47,[47,54,59,62,66]),(55,[55,59,62,67,74])]
+GF_B=[(52,[52,59,64,67,71]),(48,[48,55,60,64,67]),(55,[55,59,62,67,71]),(57,[57,61,64,69,73])]  # Em C G A
+GF_MEL=[76,None,74,71, 72,None,71,67, 74,None,71,67, 69,None,73,76]  # 每小节 4 拍各一音
+def golden_field(L):
+    n=int(L*SR); out=np.zeros((n,2)); bar=4*BEAT; NB=int(round(L/bar))
+    for b in range(NB+2):
+        s=int(b*bar*SR); bb=b%NB if b<NB else b
+        sec='B' if 12<=bb<20 else ('R' if 20<=bb<24 else 'A')
+        root,ch=(GF_B if sec=='B' else GF_A)[bb%4]
+        pv=0.22 if sec=='B' else 0.18
+        _add(out,pad(mtof(root+12),bar*1.3,cut=2200 if sec=='B' else 1400)*adsr(int(bar*1.3*SR),1.2,0.5,0.8,1.5)*pv,s)
+        _add(out,ks_fast(mtof(root-12),bar,0.3,b)*(0.25 if sec=='B' else 0.35),s,-0.1)
+        if sec=='B':
+            for i in range(4):
+                m=GF_MEL[(bb-12)%4*4+i]
+                if m: _add(out,harmonica(mtof(m),BEAT*1.6),s+int(i*BEAT*SR),0.2)
+            _add(out,pad(mtof(root+24),bar,0.2,3000)*adsr(int(bar*SR),1.5,0.3,0.6,1.2)*0.05,s,-0.3)
+        else:
+            sub=16 if sec=='R' else 8; amp=0.22*(0.4+0.15*(bb-20) if sec=='R' else 1)
+            for i in range(sub):
+                m=ch[[0,2,1,3,2,4,3,2][i%8]]+12+(12 if sec=='R' and i%4==3 else 0)
+                _add(out,ks_fast(mtof(m),2.5,0.45,b*16+i)*amp*(1 if i%2==0 else .75),s+int(i*bar/sub*SR),0.35*np.sin(i))
+            if sec=='R': _add(out,lp(rng.standard_normal(int(bar*SR)),300+2500*(bb-20)/4)*np.linspace(0,1,int(bar*SR))*0.03,s)
+    out+=lp(rng.standard_normal((n,2)),700)*(0.5+0.5*np.sin(2*np.pi*t_(L)[:,None]/(L/4)))*0.03
+    out=delay(out,BEAT*0.75,0.35,0.18); return reverb(out,0.35,dur=3,decay=1.2)
+OH_MEL=[69,71,74,76,74,71,69,None, 66,69,71,69,66,64,62,None, 64,66,69,71,72,71,69,66, 64,62,64,None,None,None,None,None]
+OH_B=[(47,[47,54,59,62]),(55,[55,59,62,67]),(50,[50,57,62,66]),(57,[57,61,64,69])]  # Bm G D A
+OH_MOTIF=[83,81,78,None,76,78,81,None, 79,78,74,None,76,None,None,None]
+def old_home_guitar(L):
+    n=int(L*SR); out=np.zeros((n,2)); beat=1.0; bar=4*beat; NB=int(round(L/bar))
+    prog=[(50,[50,57,62,66]),(47,[47,54,59,62]),(55,[55,59,62,67]),(57,[57,61,64,69])]
+    for b in range(NB+2):
+        s=int(b*bar*SR); bb=b%NB if b<NB else b; B=12<=bb<20
+        root,ch=(OH_B if B else prog)[bb%4]
+        if B:  # 稀疏独奏吉他 + 八音盒新动机
+            _add(out,ks_fast(mtof(root),bar+1,0.3,700+b)*0.2,s,-0.2)
+            _add(out,ks_fast(mtof(ch[2]+12),bar,0.4,800+b)*0.12,s+int(2*beat*SR),0.2)
+            for i in range(4):
+                m=OH_MOTIF[((bb-12)%4)*4+i] if (bb-12)<16 else None
+                if m: _add(out,musicbox(mtof(m)),s+int(i*beat*SR),0.3*np.cos(i))
+        else:
+            for i,m in enumerate(ch): _add(out,ks_fast(mtof(m),bar+1,0.35,100+b*4+i)*0.18,s+int(i*0.06*SR),-0.3+i*0.1)
+            for i in range(8):
+                idx=(bb*8+i)%len(OH_MEL); m=OH_MEL[idx]
+                if m is None or (bb>=20 and idx>=20): continue   # A' 旋律更早断开
+                _add(out,ks_fast(mtof(m),2.0,0.6,500+b*8+i)*0.3,s+int(i*beat/2*SR),0.25)
+    out=lp(out+hp(rng.standard_normal((n,2)),3000)*0.006,7000)
+    return reverb(delay(out,0.75,0.3,0.15),0.4,dur=3.5,decay=0.9,bright=4500)
+def formant_chirp(d=0.5,f0=140):
+    tt=t_(d); f=f0*(1+0.3*np.sin(2*np.pi*3*tt)); src=2*((np.cumsum(f)/SR)%1)-1
+    fm=[(700,1200),(400,2000),(600,1000),(300,2300)][rng.integers(4)]
+    x=bp(src,fm[0]*0.8,fm[0]*1.2)+0.6*bp(src,fm[1]*0.85,fm[1]*1.15)
+    x=bp(x,300,3400)*(rng.random(len(tt))>0.05)*np.sin(np.pi*tt/d)
+    return np.tanh(x*4)*0.12
+def broadcast_combat(L):
+    n0=int(L*SR); tt=t_(L); n=n0+2*SR; out=np.zeros((n,2)); bt=60/128; bar=4*bt; NB=int(round(L/bar))
+    roots=[38,38,41,36]
+    for b in range(NB+1):
+        s=int(b*bar*SR); bb=b%NB if b<NB else b
+        sec='B' if 12<=bb<20 else ('R' if 20<=bb<24 else 'A'); r=roots[bb%4]
+        lay=np.zeros((int(bar*SR)+SR,2))
+        if sec!='B':
+            for i in range(16):
+                st=int(i*bt/4*SR); ts=t_(bt/4*0.9); f=mtof(r+(12 if i%4==3 else 0))
+                x=lp((2*(ts*f%1)-1)*adsr(len(ts),0.002,0.05,0.6,0.02),500+1500*(i%4==0))*0.25; _add(lay,x,st)
+        else:
+            ts=t_(bar); _add(lay,lp(2*(ts*mtof(r)%1)-1,250)*0.18*adsr(len(ts),0.3,0.2,0.8,0.3),0)
+        for i in range(4):
+            if sec=='B' and i%2: continue
+            st=int(i*bt*SR); ts=t_(0.35); _add(lay,np.sin(2*np.pi*(45*ts+90*(1-np.exp(-ts*40))/40))*np.exp(-ts*9)*0.7,st)
+            if i%2==1: _add(lay,bp(rng.standard_normal(int(0.2*SR)),1200,7000)*np.exp(-t_(0.2)*22)*0.35,st,0.1)
+        if sec=='R':
+            k=4*(1+(bb-20)//2)
+            for i in range(k*4//4*4 if bb==23 else k): _add(lay,bp(rng.standard_normal(int(0.08*SR)),1500,7000)*np.exp(-t_(.08)*30)*(0.1+0.25*i/k),int(i*bar/k*SR),0.1)
+            ts=t_(bar); _add(lay,hp(rng.standard_normal(len(ts)),300+1500*(bb-20))*(((bb-20)*bar+ts)/(4*bar))**2*0.15,0)
+        for i in range(8):
+            _add(lay,hp(rng.standard_normal(int(0.05*SR)),8000)*np.exp(-t_(0.05)*80)*0.12,int((i+0.5)*bt/2*SR),0.4)
+        if sec=='B':
+            lay=lp(lay,350+250*(bb-12))  # 滤波鼓
+            for j in range(3): _add(lay,formant_chirp(0.25+0.3*rng.random(),120+60*rng.random()),int((0.3+j*1.1+0.4*rng.random())*bt*SR),rng.uniform(-.7,.7))
+        if bb%2==0 and sec!='R':
+            ts=t_(bar); _add(lay,np.sin(2*np.pi*mtof(r+31)*ts)*(np.sin(2*np.pi*7*ts)>0.3)*np.exp(-ts*0.5)*0.05,0,-0.5)
+        _add(out,lay,s)
+    out=out[:n0]; n=n0
+    out+=pan(pad(mtof(26),L,0.3,600)[:n]*0.15,0)
+    out+=pan(bp(rng.standard_normal(n),2000,5000)*(0.5+0.5*np.sin(2*np.pi*tt/(4*bar)))**4*0.04,0.6)
+    return reverb(delay(out,bt*0.75,0.3,0.12),0.2,dur=1.8,decay=2)
+def lufs_fix(path,target,peak_db=-1.2):
+    """用 ffmpeg ebur128 实测后精确校准积分响度，再软限幅到峰值以下。"""
+    for _ in range(3):
+        o=subprocess.run(['ffmpeg','-nostats','-i',path,'-af','ebur128','-f','null','-'],capture_output=True,text=True).stderr
+        I=float(re.findall(r'I:\s+(-?[\d.]+) LUFS',o)[-1])
+        if abs(I-target)<0.2: return I
+        sr,x=wavfile.read(path); x=x/32767*10**((target-I)/20); pk=10**(peak_db/20)
+        x=np.where(np.abs(x)>pk*0.8, np.sign(x)*(pk*0.8+pk*0.2*np.tanh((np.abs(x)-pk*0.8)/(pk*0.2))), x)
+        save(path,x)
+    return I
+
 if __name__=='__main__':
     root=sys.argv[1]
-    save(f'{root}/Music/bgm_golden_field_explore_loop.wav',master(loop_render(golden_field,16*4*BEAT),-16))
-    save(f'{root}/Music/bgm_old_home_unfinished_song_loop.wav',master(loop_render(old_home_guitar,64.0),-17))
-    save(f'{root}/Music/bgm_broadcast_anomaly_combat_loop.wav',master(loop_render(broadcast_combat,16*4*60/128),-15))
+    save(f'{root}/Music/bgm_golden_field_explore_loop.wav',master(loop_render(golden_field,32*4*BEAT),-16))
+    save(f'{root}/Music/bgm_old_home_unfinished_song_loop.wav',master(loop_render(old_home_guitar,112.0),-16))
+    save(f'{root}/Music/bgm_broadcast_anomaly_combat_loop.wav',master(loop_render(broadcast_combat,32*4*60/128),-16))
     save(f'{root}/Music/sting_settlement_homecoming.wav',fade(master(settlement_sting(),-16),0.001,1.0))
+    for f in ('bgm_golden_field_explore_loop','bgm_old_home_unfinished_song_loop','bgm_broadcast_anomaly_combat_loop'):
+        print(f,'LUFS',lufs_fix(f'{root}/Music/{f}.wav',-16))
+    if '--music-only' in sys.argv: sys.exit()
     for k,v in sfx_all().items(): save(f'{root}/SFX/{k}.wav',fade(norm_peak(v,-1.5)))
