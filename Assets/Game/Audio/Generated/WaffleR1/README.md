@@ -11,7 +11,7 @@
 |---|---|---|
 | bgm_golden_field_explore_loop.wav | 106.67 s（72 BPM，32 小节，无缝循环） | 金色麦田探索；A 0:00–0:40 D–G–Bm–G 指弹 → B 间奏 0:40–1:07 转 Em–C–G–A、吉他退场、口琴式旋律+高位 pad → 回升 1:07–1:20 十六分琶音渐强 → A′ 1:20–1:47 |
 | bgm_old_home_unfinished_song_loop.wav | 112.0 s（60 BPM，28 小节，无缝循环） | 老房子 / 老吉他“未完成的歌”；A 0:00–0:48 → B 间奏 0:48–1:20 Bm–G–D–A 稀疏独奏吉他+八音盒新动机 → A′ 1:20–1:52 残缺旋律回归且更早断开；带磁带底噪 |
-| bgm_broadcast_anomaly_combat_loop.wav | 30.0 s（128 BPM，16 小节，无缝循环） | 冷广播异常战斗循环（可替换 `combatLoop` 试听）；锯齿贝斯+鼓+摩斯/静电 |
+| bgm_broadcast_anomaly_combat_loop.wav | 60.0 s（128 BPM，32 小节，无缝循环） | 冷广播异常战斗（可替换 `combatLoop` 试听）；A 0:00–0:22.5 锯齿贝斯+鼓+摩斯 → B 崩落间奏 0:22.5–0:37.5 滤波鼓、长音贝斯、广播人声式共振峰啁啾 → 回升 0:37.5–0:45 军鼓滚奏+噪声上扬 → A′ 0:45–1:00 |
 | sting_settlement_homecoming.wav | 6.0 s（一次性） | 胜利 / 结算 / 归乡短乐句 |
 
 循环做法：多渲染 4 s 尾音并叠回开头，首尾样本跳变 < 1.1%。
