@@ -103,6 +103,10 @@ namespace Waffle.Tests
             Assert.That(bag.TryGrant(Reward(run, "home", RelicInventory.SewingTin, 1)), Is.True);
             Assert.That(bag.TryGrant(Reward(run, "silo", RelicInventory.WorkGloves, 1)), Is.True);
             Assert.That(bag.TryGrant(Reward(run, "guitar", RelicInventory.OldGuitar, 0)), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "lamp", RelicInventory.LanternGlass, 0)), Is.False);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 0f, out _), Is.True);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 8f, out _), Is.True);
+            Assert.That(bag.TryConsumeTug(true, true, 0f, out _, out _), Is.True);
             Assert.That(bag.TryGrant(Reward(run, "lamp", RelicInventory.LanternGlass, 0)), Is.True);
             Assert.That(bag.TryGrant(Reward(run, "key", RelicInventory.ClockKey, 0)), Is.True);
             Assert.That(bag.TryGrant(Reward(run, "cup", RelicInventory.RainCup, 0)), Is.True);
@@ -123,8 +127,11 @@ namespace Waffle.Tests
             var bag = Open();
             bag.TryGrant(Reward(run, "home", RelicInventory.SewingTin, 1));
             bag.TryGrant(Reward(run, "silo", RelicInventory.WorkGloves, 1));
-            bag.TryGrant(Reward(run, "cup", RelicInventory.RainCup, 0));
-            bag.TryGrant(Reward(run, "lamp", RelicInventory.LanternGlass, 0));
+            bag.TryGrant(Reward(run, "guitar", RelicInventory.OldGuitar, 0));
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 0f, out _), Is.True);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 8f, out _), Is.True);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 16f, out _), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "cup", RelicInventory.RainCup, 0)), Is.True);
             Assert.That(bag.TryConsumeMend(true, true, false, out _), Is.False);
             Assert.That(bag.TryConsumeMend(true, true, true, out float mend), Is.True);
             Assert.That(mend, Is.EqualTo(0.25f));
@@ -138,6 +145,8 @@ namespace Waffle.Tests
             Assert.That(bag.TryConsumeSip(true, true, true, 0f, out float sip), Is.True);
             Assert.That(sip, Is.EqualTo(0.06f));
             Assert.That(bag.TryConsumeSip(true, true, true, 16f, out _), Is.True);
+            Assert.That(bag.TryUnequip(run, 3), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "lamp", RelicInventory.LanternGlass, 0)), Is.True);
             bag.Advance(3f, false, true, true);
             Assert.That(bag.ReadModifiers().MoveSpeed, Is.EqualTo(0.06f).Within(0.0001f));
             bag.Advance(4f, true, true, true);
@@ -152,12 +161,46 @@ namespace Waffle.Tests
             var bag = Open();
             bag.TryGrant(Reward(run, "guitar", RelicInventory.OldGuitar, 0));
             bag.TryGrant(Reward(run, "home", RelicInventory.SewingTin, 1));
-            bag.TryGrant(Reward(run, "key", RelicInventory.ClockKey, 0));
-            Assert.That(bag.TryConsumeDodgeEcho(true, true, 0f, out var pulse), Is.True);
-            Assert.That(pulse.ReadyAgainAt, Is.EqualTo(6.5f).Within(0.0001f));
+            Assert.That(bag.TryGrant(Reward(run, "key", RelicInventory.ClockKey, 0)), Is.False);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 0f, out _), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "lamp", RelicInventory.LanternGlass, 0)), Is.True);
+            bag.Advance(4f, true, true, true);
+            Assert.That(bag.TryUnequip(run, 2), Is.True);
+            Assert.That(bag.TryGrant(Reward(run, "key", RelicInventory.ClockKey, 0)), Is.True);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 8f, out var pulse), Is.True);
+            Assert.That(pulse.ReadyAgainAt, Is.EqualTo(14.5f).Within(0.0001f));
             Assert.That(pulse.DamageFactor, Is.EqualTo(0.5f));
-            Assert.That(bag.TryConsumeDodgeEcho(true, true, 6.4f, out _), Is.False);
-            Assert.That(bag.TryConsumeDodgeEcho(true, true, 6.5f, out _), Is.True);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 14.4f, out _), Is.False);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 14.5f, out _), Is.True);
+        }
+
+        [Test]
+        public void GuitarTearThenChromaticArriveOnlyAfterUse()
+        {
+            var bag = Open();
+            bag.TryGrant(Reward(run, "guitar", RelicInventory.OldGuitar, 0));
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 0f, out var first), Is.True);
+            Assert.That(bag.TryDequeueFx(out var cue), Is.True);
+            Assert.That(cue.Kind, Is.EqualTo(RelicFxKind.StringRing));
+            Assert.That(cue.TearMeters, Is.EqualTo(0f));
+            Assert.That(cue.ChromaticPixels, Is.EqualTo(0f));
+            Assert.That(first.DamageFactor, Is.EqualTo(0.5f));
+            bag.TryConsumeDodgeEcho(true, true, 8f, out _);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 16f, out var torn), Is.True);
+            Assert.That(bag.TryDequeueFx(out cue), Is.True);
+            Assert.That(bag.TryDequeueFx(out cue), Is.True);
+            Assert.That(cue.Kind, Is.EqualTo(RelicFxKind.StringTear));
+            Assert.That(cue.TearMeters, Is.EqualTo(1.2f));
+            Assert.That(torn.DamageFactor, Is.EqualTo(0.6f));
+            bag.TryConsumeDodgeEcho(true, true, 24f, out _);
+            Assert.That(bag.TryConsumeDodgeEcho(true, true, 32f, out var split), Is.True);
+            while (bag.TryDequeueFx(out cue)) { }
+            Assert.That(cue.Kind, Is.EqualTo(RelicFxKind.ChromaticHit));
+            Assert.That(cue.ChromaticPixels, Is.EqualTo(1.6f));
+            Assert.That(cue.TearMeters, Is.EqualTo(1.2f));
+            Assert.That(split.RadiusMeters, Is.EqualTo(3.4f));
+            Assert.That(split.DamageFactor, Is.EqualTo(0.65f));
+            Assert.That(bag.UnlockHint(RelicInventory.LanternGlass), Is.EqualTo("可以领取"));
         }
 
         RelicInventory Open()
